@@ -23,6 +23,7 @@
 #include <vector>
 
 class GUIComponent;
+class ButtonEvent;
 
 /** The GUIManager is basically the place where the main loop runs */
 class GUIManager
@@ -32,12 +33,19 @@ private:
   
   /** component where the mouse is currently over */
   GUIComponent* last_component;
+  GUIComponent* current_component;
+
+  GUIComponent* grabbing_component;
+  
+  int last_x;
+  int last_y;
 
   /** A collection of GUI components aka widgets */
   typedef std::vector<GUIComponent*> ComponentLst;
   ComponentLst components;
 
   void process_events ();
+  void process_button_events (ButtonEvent&);
   void draw_status ();
   GUIComponent* find_component_at (int, int);
 public:
@@ -49,6 +57,9 @@ public:
 
   /** Stops the GUIManager */
   void quit();
+
+  void grab_mouse (GUIComponent*);
+  void ungrab_mouse (GUIComponent*);
 };
 
 #endif

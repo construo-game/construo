@@ -152,7 +152,7 @@ void
 World::draw (GraphicContext* gc)
 {
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
-    (*i)->draw ();
+    (*i)->draw (gc);
 
   particle_mgr->draw(gc);
 }

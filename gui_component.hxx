@@ -61,8 +61,13 @@ public:
   virtual void on_mouse_enter () {}
   virtual void on_mouse_leave () {}
 
-  virtual void wheel_up () {}
-  virtual void wheel_down () {}
+  virtual void wheel_up (int x, int y) {}
+  virtual void wheel_down (int x, int y) {}
+
+  virtual void scroll_left () {}
+  virtual void scroll_right () {}
+  virtual void scroll_up () {}
+  virtual void scroll_down () {}
 
   virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
 };

@@ -230,7 +230,7 @@ X11Display::read_event ()
         if (event.xbutton.button == 1)
           ev.button.id = BUTTON_PRIMARY;
         else if (event.xbutton.button == 2)
-          ev.button.id = BUTTON_START;
+          ev.button.id = BUTTON_SECONDARY;
         else if (event.xbutton.button == 3)
           ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
         else if (event.xbutton.button == 4)
@@ -245,6 +245,19 @@ X11Display::read_event ()
       break;
 
     case ButtonRelease:
+      {
+        Event ev;
+        ev.button.type = BUTTON_EVENT;
+
+        if (event.xbutton.button == 1)
+          ev.button.id = BUTTON_PRIMARY;
+        else if (event.xbutton.button == 2)
+          ev.button.id = BUTTON_SECONDARY;
+
+        ev.button.pressed = false;
+
+        events.push(Event(ev));
+      }
       break;
 
     case KeyPress:
@@ -364,7 +377,7 @@ X11Display::read_event ()
       // Window close request
       if ((int) event.xclient.data.l[0] == (int) wm_delete_window) {
         std::cout << "Window is destroyed" << std::endl;
-        //construo_main->quit();
+        send_button_press(BUTTON_ESCAPE);
       }
       break;
 

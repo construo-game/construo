@@ -68,7 +68,6 @@ GUIRunButton::GUIRunButton ()
 {
 }
 
-
 void
 GUIRunButton::draw_hover(GraphicContext* gc)
 {

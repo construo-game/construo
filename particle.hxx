@@ -83,7 +83,7 @@ public:
     pos += velocity * delta;
 
     float damp = 0.2;
-
+#if 0
     // Calc collision with screen x border
     if (pos.x < 0) {
       velocity.x =  fabs(velocity.x);
@@ -100,7 +100,9 @@ public:
       velocity.y =  fabs(velocity.y);
       pos.y = 0;
       velocity *= damp;
-    } else if (pos.y > 599) {
+    } else
+#endif
+ if (pos.y > 599) {
       velocity.y =  -fabs(velocity.y);
       pos.y = 599;
       velocity *= damp;
@@ -136,10 +138,9 @@ public:
   void draw_highlight (GraphicContext* gc)
   {
     //int size = int(10.0f/(mass*mass)) + 1;
-    draw (gc);
-    graphic_context->draw_fill_circle (int(pos.x), int (pos.y),
-                                       6,
-                                       Color(1.0f, 1.0f, 1.0f));
+    gc->draw_fill_circle (int(pos.x), int (pos.y),
+                          6,
+                          Color(1.0f, 1.0f, 1.0f));
   }
 
   lisp_object_t* serialize()

@@ -19,12 +19,16 @@
 
 #include "controller.hxx"
 #include "particle_factory.hxx"
+#include "input_context.hxx"
+#include "gui_manager.hxx"
 #include "worldview_component.hxx"
 
+extern GUIManager* gui_manager;
 extern Controller* controller;
 
 WorldViewComponent::WorldViewComponent ()
 {
+  scrolling = true;
 }
 
 WorldViewComponent::~WorldViewComponent ()
@@ -33,26 +37,55 @@ WorldViewComponent::~WorldViewComponent ()
 }
 
 void
-WorldViewComponent::draw (GraphicContext* gc)
+WorldViewComponent::draw (GraphicContext* parent_gc)
 {
-  controller->get_world()->draw (gc);
+  int x = gc.screen_to_world_x (input_context->get_mouse_x ());
+  int y = gc.screen_to_world_y (input_context->get_mouse_y ());
+
+  gc.set_parent_gc (parent_gc);
+
+  gc.draw_line (-1000, 599, 1000, 599, Color (0x0000AA));
+
+  World& world = *controller->get_world();
+
+  Particle* selected_particle = world.get_particle (x, y);
+  if (selected_particle)
+    {
+      selected_particle->draw_highlight (&gc);
+    }
+
+  world.draw (&gc);
+
+
+  if (current_particle)
+    {
+      gc.draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
+                    x, y,
+                    Color(0xAAAAAA));
+ 
+    }
 }
 
 void
-WorldViewComponent::wheel_up ()
+WorldViewComponent::wheel_up (int x, int y)
 {
   std::cout << "Wheel UP" << std::endl;
+  gc.zoom_in (x, y);
 }
 
 void
-WorldViewComponent::wheel_down ()
+WorldViewComponent::wheel_down (int x, int y)
 {
   std::cout << "Wheel down" << std::endl;
+  gc.zoom_out (x, y);
 }
 
 void
-WorldViewComponent::on_primary_button_click (int x, int y)
+WorldViewComponent::on_primary_button_click (int screen_x, int screen_y)
 {
+  int x = gc.screen_to_world_x (screen_x);
+  int y = gc.screen_to_world_y (screen_y);
+
   World& world = *controller->get_world ();
 
   if (current_particle)
@@ -84,8 +117,11 @@ WorldViewComponent::on_primary_button_click (int x, int y)
 }
 
 void
-WorldViewComponent::on_delete_press (int x, int y)
+WorldViewComponent::on_delete_press (int screen_x, int screen_y)
 {
+  int x = gc.screen_to_world_x (screen_x);
+  int y = gc.screen_to_world_y (screen_y);
+
   std::cout << "Deleteing " << current_particle << std::endl;
   if (current_particle)
     {
@@ -99,14 +135,79 @@ WorldViewComponent::on_delete_press (int x, int y)
 }
 
 void
-WorldViewComponent::on_fix_press (int x, int y)
+WorldViewComponent::on_fix_press (int screen_x, int screen_y)
 {
+  int x = gc.screen_to_world_x (screen_x);
+  int y = gc.screen_to_world_y (screen_y);
+
   Particle* particle = controller->get_world ()->get_particle (x, y);
   std::cout << "Fixing particle: " << particle << std::endl;
   if (particle)
     {
       std::cout << "particle: " << particle->get_fixed () << std::endl;
       particle->set_fixed (!particle->get_fixed ());
+    }
+}
+
+void
+WorldViewComponent::scroll_left ()
+{
+  gc.translate_offset (-20, 0);
+}
+
+void
+WorldViewComponent::scroll_right ()
+{
+  gc.translate_offset (20, 0);
+}
+
+void
+WorldViewComponent::scroll_up ()
+{
+  gc.translate_offset (0, -20);
+}
+
+void
+WorldViewComponent::scroll_down ()
+{
+  gc.translate_offset (0, 20);
+}
+
+void
+WorldViewComponent::on_secondary_button_press (int x, int y)
+{
+  std::cout << "Secondary PRESS: " << std::endl;
+  scrolling = true;
+  x_offset = gc.get_x_offset ();
+  y_offset = gc.get_y_offset (); 
+  gui_manager->grab_mouse (this);
+
+  scroll_pos_x = gc.screen_to_world_x(x);
+  scroll_pos_y = gc.screen_to_world_y(y);
+}
+
+void
+WorldViewComponent::on_secondary_button_release (int x, int y)
+{
+  std::cout << "Secondary RELEASE: " << std::endl;
+  scrolling = false;
+  gui_manager->ungrab_mouse (this);
+}
+
+void
+WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
+{
+  std::cout << "Move: " << x << " " << y << std::endl;
+
+  if (scrolling)
+    {
+      int new_scroll_pos_x = int(x/gc.get_zoom() - x_offset);
+      int new_scroll_pos_y = int(y/gc.get_zoom() - y_offset);
+
+      gc.set_offset (x_offset + (new_scroll_pos_x - scroll_pos_x),
+                     y_offset + (new_scroll_pos_y - scroll_pos_y));
+
+      std::cout << "X_offset: " << x << " " << y << std::endl;
     }
 }
 

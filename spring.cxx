@@ -73,16 +73,16 @@ Spring::update (float delta)
 }
 
 void
-Spring::draw ()
+Spring::draw (GraphicContext* gc)
 {
   CL_Vector dist = particles.first->pos - particles.second->pos;
   float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
   
   float color = fabs((stretch/max_stretch));
   
-  graphic_context->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
-                              int(particles.second->pos.x), int(particles.second->pos.y),
-                              Color(color, 1.0f - color, 0.0f));
+  gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
+                 int(particles.second->pos.x), int(particles.second->pos.y),
+                 Color(color, 1.0f - color, 0.0f));
 }
 
 /* EOF */

@@ -52,9 +52,6 @@ GUIManager::run ()
       controller->update ();
       graphic_context->clear ();
       
-      // FIXME: insert worldview here
-      controller->get_world()->draw (graphic_context);
-
       draw_status();
 
       for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
@@ -130,13 +127,146 @@ GUIManager::find_component_at (int x, int y)
 }
 
 void
-GUIManager::process_events ()
+GUIManager::process_button_events (ButtonEvent& button)
 {
-  Event event;
   int x = input_context->get_mouse_x();
   int y = input_context->get_mouse_y();
 
-  GUIComponent* current_component = find_component_at (x, y);
+  if (button.pressed)
+    {
+      switch (button.id)
+        {
+        case BUTTON_START:
+          controller->start_simulation ();
+          break;
+
+        case BUTTON_PRIMARY:
+          current_component->on_primary_button_click(x, y);
+          break;
+
+        case BUTTON_SECONDARY:
+          current_component->on_secondary_button_press(x, y);
+          break;
+
+        case BUTTON_FIX:
+          current_component->on_fix_press (x, y);
+          break;
+        case BUTTON_DELETE:
+          current_component->on_delete_press (x, y);
+          break;
+
+        case BUTTON_SCROLL_LEFT:
+          current_component->scroll_left ();
+          break;
+
+        case BUTTON_SCROLL_RIGHT:
+          current_component->scroll_right ();
+          break;
+
+        case BUTTON_SCROLL_UP:
+          current_component->scroll_up ();
+          break;
+
+        case BUTTON_SCROLL_DOWN:
+          current_component->scroll_down ();
+          break;
+
+        case BUTTON_CLEAR:
+          controller->clear_world ();
+          break;
+                  
+        case BUTTON_UNDO:
+          controller->undo ();
+          break;
+                  
+        case BUTTON_REDO:
+          controller->redo ();
+          break;
+
+        case BUTTON_ESCAPE:
+          do_quit = true;
+          break;
+
+        case BUTTON_TOGGLESLOWMO:
+          controller->set_slow_down (!controller->slow_down_active ());
+          break;
+
+        case BUTTON_QUICKSAVE0:
+        case BUTTON_QUICKSAVE1:
+        case BUTTON_QUICKSAVE2:
+        case BUTTON_QUICKSAVE3:
+        case BUTTON_QUICKSAVE4:
+        case BUTTON_QUICKSAVE5:
+        case BUTTON_QUICKSAVE6:
+        case BUTTON_QUICKSAVE7:
+        case BUTTON_QUICKSAVE8:
+        case BUTTON_QUICKSAVE9:
+          controller->save_to_slot (button.id - BUTTON_QUICKSAVE0);
+          break;
+
+        case BUTTON_QUICKLOAD0:
+        case BUTTON_QUICKLOAD1:
+        case BUTTON_QUICKLOAD2:
+        case BUTTON_QUICKLOAD3:
+        case BUTTON_QUICKLOAD4:
+        case BUTTON_QUICKLOAD5:
+        case BUTTON_QUICKLOAD6:
+        case BUTTON_QUICKLOAD7:
+        case BUTTON_QUICKLOAD8:
+        case BUTTON_QUICKLOAD9:
+          controller->load_from_slot (button.id - BUTTON_QUICKLOAD0);
+          break;
+
+        default:
+          std::cout << "Got unhandled BUTTON_EVENT press: " << button.id << std::endl;
+          break;
+        }
+    }
+  else // button released
+    {
+      switch (button.id)
+        {
+        case BUTTON_PRIMARY:
+          current_component->on_primary_button_release(x, y);
+          break;
+
+        case BUTTON_SECONDARY:
+          current_component->on_secondary_button_release(x, y);
+          break;
+
+        case BUTTON_ZOOM_OUT:
+          current_component->wheel_up (x, y);
+          break;
+
+        case BUTTON_ZOOM_IN:
+          current_component->wheel_down (x, y);
+          break;
+
+        default:
+          std::cout << "GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: "
+                    << button.id << std::endl;
+          break;
+        }
+    }
+}
+
+void
+GUIManager::process_events ()
+{
+  Event event;
+
+  int x = input_context->get_mouse_x();
+  int y = input_context->get_mouse_y();
+
+  if (grabbing_component && (last_x != x || last_y != y))
+    {
+      grabbing_component->on_mouse_move (x, y, x - last_x, y - last_y);
+    }
+
+  last_x = x;
+  last_y = y;
+
+  current_component = find_component_at (x, y);
   assert (current_component);
 
   if (last_component != current_component)
@@ -148,98 +278,33 @@ GUIManager::process_events ()
       last_component = current_component;
     }
  
-
-  if (current_component )
-  
-  while (input_context->get_event (&event))
+  if (current_component)
     {
-      if (event.button.pressed)
+      while (input_context->get_event (&event))
         {
           switch (event.type)
             {
             case BUTTON_EVENT:
-              switch (event.button.id)
-                {
-                case BUTTON_START:
-                  controller->start_simulation ();
-                  break;
-
-                case BUTTON_PRIMARY:
-                  current_component->on_primary_button_click(x, y);
-                  break;
-
-                case BUTTON_FIX:
-                  current_component->on_fix_press (x, y);
-                  break;
-                case BUTTON_DELETE:
-                  current_component->on_delete_press (x, y);
-                  break;
-
-                case BUTTON_ZOOM_OUT:
-                  current_component->wheel_up ();
-                  break;
-
-                case BUTTON_ZOOM_IN:
-                  current_component->wheel_down ();
-                  break;
-
-                case BUTTON_CLEAR:
-                  controller->clear_world ();
-                  break;
-                  
-                case BUTTON_UNDO:
-                  controller->undo ();
-                  break;
-                  
-                case BUTTON_REDO:
-                  controller->redo ();
-                  break;
-
-                case BUTTON_ESCAPE:
-                  do_quit = true;
-                  break;
-
-                case BUTTON_TOGGLESLOWMO:
-                  controller->set_slow_down (!controller->slow_down_active ());
-                  break;
-
-                case BUTTON_QUICKSAVE0:
-                case BUTTON_QUICKSAVE1:
-                case BUTTON_QUICKSAVE2:
-                case BUTTON_QUICKSAVE3:
-                case BUTTON_QUICKSAVE4:
-                case BUTTON_QUICKSAVE5:
-                case BUTTON_QUICKSAVE6:
-                case BUTTON_QUICKSAVE7:
-                case BUTTON_QUICKSAVE8:
-                case BUTTON_QUICKSAVE9:
-                  controller->save_to_slot (event.button.id - BUTTON_QUICKSAVE0);
-                  break;
-
-                case BUTTON_QUICKLOAD0:
-                case BUTTON_QUICKLOAD1:
-                case BUTTON_QUICKLOAD2:
-                case BUTTON_QUICKLOAD3:
-                case BUTTON_QUICKLOAD4:
-                case BUTTON_QUICKLOAD5:
-                case BUTTON_QUICKLOAD6:
-                case BUTTON_QUICKLOAD7:
-                case BUTTON_QUICKLOAD8:
-                case BUTTON_QUICKLOAD9:
-                  controller->load_from_slot (event.button.id - BUTTON_QUICKLOAD0);
-                  break;
-
-                default:
-                  std::cout << "Got unhandled BUTTON_EVENT: " << event.button.id << std::endl;
-                  break;
-                }
-              //std::cout << "GOt Event: " << event.button.id << std::endl;
+              process_button_events (event.button);
               break;
-            default:
-              std::cout << "ConstruoMain: Unhandled event: " << event.type << std::endl;
+            default: 
+              std::cout << "GUIManager: Unhandled event type" << std::endl;
+              break;
             }
         }
     }
+}
+
+void
+GUIManager::grab_mouse (GUIComponent* comp)
+{
+  grabbing_component = comp;
+}
+
+void
+GUIManager::ungrab_mouse (GUIComponent* comp)
+{
+  grabbing_component = 0;
 }
 
 /* EOF */

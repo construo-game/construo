@@ -55,7 +55,7 @@ public:
   Spring (World* world, lisp_object_t* cursor);
 
   void update (float delta);
-  void draw ();
+  void draw (GraphicContext* gc);
 
   lisp_object_t* serialize()
   {

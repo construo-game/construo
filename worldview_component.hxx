@@ -20,6 +20,7 @@
 #ifndef HEADER_WORLDVIEW_COMPONENT_HXX
 #define HEADER_WORLDVIEW_COMPONENT_HXX
 
+#include "zoom_graphic_context.hxx"
 #include "gui_component.hxx"
 
 class Particle;
@@ -29,20 +30,41 @@ class Particle;
 class WorldViewComponent : public GUIComponent
 {
 private:
+  ZoomGraphicContext gc;
+
   /** The currently selected particle or NULL in case none is selected */
   Particle* current_particle;
+
+  bool scrolling;
+  
+  int scroll_pos_x;
+  int scroll_pos_y;
+
+  float x_offset;
+  float y_offset;
 public:
   WorldViewComponent ();
   ~WorldViewComponent ();
 
-  void draw (GraphicContext* gc);
+  void draw (GraphicContext* parent_gc);
 
   void on_primary_button_click (int x, int y);
+
+  void on_secondary_button_press (int x, int y);
+  void on_secondary_button_release (int x, int y);
+
+  void on_mouse_move (int x, int y, int of_x, int of_y);
+
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 
-  void wheel_up ();
-  void wheel_down ();
+  void wheel_up (int x, int y);
+  void wheel_down (int x, int y);
+
+  void scroll_left ();
+  void scroll_right ();
+  void scroll_up ();
+  void scroll_down ();
 
   /** */
   bool is_at (int x, int y) { return true; }
