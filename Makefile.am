@@ -42,7 +42,8 @@ gui_window.hxx gui_window.cxx \
 gui_component.cxx \
 command_line.hxx command_line.cxx \
 settings.hxx  settings.cxx \
-vector2d.hxx
+vector2d.hxx \
+math.hxx
 
 LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 

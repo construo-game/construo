@@ -58,19 +58,24 @@ void
 GUIButton::on_primary_button_press (int x, int y)
 {
   std::cout << "PRess" << std::endl;
-  on_click ();
+  gui_manager->grab_mouse (this);
+  pressed = true;
 }
 
 void
 GUIButton::on_primary_button_release (int x, int y)
 {
-    std::cout << "Release" << std::endl;
+  gui_manager->ungrab_mouse (this);
+  if (is_at (x, y))
+    on_click ();
+  std::cout << "Release" << std::endl;
+  pressed = false;
 }
 
 void
 GUIButton::draw (GraphicContext* gc)
 {
-  if (pressed)
+  if (pressed && mouse_over)
     {
       gc->draw_fill_rect (x_pos, y_pos, x_pos + width,  y_pos + height, Colors::button_bg_pressed);
     }
@@ -85,7 +90,7 @@ GUIButton::draw (GraphicContext* gc)
 
   draw_content (gc);
 
-  if (pressed)
+  if (pressed && mouse_over)
     {
       draw_border_pressed (gc);
     }
@@ -140,7 +145,7 @@ GUIButton::on_click()
 void
 GUIRunButton::draw_content (GraphicContext* gc)
 {
-  if (controller->is_running ())
+  if ((!pressed || !mouse_over) && controller->is_running ())
     gc->draw_fill_rect (x_pos, y_pos,
                    x_pos + width, y_pos + height, Colors::button_bg_active) ;
   /*

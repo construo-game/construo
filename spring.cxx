@@ -109,7 +109,7 @@ Spring::draw_highlight (GraphicContext* gc)
 {
   gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
                  int(particles.second->pos.x), int(particles.second->pos.y),
-                 Color(0xAAAAAA), 
+                 Color(0xEEEEEE), 
                  10);
 }
 

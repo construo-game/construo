@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include "config.h"
+#include "math.hxx"
 #include "construo_error.hxx"
 #include "world.hxx"
 #include "particle_factory.hxx"
@@ -121,11 +122,11 @@ World::parse_particles (lisp_object_t* cursor)
   particle_mgr = new ParticleFactory(cursor);
 }
 
-World::World (const World& w)
+World::World (const World& old_world)
 {
-  particle_mgr = new ParticleFactory (*w.particle_mgr);
+  particle_mgr = new ParticleFactory (*old_world.particle_mgr);
   
-  for (CSpringIter i = w.springs.begin (); i != w.springs.end (); ++i)
+  for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)
     {
       Particle* first  = particle_mgr->lookup_particle((*i)->particles.first->get_id());
       Particle* second = particle_mgr->lookup_particle((*i)->particles.second->get_id());
@@ -389,6 +390,29 @@ World::write_lisp (const std::string& filename)
   fputs(")\n\n;; EOF ;;\n", out);
 
   fclose(out);
+}
+
+BoundingBox
+World::calc_bounding_box()
+{
+  BoundingBox bbox;
+
+  bbox.x1 = 0;
+  bbox.y1 = 0;
+
+  bbox.x2 = 800;
+  bbox.y2 = 600;
+
+  for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
+    {
+      bbox.x1 = Math::min(bbox.x1, (*i)->pos.x);
+      bbox.y1 = Math::min(bbox.y1, (*i)->pos.y);
+
+      bbox.x2 = Math::max(bbox.x2, (*i)->pos.x);
+      bbox.y2 = Math::max(bbox.y2, (*i)->pos.y);
+    }
+
+  return bbox;
 }
 
 /* EOF */

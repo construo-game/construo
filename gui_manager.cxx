@@ -39,8 +39,9 @@ GUIManager::GUIManager ()
 {
   do_quit = false;
 
-  last_component = 0;
+  last_component     = 0;
   grabbing_component = 0;
+  current_component  = 0;
 
   worldview_component = new WorldViewComponent ();
   components.push_back (worldview_component);
@@ -53,9 +54,9 @@ GUIManager::GUIManager ()
   components.push_back (new GUIQuitButton ());
 
   /*
-  GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
-  window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
-  components.push_back (window);
+    GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
+    window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
+    components.push_back (window);
   */
 }
   
@@ -275,30 +276,47 @@ GUIManager::process_events ()
 
   int x = input_context->get_mouse_x();
   int y = input_context->get_mouse_y();
-
+      
   if (grabbing_component && (last_x != x || last_y != y))
     {
       grabbing_component->on_mouse_move (x, y, x - last_x, y - last_y);
     }
-
+      
   last_x = x;
   last_y = y;
 
-  current_component = find_component_at (x, y);
-  assert (current_component);
-
-  if (last_component != current_component)
+  if (!grabbing_component)
     {
-      current_component->on_mouse_enter ();
-      if (last_component)
-        last_component->on_mouse_leave ();
+      current_component = find_component_at (x, y);
+      assert (current_component);
 
-      last_component = current_component;
+      if (last_component != current_component)
+        {
+          current_component->on_mouse_enter ();
+          if (last_component)
+            last_component->on_mouse_leave ();
+
+          last_component = current_component;
+        }
     }
- 
-  if (current_component)
+  else
     {
-      while (input_context->get_event (&event))
+      GUIComponent* comp = find_component_at (x, y);
+
+      if (comp != grabbing_component)
+        {
+          grabbing_component->on_mouse_leave();
+          last_component = comp;
+        }
+      else if (last_component != grabbing_component)
+        {
+          grabbing_component->on_mouse_enter();
+        }
+    }
+
+  while (input_context->get_event (&event))
+    {
+      if (current_component)
         {
           switch (event.type)
             {
@@ -317,6 +335,7 @@ void
 GUIManager::grab_mouse (GUIComponent* comp)
 {
   grabbing_component = comp;
+  current_component  = comp;
 }
 
 void

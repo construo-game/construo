@@ -37,6 +37,7 @@ class ParticleFactory
 {
 private:
   std::vector<Particle*> particles;
+
   /** the id of next particle that will get created */
   int particle_id_count;
 public:
@@ -69,8 +70,10 @@ public:
 
   ParticleIter begin () { return particles.begin(); }
   ParticleIter end () { return particles.end(); }
+
   void clear ();
   void write_lisp(FILE* out);
+
 private:
   ParticleFactory& operator= (const ParticleFactory&);
 };

@@ -69,7 +69,7 @@ ParticleFactory&
 ParticleFactory::operator= (const ParticleFactory& pmgr)
 {  
   ConstruoAssert (0, "Don't use this");
-  for (CParticleIter i = pmgr.particles.begin (); 
+  for (CParticleIter i = pmgr.particles.begin ();
        i != pmgr.particles.end (); 
        ++i)
     {
@@ -81,7 +81,6 @@ ParticleFactory::operator= (const ParticleFactory& pmgr)
 Particle*
 ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
 {
-  //std::cout << "particle_id_count: " << particle_id_count << std::endl;
   Particle* p = new Particle(particle_id_count++,
                              arg_pos, 
                              arg_velocity, m, f);

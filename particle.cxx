@@ -78,9 +78,10 @@ Particle::draw (GraphicContext* gc)
                             Color(1.0f, 0.0f, 0.0f));
     }
 
-  gc->draw_line (int (pos.x), int (pos.y),
-                 int (pos.x + velocity.x), int (pos.y + velocity.y),
-                 Color (0.0f, 0.0f, 1.0f));
+  if (0) // draw normals
+    gc->draw_line (int (pos.x), int (pos.y),
+                   int (pos.x + velocity.x), int (pos.y + velocity.y),
+                   Color (0.0f, 0.0f, 1.0f));
 }
 
 

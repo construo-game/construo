@@ -28,6 +28,14 @@ class Particle;
 class ParticleFactory;
 class Spring;
 
+struct BoundingBox
+{
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+};
+
 /** This class holds all particles and springs */
 class World
 {
@@ -80,6 +88,7 @@ public:
 
   void write_lisp (const std::string& filename);
 
+  BoundingBox calc_bounding_box();
 private:
   static World* current_world;
 public:
