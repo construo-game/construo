@@ -123,18 +123,24 @@ WorldViewComponent::on_primary_button_click (int screen_x, int screen_y)
 void
 WorldViewComponent::on_delete_press (int screen_x, int screen_y)
 {
+  World& world = *controller->get_world ();
+
   int x = gc.screen_to_world_x (screen_x);
   int y = gc.screen_to_world_y (screen_y);
 
-  std::cout << "Deleteing " << current_particle << std::endl;
-  if (current_particle)
-    {
+  if (current_particle) 
+    { // We are currently creating a new spring, abort that
       current_particle = 0;
     }
   else
     {
-      Particle* p = controller->get_world ()->get_particle (x, y);
-      controller->get_world ()->remove_particle (p);
+      Spring*   spring   = world.get_spring (x, y);
+      Particle* particle = world.get_particle (x, y);
+
+      if (particle)
+        world.remove_particle (particle);
+      else if (spring)
+        world.remove_spring(spring);
     }
 }
 

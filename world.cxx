@@ -252,13 +252,12 @@ World::get_spring (int x, int y)
       
       if (u >= 0 && u <= 1.0f
           && ((spring && min_distance > distance)
-              || distance <= capture_threshold)) // FIXME: threashold is dependend on view
+              || (!spring && distance <= capture_threshold))) // FIXME: threashold is dependend on view
         {
           spring = *i;
           min_distance = distance;
         }
     }
-  std::cout << "Spring: " << spring << std::endl;
 
   return spring;
 }
