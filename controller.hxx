@@ -38,11 +38,15 @@ private:
   World* world;
 
   DeltaManager delta_manager;
+  
+  static Controller* instance_;
 public:
   /** Create an empty world workspace */
   Controller ();
   Controller (const std::string& filename);
   ~Controller ();
+
+  static Controller* instance() { return instance_; }
 
   bool has_been_run () { return world && world->get_has_been_run (); }
   

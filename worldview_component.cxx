@@ -25,17 +25,18 @@
 #include "worldview_zoom_tool.hxx"
 #include "worldview_component.hxx"
 
-extern GUIManager* gui_manager;
-extern Controller* controller;
+WorldViewComponent* WorldViewComponent::instance_;
 
 WorldViewComponent::WorldViewComponent ()
   : GUIComponent(0, 0, graphic_context->get_width (), graphic_context->get_height ())
 {
+  instance_ = this;
+
   scrolling = false;
 
-  select_tool  = new WorldViewSelectTool (this);;
-  insert_tool  = new WorldViewInsertTool (this);
-  zoom_tool    = new WorldViewZoomTool (this);
+  select_tool  = new WorldViewSelectTool ();
+  insert_tool  = new WorldViewInsertTool ();
+  zoom_tool    = new WorldViewZoomTool ();
 
   current_tool = zoom_tool;
   mode = ZOOM_MODE;
@@ -64,7 +65,7 @@ WorldViewComponent::set_mode (Mode m)
 
 WorldViewComponent::~WorldViewComponent ()
 {
-  
+  instance_ = 0;
 }
 
 void
@@ -77,7 +78,7 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   gc.draw_line (-1000, 599, 1000, 599, Color (0x0000AA));
 
-  World& world = *controller->get_world();
+  World& world = *Controller::instance()->get_world();
 
   current_tool->draw_background (&gc);
   world.draw (&gc);
@@ -178,7 +179,7 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
   scrolling = true;
   x_offset = gc.get_x_offset ();
   y_offset = gc.get_y_offset (); 
-  gui_manager->grab_mouse (this);
+  GUIManager::instance()->grab_mouse (this);
 
   scroll_pos_x = gc.screen_to_world_x(x);
   scroll_pos_y = gc.screen_to_world_y(y);
@@ -188,7 +189,7 @@ void
 WorldViewComponent::on_tertiary_button_release (int x, int y)
 {
   scrolling = false;
-  gui_manager->ungrab_mouse (this);
+  GUIManager::instance()->ungrab_mouse (this);
 }
 
 void

@@ -25,11 +25,7 @@
 #include "gui_manager.hxx"
 #include "worldview_select_tool.hxx"
 
-extern GUIManager* gui_manager;
-extern Controller* controller;
-
-WorldViewSelectTool::WorldViewSelectTool (WorldViewComponent* c)
-  : WorldViewTool (c)
+WorldViewSelectTool::WorldViewSelectTool ()
 {
   mode = IDLE_MODE;
 }
@@ -41,8 +37,8 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 void
 WorldViewSelectTool::draw_background (GraphicContext* gc)
 {
-  int x = worldview_component->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  int y = worldview_component->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
+  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
 
   if (mode == GETTING_SELECTION_MODE)
     {
@@ -78,12 +74,12 @@ WorldViewSelectTool::deactivate ()
 void
 WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 {
-  int x = worldview_component->get_gc()->screen_to_world_x (screen_x);
-  int y = worldview_component->get_gc()->screen_to_world_y (screen_y);
+  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
   
-  World& world = *controller->get_world ();
+  World& world = *Controller::instance()->get_world ();
 
-  gui_manager->grab_mouse (worldview_component);
+  GUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
   mode = GETTING_SELECTION_MODE;
 
@@ -105,15 +101,15 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_primary_button_release (int x, int y)
 {
-  World& world = *controller->get_world ();
+  World& world = *Controller::instance()->get_world ();
       
-  gui_manager->ungrab_mouse (worldview_component);
+  GUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   
   if (mode == GETTING_SELECTION_MODE)
     { 
       selection = world.get_particles (int(click_pos.x), int(click_pos.y),
-                                       worldview_component->get_gc()->screen_to_world_x (x),
-                                       worldview_component->get_gc()->screen_to_world_y (y));
+                                       WorldViewComponent::instance()->get_gc()->screen_to_world_x (x),
+                                       WorldViewComponent::instance()->get_gc()->screen_to_world_y (y));
       mode = IDLE_MODE;
     }
 }
@@ -122,10 +118,10 @@ void
 WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
   mode = ROTATING_SELECTION_MODE;
-  gui_manager->grab_mouse (worldview_component);  
+  GUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
 
-  click_pos.x = worldview_component->get_gc()->screen_to_world_x (screen_x);
-  click_pos.y = worldview_component->get_gc()->screen_to_world_y (screen_y);
+  click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  click_pos.y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
   
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {
@@ -140,14 +136,14 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_secondary_button_release (int x, int y)
 {
-  gui_manager->ungrab_mouse (worldview_component);
+  GUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   mode = IDLE_MODE;
 }
 
 void
 WorldViewSelectTool::on_delete_press (int x, int y)
 {
-  World& world = *controller->get_world ();
+  World& world = *Controller::instance()->get_world ();
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {
       world.remove_particle(*i);
@@ -187,7 +183,7 @@ WorldViewSelectTool::on_fix_press (int x, int y)
 void
 WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of_y)
 {
-  World& world = *controller->get_world ();
+  World& world = *Controller::instance()->get_world ();
 
   switch (mode)
     {
@@ -195,8 +191,8 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
       for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
         {
           // Will lead to round errors 
-          (*i)->pos.x += of_x / worldview_component->get_gc ()->get_zoom();
-          (*i)->pos.y += of_y / worldview_component->get_gc ()->get_zoom();
+          (*i)->pos.x += of_x / WorldViewComponent::instance()->get_gc ()->get_zoom();
+          (*i)->pos.y += of_y / WorldViewComponent::instance()->get_gc ()->get_zoom();
 
           std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
           for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
@@ -213,8 +209,8 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
     case ROTATING_SELECTION_MODE:
       {
         std::cout << "Roatating" << std::endl;
-        Vector2d new_pos(worldview_component->get_gc()->screen_to_world_x (screen_x),
-                         worldview_component->get_gc()->screen_to_world_y (screen_y));
+        Vector2d new_pos(WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x),
+                         WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y));
 
         float new_angle = atan2(new_pos.y - rotate_center.y,
                                 new_pos.x - rotate_center.x);

@@ -23,7 +23,6 @@
 #include "worldview_tool.hxx"
 
 class Particle;
-class WorldViewComponent;
 
 /** */
 class WorldViewInsertTool : public WorldViewTool
@@ -33,7 +32,7 @@ private:
   Particle* current_particle;
 
 public:
-  WorldViewInsertTool (WorldViewComponent* c);
+  WorldViewInsertTool ();
   ~WorldViewInsertTool ();
 
   void draw_background (GraphicContext* gc);

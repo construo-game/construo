@@ -20,8 +20,11 @@
 #include "construo_error.hxx"
 #include "controller.hxx"
 
+Controller* Controller::instance_ = 0;
+
 Controller::Controller ()
 {
+  instance_ = this;
   running   = false;
   slow_down = false;
   world     = new World ();
@@ -29,6 +32,7 @@ Controller::Controller ()
 
 Controller::Controller (const std::string& filename)
 {
+  instance_ = this;
   running   = false;
   slow_down = false;
   world     = new World (filename);
@@ -36,6 +40,7 @@ Controller::Controller (const std::string& filename)
 
 Controller::~Controller ()
 {
+  instance_ = 0;
 }
 
 void

@@ -23,8 +23,7 @@
 #include "worldview_component.hxx"
 #include "worldview_zoom_tool.hxx"
 
-WorldViewZoomTool::WorldViewZoomTool (WorldViewComponent* c)
-  : WorldViewTool (c)
+WorldViewZoomTool::WorldViewZoomTool ()
 {
   creating_zoom_rectangle = false;
 }
@@ -44,8 +43,8 @@ WorldViewZoomTool::draw_foreground (GraphicContext* gc)
 {
   if (creating_zoom_rectangle)
     {
-      int x = worldview_component->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-      int y = worldview_component->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
+      int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+      int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
       
       gc->draw_rect (Math::min(x, int(click_pos.x)),
                      Math::min(y, int(click_pos.y)),
@@ -59,8 +58,8 @@ void
 WorldViewZoomTool::on_primary_button_press (int screen_x, int screen_y)
 {
   creating_zoom_rectangle = true;
-  click_pos.x = worldview_component->get_gc()->screen_to_world_x (screen_x);
-  click_pos.y = worldview_component->get_gc()->screen_to_world_y (screen_y);
+  click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  click_pos.y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 }  
 
 void
@@ -68,10 +67,10 @@ WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
 {
   creating_zoom_rectangle = false;
 
-  int x = worldview_component->get_gc()->screen_to_world_x (screen_x);
-  int y = worldview_component->get_gc()->screen_to_world_y (screen_y);
+  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
   
-  worldview_component->get_gc()->zoom_to(Math::min(x, int(click_pos.x)),
+  WorldViewComponent::instance()->get_gc()->zoom_to(Math::min(x, int(click_pos.x)),
                                          Math::min(y, int(click_pos.y)),
                                          Math::max(x, int(click_pos.x)),
                                          Math::max(y, int(click_pos.y)));

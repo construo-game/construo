@@ -47,7 +47,7 @@ private:
   /** The center of a rotation */
   Vector2d rotate_center;
 public:
-  WorldViewSelectTool (WorldViewComponent*);
+  WorldViewSelectTool ();
   ~WorldViewSelectTool ();
 
   void activate ();

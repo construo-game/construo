@@ -35,7 +35,7 @@ private:
       click_pos is set, false otherwise */
   bool creating_zoom_rectangle;
 public:
-  WorldViewZoomTool (WorldViewComponent* c);
+  WorldViewZoomTool ();
   ~WorldViewZoomTool ();
   
   void activate ();

@@ -31,21 +31,18 @@
 #include "worldview_component.hxx"
 #include "gui_buttons.hxx"
 
-extern Controller* controller;
-
-WorldViewComponent* worldview_component;
+GUIManager* GUIManager::instance_;
 
 GUIManager::GUIManager ()
 {
+  instance_ = this;
   do_quit = false;
 
   last_component     = 0;
   grabbing_component = 0;
   current_component  = 0;
 
-  worldview_component = new WorldViewComponent ();
-  components.push_back (worldview_component);
-
+  components.push_back (new WorldViewComponent ());
   components.push_back (new GUIRunButton ());
   components.push_back (new GUISlowMoButton  ());
   components.push_back (new GUIUndoButton ());
@@ -59,6 +56,11 @@ GUIManager::GUIManager ()
     components.push_back (window);
   */
 }
+
+GUIManager::~GUIManager ()
+{
+  instance_ = 0;
+}
   
 void
 GUIManager::run ()
@@ -67,7 +69,7 @@ GUIManager::run ()
     {
       process_events ();
 
-      controller->update ();
+      Controller::instance()->update ();
       graphic_context->clear ();
       
       draw_status();
@@ -79,7 +81,7 @@ GUIManager::run ()
 
       graphic_context->flip ();
       //KeepAliveMgr::keep_alive ();
-      if (controller->is_running())
+      if (Controller::instance()->is_running())
         {
           system_context->sleep (10000); // limit CPU usage via brute force
           input_context->wait_for_events();
@@ -110,7 +112,7 @@ GUIManager::draw_status ()
   graphic_context->draw_string (600,  80, "     [u] - undo to last state");
   graphic_context->draw_string (600,  92, "     [r] - redo (undo an undo)");
 
-  if (controller->is_running ())
+  if (Controller::instance()->is_running ())
     graphic_context->draw_string (graphic_context->get_width () - 60,
                                   graphic_context->get_height () - 10,
                                   "[RUNNING]", Color(0xFF0000));
@@ -119,7 +121,7 @@ GUIManager::draw_status ()
                                   graphic_context->get_height () - 10,
                                   "[STOPPED]", Color(0x00FF00));
 
-  if (controller->slow_down_active ())
+  if (Controller::instance()->slow_down_active ())
     {
       graphic_context->draw_string (10,
                                     graphic_context->get_height () - 10,
@@ -156,7 +158,7 @@ GUIManager::process_button_events (ButtonEvent& button)
       switch (button.id)
         {
         case BUTTON_START:
-          controller->start_simulation ();
+          Controller::instance()->start_simulation ();
           break;
 
         case BUTTON_PRIMARY:
@@ -195,15 +197,15 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_CLEAR:
-          controller->clear_world ();
+          Controller::instance()->clear_world ();
           break;
                   
         case BUTTON_UNDO:
-          controller->undo ();
+          Controller::instance()->undo ();
           break;
                   
         case BUTTON_REDO:
-          controller->redo ();
+          Controller::instance()->redo ();
           break;
 
         case BUTTON_ESCAPE:
@@ -211,18 +213,18 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_MODE_CHANGE:
-          if (worldview_component->get_mode () == WorldViewComponent::INSERT_MODE)
+          if (WorldViewComponent::instance()->get_mode () == WorldViewComponent::INSERT_MODE)
             {
-              worldview_component->set_mode(WorldViewComponent::SELECT_MODE);
+              WorldViewComponent::instance()->set_mode(WorldViewComponent::SELECT_MODE);
             }
           else
             {
-              worldview_component->set_mode(WorldViewComponent::INSERT_MODE);
+              WorldViewComponent::instance()->set_mode(WorldViewComponent::INSERT_MODE);
             }
           break;
 
         case BUTTON_TOGGLESLOWMO:
-          controller->set_slow_down (!controller->slow_down_active ());
+          Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active ());
           break;
 
         case BUTTON_QUICKSAVE0:
@@ -235,7 +237,7 @@ GUIManager::process_button_events (ButtonEvent& button)
         case BUTTON_QUICKSAVE7:
         case BUTTON_QUICKSAVE8:
         case BUTTON_QUICKSAVE9:
-          controller->save_to_slot (button.id - BUTTON_QUICKSAVE0);
+          Controller::instance()->save_to_slot (button.id - BUTTON_QUICKSAVE0);
           break;
 
         case BUTTON_QUICKLOAD0:
@@ -248,7 +250,7 @@ GUIManager::process_button_events (ButtonEvent& button)
         case BUTTON_QUICKLOAD7:
         case BUTTON_QUICKLOAD8:
         case BUTTON_QUICKLOAD9:
-          controller->load_from_slot (button.id - BUTTON_QUICKLOAD0);
+          Controller::instance()->load_from_slot (button.id - BUTTON_QUICKLOAD0);
           break;
 
         default:

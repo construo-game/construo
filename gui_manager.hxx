@@ -48,8 +48,13 @@ private:
   void process_button_events (ButtonEvent&);
   void draw_status ();
   GUIComponent* find_component_at (int, int);
+
+  static GUIManager* instance_;
 public:
   GUIManager ();
+  ~GUIManager ();
+
+  static GUIManager* instance () { return instance_; }
   
   /** Launches the main-loop of the GUIManager, doesn't return until
       quit() is called. */

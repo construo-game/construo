@@ -25,10 +25,6 @@
 #include "gui_buttons.hxx"
 #include "worldview_component.hxx"
 
-extern Controller* controller;
-extern GUIManager* gui_manager;
-extern WorldViewComponent* worldview_component;
-
 #define BUTTON_POS(n) (50 + n * 30)
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
@@ -58,14 +54,14 @@ void
 GUIButton::on_primary_button_press (int x, int y)
 {
   std::cout << "PRess" << std::endl;
-  gui_manager->grab_mouse (this);
+  GUIManager::instance()->grab_mouse (this);
   pressed = true;
 }
 
 void
 GUIButton::on_primary_button_release (int x, int y)
 {
-  gui_manager->ungrab_mouse (this);
+  GUIManager::instance()->ungrab_mouse (this);
   if (is_at (x, y))
     on_click ();
   std::cout << "Release" << std::endl;
@@ -145,7 +141,7 @@ GUIButton::on_click()
 void
 GUIRunButton::draw_content (GraphicContext* gc)
 {
-  if ((!pressed || !mouse_over) && controller->is_running ())
+  if ((!pressed || !mouse_over) && Controller::instance()->is_running ())
     gc->draw_fill_rect (x_pos, y_pos,
                    x_pos + width, y_pos + height, Colors::button_bg_active) ;
   /*
@@ -164,7 +160,7 @@ void
 GUIRunButton::on_click()
 {
   std::cout << "Button pressed" << std::endl;
-  controller->start_simulation ();
+  Controller::instance()->start_simulation ();
 }
 
 GUISlowMoButton::GUISlowMoButton ()
@@ -176,13 +172,13 @@ GUISlowMoButton::GUISlowMoButton ()
 void
 GUISlowMoButton::on_click()
 {
-  controller->set_slow_down (!controller->slow_down_active ());
+  Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active ());
 }
 
 void
 GUISlowMoButton::draw_content (GraphicContext* gc)
 {
-  if (controller->slow_down_active())
+  if (Controller::instance()->slow_down_active())
     gc->draw_fill_rect (x_pos, y_pos,
                         x_pos + width, y_pos + height, Colors::button_bg_active);
 
@@ -203,7 +199,7 @@ GUIUndoButton::draw_content (GraphicContext* gc)
 void
 GUIUndoButton::on_click()
 {
-  controller->undo ();
+  Controller::instance()->undo ();
 }
 
 GUIZoomInButton::GUIZoomInButton ()
@@ -214,7 +210,7 @@ GUIZoomInButton::GUIZoomInButton ()
 void
 GUIZoomInButton::on_click()
 {
-  worldview_component->wheel_up (400,300);
+  WorldViewComponent::instance()->wheel_up (400,300);
 }
 
 
@@ -226,7 +222,7 @@ GUIZoomOutButton::GUIZoomOutButton ()
 void
 GUIZoomOutButton::on_click()
 {
-  worldview_component->wheel_down (400,300); 
+  WorldViewComponent::instance()->wheel_down (400,300); 
 }
 
 GUIQuitButton::GUIQuitButton ()
@@ -237,7 +233,7 @@ GUIQuitButton::GUIQuitButton ()
 void
 GUIQuitButton::on_click()
 {
-  gui_manager->quit();
+  GUIManager::instance()->quit();
 }
 
 /* EOF */

@@ -21,18 +21,12 @@
 #define HEADER_CONSTRUO_WORLDVIEW_TOOL_HXX
 
 class GraphicContext;
-class WorldViewComponent;
 
 /** */
 class WorldViewTool
 {
-protected:
-  WorldViewComponent* worldview_component;
-
 public:
-  WorldViewTool (WorldViewComponent* c) 
-    : worldview_component(c) 
-  {}
+  WorldViewTool () {}
 
   virtual ~WorldViewTool () {}
 
