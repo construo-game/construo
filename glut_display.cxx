@@ -152,6 +152,16 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 void
 GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 {
+  glColor4f (color.r, color.g, color.b, color.a);
+  glPushMatrix();
+  glTranslatef (x , y, 0);
+  glScalef (.07f, -.07, 0);
+  for (std::string::const_iterator i = str.begin (); i != str.end (); ++i)
+    {
+      glutStrokeCharacter  (GLUT_STROKE_MONO_ROMAN, *i);
+      //glutStrokeWidth (GLUT_STROKE_MONO_ROMAN, *i);
+    }
+  glPopMatrix();
 }
 
 
