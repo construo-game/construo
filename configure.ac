@@ -28,12 +28,29 @@ AC_PROG_INSTALL
 AC_PATH_XTRA
 AC_LANG(C++)
 
+
+AC_MSG_CHECKING([whether we are enabling debug-mode])
+AC_ARG_ENABLE([debug],
+              AC_HELP_STRING([--enable-debug],
+                             [enable debug support (default: yes)]),,
+              [enable_debug=yes])
+AC_MSG_RESULT($enable_debug)
+
+if test x$enable_debug = xyes; then
+  AC_DEFINE(DEBUG, 1, [Enable debuging])
+  CXXFLAGS="-g -O0"
+fi
+
 AC_MSG_CHECKING([whether we are enabling profiling])
 AC_ARG_ENABLE([profiling],
               AC_HELP_STRING([--enable-profiling],
-                             [enable gprof profiling (default: no)]),
-              [AC_MSG_RESULT([yes]); CXXFLAGS="$CXXFLAGS -pg"],
-              [AC_MSG_RESULT([no])])
+                             [enable gprof profiling (default: no)]),,
+              [enable_profiling=no])
+AC_MSG_RESULT($enable_profiling)
+
+if test x$enable_profiling = xyes; then
+  CXXFLAGS="$CXXFLAGS -pg"
+fi
 
 AC_CHECK_HEADER([sstream],
                 [],
@@ -90,9 +107,11 @@ AC_CONFIG_FILES(Makefile examples/Makefile)
 AC_OUTPUT
 
 echo ""
-echo "   CXXFLAGS = $CXXFLAGS"
-echo "   LIBS     = $LIBS"
-echo "   Targets  = $ConstruoTargets"
+echo "   CXXFLAGS  = $CXXFLAGS"
+echo "   LIBS      = $LIBS"
+echo "   Targets   = $ConstruoTargets"
+echo "   Debugging = $enable_debug"
+echo "   Profiling = $enable_profiling"
 echo ""
 echo "Now type 'make' and everything should work, if not, write a bug reports to:"
 echo ""

@@ -112,6 +112,16 @@ bool action_cam_hfunc ()
   return Controller::instance()->get_action_cam();
 }
 
+bool show_grid_hfunc() 
+{
+  return WorldViewComponent::instance()->uses_grid();
+}
+
+void show_grid_callback()
+{
+  WorldViewComponent::instance()->on_grid_press(0, 0);
+}
+
 void redo_callback ()
 {
   return Controller::instance()->redo();
@@ -139,13 +149,14 @@ WorldGUIManager::WorldGUIManager ()
   //add(new GUIZoomInButton ());
   //add(new GUIZoomOutButton ());
   add(new GUILoadButton ());
-  add(new GUIGenericButton ("Save", 10, BUTTON_POS(9), BUTTON_WIDTH, BUTTON_HEIGHT, save_button_callback));
+  add(new GUIGenericButton ("Save", 10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT, save_button_callback));
 
-  add(new GUIGenericButton ("Undo", 10, BUTTON_POS(5), BUTTON_WIDTH, BUTTON_HEIGHT, undo_callback));
-  add(new GUIGenericButton ("Redo", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT, redo_callback));
+  add(new GUIGenericButton ("Undo", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT, undo_callback));
+  add(new GUIGenericButton ("Redo", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT, redo_callback));
 
   add(new GUIGenericButton ("ActionCam", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT, action_cam_callback, action_cam_hfunc));
   add(new GUIGenericButton ("Hide Dots", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT, hide_dots_callback, hide_dots_hfunc));
+  add(new GUIGenericButton ("Use Grid", 10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT, show_grid_callback, show_grid_hfunc));
   add(new GUIQuitButton ());
 
   //add(new GUILabel ("Tools", BUTTON_LX_POS, BUTTON_POS(3)+5, BUTTON_WIDTH, BUTTON_HEIGHT));

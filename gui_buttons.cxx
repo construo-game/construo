@@ -208,7 +208,7 @@ GUIZoomOutButton::on_click()
 }
 
 GUIQuitButton::GUIQuitButton ()
-  : GUIButton ("Quit", 10, BUTTON_POS(11), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Quit", 10, BUTTON_POS(12), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
 }
 
@@ -220,7 +220,7 @@ GUIQuitButton::on_click()
 
 
 GUILoadButton::GUILoadButton ()
-  : GUIButton ("Load", 10, BUTTON_POS(8), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Load", 10, BUTTON_POS(9), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
 }
 
