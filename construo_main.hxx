@@ -27,10 +27,20 @@
 
 class GUIManager;
 class World;
+class X11Display;
+class GlutDisplay;
+class UnixSystem;
 
 class ConstruoMain
 {
 private:
+#ifdef USE_X11_DISPLAY
+  X11Display*  display;
+#elif USE_GLUT_DISPLAY
+  GlutDisplay* display;
+#endif
+  UnixSystem* system;
+
   bool do_quit;
   Config config;
   GUIManager* gui_manager;
@@ -48,6 +58,12 @@ private:
   /** Called once the game is going to end, used to do the lastsave
       and similar things */
   void on_exit();
+
+  /** Initialize the graphic context and the system */
+  void init_system();
+
+  /** Shutdown the graphic display and everything else */
+  void deinit_system();
 
   void process_events ();
 };

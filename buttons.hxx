@@ -36,6 +36,7 @@ enum ButtonTypes {
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_SETVELOCITY,   // set the velocity of the selection
   BUTTON_TOGGLESLOWMO, 
+  BUTTON_FULLSCREEN,  // Toggle fullscreen mode
   BUTTON_JOIN,  // Join objects that are close together
   BUTTON_GRID,  // display or hide the grid
   BUTTON_RUN,         // starts or stops the simulation

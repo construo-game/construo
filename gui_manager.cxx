@@ -108,6 +108,10 @@ GUIManager::process_button_events (ButtonEvent& button)
     {
       switch (button.id)
         {
+        case BUTTON_FULLSCREEN:
+          
+          break;
+
         case BUTTON_START:
           Controller::instance()->start_simulation ();
           break;

@@ -351,10 +351,10 @@ void
 GlutDisplay::idle_func ()
 {
   /*  if (Controller::instance()->is_running() || update_display > 0)
-    {
+      {
       //system_context->sleep (0); // limit CPU usage via brute force
       update_display = 0;
-    }*/
+      }*/
   if (!ScreenManager::instance ()->is_finished())
     {
       ScreenManager::instance ()->run_once();
@@ -537,12 +537,16 @@ GlutDisplay::set_fullscreen (bool fullscreen)
 {
   if (fullscreen)
     {        
+#if 0
       char mode[64];
       snprintf (mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
       std::cout << "GlutDisplay: switching to: " << mode << std::endl;
       glutGameModeString(mode);
       glutEnterGameMode();
       is_fullscreen = true;
+#else
+      glutFullScreen();
+#endif
     }
   else
     {

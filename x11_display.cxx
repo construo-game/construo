@@ -35,14 +35,14 @@ extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
 static char zoom_tool_cursor[] = {
-    /* -------- -------- */  0x00,
-    /* -------- -------- */  0x00,
-    /* ------xx xx------ */  0x18,                         
-    /* ----xxxx xxxx---- */  0x3c,
-    /* ----xxxx xxxx---- */  0x3c,
-    /* ------xx xx------ */  0x18,
-    /* -------- -------- */  0x00,
-    /* -------- -------- */  0x00
+  /* -------- -------- */  0x00,
+  /* -------- -------- */  0x00,
+  /* ------xx xx------ */  0x18,                         
+  /* ----xxxx xxxx---- */  0x3c,
+  /* ----xxxx xxxx---- */  0x3c,
+  /* ------xx xx------ */  0x18,
+  /* -------- -------- */  0x00,
+  /* -------- -------- */  0x00
 };
 
 X11Display::X11Display(int w, int h, bool fullscreen_)
@@ -60,6 +60,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 
   attributes.background_pixel  = BlackPixel(display, screen);
   attributes.border_pixel      = WhitePixel(display, screen);
+
   if (fullscreen)
     attributes.override_redirect = True;
   else
@@ -135,7 +136,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
                  &gcv);
 
   if (fullscreen)
-    set_fullscreen (true);
+    set_fullscreen();
 
   if (1) // custom cursor code
     {
@@ -155,8 +156,12 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 X11Display::~X11Display ()
 {
   std::cout << "Closing X11 display" << std::endl;
+  
   if (fullscreen)
-    restore_mode ();
+    {
+      std::cout << "X11Display: Restoring video mode" << std::endl;
+      restore_mode ();
+    }
   
   if (doublebuffer)
     XFreePixmap (display, drawable);
@@ -358,6 +363,12 @@ X11Display::read_event ()
             
         switch (sym)
           {
+          case XK_F11:
+            // FIXME: Shortcut
+            //send_button_press(BUTTON_FULLSCREEN);
+            toggle_fullscreen();
+            break;
+
           case XK_Left:
             send_button_press(BUTTON_SCROLL_LEFT);
             break;
@@ -606,11 +617,35 @@ X11Display::flip ()
 }
 
 void
-X11Display::set_fullscreen (bool fullscreen)
+X11Display::save_mode()
+{
+#ifdef HAVE_LIBXXF86VM
+  memset(&orig_modeline, 0, sizeof(orig_modeline));
+
+  // Get the current display settings for later restore
+  XF86VidModeGetModeLine(display, 
+                         DefaultScreen(display),
+                         &orig_dotclock,
+                         &orig_modeline);
+
+  XF86VidModeGetViewPort(display,
+                         DefaultScreen(display),
+                         &orig_viewport_x,
+                         &orig_viewport_y);
+  std::cout << "save_mode: "
+            << orig_dotclock << " " 
+            << orig_viewport_x << ", " << orig_viewport_y << std::endl;
+
+#endif /* HAVE_LIBXXF86VM */
+}
+
+void
+X11Display::set_fullscreen ()
 {
 #ifdef HAVE_LIBXXF86VM
   int event_base;
   int error_base;
+
   if (XF86VidModeQueryExtension(display, &event_base, &error_base) != True)
     {
       // No VidMode extension available, bailout
@@ -618,26 +653,14 @@ X11Display::set_fullscreen (bool fullscreen)
       return;
     }
 
-  int screen = DefaultScreen(display);
+  save_mode();
 
-  memset(&orig_modeline, 0, sizeof(orig_modeline));
-  // Get the current display settings for later restore
-  XF86VidModeGetModeLine(display, 
-                         screen,
-                         &orig_dotclock,
-                         &orig_modeline);
-
-  XF86VidModeGetViewPort(display,
-                         screen,
-                         &orig_viewport_x,
-                         &orig_viewport_y);
-
-  XF86VidModeModeInfo **modes;
+  XF86VidModeModeInfo **modes; 
   int nmodes;
   int mode_index = -1;
   if (XF86VidModeGetAllModeLines(display,
-                                 screen,
-                                 &nmodes,&modes))
+                                 DefaultScreen(display),
+                                 &nmodes,&modes)) // FIXME: memleak
     {
       std::cout << "VideoModes: (searching for " << width << "x" << height << ")" << std::endl;
       for (int i = 0; i < nmodes; i++)
@@ -670,19 +693,36 @@ X11Display::set_fullscreen (bool fullscreen)
                     << std::endl;
 
           if(XF86VidModeSwitchToMode(display,
-                                     screen,
+                                     DefaultScreen(display),
                                      modes[mode_index]))
             {
-              XF86VidModeSetViewPort(display, screen, 0, 0);
+              fullscreen = true;
+
+              { // Now that we have switched to the correct mode, we
+                // need to position the Viewport correct to the window
+                Window child_window;
+                int x, y;
+                // Get the windows absolute position (aka relative to
+                // the root window)
+                XTranslateCoordinates(display, window, DefaultRootWindow(display), 
+                                      0, 0, 
+                                      &x, &y, &child_window);
+                XF86VidModeSetViewPort(display, DefaultScreen(display), x, y);
+              }
+              
               // Hijack the focus (works only till the next focus change)
               XSetInputFocus(display, window, RevertToParent, CurrentTime);
-              
+
               // Capture the pointer
-              if (XGrabPointer(display, window, true, 0, GrabModeAsync, GrabModeAsync, window, None, CurrentTime)
-                  != GrabSuccess)
+              if (XGrabPointer(display, window, true, 0, GrabModeAsync, GrabModeAsync, 
+                               window, None, CurrentTime) != GrabSuccess)
                 {
                   std::cout << "X11Display: Couldn't grab the pointer" << std::endl;
                 }
+            }
+          else
+            {
+              std::cout << "X11Display: Throuble switiching to fullscreen?!" << std::endl;
             }
         }
       else // No mode found
@@ -724,9 +764,22 @@ X11Display::run()
 }
 
 void
+X11Display::toggle_fullscreen()
+{
+  std::cout << "Fullscreen state: " << fullscreen << std::endl;
+
+  if (fullscreen)
+    restore_mode();
+  else
+    set_fullscreen();
+}
+
+void
 X11Display::restore_mode ()
 {
 #ifdef HAVE_LIBXXF86VM
+  std::cout << "X11Display::restore_mode()" << std::endl;
+
   XF86VidModeModeInfo modeinfo;
   
   modeinfo.dotclock   = orig_dotclock;
@@ -749,6 +802,8 @@ X11Display::restore_mode ()
                           &modeinfo);
   XF86VidModeSetViewPort(display, DefaultScreen(display),
                          orig_viewport_x, orig_viewport_y);
+
+  XUngrabPointer(display, CurrentTime);
 
   fullscreen = false;
 #endif

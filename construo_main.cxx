@@ -66,6 +66,7 @@ ConstruoMain::exit()
 {
   on_exit();
   delete gui_manager;
+  deinit_system();
   ::exit(EXIT_SUCCESS);
 }
 
@@ -75,9 +76,9 @@ ConstruoMain::on_exit()
   std::cout << "Calling on_exit()" << std::endl;
 
   //if (!controller->has_been_run())
-    {
-      controller->save_world("/user/laststate.construo");
-    }
+  {
+    controller->save_world("/user/laststate.construo");
+  }
 
   std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
             << "  New versions and more information can be found at:\n\n"
@@ -86,27 +87,43 @@ ConstruoMain::on_exit()
             << "    * Ingo Ruhnke <grumbel@gmx.de>\n\n" << std::endl;
 }
 
+void
+ConstruoMain::init_system()
+{
+  std::cout << "ConstruoMain::init_system()" << std::endl;
+  system = new UnixSystem();
+#ifdef USE_X11_DISPLAY
+  display = new X11Display(settings.screen_width, settings.screen_height, 
+                           settings.fullscreen);
+#elif USE_GLUT_DISPLAY
+  display = new GlutDisplay(settings.screen_width, settings.screen_height);
+#else
+#  error "No display type defined"
+#endif
+
+  // Init the display, input systems
+  graphic_context = display;
+  input_context   = display;
+  system_context  = system;
+}
+
+void
+ConstruoMain::deinit_system()
+{
+  std::cout << "ConstruoMain::deinit_system()" << std::endl;
+  delete display;
+  delete system;
+}
+
 int 
 ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
 {
   CommandLine::parse(argc, argv);
 
   try {
-#ifdef USE_X11_DISPLAY
-    X11Display display (settings.screen_width, settings.screen_height, 
-                        settings.fullscreen);
-#elif USE_GLUT_DISPLAY
-    GlutDisplay display (settings.screen_width, settings.screen_height);
-#else
-#  error "No display type defined"
-#endif
-    UnixSystem system;
+    // Init the System
+    init_system();
 
-    // Init the display, input systems
-    graphic_context = &display;
-    input_context   = &display;
-    system_context  = &system;
-  
     std::cout << PACKAGE_STRING"\n" << std::endl;
     std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
               << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
@@ -143,8 +160,9 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
       }
   
     // For some targets this will never return
-    display.run();
+    display->run();
 
+    // Shutdown the system and exit
     exit();
   } catch (ConstruoError& err) {
     std::cout << "Error ocurred: " << err.msg << std::endl;
