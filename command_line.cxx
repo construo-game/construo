@@ -43,6 +43,11 @@ CommandLine::parse (int argc, char** argv)
             {
               settings.fullscreen = true;
             }
+          else if (strcmp(argv[i], "--disable-doublebuffer") == 0
+              || strcmp(argv[i], "-d") == 0)
+            {
+              settings.doublebuffer = false;
+            }
           else if (strcmp(argv[i], "-g") == 0
                    || strcmp(argv[i], "--geometry") == 0)
             {

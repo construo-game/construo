@@ -156,4 +156,13 @@ ZoomGraphicContext::set_offset (float x, float y)
   y_offset = y;
 }
 
+void
+ZoomGraphicContext::flip (int x1, int y1, int x2, int y2)
+{
+  parent_gc->flip (world_to_screen_x (x1),
+                   world_to_screen_y (y1),
+                   world_to_screen_x (x2),
+                   world_to_screen_y (y2));
+}
+
 /* EOF */

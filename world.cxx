@@ -156,6 +156,9 @@ World::draw (GraphicContext* gc)
     (*i)->draw (gc);
 
   particle_mgr->draw(gc);
+
+  //const WorldBoundingBox& box = calc_bounding_box();
+  //gc->draw_rect((int) box.x1, (int) box.y1, (int) box.x2, (int) box.y2, Color (0x0000FF));
 }
 
 void
@@ -392,16 +395,24 @@ World::write_lisp (const std::string& filename)
   fclose(out);
 }
 
-BoundingBox
+WorldBoundingBox
 World::calc_bounding_box()
 {
-  BoundingBox bbox;
+  WorldBoundingBox bbox;
 
-  bbox.x1 = 0;
-  bbox.y1 = 0;
+  if (particle_mgr->size() > 0)
+    {
+      bbox.x1 = bbox.x2 = (*particle_mgr->begin ())->pos.x;
+      bbox.y1 = bbox.y2 = (*particle_mgr->begin ())->pos.y;
+    }
+  else
+    {
+      bbox.x1 = 0;
+      bbox.y1 = 0;
 
-  bbox.x2 = 800;
-  bbox.y2 = 600;
+      bbox.x2 = 800;
+      bbox.y2 = 600;
+    }
 
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {

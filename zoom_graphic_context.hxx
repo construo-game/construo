@@ -71,6 +71,8 @@ public:
 
   int world_to_screen_x (int);
   int world_to_screen_y (int);
+
+  void flip (int x1, int y1, int x2, int y2);
 };
 
 #endif

@@ -42,6 +42,8 @@ public:
 
   /** FIXME: flip should be handled outsite of GraphicContext */
   virtual void flip () =0;
+  virtual void real_flip () {}
+  virtual void flip (int x1, int y1, int x2, int y2) =0;
 };
 
 #endif

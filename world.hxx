@@ -28,7 +28,7 @@ class Particle;
 class ParticleFactory;
 class Spring;
 
-struct BoundingBox
+struct WorldBoundingBox
 {
   float x1;
   float y1;
@@ -88,7 +88,7 @@ public:
 
   void write_lisp (const std::string& filename);
 
-  BoundingBox calc_bounding_box();
+  WorldBoundingBox calc_bounding_box();
 private:
   static World* current_world;
 public:

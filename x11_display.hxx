@@ -23,6 +23,7 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
 
+#include "math.hxx"
 #include "graphic_context.hxx"
 #include "input_context.hxx"
 #include "keep_alive.hxx"
@@ -30,12 +31,21 @@
 #define X11_FULLSCREEN_MODE true
 #define X11_WINDOW_MODE     false
 
+struct FlipRect
+{
+  int x1;
+  int y1;
+  int x2;
+  int y2;
+};
+
 /** X11Display driver */
 class X11Display : public GraphicContext,
                    public InputContext,
                    public KeepAlive
 {
 private:
+  bool doublebuffer;
   XF86VidModeModeLine orig_modeline;
   int orig_viewport_x;
   int orig_viewport_y;
@@ -54,6 +64,9 @@ private:
 
   /** true if display is in fullscreen mode, false for window mode */
   bool fullscreen;
+
+  std::vector<FlipRect> flip_rects;
+  std::vector<FlipRect> last_flip_rects;
 public:
   X11Display (int w, int h, bool fullscreen_);
   virtual ~X11Display ();
@@ -76,6 +89,11 @@ public:
   
   /** Flip the double buffered display */
   void flip ();
+
+  /** perform the real flip, only flip marked reagions */
+  void real_flip ();
+
+  void flip (int x1, int y1, int x2, int y2);
 
   // Input Context stuff
   int get_mouse_x ();

@@ -30,8 +30,8 @@ struct Color
 
   Color (int i) {
     r = ((i & 0xFF0000) >> 16) / 255.0f;
-    b = ((i & 0x00FF00) >>  8) / 255.0f;
-    g = ((i & 0x0000FF) >>  0) / 255.0f;
+    g = ((i & 0x00FF00) >>  8) / 255.0f;
+    b = ((i & 0x0000FF) >>  0) / 255.0f;
   }
   
   Color (float r, float g, float b, float a = 1.0f)

@@ -70,8 +70,10 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
       gc.draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
                     x, y,
                     Color(0xAAAAAA));
- 
     }
+
+  //const WorldBoundingBox& box = world.calc_bounding_box();
+  //gc.flip (int(box.x1), int(box.y1), int(box.x2), int(box.y2));
 }
 
 void

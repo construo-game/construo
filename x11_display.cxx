@@ -24,13 +24,15 @@
 #include "construo_error.hxx"
 #include "config.h"
 #include "x11_display.hxx"
+#include "settings.hxx"
 #include "construo_main.hxx"
 
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
 X11Display::X11Display(int w, int h, bool fullscreen_)
-  : width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
+  : doublebuffer (settings.doublebuffer),
+    width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
 {
   std::cout << "Opening X11 display" << std::endl;
   display = XOpenDisplay(NULL);
@@ -99,8 +101,11 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     XSetWMProtocols (display, window, &wm_delete_window, 1);
   }
 
-  drawable = XCreatePixmap (display, window, width, height, 
-                            DefaultDepth(display, screen));  
+  if (doublebuffer)
+    drawable = XCreatePixmap (display, window, width, height, 
+                              DefaultDepth(display, screen));  
+  else
+    drawable = window;
 
   XMapRaised(display, window);
 
@@ -122,7 +127,9 @@ X11Display::~X11Display ()
   if (fullscreen)
     restore_mode ();
   
-  XFreePixmap (display, drawable);
+  if (doublebuffer)
+    XFreePixmap (display, drawable);
+  
   XDestroyWindow (display, window);
   XCloseDisplay(display); 
 }
@@ -435,15 +442,53 @@ X11Display::clear ()
 }
 
 void
+X11Display::flip (int x1, int y1, int x2, int y2)
+{
+  if (doublebuffer)
+    {
+      FlipRect flip_rect;
+
+      flip_rect.x1 = x1;
+      flip_rect.y1 = y1;
+      flip_rect.x2 = x2;
+      flip_rect.y2 = y2;
+
+      //flip_rects.push_back(flip_rect);
+    }
+}
+
+void
+X11Display::real_flip ()
+{
+  if (doublebuffer)
+    {
+      for (std::vector<FlipRect>::iterator i = flip_rects.begin ();
+           i != flip_rects.end ();
+           ++i)
+        {
+          XCopyArea (display, drawable, window, gc,
+                     i->x1, i->y1, // source
+                     i->x2 - i->x1, i->y2 - i->y1, // width/height
+                     i->x1, i->y1 // destination
+                     );
+        }
+      flip_rects.clear ();
+    }
+}
+
+void
 X11Display::flip ()
 {
-  // FIXME: Use another gc here
-  XCopyArea (display, drawable, window, gc,
-             0, 0, // source
-             width, height,
-             0, 0 // destination
-             );
-  //XFlush(display);
+  if (doublebuffer)
+    {
+      // FIXME: Use another gc here
+      XCopyArea (display, drawable, window, gc,
+                 0, 0, // source
+                 width, height,
+                 0, 0 // destination
+                 );
+      //XFlush(display);
+    }
 }
 
 void

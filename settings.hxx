@@ -27,6 +27,7 @@ class Settings
 {
 public:
   bool fullscreen;
+  bool doublebuffer;
   int  screen_width;
   int  screen_height;
   
