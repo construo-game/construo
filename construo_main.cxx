@@ -1,7 +1,7 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
-//  Copyright (C) 2000 Ingo Ruhnke <grumbel@gmx.de>
+//  Construo - A wire-frame construction game
+//  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -18,8 +18,11 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <fstream>
-#include "DeltaManager.hxx"
-#include "Construo.hxx"
+#include "delta_manager.hxx"
+#include "construo.hxx"
+#include "particle.hxx"
+#include "construo_main.hxx"
+#include "config.h"
 
 unsigned int Particle::id_counter;
 
@@ -42,36 +45,41 @@ Construo::get_title ()
 }
 
 void 
-Construo::on_press(CL_InputDevice *device, const CL_Key &key)
+Construo::on_mouse_press(int button_no) 
 {
-  if (device == CL_Input::pointers[0])
-    {
-      click_pos = CL_Vector (key.x, key.y);
+#if 0 
+  click_pos = CL_Vector (key.x, key.y);
 
-      if (c_particle)
-	{
-	  Particle* particle = current_particle ();
-	  if (!particle)
-	    {
-	      particle = new Particle (click_pos,
-				       CL_Vector(0,0));
-	      particles.push_back (particle);
-	    }
-	  if (c_particle != particle)
-	    sticks.push_back (new Stick (c_particle, particle));
-	  c_particle = 0;
-	}
-      else
-	{
-	  c_particle = current_particle ();
-	  if (!c_particle)
-	    {
-	      c_particle = new Particle (click_pos,
-					 CL_Vector(0,0));
-	      particles.push_back (c_particle);
-	    }
-	}
+  if (c_particle)
+    {
+      Particle* particle = current_particle ();
+      if (!particle)
+        {
+          particle = new Particle (click_pos,
+                                   CL_Vector(0,0));
+          particles.push_back (particle);
+        }
+      if (c_particle != particle)
+        sticks.push_back (new Stick (c_particle, particle));
+      c_particle = 0;
     }
+  else
+    {
+      c_particle = current_particle ();
+      if (!c_particle)
+        {
+          c_particle = new Particle (click_pos,
+                                     CL_Vector(0,0));
+          particles.push_back (c_particle);
+        }
+    }
+#endif
+}
+
+void 
+Construo::on_key_press(int key_id)
+{
+#if 0
   else if (device == CL_Input::keyboards[0])
     {
       switch (key.id) {
@@ -118,29 +126,33 @@ Construo::on_press(CL_InputDevice *device, const CL_Key &key)
 	break;	
       }
     }
+#endif
 }
 
 void
 Construo::load_or_save_xml (std::string filename)
 {
+#if 0
   if (CL_Keyboard::get_keycode (CL_KEY_LSHIFT)
       || CL_Keyboard::get_keycode (CL_KEY_RSHIFT))
     load_xml (filename);
   else
     save_xml (filename);
+#endif
 }
 
 void
 Construo::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
 {
+#if 0
   xmlNodePtr cur = arg_cur->children;
 
   while (cur != NULL)
     {  
       if (xmlIsBlankNode(cur)) {
 	cur = cur->next;
-      continue;
-    }
+        continue;
+      }
   
       if (strcmp((char*)cur->name, "particle") == 0)
 	{
@@ -193,11 +205,13 @@ Construo::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
 
       cur = cur->next;
     }
+#endif
 }
 
 Particle* 
 Construo::id_to_particle (unsigned int n)
 {
+#if 0
   for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
     {
       if ((*i)->get_id () == n)
@@ -205,11 +219,13 @@ Construo::id_to_particle (unsigned int n)
     }
   std::cout << "Couldn't find particle id" << std::endl;
   return 0;
+#endif
 }
 
 void
 Construo::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
 {
+#if 0
   xmlNodePtr cur = arg_cur->children;
 
   while (cur != NULL)
@@ -237,6 +253,7 @@ Construo::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
       
       cur = cur->next;
     }
+#endif
 }
 
 void 
@@ -252,6 +269,7 @@ Construo::zero_out_velocity ()
 void
 Construo::load_xml (std::string filename)
 {
+#if 0
   running = false;
   particles.clear ();
   sticks.clear ();
@@ -308,13 +326,14 @@ Construo::load_xml (std::string filename)
       cur = cur->next;
     }
   xmlFreeDoc (doc);
+#endif
 }
 
 void 
 Construo::save_xml (std::string filename)
 {
   std::cout << "Quick save to: " << filename << std::endl;
-  ofstream out (filename.c_str ());
+  std::ofstream out (filename.c_str ());
 
   out << "<?xml version=\"1.0\"?>\n";
   out << "<construo-scene>\n";
@@ -337,7 +356,7 @@ Construo::save_xml (std::string filename)
 }
 
 void 
-Construo::on_release(CL_InputDevice *device, const CL_Key &key)
+Construo::on_key_release(int key_id)
 {
   /*
     if (device == CL_Input::pointers[0])
@@ -363,6 +382,7 @@ Construo::on_release(CL_InputDevice *device, const CL_Key &key)
 Particle* 
 Construo::current_particle ()
 {
+#if 0
   CL_Vector mouse_pos (CL_Mouse::get_x (), CL_Mouse::get_y ());
   
   Particle* particle = 0;
@@ -379,6 +399,7 @@ Construo::current_particle ()
     }
   
   return particle;
+#endif
 }
 
 bool stick_destroyed (Stick* stick)
@@ -389,6 +410,7 @@ bool stick_destroyed (Stick* stick)
 int 
 Construo::main (int argc, char* argv[])
 {
+#if 0
   std::cout << "Construo" << std::endl;
   CL_SetupDisplay::init ();
   CL_Display::set_videomode (800, 600, 16, false, false);
@@ -427,7 +449,7 @@ Construo::main (int argc, char* argv[])
 		    
 		    // Central Gravity force:
 		    /*CL_Vector direction = ((*i)->pos - CL_Vector (400, 300));
-		    if (direction.norm () != 0.0f)
+                      if (direction.norm () != 0.0f)
 		      (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
 		    */
 		    
@@ -456,72 +478,79 @@ Construo::main (int argc, char* argv[])
 		  }
 	      }
 	    }
-	      // Stick splitting
-	      for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-		{
-		  if ((*i)->destroyed)
-		    {
-		      if ((((*i)->particles.first->pos 
-			    - (*i)->particles.second->pos)).norm () > 10.0f)
-			{
-			  CL_Vector pos = 
-			    ((*i)->particles.first->pos + (*i)->particles.second->pos)*0.5f;
-			  Particle* p1 = new Particle (pos, CL_Vector ());
-			  Particle* p2 = new Particle (pos, CL_Vector ());
-			  p1->velocity = (*i)->particles.first->velocity * 0.5f;
-			  p2->velocity = (*i)->particles.second->velocity * 0.5f;
-			  particles.push_back (p1);
-			  particles.push_back (p2);
-			  sticks.push_back (new Stick ((*i)->particles.first, p1));
-			  sticks.push_back (new Stick ((*i)->particles.second, p2));
-			}
-		    }
-		}
+          // Stick splitting
+          for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+            {
+              if ((*i)->destroyed)
+                {
+                  if ((((*i)->particles.first->pos 
+                        - (*i)->particles.second->pos)).norm () > 10.0f)
+                    {
+                      CL_Vector pos = 
+                        ((*i)->particles.first->pos + (*i)->particles.second->pos)*0.5f;
+                      Particle* p1 = new Particle (pos, CL_Vector ());
+                      Particle* p2 = new Particle (pos, CL_Vector ());
+                      p1->velocity = (*i)->particles.first->velocity * 0.5f;
+                      p2->velocity = (*i)->particles.second->velocity * 0.5f;
+                      particles.push_back (p1);
+                      particles.push_back (p2);
+                      sticks.push_back (new Stick ((*i)->particles.first, p1));
+                      sticks.push_back (new Stick ((*i)->particles.second, p2));
+                    }
+                }
+            }
 
-	      sticks.remove_if (stick_destroyed);
-	    }
+          sticks.remove_if (stick_destroyed);
+        }
 
-	  {
-	    Particle* p = current_particle ();
-	    if (p)
-	      {
-		int size = 5;
-		CL_Display::fill_rect (int(p->pos.x - size), int(p->pos.y - size),
-				       int(p->pos.x + size), int(p->pos.y + size), 
-				       1.0f, 0.0f, 0.0f);
-	      }
-	  }
+      {
+        Particle* p = current_particle ();
+        if (p)
+          {
+            int size = 5;
+            CL_Display::fill_rect (int(p->pos.x - size), int(p->pos.y - size),
+                                   int(p->pos.x + size), int(p->pos.y + size), 
+                                   1.0f, 0.0f, 0.0f);
+          }
+      }
 
 
       if (!CL_Keyboard::get_keycode (CL_KEY_ENTER))
-	    {
-	      for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-		(*i)->draw ();
+        {
+          for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+            (*i)->draw ();
 
-	      /*
-		if (CL_Vector () != click_pos)
-		{
-		CL_Display::draw_line (click_pos.x, click_pos.y, CL_Mouse::get_x (), CL_Mouse::get_y (),
-		0.0, 0.0, 1.0);
-		}*/
+          /*
+            if (CL_Vector () != click_pos)
+            {
+            CL_Display::draw_line (click_pos.x, click_pos.y, CL_Mouse::get_x (), CL_Mouse::get_y (),
+            0.0, 0.0, 1.0);
+            }*/
 
-	      for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-		{
-		  (*i)->draw ();
-		}
+          for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+            {
+              (*i)->draw ();
+            }
 
-	      CL_Display::flip_display ();
-	      CL_System::sleep (20);
+          CL_Display::flip_display ();
+          CL_System::sleep (20);
 
 
-	    }
+        }
 
-	  CL_System::keep_alive ();
+      CL_System::keep_alive ();
 
-	}
-
-      CL_SetupDisplay::deinit ();
-      return 0;
     }
 
-  /* EOF */
+  CL_SetupDisplay::deinit ();
+  return 0;
+#endif
+  return 0;
+}
+
+int main (int argc, char** argv)
+{
+  std::cout << "Construo " << VERSION << std::endl;;
+}
+
+/* EOF */
