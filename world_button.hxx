@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,33 +17,29 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_UNIX_SYSTEM_HXX
-#define HEADER_CONSTRUO_UNIX_SYSTEM_HXX
+#ifndef HEADER_CONSTRUO_WORLD_BUTTON_HXX
+#define HEADER_CONSTRUO_WORLD_BUTTON_HXX
 
-#include <string>
-#include "system_context.hxx"
+#include "gui_file_button.hxx"
 
-/** This class wraps a bunch of unix functions to provide file-io and
-    the current time */
-class UnixSystem : public SystemContext
+class World;
+
+/** button in the load/save dialog */
+class WorldButton : public GUIFileButton
 {
 private:
-  unsigned int start_time;
-  std::string construo_rc_path;
-  
-  std::string translate_filename (const std::string&);
-public:
-  UnixSystem ();
-  virtual ~UnixSystem ();
-  unsigned int get_time ();
-  void sleep (unsigned long);
-  std::string get_construo_rc_path();
-  std::string get_user_realname();
-  std::string get_user_email();
+  World* world;
 
-  FILE* open_input_file(const std::string& filename);
-  FileType get_file_type(const std::string& filename);
-  std::vector<std::string> read_directory(const std::string& pathname);
+public:
+  WorldButton (const std::string& arg_filename);
+  ~WorldButton ();
+
+  void draw (GraphicContext* gc);
+  void on_click ();
+
+private:
+  WorldButton (const WorldButton&);
+  WorldButton& operator= (const WorldButton&);
 };
 
 #endif

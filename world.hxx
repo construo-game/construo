@@ -60,8 +60,13 @@ private:
   void parse_particles (lisp_object_t* lst);
 
 public:
+  /** Create an empty world */
   World ();
+
+  /** Copy an existing world */
   World (const World& w);
+
+  /** load a world from file */
   World (const std::string& filename);
   ~World ();
 

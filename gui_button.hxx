@@ -17,33 +17,17 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_UNIX_SYSTEM_HXX
-#define HEADER_CONSTRUO_UNIX_SYSTEM_HXX
+#ifndef HEADER_CONSTRUO_GUI_BUTTON_HXX
+#define HEADER_CONSTRUO_GUI_BUTTON_HXX
 
-#include <string>
-#include "system_context.hxx"
+#include "gui_component.hxx"
 
-/** This class wraps a bunch of unix functions to provide file-io and
-    the current time */
-class UnixSystem : public SystemContext
+/** */
+class GUIButton : public GUIComponent
 {
 private:
-  unsigned int start_time;
-  std::string construo_rc_path;
-  
-  std::string translate_filename (const std::string&);
 public:
-  UnixSystem ();
-  virtual ~UnixSystem ();
-  unsigned int get_time ();
-  void sleep (unsigned long);
-  std::string get_construo_rc_path();
-  std::string get_user_realname();
-  std::string get_user_email();
-
-  FILE* open_input_file(const std::string& filename);
-  FileType get_file_type(const std::string& filename);
-  std::vector<std::string> read_directory(const std::string& pathname);
+  GUIButton (GUIManager* parent);
 };
 
 #endif

@@ -55,10 +55,15 @@ worldview_zoom_tool.hxx worldview_zoom_tool.cxx \
 collider.hxx \
 rect_collider.hxx rect_collider.cxx \
 gui_label.hxx gui_label.cxx \
-string_converter.hxx \
+string_utils.hxx string_utils.cxx \
 rect.hxx \
 construo_main.hxx \
-selection.hxx selection.cxx 
+selection.hxx selection.cxx \
+world_button.hxx world_button.cxx \
+gui_directory_button.hxx gui_directory_button.cxx \
+gui_file_button.hxx gui_file_button.cxx \
+gui_file_manager.hxx gui_file_manager.cxx \
+gui_directory.hxx gui_directory.cxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a

@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_GUI_MANAGER_HXX
 
 #include <vector>
+#include "gui_file_manager.hxx"
 
 class GUIComponent;
 class ButtonEvent;
@@ -51,6 +52,8 @@ private:
   void process_button_events (ButtonEvent&);
   void draw_status ();
   GUIComponent* find_component_at (int, int);
+
+  //GUIFileManager file_manager;
 
   static GUIManager* instance_;
 public:

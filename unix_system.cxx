@@ -17,16 +17,21 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <dirent.h>
 #include <pwd.h>
 #include <errno.h>
 #include "construo_error.hxx"
+#include "string_utils.hxx"
 #include "unix_system.hxx"
+
+using namespace StringUtils;
 
 UnixSystem::UnixSystem ()
 { // riped out of ClanLib-0.7
@@ -122,6 +127,58 @@ UnixSystem::get_user_email()
     }
   else
     return "";
+}
+
+FileType
+UnixSystem::get_file_type(const std::string& filename)
+{
+  if (is_suffix(filename, ".construo"))
+    return FT_CONSTRUO_FILE;
+  else
+    return FT_UNKNOWN_FILE;
+}
+
+std::string
+UnixSystem::translate_filename (const std::string& filename)
+{
+  if (filename == "/")
+    return "/home/ingo/.construo/"; 
+  else if (is_prefix(filename, "/user/"))
+    {
+      return "/home/ingo/.construo/";  filename.substr(6); 
+    }
+  else if (is_prefix(filename, "/examples/"))
+    {
+      return "examples/" + filename.substr(10); 
+    }
+  else
+    return filename;
+}
+
+FILE*
+UnixSystem::open_input_file(const std::string& filename)
+{
+  return fopen(translate_filename (filename).c_str(), "r");
+}
+
+std::vector<std::string>
+UnixSystem::read_directory(const std::string& arg_pathname)
+{
+  std::vector<std::string> dir_lst;
+  std::string pathname = translate_filename (arg_pathname);
+
+  DIR* dir = ::opendir (pathname.c_str());
+  // FIXME: Error checking here
+  struct dirent* entry;
+
+  while ((entry = readdir(dir)) != 0)
+    {
+      dir_lst.push_back(entry->d_name);
+    }
+  
+  closedir (dir);
+
+  return dir_lst;
 }
 
 /* EOF */

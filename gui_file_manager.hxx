@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction gamee
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,41 +17,33 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_STRING_CONVERTER_HXX
-#define HEADER_CONSTRUO_STRING_CONVERTER_HXX
+#ifndef HEADER_CONSTRUO_GUI_FILE_MANAGER_HXX
+#define HEADER_CONSTRUO_GUI_FILE_MANAGER_HXX
 
+#include <map>
 #include <string>
-#include <sstream>
+#include "gui_directory.hxx"
 
-template <class T>
-std::string to_string (const T& any)
+/** */
+class GUIFileManager
 {
-  std::ostringstream oss;
-  oss << any;
-  return oss.str();
-}
+private:
+  /** Cache for directories */
+  std::map<std::string, GUIDirectory*> directories;
 
-/** Convert the contents in string \a rep to type \a T, if conversion
-    fails false is returned and the value of \a x is unchanged, if
-    true is returned the conversation was successfull. */
-template <class T>
-bool from_string(const std::string& rep, T& x)
-{
-  // this is necessary so that if "x" is not modified if the conversion fails
-  T temp;
-  std::istringstream iss(rep);
-  iss >> temp;
+  GUIDirectory* current_directory;
 
-  if (iss.fail())
-    {
-      return false;
-    }
-  else
-    {
-      x = temp;
-      return true;
-    }
-}
+  GUIDirectory* get_directory (const std::string& pathname);
+public:
+  GUIFileManager ();
+  ~GUIFileManager ();
+
+  /** Switch the GUIFileManagers view to the directory given by
+      pathname */
+  void open_directory (const std::string& pathname);
+
+  void draw ();
+};
 
 #endif
 

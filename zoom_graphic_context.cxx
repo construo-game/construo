@@ -18,16 +18,33 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <iostream>
+#include "construo.hxx"
 #include "math.hxx"
 #include "zoom_graphic_context.hxx"
 
 ZoomGraphicContext::ZoomGraphicContext ()
 {
+  x_offset = 0.0f;
+  y_offset = 0.0f;
+  zoom = 1.0f;
+
+  /*  x1 = y1 = 0;
+  // FIXME: should use parent gc
+  x2 = graphic_context->get_width();
+  y2 = graphic_context->get_height();*/
+}
+
+/*ZoomGraphicContext::ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_)
+  : x1 (x1_),
+    y1 (y1_),
+    x2 (x2_),
+    y2 (y2_)
+{
   x_offset   = 0;
   y_offset   = 0;
   zoom       = 1.0f;
   parent_gc  = NULL;
-}
+}*/
 
 Vector2d
 ZoomGraphicContext::screen_to_world (const Vector2d& pos)

@@ -18,7 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <config.h>
-#include "string_converter.hxx"
+#include "string_utils.hxx"
 #include "construo.hxx"
 #include "graphic_context.hxx"
 #include "input_context.hxx"
@@ -33,6 +33,8 @@
 #include "worldview_insert_tool.hxx"
 #include "gui_buttons.hxx"
 #include "gui_label.hxx"
+
+using namespace StringUtils;
 
 GUIManager* GUIManager::instance_;
 
@@ -132,6 +134,8 @@ GUIManager::run_once ()
     {
       (*i)->draw (graphic_context);
     }
+
+  //file_manager.draw ();
           
   graphic_context->flip ();
 }

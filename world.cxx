@@ -53,7 +53,7 @@ World::World (const std::string& filename)
   FILE* in;
   lisp_stream_t stream;
 
-  in = fopen(filename.c_str(), "r");
+  in = system_context->open_input_file(filename);
   if (!in)
     {
       throw ConstruoError ("World: Couldn't open " + filename);

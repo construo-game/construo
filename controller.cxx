@@ -67,7 +67,7 @@ Controller::save_world (const std::string& filename)
 std::string
 Controller::get_slot_filename(int n)
 {
-  const std::string& str = system_context->get_construo_rc_path();
+  std::string str = system_context->get_construo_rc_path();
   return str + std::string("quicksave") + char('0' + n) + ".construo";
 }
 

@@ -20,6 +20,15 @@
 #ifndef HEADER_SYSTEM_CONTEXT_HXX
 #define HEADER_SYSTEM_CONTEXT_HXX
 
+#include <string>
+#include <vector>
+
+enum FileType {
+  FT_DIRECTORY,
+  FT_CONSTRUO_FILE,
+  FT_UNKNOWN_FILE
+};
+
 /** System stuff like file-IO and time */
 class SystemContext
 {
@@ -38,6 +47,14 @@ public:
 
   /** @return the email of the current user or an empty string if not available */
   virtual std::string get_user_email() =0;
+
+  /** @return the type of the given file */
+  virtual FileType get_file_type(const std::string& filename) =0;
+
+  virtual FILE* open_input_file(const std::string& filename) =0;
+
+  /** @return a list of files available in the given directory */
+  virtual std::vector<std::string> read_directory(const std::string& pathname) =0;
 };
 
 #endif

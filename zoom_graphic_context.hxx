@@ -28,6 +28,11 @@
 class ZoomGraphicContext : public GraphicContext
 {
 private:
+  /*int x1;
+  int y1;
+  int x2;
+  int y2;*/
+
   GraphicContext* parent_gc;
 
   float x_offset;
@@ -38,6 +43,7 @@ private:
   int translate_y (int);
 public:
   ZoomGraphicContext ();
+  //ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_);
 
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);

@@ -20,8 +20,10 @@
 #include "colors.hxx"
 #include "math.hxx"
 #include "lisp_reader.hxx"
-#include "string_converter.hxx"
+#include "string_utils.hxx"
 #include "particle.hxx"
+
+using namespace StringUtils;
 
 Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
   : id (i), 
