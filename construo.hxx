@@ -33,8 +33,8 @@ extern InputContext*   input_context;
 /** Global accessor to the graphic device */
 extern GraphicContext* graphic_context;
 
-const double back_force = 500.0;
-const double max_stretch = 0.1;
+extern const double back_force;
+extern const double max_stretch;
 
 #endif
 

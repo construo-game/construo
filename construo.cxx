@@ -25,4 +25,12 @@ SystemContext*  system_context  =0;
 InputContext*   input_context   =0;
 GraphicContext* graphic_context =0;
 
+#ifdef CONSTRUO_0_1_0
+const double back_force = 500.0;
+const double max_stretch = 0.1f;
+#else
+const double back_force = 1000.0;
+const double max_stretch = 0.3f;
+#endif
+
 /* EOF */

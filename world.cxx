@@ -33,12 +33,14 @@ World::World ()
 {
   has_been_run = false;
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
+  colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
 }
 
 World::World (const std::string& filename)
   : particle_mgr (0)
 {
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
+  colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
 
   has_been_run = false;
   FILE* in;
