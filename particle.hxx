@@ -40,9 +40,12 @@ public:
   Vector2d  velocity;
 
 private:
-  /** the mass of the particle as 1/mass */
+  /** the mass of the particle as 1/mass (FIXME: is this still the
+      case?!) */
   float mass;
 public:
+  /** If true the particle will have a fixed position which cannot be
+      changed, if false the particle reacts to forces as normal. */
   bool fixed;
 
   /** totale force acting on particle (used as temp-var in update() to

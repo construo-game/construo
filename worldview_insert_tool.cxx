@@ -48,7 +48,7 @@ WorldViewInsertTool::draw_background (ZoomGraphicContext* gc)
   Particle* selected_particle = world.get_particle (x, y);
   if (selected_particle)
     {
-      selected_particle->draw_highlight (gc);
+      selected_particle->draw_highlight(gc);
     }
 }
 
@@ -60,6 +60,7 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
   Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world (input_context->get_mouse_pos ());
   
   Spring* selected_spring = world.get_spring (click_pos.x, click_pos.y);
+
   if (selected_spring)
     {
       selected_spring->draw_highlight (gc);
@@ -79,6 +80,21 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
     {
       selected_particle->draw_infos (gc);
     }
+  else
+    {
+      Vector2d new_particle_pos;
+          
+      if (WorldViewComponent::instance()->uses_grid())
+        new_particle_pos = Vector2d(Math::round_to(click_pos.x, 10),
+                                    Math::round_to(click_pos.y, 10));
+      else
+        new_particle_pos = Vector2d(click_pos.x, click_pos.y);
+
+      gc->draw_fill_circle(new_particle_pos.x,
+                           new_particle_pos.y,
+                           3.0f,
+                           Colors::highlight);
+    }
 }
 
 void
@@ -90,6 +106,8 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
 
   if (current_particle)
     {
+      // We are going to place a second particle and convert the last an
+      // the new one with a spring
       Particle* new_current_particle = world.get_particle (x, y);
       if (new_current_particle != current_particle)
         {
@@ -99,7 +117,16 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
             }
           else // add a new particle and connect it with the current one
             {
-              new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d(), particle_mass);
+              Vector2d new_particle_pos;
+              if (WorldViewComponent::instance()->uses_grid())
+                new_particle_pos = Vector2d(Math::round_to(x, 10),
+                                            Math::round_to(y, 10));
+              else
+                new_particle_pos = Vector2d(x, y);
+
+              new_current_particle = world.get_particle_mgr()->add_particle(new_particle_pos,
+                                                                            Vector2d(), 
+                                                                            particle_mass);
               world.add_spring (current_particle, new_current_particle);
             }
           current_particle = 0;
@@ -108,11 +135,27 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
     }
   else
     {
+      // We are going to add a new particle and making it the last
+      // one, so that the next click would result in a new spring
       current_particle = world.get_particle (x, y);
-      if (!current_particle)
+
+      if (current_particle)
         {
-          Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d(), 
-                                                                particle_mass);
+          // We have clicked on a particle, so make it the current one
+        }
+      else
+        {
+          Vector2d new_particle_pos;
+          
+          if (WorldViewComponent::instance()->uses_grid())
+            new_particle_pos = Vector2d(Math::round_to(x, 10),
+                                        Math::round_to(y, 10));
+          else
+            new_particle_pos = Vector2d(x, y);
+          
+          Particle* p = world.get_particle_mgr()->add_particle(new_particle_pos,
+                                                               Vector2d(), 
+                                                               particle_mass);
           current_particle = p;
           WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
         }

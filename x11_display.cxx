@@ -417,6 +417,9 @@ X11Display::read_event ()
           case XK_space:
             send_button_press(BUTTON_RUN);
             break;
+          case XK_g:            
+            send_button_press(BUTTON_GRID);
+            break;
           case XK_Tab:
             send_button_press(BUTTON_TOGGLESLOWMO);
             break;

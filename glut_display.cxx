@@ -487,6 +487,10 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       event.button.id = BUTTON_QUICKSAVE9;
       break;
 
+    case 'g':
+      event.button.id = BUTTON_GRID;
+      break;
+
     case 'u':
       event.button.id = BUTTON_UNDO;
       break;

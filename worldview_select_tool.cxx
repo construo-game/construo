@@ -244,9 +244,17 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
     case MOVING_SELECTION_MODE:
       for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
         {
-          // Will lead to round errors 
-          (*i)->pos.x += of_x / WorldViewComponent::instance()->get_gc ()->get_zoom();
-          (*i)->pos.y += of_y / WorldViewComponent::instance()->get_gc ()->get_zoom();
+          if (WorldViewComponent::instance()->uses_grid())
+            {
+              (*i)->pos.x += Math::round_to(of_x / WorldViewComponent::instance()->get_gc()->get_zoom(), 10);
+              (*i)->pos.y += Math::round_to(of_y / WorldViewComponent::instance()->get_gc()->get_zoom(), 10);
+            }
+          else
+            {
+              // Will lead to round errors 
+              (*i)->pos.x += of_x / WorldViewComponent::instance()->get_gc ()->get_zoom();
+              (*i)->pos.y += of_y / WorldViewComponent::instance()->get_gc ()->get_zoom();
+            }
 
           std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
           for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 

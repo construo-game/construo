@@ -31,9 +31,15 @@ class World;
 class Spring
 {
 public:
+  /** Pointers to the two particles to which the Spring is
+      connected */
   std::pair<Particle*, Particle*> particles;
   
+  /** The orignial length of the Spring, the actually length on the
+      screen is different, since the spring can be streched */
   float length;
+  
+  /** */
   bool destroyed;
 
   float stiffness;

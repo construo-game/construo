@@ -158,18 +158,19 @@ WorldGUIManager::WorldGUIManager ()
   add(new GUIGenericButton ("-", BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25, zoom_out_callback));
   add(new GUIGenericButton ("+", BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25, zoom_in_callback));
 
+  // FIXME: Stuff for particle mass and Co. must be implemented in another way
   if(0)
     {
-  add(new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
-  add(new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
+      add(new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
+      add(new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
 
-  add(new GUILabel ("Stiffness",   550, 280, 75, 25));
+      add(new GUILabel ("Stiffness",   550, 280, 75, 25));
 
-  add(new GUIGenericButton ("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass));
-  add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+      add(new GUIGenericButton ("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass));
+      add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
 
-  add(new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
-  add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+      add(new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
+      add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
     }
   //add(new GUIWindow ("Test Window",   200, 100, 200, 90));
  
@@ -240,8 +241,8 @@ WorldGUIManager::draw_overlay ()
   World& world = *Controller::instance()->get_world ();
 
   /*graphic_context->draw_string (600,  430, "Particles Mass: ");
-  graphic_context->draw_string (BUTTON_LX_POS,  430, 
-                                to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
+    graphic_context->draw_string (BUTTON_LX_POS,  430, 
+    to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
   int bottom_line = graphic_context->get_height() - 10;
   graphic_context->draw_string (10, bottom_line-20, "FPS: ");

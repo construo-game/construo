@@ -35,6 +35,7 @@ WorldViewComponent::WorldViewComponent ()
   instance_ = this;
 
   scrolling = false;
+  use_grid  = true;
 
   select_tool   = new WorldViewSelectTool ();
   insert_tool   = new WorldViewInsertTool ();
@@ -87,12 +88,37 @@ WorldViewComponent::~WorldViewComponent ()
 }
 
 void
+WorldViewComponent::draw_grid()
+{
+  ZoomGraphicContext& gc = *get_gc();
+
+  int start_x = Math::round_to(gc.screen_to_world_x(0), 10) - 10;
+  int end_x   = Math::round_to(gc.screen_to_world_x(gc.get_width()), 10) + 10;
+
+  int start_y = Math::round_to(gc.screen_to_world_y(0), 10) - 10;
+  int end_y   = Math::round_to(gc.screen_to_world_y(gc.get_height()), 10) + 10;
+
+  for(int y = start_y; y < end_y; y += 10)
+    gc.draw_line(start_x, y, 
+                 end_x, y,
+                 Color(0.4f, 0.4f, 0.4f), 1);
+
+  for(int x = start_x; x < end_x; x += 10)
+    gc.draw_line(x, start_y, 
+                 x, end_y,
+                 Color(0.4f, 0.4f, 0.4f), 1);
+}
+
+void
 WorldViewComponent::draw (GraphicContext* parent_gc)
 {
   //int x = gc.screen_to_world_x (input_context->get_mouse_x ());
   //int y = gc.screen_to_world_y (input_context->get_mouse_y ());
 
   gc.set_parent_gc (parent_gc);
+
+  if (use_grid)
+    draw_grid();
 
   //Draw the buttom border line
   gc.draw_line (-10000, 599, 10000, 599, Colors::rect_collider_fg);
@@ -261,6 +287,12 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
     {
       current_tool->on_mouse_move (x, y, of_x, of_y);
     }
+}
+
+void
+WorldViewComponent::on_grid_press(int x, int y)
+{
+  use_grid = !use_grid;
 }
 
 float

@@ -26,13 +26,26 @@
 class Settings
 {
 public:
+  /** Start the application in fullscreen mode */
   bool fullscreen;
+
+  /** Use doublebuffering */
   bool doublebuffer;
+
+  /** Enable alpha blending */
   bool alphablending;
+
+  /** Enable anti aliasing*/
   bool antialiasing;
-  int  screen_width;
-  int  screen_height;
   
+  /** Screen width in pixel */
+  int  screen_width;
+
+  /** Screen height in pixel */
+  int  screen_height;
+
+  /** Initial file to be loaded on startup (aka. the one that is given
+      on the command line */
   std::string startup_file;
 
   Settings ();

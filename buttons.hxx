@@ -36,6 +36,7 @@ enum ButtonTypes {
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_SETVELOCITY,   // set the velocity of the selection
   BUTTON_TOGGLESLOWMO, 
+  BUTTON_GRID,  // display or hide the grid
   BUTTON_RUN,         // starts or stops the simulation
   BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)
   BUTTON_ACTIONCAM,  

@@ -28,7 +28,8 @@ class Particle;
 class WorldViewInsertTool : public WorldViewTool
 {
 private:
-  /** The currently selected particle or NULL in case none is selected */
+  /** The last particle that got inserted or marked by a click, it is
+      used as the first particle of the newly created spring */
   Particle* current_particle;
   
   /** mass of the particles that are inserted on a primary press */

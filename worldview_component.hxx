@@ -32,7 +32,7 @@ class WorldViewZoomTool;
 class WorldViewColliderTool;
 
 /** GUI Component that manages the view and the editing of the
-    world */
+    world, this is the main component of Construo */
 class WorldViewComponent : public GUIComponent
 {
 public:
@@ -43,6 +43,11 @@ private:
 
   ZoomGraphicContext gc;
 
+  /** If set to true, display a grid and align dots to it */
+  bool use_grid;
+  
+  /** True if the third button is currently pressed and we are in
+      scroll mode */
   bool scrolling;
   
   float scroll_pos_x;
@@ -60,6 +65,8 @@ private:
   WorldViewColliderTool*   collider_tool;
 
   static WorldViewComponent* instance_;
+
+  void draw_grid();
 public:
   void set_mode (Mode m); 
   Mode get_mode () { return mode; }
@@ -74,6 +81,8 @@ public:
   ZoomGraphicContext* get_gc () { return &gc; }
   void draw (GraphicContext* parent_gc);
 
+  bool uses_grid() const { return  use_grid; }
+
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);
 
@@ -85,6 +94,7 @@ public:
 
   void on_mouse_move (int x, int y, int of_x, int of_y);
 
+  void on_grid_press(int x, int y);
   void on_duplicate_press (int x, int y);
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);

@@ -59,6 +59,12 @@ inline int round(float a)
   return int((a > 0) ? (a + .5f) : (a - .5));
 }
 
+/** Round x to a multilple of n */
+inline int round_to(float x, int n)
+{
+  return static_cast<int>(x + (n/2)) / n * n;
+}
+
 } // namespace Math
 
 #endif

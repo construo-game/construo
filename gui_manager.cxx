@@ -127,6 +127,11 @@ GUIManager::process_button_events (ButtonEvent& button)
         case BUTTON_FIX:
           current_component->on_fix_press (x, y);
           break;
+
+        case BUTTON_GRID:
+          current_component->on_grid_press(x, y);
+          break;
+
         case BUTTON_DELETE:
           current_component->on_delete_press (x, y);
           break;
