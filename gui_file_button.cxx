@@ -21,7 +21,8 @@
 
 GUIFileButton::GUIFileButton (const std::string& arg_filename)
   : GUIComponent (0, 0, 200, 150),
-    filename (arg_filename)
+    filename (arg_filename),
+    mouse_over (false)
 {
   std::cout << "FILENAME: " << filename << std::endl;
 }

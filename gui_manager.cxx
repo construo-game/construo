@@ -135,7 +135,7 @@ GUIManager::run_once ()
       (*i)->draw (graphic_context);
     }
 
-  //file_manager.draw ();
+  file_manager.draw ();
           
   graphic_context->flip ();
 }

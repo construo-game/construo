@@ -109,6 +109,8 @@ public:
 
   void run();
 
+  void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
+
 private:
   bool read_event ();
   void send_button_press (int i);

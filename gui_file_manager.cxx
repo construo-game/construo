@@ -35,9 +35,7 @@ GUIFileManager::~GUIFileManager ()
 void
 GUIFileManager::draw ()
 {
-  ZoomGraphicContext gc;
-  gc.set_parent_gc (graphic_context);
-  current_directory->draw (&gc);
+  current_directory->draw (graphic_context);
 }
 
 /* EOF */

@@ -1,0 +1,415 @@
+2003-01-04 21:12  grumbel
+
+	* collider.hxx, command_line.cxx, command_line.hxx,
+	glut_display.cxx, glut_display.hxx, gui_component.cxx,
+	gui_label.cxx, gui_label.hxx, gui_window.cxx, math.hxx, rect.hxx,
+	rect_collider.cxx, rect_collider.hxx, selection.cxx, selection.hxx,
+	settings.cxx, settings.hxx, string_converter.hxx, vector2d.hxx,
+	worldview_insert_tool.cxx, worldview_insert_tool.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.cxx, worldview_tool.hxx, worldview_zoom_tool.cxx,
+	worldview_zoom_tool.hxx: fixed copyright header a bit
+
+2003-01-04 21:07  grumbel
+
+	* Makefile.am, buttons.hxx, graphic_context.hxx, gui_component.hxx,
+	gui_manager.cxx, gui_manager.hxx, particle.cxx,
+	particle_factory.cxx, particle_factory.hxx, rect.hxx,
+	selection.cxx, selection.hxx, spring.cxx, world.cxx,
+	worldview_component.cxx, worldview_component.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.hxx, x11_display.cxx, zoom_graphic_context.cxx,
+	zoom_graphic_context.hxx: splitted of some of the selection code
+
+2003-01-03 05:27  grumbel
+
+	* Makefile.am, NEWS, configure.ac, zoom_graphic_context.cxx: added
+	configure test for glut
+
+2003-01-03 05:04  grumbel
+
+	* rect.hxx: little rectangle helper class
+
+2003-01-03 05:03  grumbel
+
+	* Makefile.am, configure.ac, construo_main.cxx, glut_display.cxx,
+	glut_display.hxx, gui_manager.cxx, gui_manager.hxx,
+	input_context.hxx, worldview_select_tool.cxx, x11_display.cxx,
+	x11_display.hxx: - added frames counter (stdout) - added selection
+	rectangle - fixed x11 display - made glut and x11 compilable
+
+2003-01-03 03:28  grumbel
+
+	* examples/: ball.construo, colido.construo, stabilo.construo,
+	swing.construo, zeppelin.construo: added some new constructions
+
+2003-01-03 03:27  grumbel
+
+	* glut_display.cxx: added font support to the glut target
+
+2003-01-03 02:48  grumbel
+
+	* Makefile.am, buttons.hxx, construo_main.cxx, glut_display.cxx,
+	glut_display.hxx, gui_manager.cxx, gui_manager.hxx,
+	x11_display.cxx, x11_display.hxx: added glut display target
+
+2003-01-03 00:18  grumbel
+
+	* string_converter.hxx: missing file
+
+2003-01-02 21:49  grumbel
+
+	* construo.cxx, construo.hxx, graphic_context.hxx, gui_label.cxx,
+	gui_label.hxx, gui_manager.cxx, math.hxx, particle.cxx,
+	particle.hxx, particle_factory.cxx, particle_factory.hxx,
+	spring.cxx, spring.hxx, world.cxx, world.hxx,
+	worldview_component.cxx, worldview_component.hxx,
+	worldview_insert_tool.cxx, worldview_insert_tool.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.hxx, worldview_zoom_tool.cxx,
+	worldview_zoom_tool.hxx, x11_display.cxx, x11_display.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx: some int/float
+	cleanup
+
+2002-12-31 18:38  grumbel
+
+	* gui_manager.cxx, particle.cxx, particle.hxx,
+	particle_factory.cxx, particle_factory.hxx, spring.cxx,
+	vector2d.hxx, world.cxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_insert_tool.cxx,
+	worldview_insert_tool.hxx: fixed some formulas to let the mass take
+	effect
+
+2002-12-31 05:14  grumbel
+
+	* Makefile.am, construo.cxx, gui_buttons.hxx, gui_component.hxx,
+	gui_label.cxx, gui_label.hxx, gui_manager.cxx, particle.cxx,
+	world.cxx, world.hxx, worldview_component.cxx,
+	worldview_component.hxx, x11_display.cxx, zoom_graphic_context.cxx:
+	some experimental stuff
+
+2002-12-30 02:24  grumbel
+
+	* construo.cxx, construo.hxx, world.cxx: seperated some const
+
+2002-12-29 21:46  grumbel
+
+	* collider.hxx, controller.cxx, controller.hxx, gui_manager.cxx,
+	gui_manager.hxx, rect_collider.cxx, rect_collider.hxx, world.cxx,
+	worldview_component.hxx, worldview_select_tool.cxx: added custom
+	Collider
+
+2002-12-29 20:03  grumbel
+
+	* Makefile.am, NEWS, collider.hxx, command_line.cxx, particle.cxx,
+	rect_collider.cxx, rect_collider.hxx, vector2d.hxx, world.cxx,
+	world.hxx: added collider
+
+2002-12-29 19:41  grumbel
+
+	* construo_main.cxx, controller.cxx, controller.hxx,
+	gui_buttons.cxx, gui_manager.cxx, gui_manager.hxx,
+	worldview_component.cxx, worldview_insert_tool.cxx,
+	worldview_insert_tool.hxx, worldview_select_tool.cxx,
+	worldview_select_tool.hxx, worldview_tool.hxx,
+	worldview_zoom_tool.cxx, worldview_zoom_tool.hxx: replaced some
+	global variables with singletons
+
+2002-12-29 19:18  grumbel
+
+	* vector2d.hxx, worldview_select_tool.cxx,
+	worldview_select_tool.hxx: added rotation
+
+2002-12-29 18:35  grumbel
+
+	* worldview_component.cxx, worldview_select_tool.cxx,
+	worldview_select_tool.hxx: zome minjor fixes
+
+2002-12-29 16:58  grumbel
+
+	* Makefile.am, world.cxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_zoom_tool.cxx,
+	worldview_zoom_tool.hxx, zoom_graphic_context.cxx,
+	zoom_graphic_context.hxx: added zoom tool
+
+2002-12-29 04:05  grumbel
+
+	* Makefile.am, buttons.hxx, gui_component.hxx, gui_manager.cxx,
+	world.cxx, worldview_component.cxx, worldview_component.hxx,
+	worldview_insert_tool.cxx, worldview_insert_tool.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.cxx, worldview_tool.hxx, x11_display.cxx: splited
+	insert and select stuff into seperate classes
+
+2002-12-28 05:34  grumbel
+
+	* gui_manager.cxx, particle.cxx, spring.cxx, spring.hxx, world.cxx,
+	world.hxx, worldview_component.cxx, worldview_component.hxx,
+	math.hxx, colors.cxx, colors.hxx, gui_component.cxx,
+	gui_window.cxx, gui_window.hxx: added a select and move tool
+
+2002-12-28 04:04  grumbel
+
+	* color.hxx, command_line.cxx, graphic_context.hxx,
+	gui_manager.cxx, settings.cxx, settings.hxx, world.cxx, world.hxx,
+	worldview_component.cxx, x11_display.cxx, x11_display.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx: added some
+	flip-region limiter stuff
+
+2002-12-28 03:08  grumbel
+
+	* Makefile.am, gui_buttons.cxx, gui_manager.cxx, particle.cxx,
+	particle_factory.cxx, particle_factory.hxx, spring.cxx, world.cxx,
+	world.hxx: fixed pointer grabing a bit
+
+2002-12-28 01:19  grumbel
+
+	* Makefile.am, gui_component.hxx, gui_manager.cxx, lisp_reader.cxx,
+	lisp_reader.hxx, lisp_writer.cxx, lisp_writer.hxx, particle.cxx,
+	particle.hxx, particle_factory.cxx, particle_factory.hxx,
+	spring.cxx, vector2d.hxx, world.cxx, world.hxx,
+	worldview_component.cxx, x11_display.cxx: added smaller vector
+	class
+
+2002-12-27 22:28  grumbel
+
+	* Makefile.am, NEWS, command_line.cxx, command_line.hxx,
+	construo_main.cxx, settings.cxx, settings.hxx, x11_display.cxx,
+	x11_display.hxx: added a handfull of command line flags to toggle
+	fullscreen and Co.
+
+2002-12-27 20:23  grumbel
+
+	* Makefile.am, TODO, construo_main.cxx, gui_buttons.cxx,
+	gui_buttons.hxx, gui_component.hxx, gui_manager.cxx,
+	worldview_component.cxx, worldview_component.hxx, x11_display.cxx,
+	x11_display.hxx: - added fullscreen support (currently default)
+
+2002-12-26 23:35  grumbel
+
+	* Makefile.am, NEWS, gui_buttons.cxx, gui_buttons.hxx,
+	gui_manager.cxx: added more buttons
+
+2002-12-26 22:07  grumbel
+
+	* world.cxx, worldview_component.cxx: added removal of springs
+
+2002-12-26 21:46  grumbel
+
+	* AUTHORS, construo_main.cxx, controller.cxx, controller.hxx,
+	gui_buttons.cxx, gui_buttons.hxx, gui_component.hxx,
+	gui_manager.cxx, gui_manager.hxx, particle.cxx, particle.hxx,
+	particle_factory.cxx, spring.cxx, spring.hxx, world.cxx, world.hxx,
+	worldview_component.cxx, worldview_component.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx: - added code to
+	check for spring/cursor caption
+
+2002-12-26 18:54  grumbel
+
+	* particle_factory.cxx, particle_factory.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx,
+	examples/jesus2.construo, examples/monster.construo,
+	examples/scorpion.construo, examples/stretch.construo: added
+	missing files
+
+2002-12-26 18:11  grumbel
+
+	* Makefile.am, gui_buttons.cxx, gui_component.hxx, gui_manager.cxx,
+	gui_manager.hxx, particle.hxx, spring.cxx, spring.hxx, world.cxx,
+	worldview_component.cxx, worldview_component.hxx, x11_display.cxx:
+	added zoom, restructured input a bit
+
+2002-12-26 04:02  grumbel
+
+	* Makefile.am, buttons.hxx, configure.ac, construo_main.cxx,
+	gui_buttons.cxx, gui_buttons.hxx, gui_component.hxx,
+	gui_manager.cxx, gui_manager.hxx, input_context.hxx, world.hxx,
+	worldview_component.cxx, worldview_component.hxx, x11_display.cxx,
+	x11_display.hxx: more GUI stuff
+
+2002-12-26 02:43  grumbel
+
+	* AUTHORS, Makefile.am, TODO, construo.cxx, construo_main.cxx,
+	construo_main.hxx, controller.cxx, controller.hxx,
+	graphic_context.hxx, gui_component.hxx, gui_manager.cxx,
+	gui_manager.hxx, input_context.hxx, lisp_reader.cxx,
+	lisp_reader.hxx, system_context.hxx, unix_system.cxx,
+	unix_system.hxx, world.cxx, world.hxx, worldview_component.cxx,
+	worldview_component.hxx, x11_display.cxx, x11_display.hxx:
+	restructed the code a bit to allow a gui
+
+2002-11-24 22:12  grumbel
+
+	* examples/choh/: README, quicksave0.construo, quicksave1.construo,
+	quicksave2.construo, quicksave3.construo, quicksave4.construo,
+	quicksave5.construo, quicksave6.construo, quicksave7.construo,
+	quicksave8.construo, quicksave9.construo: added Mark Michelsen's
+	House of Horror machines
+
+2002-11-24 20:49  grumbel
+
+	* Makefile.am, TODO, buttons.hxx, construo.cxx, construo.hxx,
+	construo_error.hxx, construo_main.cxx, construo_main.hxx,
+	force_emitter.hxx, input_context.cxx, lisp_reader.cxx,
+	lisp_reader.hxx, lisp_writer.cxx, lisp_writer.hxx, lispifier.cxx,
+	lispifier.hxx, particle.cxx, particle.hxx, spring.cxx, spring.hxx,
+	stick.cxx, stick.hxx, world.cxx, world.hxx: - fixed
+	particle_counter bug - fixed a few ugly variable/class names -
+	removed a bit obsolete xml code
+
+2002-11-23 00:07  grumbel
+
+	* TODO: more todo items
+
+2002-11-22 18:06  grumbel
+
+	* construo_main.cxx, xml2sexpr.sh, examples/Makefile.am: added
+	converter script
+
+2002-11-22 17:51  grumbel
+
+	* examples/: quicksave1.construo, quicksave2.construo,
+	quicksave3.construo, quicksave4.construo: release preperations
+
+2002-11-22 17:49  grumbel
+
+	* AUTHORS, INSTALL, Makefile.am, NEWS, README, TODO, buttons.hxx,
+	configure.ac, construo_main.cxx, construo_main.hxx, particle.cxx,
+	stick.cxx, stick.hxx, system_context.hxx, unix_system.cxx,
+	unix_system.hxx, world.cxx, world.hxx, x11_display.cxx,
+	x11_display.hxx: - quick load/save cleaned up - slow-motion added
+
+2002-11-22 16:16  grumbel
+
+	* examples/: capsule.construo, rotatium.construo: more examples
+
+2002-11-22 15:21  grumbel
+
+	* examples/explosion.construo: another example
+
+2002-11-22 14:02  grumbel
+
+	* examples/: balance.construo, bigthing.construo, bridgio.construo,
+	bug.construo, castle.construo, complex.construo,
+	complexus.construo, crashtest.construo, hangon.construo,
+	jesus.construo, krahn.construo, kran2.construo, kranfree.construo,
+	logo.construo, moonlander.construo, pendel.construo,
+	pendel45.construo, penguin.construo, penguin2.construo,
+	plane.construo, quicksave1.construo, quicksave2.construo,
+	quicksave3.construo, quicksave4.construo, shangon.construo,
+	test.construo, thingo.construo, thingo2.construo,
+	waaagggee45.construo, ziege.construo: - added a bunch of example
+	files
+
+2002-11-22 00:10  grumbel
+
+	* buttons.hxx, configure.ac, construo_main.cxx, construo_main.hxx,
+	lisp_reader.cxx, particle.cxx, particle.hxx, stick.hxx,
+	x11_display.cxx: added redo, fixed nan-bug
+
+2002-11-21 18:42  grumbel
+
+	* Makefile.am, NEWS, TODO, autogen.sh, buttons.hxx, config.cxx,
+	configure.ac, construo.cxx, construo.hxx, construo_error.hxx,
+	construo_main.cxx, construo_main.hxx, lisp_reader.cxx,
+	lisp_reader.hxx, lispifier.cxx, lispifier.hxx, lispreader.c,
+	lispreader.h, particle.cxx, particle.hxx, stick.cxx, stick.hxx,
+	world.cxx, world.hxx, x11_display.cxx: - implemented load/save, not
+	hooked up in the interface, but works
+
+2002-11-21 00:29  grumbel
+
+	* NEWS, buttons.hxx, color.hxx, construo_main.cxx,
+	construo_main.hxx, graphic_context.hxx, particle.hxx, world.cxx,
+	world.hxx, x11_display.cxx, x11_display.hxx: - docu fixes, lots of
+	small cleanup - beside load/save it looks quite useable
+
+2002-11-20 19:08  grumbel
+
+	* Makefile.am, buttons.hxx, color.hxx, construo.cxx, construo.hxx,
+	construo_main.cxx, construo_main.hxx, events.hxx,
+	force_emitter.hxx, graphic_context.hxx, input_context.cxx,
+	input_context.hxx, keep_alive.hxx, keep_alive_mgr.cxx,
+	keep_alive_mgr.hxx, keys.hxx, particle.hxx, world.cxx, world.hxx,
+	x11_display.cxx, x11_display.hxx: - added input handling -
+	connection of particles is up and running again
+
+2002-11-20 14:53  grumbel
+
+	* Makefile.am, configure.ac, construo_main.cxx, events.hxx,
+	graphic_context.hxx, input_context.hxx, keys.hxx, x11_display.cxx,
+	x11_display.hxx: - fixed make dist - added some test drawing stuff
+
+2002-11-20 13:59  grumbel
+
+	* Makefile.am, construo_main.cxx, construo_main.hxx,
+	input_context.hxx, keep_alive.hxx, keep_alive_mgr.cxx,
+	keep_alive_mgr.hxx, particle.hxx, system_context.hxx,
+	unix_system.cxx, unix_system.hxx, x11_display.cxx, x11_display.hxx:
+	- main loop is now up&running - most parts of input handling are
+	still missing, so its still unusable
+
+2002-11-20 12:39  grumbel
+
+	* Makefile.am, color.hxx, configure.ac, construo_main.cxx,
+	graphic_context.hxx, input_context.hxx, x11_display.cxx,
+	x11_display.hxx, unix_system.cxx, unix_system.hxx: - fixed
+	configure script - added unix context
+
+2002-11-20 01:53  grumbel
+
+	* .cvsignore: added ignore file
+
+2002-11-20 01:50  grumbel
+
+	* Config.cxx, Config.hxx, DeltaManager.hxx, TODO: - removed
+	obsolete files - added TODO
+
+2002-11-20 01:46  grumbel
+
+	* autogen.sh, color.hxx, config.hxx, construo.hxx,
+	construo_error.hxx, construo_main.hxx, delta_manager.hxx,
+	graphic_context.hxx, input_context.hxx, particle.hxx, stick.hxx,
+	system_context.hxx, vector.hxx, x11_display.hxx: - added
+	automake/autoconf support - removed clanlib and libxml dependencies
+	- added some code for the x11 target - lots of placeholders at the
+	moment, it will compile but not work
+
+2002-11-20 01:37  grumbel
+
+	* config.h.in: - added automake/autoconf support - removed clanlib
+	and libxml dependencies - added some code for the x11 target - lots
+	of placeholders at the moment, it will compile but not work
+
+2002-11-20 01:33  grumbel
+
+	* AUTHORS, Construo.cxx, Construo.hxx, Makefile, Makefile.am, NEWS,
+	config.cxx, configure.ac, construo_main.cxx, vector.cxx,
+	x11_display.cxx: - added automake/autoconf support - removed
+	clanlib and libxml dependencies - added some code for the x11
+	target - lots of placeholders at the moment, it will compile but
+	not work
+
+2002-03-21 20:07  grumbel
+
+	* Construo.cxx, Construo.hxx: Some updates to make it compilable
+	with the newest ClanLib along with -Wall clean fix
+
+2001-11-23 11:16  grumbel
+
+	* Makefile: Small fix in the makefile to let it compile with g++3.0
+
+2001-11-16 11:45  grumbel
+
+	* Makefile: Added Makefile
+
+2001-11-16 11:38  grumbel
+
+	* COPYING, Config.cxx, Config.hxx, Construo.cxx, Construo.hxx,
+	DeltaManager.hxx, INSTALL, README, fonts.dir: Initial revision
+
+2001-11-16 11:38  grumbel
+
+	* COPYING, Config.cxx, Config.hxx, Construo.cxx, Construo.hxx,
+	DeltaManager.hxx, INSTALL, README, fonts.dir: Initial checkin
+

@@ -42,16 +42,22 @@ WorldButton::~WorldButton ()
 void
 WorldButton::draw (GraphicContext* parent_gc)
 {
-  ZoomGraphicContext gc;
+  parent_gc->draw_fill_rect (x_pos, y_pos, 
+                             x_pos +  width, y_pos + height,
+                             Color (0xBB0000FF));
+
+  ZoomGraphicContext gc (x_pos, y_pos, x_pos + width, y_pos + height);
   gc.set_parent_gc(parent_gc);
+
+  gc.lock();
 
   if (world)
     {
+      // FIXME: bounding box should be calculated in construtor
       const WorldBoundingBox& box = world->calc_bounding_box();
       gc.zoom_to((int) box.x1, (int)box.y1,
                   (int)box.x2, (int)box.y2);
       world->draw (&gc);
-      gc.draw_string (50, 50, filename);
     }
   else
     {
@@ -59,6 +65,19 @@ WorldButton::draw (GraphicContext* parent_gc)
       gc.draw_line (0,0, gc.get_width (), gc.get_height (), Color (0xFF00FFFF));
       gc.draw_line (0,gc.get_height (), gc.get_width (), 0, Color (0xFF00FFFF));
     }
+
+  gc.unlock();
+
+  if (mouse_over)
+    parent_gc->draw_rect (x_pos, y_pos, 
+                          x_pos +  width, y_pos + height,
+                          Color (0xFFFFFFFF));
+  else
+    parent_gc->draw_rect (x_pos, y_pos, 
+                          x_pos +  width, y_pos + height,
+                          Color (0xFF0000FF));
+
+  parent_gc->draw_string (x_pos + 20, y_pos + 160, filename);
 }
 
 void

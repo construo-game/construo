@@ -53,7 +53,7 @@ private:
   void draw_status ();
   GUIComponent* find_component_at (int, int);
 
-  //GUIFileManager file_manager;
+  GUIFileManager file_manager;
 
   static GUIManager* instance_;
 public:

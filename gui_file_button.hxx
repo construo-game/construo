@@ -29,12 +29,16 @@ class GUIFileButton : public GUIComponent
 {
 protected:
   std::string filename;
+  bool mouse_over;
 public:
   GUIFileButton (const std::string& arg_filename);
   ~GUIFileButton ();
 
   //virtual void draw (ZoomGraphicContext*) =0;
   virtual void on_click() =0;
+
+  void on_mouse_enter () { mouse_over = true; }
+  void on_mouse_leave () { mouse_over = false; }
 };
 
 #endif

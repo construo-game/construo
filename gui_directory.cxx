@@ -60,11 +60,21 @@ GUIDirectory::~GUIDirectory ()
 void
 GUIDirectory::draw (GraphicContext* gc)
 {
+  int x_pos = 50;
+  int y_pos = 37;
   for(std::vector<GUIFileButton*>::iterator i = files.begin();
       i != files.end();
       ++i)
     {
-      (*i)->draw(gc);
+      (*i)->set_position(x_pos, y_pos);
+      (*i)->draw(gc); 
+      
+      x_pos += 250;
+      if (x_pos > 800)
+        {
+          x_pos = 50;
+          y_pos += 187;
+        }
     }  
 }
 

@@ -28,13 +28,13 @@ ZoomGraphicContext::ZoomGraphicContext ()
   y_offset = 0.0f;
   zoom = 1.0f;
 
-  /*  x1 = y1 = 0;
+  x1 = y1 = 0;
   // FIXME: should use parent gc
   x2 = graphic_context->get_width();
-  y2 = graphic_context->get_height();*/
+  y2 = graphic_context->get_height();
 }
 
-/*ZoomGraphicContext::ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_)
+ZoomGraphicContext::ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_)
   : x1 (x1_),
     y1 (y1_),
     x2 (x2_),
@@ -44,7 +44,19 @@ ZoomGraphicContext::ZoomGraphicContext ()
   y_offset   = 0;
   zoom       = 1.0f;
   parent_gc  = NULL;
-}*/
+}
+
+void
+ZoomGraphicContext::lock ()
+{
+  parent_gc->set_clip_rect (x1, y1, x2, y2);
+}
+
+void
+ZoomGraphicContext::unlock ()
+{
+  parent_gc->set_clip_rect (0, 0, parent_gc->get_width (), parent_gc->get_height());
+}
 
 Vector2d
 ZoomGraphicContext::screen_to_world (const Vector2d& pos)
@@ -56,8 +68,8 @@ ZoomGraphicContext::screen_to_world (const Vector2d& pos)
 Vector2d
 ZoomGraphicContext::world_to_screen (const Vector2d& pos)
 {
-  return Vector2d ((pos.x + x_offset) * zoom,
-                   (pos.y + y_offset) * zoom);
+  return Vector2d ((pos.x + x_offset) * zoom + x1,
+                   (pos.y + y_offset) * zoom + y1);
 }
 
 float
@@ -75,13 +87,13 @@ ZoomGraphicContext::screen_to_world_y (float y)
 float
 ZoomGraphicContext::world_to_screen_x (float x)
 {
-  return (x + x_offset) * zoom;
+  return (x + x_offset) * zoom + x1;
 }
 
 float
 ZoomGraphicContext::world_to_screen_y (float y) 
 {
-  return (y + y_offset) * zoom;
+  return (y + y_offset) * zoom + y1;
 }
 
 void
@@ -257,15 +269,27 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
   
   if (rect_relation > screen_relation)
     {
-      set_zoom(800/width);
+      set_zoom(get_width()/width);
     }
   else
     {
-      set_zoom(600/height);
+      set_zoom(get_height()/height);
     }
 
   x_offset = (get_width()  / (2*zoom)) - center_x;
   y_offset = (get_height() / (2*zoom)) - center_y;
+}
+
+int
+ZoomGraphicContext::get_width ()
+{
+  return x2 - x1;
+}
+
+int
+ZoomGraphicContext::get_height ()
+{
+  return y2 - y1;
 }
 
 /* EOF */

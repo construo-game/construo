@@ -52,8 +52,7 @@ Spring::Spring (World* world, lisp_object_t* cursor)
   : destroyed (false)
 {
   cursor = lisp_cdr(cursor); // Skip the identifer
-  
-  bool spring_err_msg = false;
+
   int first_id = -1;
   int second_id = -1;
   length = -1;
@@ -77,12 +76,7 @@ Spring::Spring (World* world, lisp_object_t* cursor)
 
   if (length == -1)
     {
-      if (!spring_err_msg)
-        {
-          std::cout << "Spring: length missing in data file, recalculating" << std::endl;
-          spring_err_msg = true;
-        }
-      
+      //std::cout << "Spring: length missing in data file, recalculating" << std::endl;     
       length = fabs((particles.first->pos - particles.second->pos).norm ());
     }
 }

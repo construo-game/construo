@@ -677,4 +677,20 @@ X11Display::restore_mode ()
 #endif
 }
 
+void
+X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
+{
+  XRectangle rect[1];
+
+  rect[0].x = x1;
+  rect[0].y = y1;
+  rect[0].width  = x2 - x1;
+  rect[0].height = y2 - y1;
+
+  XSetClipRectangles (display, gc, 
+                      0, 0, // clip origin
+                      rect, 1,
+                      Unsorted);
+}
+
 /* EOF */

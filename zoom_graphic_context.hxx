@@ -28,10 +28,10 @@
 class ZoomGraphicContext : public GraphicContext
 {
 private:
-  /*int x1;
+  int x1;
   int y1;
   int x2;
-  int y2;*/
+  int y2;
 
   GraphicContext* parent_gc;
 
@@ -43,8 +43,14 @@ private:
   int translate_y (int);
 public:
   ZoomGraphicContext ();
-  //ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_);
+  ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_);
 
+  /** Sets the clipping rectangles needed for the GC */
+  void lock ();
+
+  /** Resets the clipping to the old state */
+  void unlock ();
+  
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_circle(float x, float y, float r, Color color);
@@ -52,8 +58,8 @@ public:
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
 
-  int get_width ()  { return parent_gc->get_width (); }
-  int get_height () { return parent_gc->get_height (); }
+  int get_width ();
+  int get_height ();
 
   void clear ()  { parent_gc->clear (); }
 
