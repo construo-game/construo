@@ -1,9 +1,7 @@
-Release 0.2.1:
+Release 0.2.2:
 * update Changelog
 * fix assertion on broken files
 * fix broken demos (complex*, explode, ...)
-* fix make install
-* let it act nicly on the lack of examples/ directory
 
 Release 0.3.0:
 * Magnetic forces, aka gravity forces which reflect some particles and
@@ -37,18 +35,19 @@ Release 0.3.0:
 --- User contributed ---
  - Capability to connect springs into the middle of another spring
    [grumbel: don't think this is a good idea, the physics model
-   doesn't work like this]
+   doesn't work like this, but it still could be done if we simply
+   break the single spring into two]
 
  - Objects that cannot be penetrated with wire.
    [grumbel: doesn't mix with physic engine, objects that can't be
-   penetrated by particles will come]
+   penetrated by particles are already there]
  
  - Capability to adjust individual parameters of springs. 
    [grumbel: might come, but will be limited]
 
  - A macro language (yes, lisp is fine, there seems to be some code
    for it). [grumbel: won't come, overkill, use scripting language to
-   create the construo file instead]
+   create the construo file instead, optional guile support maybe?!]
 
  - Concept of object (grouping of lines / other objects). [grumbel:
    might come with the prefabs, but most likly only 'passive' so that

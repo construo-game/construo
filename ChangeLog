@@ -1,3 +1,257 @@
+2003-07-28 12:24  grumbel
+
+	* Makefile.am, config.h.in, configure.ac, construo_main.cxx,
+	gui_button.cxx, gui_button.hxx: - cleaned up the configure and
+	makefile a bit
+
+2003-07-28 11:23  grumbel
+
+	* colors.hxx, particle_factory.cxx, worldview_insert_tool.cxx,
+	NEWS: - fixed the problem with new particles disappearing
+	immidiatly in run mode
+
+2003-07-28 10:57  grumbel
+
+	* NEWS, colors.cxx, colors.hxx, worldview_component.cxx,
+	worldview_component.hxx: - added nicer ground drawing
+
+2003-07-27 20:47  grumbel
+
+	* x11_display.cxx: [no log message]
+
+2003-07-27 20:46  grumbel
+
+	* NEWS, color.hxx, configure.ac, controller.cxx, particle.hxx,
+	particle_factory.cxx, spring.cxx, world.cxx, world.hxx,
+	x11_display.cxx, x11_display.hxx: fixed broken color handling
+
+2003-07-26 19:06  grumbel
+
+	* examples/pendulum.construo: one more construction
+
+2003-07-26 19:03  grumbel
+
+	* glut_display.cxx: - added linewidth handling to the glut target
+
+2003-07-26 18:42  grumbel
+
+	* AUTHORS: last update
+
+2003-07-26 18:39  grumbel
+
+	* NEWS: release ready
+
+2003-07-26 18:38  grumbel
+
+	* examples/: bridge2.construo, mrwooble.construo, simple.construo:
+	new construction
+
+2003-07-26 18:34  grumbel
+
+	* gui_buttons.cxx, world_gui_manager.cxx: moved buttons a bit
+
+2003-07-26 18:15  grumbel
+
+	* configure.ac, worldview_select_tool.cxx,
+	worldview_select_tool.hxx: - fixed grid movement
+
+2003-07-26 17:11  grumbel
+
+	* worldview_insert_tool.cxx: - some doc fixes
+
+2003-07-26 16:55  grumbel
+
+	* x11_display.cxx: - fixed garbage on startup bug in x11
+
+2003-07-26 16:43  grumbel
+
+	* NEWS, command_line.cxx, controller.cxx, glut_display.cxx,
+	settings.cxx, settings.hxx, world_gui_manager.cxx,
+	worldview_component.cxx, worldview_component.hxx, x11_display.cxx:
+	- added switch for thick lines - added automatic zoom in for newly
+	loaded models
+
+2003-07-26 16:32  grumbel
+
+	* examples/: basketball.construo, bridg4.construo,
+	bridge4.construo, bridge6-1.construo, bridge6.construo,
+	galactica.construo, house.construo, kamikaze.construo,
+	temple.construo, wooble.construo: - some more models
+
+2003-07-26 14:14  grumbel
+
+	* NEWS, glut_display.cxx, glut_display.hxx: - added runtime
+	fullscreen switiching for glut
+
+2003-07-26 13:18  grumbel
+
+	* Makefile.am, bounding_box.cxx, bounding_box.hxx, collider.hxx,
+	configure.ac, construo_main.cxx, glut_display.cxx,
+	glut_display.hxx, rect_collider.cxx, rect_collider.hxx, world.cxx,
+	world.hxx, world_button.cxx, worldview_component.cxx: - fixed
+	bounding box handling a bit - added glut fullscreen
+
+2003-07-26 02:51  grumbel
+
+	* NEWS, Makefile.am, acinclude.m4, cursors.hxx: - added support for
+	different cursors
+
+2003-07-26 02:50  grumbel
+
+	* glut_display.cxx, glut_display.hxx, worldview_select_tool.cxx: -
+	added cursors to glut
+
+2003-07-26 02:39  grumbel
+
+	* Makefile.am, construo.cxx, construo.hxx, cursor_collider.xbm,
+	cursor_collider_mask.xbm, cursor_insert.xbm,
+	cursor_insert_mask.xbm, cursor_scroll.xbm, cursor_scroll_mask.xbm,
+	cursor_select.xbm, cursor_select_mask.xbm, cursor_zoom.xbm,
+	cursor_zoom_mask.xbm, glut_display.hxx, gui_manager.cxx,
+	load_gui_manager.cxx, root_graphic_context.cxx,
+	root_graphic_context.hxx, save_gui_manager.cxx,
+	world_gui_manager.cxx, worldview_component.cxx, x11_display.cxx,
+	x11_display.hxx, zoom_graphic_context.cxx: - added support for
+	different cursors
+
+2003-07-26 02:01  grumbel
+
+	* cursor.xcf: - added cursor
+
+2003-07-26 01:03  grumbel
+
+	* buttons.hxx, construo_main.cxx, construo_main.hxx,
+	glut_display.cxx, gui_manager.cxx, worldview_component.cxx,
+	x11_display.cxx, x11_display.hxx: - added fullscreen switching at
+	runtime
+
+2003-07-25 21:14  grumbel
+
+	* glut_display.cxx, worldview_component.cxx, x11_display.cxx: fixed
+	window resize for glut, added different cursor for xlib
+
+2003-07-25 17:57  grumbel
+
+	* buttons.hxx, glut_display.cxx, gui_component.hxx,
+	gui_manager.cxx, selection.cxx, selection.hxx, vector2d.hxx,
+	world.hxx, worldview_component.cxx, worldview_component.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.hxx, x11_display.cxx, NEWS: - added blender like
+	'remove doubles', here called 'join doubles', keypress 'j'
+
+2003-07-25 15:16  grumbel
+
+	* unix_system.cxx: - fixed missing assert
+
+2003-07-25 15:11  grumbel
+
+	* particle_factory.cxx: - fixed missing <algorithm>
+
+2003-07-25 13:07  grumbel
+
+	* Makefile.am, NEWS, autogen.sh, command_line.cxx, config.h.in,
+	configure.ac, construo.hxx, construo_main.cxx,
+	gui_new_file_button.cxx, gui_new_file_button.hxx, path_manager.cxx,
+	path_manager.hxx, save_gui_manager.cxx, save_gui_manager.hxx,
+	settings.hxx, unix_system.cxx, examples/Makefile.am: - fixed 'make
+	install'
+
+2003-07-25 11:52  grumbel
+
+	* worldview_component.cxx: - disable grid on far zoom outs
+
+2003-07-25 11:39  grumbel
+
+	* construo_main.cxx, construo_main.hxx, glut_display.cxx,
+	x11_display.cxx: - fixed missing exit handling in glut - fixed
+	window title
+
+2003-07-25 00:39  grumbel
+
+	* controller.cxx, glut_display.cxx, gui_manager.cxx, selection.cxx,
+	worldview_component.cxx: - removed a few less usefull debug
+	messages
+
+2003-07-25 00:23  grumbel
+
+	* spring_type.hxx, examples/bridge3.construo,
+	examples/candle.construo: more models
+
+2003-07-25 00:22  grumbel
+
+	* config.h.in, configure.ac, gui_buttons.cxx,
+	world_gui_manager.cxx: - added grid button - added debug mode to
+	configure
+
+2003-07-24 23:43  grumbel
+
+	* math.hxx: fixed rounding error
+
+2003-07-24 23:33  grumbel
+
+	* colors.cxx, colors.hxx, glut_display.cxx, glut_display.hxx,
+	graphic_context.hxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_insert_tool.cxx,
+	zoom_graphic_context.hxx: some optimizations, some fixes for the
+	grid
+
+2003-07-24 18:09  grumbel
+
+	* NEWS: - added grid support
+
+2003-07-24 17:53  grumbel
+
+	* buttons.hxx, glut_display.cxx, gui_component.hxx,
+	gui_manager.cxx, math.hxx, particle.hxx, settings.hxx, spring.hxx,
+	world_gui_manager.cxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_insert_tool.cxx,
+	worldview_insert_tool.hxx, worldview_select_tool.cxx,
+	x11_display.cxx: - added grid support
+
+2003-07-24 14:22  grumbel
+
+	* .cvsignore, NEWS, unix_system.cxx, unix_system.hxx: fixed bug in
+	filehandling
+
+2003-07-24 12:55  grumbel
+
+	* .cvsignore, AUTHORS, Makefile.am, README, configure.ac,
+	doxygen.cfg, globals.cxx, globals.hxx, gui_new_file_button.cxx,
+	gui_new_file_button.hxx, save_gui_manager.cxx,
+	save_gui_manager.hxx: - missing files - incremented version to
+	0.2.1
+
+2003-07-24 12:14  grumbel
+
+	* examples/: .cvsignore, landingv2.construo, pig.construo,
+	rocketlanding.construo, tower.construo: some more models
+
+2003-07-24 12:10  grumbel
+
+	* INSTALL, NEWS, TODO, autogen.sh, color.hxx, colors.cxx,
+	config.h.in, configure.ac, glut_display.cxx, glut_display.hxx,
+	graphic_context.hxx, gui_file_manager.cxx, gui_manager.hxx,
+	lisp_writer.cxx, lisp_writer.hxx, particle.cxx, particle.hxx,
+	particle_factory.cxx, rect_collider.cxx, selection.cxx, spring.cxx,
+	spring.hxx, string_utils.cxx, string_utils.hxx, system_context.hxx,
+	unix_system.cxx, unix_system.hxx, vector2d.hxx, world.cxx,
+	world_gui_manager.cxx, worldview_zoom_tool.cxx,
+	worldview_zoom_tool.hxx, x11_display.cxx, x11_display.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx: - added support
+	for gziped files - added support to draw multiple lines at once -
+	added some docu - added right-click zoom out for zoomtool - fixed a
+	few missing includes
+
+2003-07-23 10:07  grumbel
+
+	* examples/bridge2.construo: added Tristan Lietz's bridge
+
+2003-01-12 20:06  grumbel
+
+	* ChangeLog, Makefile.am, NEWS, README, configure.ac,
+	glut_display.cxx, selection.cxx, unix_system.cxx, x11_display.cxx:
+	added missing keybindings
+
 2003-01-11 20:07  grumbel
 
 	* Makefile.am, NEWS, configure.ac, construo_main.cxx,
