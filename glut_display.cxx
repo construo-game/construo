@@ -141,7 +141,8 @@ GlutDisplay::~GlutDisplay()
 void
 GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
 {
-  glLineWidth (wide);
+  if (settings.thick_lines)
+    glLineWidth (wide);
   
   glBegin (GL_LINES);
   for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
@@ -155,7 +156,9 @@ GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
 void 
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
-  glLineWidth (wide);
+  if (settings.thick_lines)
+    glLineWidth (wide);
+  
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINES);
   glVertex2f (x1, y1);
@@ -166,7 +169,9 @@ GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int 
 void
 GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  glLineWidth (2);
+  if (settings.thick_lines)
+    glLineWidth (2);
+
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINE_STRIP);
   glVertex2f (x1, y1);
@@ -180,7 +185,9 @@ GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 void
 GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  glLineWidth (.5f);
+  if (settings.thick_lines)
+    glLineWidth (.5f);
+
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_QUADS);
   glVertex2f (x1, y1);
@@ -238,7 +245,9 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 void
 GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 {
-  glLineWidth (1.0f);
+  if (settings.thick_lines)
+    glLineWidth (1.0f);
+
   glColor4f (color.r, color.g, color.b, color.a);
   glPushMatrix();
   glTranslatef (x , y, 0);
