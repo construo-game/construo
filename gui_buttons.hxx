@@ -96,6 +96,13 @@ public:
   void on_click();
 };
 
+class GUILoadButton : public GUIButton
+{
+public:
+  GUILoadButton ();
+  void on_click();
+};
+
 class GUIGenericButton : public GUIButton
 {
 private:

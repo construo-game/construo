@@ -24,7 +24,7 @@ InputContext::get_event(Event* event)
 {
   if (!events.empty())
     {
-      *event = events.back();
+      *event = events.front();
       events.pop();
       return true;
     }

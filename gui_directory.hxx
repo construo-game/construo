@@ -31,16 +31,20 @@ class GUIDirectory : public GUIChildManager
 {
 private:
   std::vector<GUIFileButton*> files;
+  int offset;
+  
+  void place_components ();
 public:
   GUIDirectory (const std::string& pathname);
   ~GUIDirectory ();
-
-  void draw (GraphicContext*);
 
   /** Move the shown directory content up */
   void move_up ();
   /** Move the shown directory content down */
   void move_down ();
+
+  void wheel_up (int x, int y);
+  void wheel_down (int x, int y);
 };
 
 #endif

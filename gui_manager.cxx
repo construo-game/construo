@@ -216,6 +216,10 @@ GUIManager::process_button_events (ButtonEvent& button)
           Controller::instance()->load_from_slot (button.id - BUTTON_QUICKLOAD0);
           break;
 
+        case BUTTON_ZOOM_OUT:
+        case BUTTON_ZOOM_IN:
+          break;
+
         default:
           current_component->on_button_press (button.id, x, y);
           break;
@@ -304,6 +308,7 @@ GUIManager::process_events ()
           switch (event.type)
             {
             case BUTTON_EVENT:
+              //std::cout << "BUTTON_EVENT: " << event.button.id  << " state: " << event.button.pressed << std::endl;
               process_button_events (event.button);
               break;
             default: 

@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <algorithm>
 #include "graphic_context.hxx"
 #include "colors.hxx"
 #include "gui_child_manager.hxx"
@@ -39,6 +40,12 @@ void
 GUIChildManager::add (GUIComponent* comp)
 {
   components.push_back(comp);
+}
+
+void
+GUIChildManager::remove (GUIComponent* comp)
+{
+  components.erase(std::remove(components.begin(), components.end(), comp), components.end());
 }
 
 void
@@ -240,10 +247,7 @@ void
 GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
 {
   GUIComponent* comp = find_component_at (x, y);
-  std::cout << "MouseMove: " << x << " " << y << " " << comp << std::endl;
-
-  if (comp)
-    comp->on_mouse_move(x, y, of_x, of_y);
+  //std::cout << " MouseMove: " << x << " " << y << " " << comp << std::endl;
 
   if (comp != current_component)
     {
@@ -251,6 +255,8 @@ GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
       if (current_component) current_component->on_mouse_leave();
       current_component = comp;
     }
+  else if (comp)
+    comp->on_mouse_move(x, y, of_x, of_y);
 }
 
 GUIComponent* 

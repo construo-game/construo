@@ -272,40 +272,35 @@ X11Display::read_event ()
 
     case ButtonPress:
       {
-        Event ev;
-        ev.button.type = BUTTON_EVENT;
+        //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
+
         if (event.xbutton.button == 1)
-          ev.button.id = BUTTON_PRIMARY;
+          send_button_press(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)
-          ev.button.id = BUTTON_TERTIARY;
+          send_button_press(BUTTON_TERTIARY);
         else if (event.xbutton.button == 3)
-          ev.button.id = BUTTON_SECONDARY;
+          send_button_press(BUTTON_SECONDARY);
         else if (event.xbutton.button == 4)
-          ev.button.id = BUTTON_ZOOM_OUT;
+          send_button_press(BUTTON_ZOOM_OUT);
         else if (event.xbutton.button == 5)
-          ev.button.id = BUTTON_ZOOM_IN;
-
-        ev.button.pressed = true;
-
-        events.push(Event(ev));
+          send_button_press(BUTTON_ZOOM_IN);
       }
       break;
 
     case ButtonRelease:
       {
-        Event ev;
-        ev.button.type = BUTTON_EVENT;
+        //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
 
         if (event.xbutton.button == 1)
-          ev.button.id = BUTTON_PRIMARY;
+          send_button_release(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)
-          ev.button.id = BUTTON_TERTIARY;
+          send_button_release(BUTTON_TERTIARY);
         else if (event.xbutton.button == 3)
-          ev.button.id = BUTTON_SECONDARY;
-
-        ev.button.pressed = false;
-
-        events.push(Event(ev));
+          send_button_release(BUTTON_SECONDARY);
+        else if (event.xbutton.button == 4)
+          send_button_release(BUTTON_ZOOM_OUT);
+        else if (event.xbutton.button == 5)
+          send_button_release(BUTTON_ZOOM_IN);
       }
       break;
 
@@ -468,7 +463,17 @@ X11Display::send_button_press (int i)
   ev.button.type = BUTTON_EVENT;
   ev.button.id = i;
   ev.button.pressed = true;
-  events.push(Event(ev)); 
+  events.push(ev); 
+}
+
+void
+X11Display::send_button_release (int i)
+{
+  Event ev;
+  ev.button.type = BUTTON_EVENT;
+  ev.button.id = i;
+  ev.button.pressed = false;
+  events.push(ev); 
 }
 
 void

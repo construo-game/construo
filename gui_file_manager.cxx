@@ -26,6 +26,7 @@ GUIFileManager::GUIFileManager ()
 {
   current_directory = new GUIDirectory ("/examples/");
   directories["/"] = current_directory;
+
   add(current_directory);
 }
 

@@ -114,6 +114,7 @@ public:
 private:
   bool read_event ();
   void send_button_press (int i);
+  void send_button_release (int i);
   void send_load_or_save(int n);
 
   X11Display (const X11Display&);

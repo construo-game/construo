@@ -23,6 +23,7 @@
 #include "colors.hxx"
 #include "world_gui_manager.hxx"
 #include "gui_buttons.hxx"
+#include "screen_manager.hxx"
 #include "worldview_component.hxx"
 
 #define BUTTON_POS(n) (50 + n * 30)
@@ -226,7 +227,7 @@ GUIZoomOutButton::on_click()
 }
 
 GUIQuitButton::GUIQuitButton ()
-  : GUIButton ("Quit", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Quit", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
 }
 
@@ -235,5 +236,18 @@ GUIQuitButton::on_click()
 {
   WorldGUIManager::instance()->quit();
 }
+
+
+GUILoadButton::GUILoadButton ()
+  : GUIButton ("Load", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT)
+{
+}
+
+void
+GUILoadButton::on_click()
+{
+  ScreenManager::instance()->set_gui(ScreenManager::LOAD_GUI);
+}
+
 
 /* EOF */

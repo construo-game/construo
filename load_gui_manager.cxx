@@ -1,6 +1,6 @@
 //  $Id$
-// 
-//  Construo - A wire-frame construction game
+//
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -12,30 +12,23 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_EVENTS_HXX
-#define HEADER_CONSTRUO_EVENTS_HXX
+#include "gui_file_manager.hxx"
+#include "load_gui_manager.hxx"
 
-enum { BUTTON_EVENT };
-
-struct ButtonEvent
+LoadGUIManager::LoadGUIManager ()
 {
-  int  type;
-  int  id;
-  bool pressed;
-};
+  file_manager = new GUIFileManager ();
+  add (file_manager);
+}
 
-/** */
-union Event
+void
+LoadGUIManager::draw_overlay ()
 {
-  int type;
-  ButtonEvent button;
-};
-
-#endif
+}
 
 /* EOF */

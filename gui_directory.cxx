@@ -52,10 +52,8 @@ GUIDirectory::GUIDirectory (const std::string& pathname)
         }
     }
 
-  for (std::vector<GUIFileButton*>::iterator i = files.begin(); i != files.end(); ++i)
-    {
-      add(*i);
-    }
+  offset = 0;
+  place_components ();
 }
 
 GUIDirectory::~GUIDirectory ()
@@ -63,19 +61,28 @@ GUIDirectory::~GUIDirectory ()
 }
 
 void
-GUIDirectory::draw (GraphicContext* gc)
+GUIDirectory::place_components ()
 {
+  // Remove all file components
+  for(std::vector<GUIFileButton*>::iterator i = files.begin();
+      i != files.end(); ++i)
+    {
+      remove(*i);
+    }
+
   int row = 0;
   int column = 0;
   int count = 0;
 
-  for(std::vector<GUIFileButton*>::iterator i = files.begin();
-      i != files.end() && count < 8;
+  std::cout << "OFFSET: " << offset << std::endl;
+
+  for(std::vector<GUIFileButton*>::size_type i = 0 + offset;
+      i < files.size() && count < 9;
       ++i)
     {
-      (*i)->set_position(column * (200 + 50) + 50,
-                         row * (150 + 37) + 30);
-      (*i)->draw(gc); 
+      files[i]->set_position(column * (200 + 50) + 50,
+                             row * (150 + 37) + 30);
+      add(files[i]);
 
       column += 1;
       if (column >= 3) // row is full
@@ -85,19 +92,41 @@ GUIDirectory::draw (GraphicContext* gc)
         }
       if (row >= 3)
         return;
-    }  
+
+      ++count;
+    }
 }
 
 void
 GUIDirectory::move_up ()
 {
-  
+  offset -= 3;
+  if (offset < 0)
+    offset = 0;
+  place_components ();
 }
 
 void
 GUIDirectory::move_down ()
 {
-  
+  offset += 3;
+  if (offset >= files.size())
+    offset -= 3;
+  place_components ();
+}
+
+void
+GUIDirectory::wheel_up (int x, int y)
+{
+  std::cout << "GUIDirectory got wheel_up" << std::endl;
+  move_up(); 
+}
+
+void
+GUIDirectory::wheel_down (int x, int y) 
+{
+  std::cout << "GUIDirectory got wheel_down" << std::endl;
+  move_down();  
 }
 
 /* EOF */

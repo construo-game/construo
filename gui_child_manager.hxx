@@ -40,6 +40,8 @@ public:
   ~GUIChildManager ();
 
   void add (GUIComponent*);
+  void remove (GUIComponent*);
+
   void draw (GraphicContext* gc);
 
   void on_primary_button_press (int x, int y);
