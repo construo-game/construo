@@ -31,6 +31,7 @@ private:
 public:
   UnixSystem ();
   unsigned int get_time ();
+  void sleep (unsigned long);
 };
 
 #endif

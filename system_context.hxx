@@ -26,6 +26,9 @@ class SystemContext
 private:
 public:
   virtual unsigned int get_time () =0;
+
+  /** sleep for the given number of milisec */
+  virtual void sleep (unsigned long) =0;
 };
 
 #endif

@@ -17,12 +17,14 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <iostream>
 #include "construo_error.hxx"
 #include "x11_display.hxx"
 
 X11Display::X11Display(int w, int h)
   : width(w), height(h)
 {
+  std::cout << "Opening X11 display" << std::endl;
   display = XOpenDisplay(NULL);
 
   if (!display)
@@ -59,6 +61,7 @@ X11Display::X11Display(int w, int h)
 
 X11Display::~X11Display ()
 {
+  std::cout << "Closing X11 display" << std::endl;
   XCloseDisplay(display);
 }
 
@@ -83,6 +86,7 @@ X11Display::draw_rect(int x1, int y1, int x2, int y2, Color color)
 void
 X11Display::draw_string(int x, int y, const std::string& str)
 {
+  
 }
 
 int
@@ -95,6 +99,36 @@ int
 X11Display::get_mouse_y ()
 {
   return mouse_y;
+}
+
+bool
+X11Display::get_keycode (int key)
+{
+  return false;
+}
+
+void
+X11Display::keep_alive ()
+{
+  //std::cout << "Keep alive" << std::endl;
+  XEvent event;
+
+  while (XPending (display) > 0)
+    {
+      XNextEvent (display, &event);
+     
+      switch (event.type)
+        {
+        case MotionNotify:
+          mouse_x = event.xmotion.x;
+          mouse_y = event.xmotion.y;
+          break;
+
+        default: 
+          std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+          break;
+        }
+    }
 }
 
 /* EOF */

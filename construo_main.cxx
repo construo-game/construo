@@ -29,7 +29,7 @@
 
 unsigned int Particle::id_counter;
 
-Construo::Construo ()
+ConstruoMain::ConstruoMain ()
 {
   last_particle = 0;
   running = false;
@@ -37,18 +37,18 @@ Construo::Construo ()
   load_xml (config.get_construo_dir () + "/" + "quicksave1.xml");
 }
 
-Construo::~Construo ()
+ConstruoMain::~ConstruoMain ()
 {
 }
 
 char* 
-Construo::get_title ()
+ConstruoMain::get_title ()
 {
   return "Construo";
 }
 
 void 
-Construo::on_mouse_press(int button_no) 
+ConstruoMain::on_mouse_press(int button_no) 
 {
 #if 0 
   click_pos = CL_Vector (key.x, key.y);
@@ -80,7 +80,7 @@ Construo::on_mouse_press(int button_no)
 }
 
 void 
-Construo::on_key_press(int key_id)
+ConstruoMain::on_key_press(int key_id)
 {
 #if 0
   else if (device == CL_Input::keyboards[0])
@@ -133,7 +133,7 @@ Construo::on_key_press(int key_id)
 }
 
 void
-Construo::load_or_save_xml (std::string filename)
+ConstruoMain::load_or_save_xml (std::string filename)
 {
 #if 0
   if (CL_Keyboard::get_keycode (CL_KEY_LSHIFT)
@@ -145,7 +145,7 @@ Construo::load_or_save_xml (std::string filename)
 }
 
 void
-Construo::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
+ConstruoMain::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
 {
 #if 0
   xmlNodePtr cur = arg_cur->children;
@@ -212,9 +212,8 @@ Construo::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
 }
 
 Particle* 
-Construo::id_to_particle (unsigned int n)
+ConstruoMain::id_to_particle (unsigned int n)
 {
-#if 0
   for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
     {
       if ((*i)->get_id () == n)
@@ -222,11 +221,10 @@ Construo::id_to_particle (unsigned int n)
     }
   std::cout << "Couldn't find particle id" << std::endl;
   return 0;
-#endif
 }
 
 void
-Construo::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
+ConstruoMain::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
 {
 #if 0
   xmlNodePtr cur = arg_cur->children;
@@ -260,7 +258,7 @@ Construo::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
 }
 
 void 
-Construo::zero_out_velocity ()
+ConstruoMain::zero_out_velocity ()
 {
   std::cout << "Setting velocity to zero" << std::endl;
   for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
@@ -270,7 +268,7 @@ Construo::zero_out_velocity ()
 }
 
 void
-Construo::load_xml (std::string filename)
+ConstruoMain::load_xml (std::string filename)
 {
 #if 0
   running = false;
@@ -333,7 +331,7 @@ Construo::load_xml (std::string filename)
 }
 
 void 
-Construo::save_xml (std::string filename)
+ConstruoMain::save_xml (std::string filename)
 {
   std::cout << "Quick save to: " << filename << std::endl;
   std::ofstream out (filename.c_str ());
@@ -359,7 +357,7 @@ Construo::save_xml (std::string filename)
 }
 
 void 
-Construo::on_key_release(int key_id)
+ConstruoMain::on_key_release(int key_id)
 {
   /*
     if (device == CL_Input::pointers[0])
@@ -383,10 +381,9 @@ Construo::on_key_release(int key_id)
 }
 
 Particle* 
-Construo::current_particle ()
+ConstruoMain::current_particle ()
 {
-#if 0
-  CL_Vector mouse_pos (CL_Mouse::get_x (), CL_Mouse::get_y ());
+  CL_Vector mouse_pos (input_context->get_mouse_x (), input_context->get_mouse_y ());
   
   Particle* particle = 0;
   float min_dist = 25;
@@ -402,7 +399,6 @@ Construo::current_particle ()
     }
   
   return particle;
-#endif
 }
 
 bool stick_destroyed (Stick* stick)
@@ -411,20 +407,17 @@ bool stick_destroyed (Stick* stick)
 }
 
 int 
-Construo::main (int argc, char* argv[])
+ConstruoMain::main (int argc, char* argv[])
 {
-#if 0
-  std::cout << "Construo" << std::endl;
-  CL_SetupDisplay::init ();
-  CL_Display::set_videomode (800, 600, 16, false, false);
 
   DeltaManager delta_manager;
 
-  slot_press = CL_Input::sig_button_press ().connect (this, &Construo::on_press);
-  slot_release = CL_Input::sig_button_release ().connect (this, &Construo::on_release);
+  //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
+  //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
   
-  while (!CL_Keyboard::get_keycode (CL_KEY_ESCAPE))
+  while (!input_context->get_keycode (KEY_ESCAPE))
     {
+#if 0
       double delta;
       
       if (slow_down)
@@ -542,12 +535,10 @@ Construo::main (int argc, char* argv[])
         }
 
       CL_System::keep_alive ();
-
-    }
-
-  CL_SetupDisplay::deinit ();
-  return 0;
 #endif
+      KeepAliveMgr::keep_alive ();
+      system_context->sleep (1000);
+    }
   return 0;
 }
 
@@ -562,7 +553,9 @@ int main (int argc, char** argv)
   graphic_context = &display;
   input_context   = &display;
   system_context  = &system;
-
+  
+  ConstruoMain app;
+  return app.main (argc, argv);
 }
 
 /* EOF */

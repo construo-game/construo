@@ -17,14 +17,17 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_INPUT_CONTEXT_HXX
-#define HEADER_INPUT_CONTEXT_HXX
+#ifndef HEADER_CONSTRUO_INPUT_CONTEXT_HXX
+#define HEADER_CONSTRUO_INPUT_CONTEXT_HXX
+
+#include "keys.hxx"
 
 /** */
 class InputContext
 {
 private:
 public:
+  virtual bool get_keycode (int key) =0;
   virtual int get_mouse_x () =0;
   virtual int get_mouse_y () =0;
 };

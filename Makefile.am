@@ -25,6 +25,9 @@ construo_SOURCES = \
  system_context.hxx \
  x11_display.hxx x11_display.cxx \
  vector.hxx  vector.cxx \
- unix_system.hxx unix_system.cxx
+ unix_system.hxx unix_system.cxx \
+ keep_alive.hxx  \
+ keep_alive_mgr.hxx keep_alive_mgr.cxx \
+ keys.hxx
 
 # EOF #

@@ -23,10 +23,12 @@
 #include <X11/Xlib.h>
 #include "graphic_context.hxx"
 #include "input_context.hxx"
+#include "keep_alive.hxx"
 
 /** X11Display driver */
 class X11Display : public GraphicContext,
-                   public InputContext
+                   public InputContext,
+                   public KeepAlive
 {
 private:
   int       width;
@@ -39,7 +41,7 @@ private:
   int mouse_y;
 public:
   X11Display (int w, int h);
-  ~X11Display ();
+  virtual ~X11Display ();
 
   // Graphic Context stuff
   void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0);
@@ -51,6 +53,9 @@ public:
   int get_mouse_x ();
   int get_mouse_y ();
 
+  bool get_keycode (int key);
+
+  void keep_alive ();
 private:
   X11Display (const X11Display&);
   X11Display& operator= (const X11Display&);

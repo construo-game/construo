@@ -28,19 +28,24 @@
 class Particle
 {
 public:
+  // FIXME: Place this in a factory
   static unsigned id_counter;
+
+  /** Id of the particle */
   unsigned int id;
-  /// position of the particle
+
+  /** position of the particle */
   CL_Vector pos;
 
-  /// velocity of the particle
+  /** velocity of the particle */
   CL_Vector  velocity;
 
-  /// totale force acting on particle
-  CL_Vector totale_force;
-
-  // the mass of the particle as 1/mass
+  /** the mass of the particle as 1/mass */
   float mass;
+
+  /** totale force acting on particle (used as temp-var in update() to
+      collect the forces)*/
+  CL_Vector totale_force;
 
   Particle (CL_Vector arg_pos, CL_Vector arg_velocity)
     : id (++id_counter), pos (arg_pos),
@@ -87,6 +92,7 @@ public:
 
     float damp = 0.2;
 
+    // Calc collision with screen x border
     if (pos.x < 0) {
       velocity.x =  fabs(velocity.x);
       pos.x = 0;
@@ -97,6 +103,7 @@ public:
       velocity *= damp;
     }
 
+    // Calc collision with screen y border
     if (pos.y < 0) {
       velocity.y =  fabs(velocity.y);
       pos.y = 0;

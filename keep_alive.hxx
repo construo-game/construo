@@ -1,6 +1,6 @@
 //  $Id$
-//
-//  Construo - A wire-frame construction game
+// 
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -12,38 +12,34 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include <unistd.h>
-#include <sys/time.h>
-#include <time.h>
-#include "unix_system.hxx"
+#ifndef HEADER_CONSTRUO_KEEP_ALIVE_HXX
+#define HEADER_CONSTRUO_KEEP_ALIVE_HXX
 
-UnixSystem::UnixSystem ()
-{ // riped out of ClanLib-0.7
-  timeval tv;
-  gettimeofday(&tv, NULL);
-  start_time = (long) tv.tv_sec*(long) 1000+(long) tv.tv_usec/(long) 1000;
-}
+#include "keep_alive_mgr.hxx"
 
-unsigned int 
-UnixSystem::get_time ()
-{ // riped out of ClanLib-0.7
-  timeval tv;
-  gettimeofday(&tv, NULL);
-
-  long tid = (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000 - start_time;
-
-  return tid;
-}
-
-void
-UnixSystem::sleep (unsigned long t)
+/** Each object that inherit from KeepAlive gets the keep_alive()
+    function called once per game-loop, it is meant to catch XEvents
+    and things like that. */
+class KeepAlive
 {
-  usleep (t);
-}
+private:
+public:
+  KeepAlive () {
+    KeepAliveMgr::register_obj(this);
+  }
+
+  virtual ~KeepAlive () {
+    KeepAliveMgr::unregister_obj(this);
+  }
+
+  virtual void keep_alive () =0;
+};
+
+#endif
 
 /* EOF */

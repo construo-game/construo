@@ -27,7 +27,7 @@
 #include "particle.hxx"
 #include "config.hxx"
 
-class Construo
+class ConstruoMain
 {
 private:
   CL_Vector click_pos;
@@ -47,8 +47,8 @@ private:
   bool slow_down;
   Config config;
 public:
-  Construo ();
-  virtual ~Construo ();
+  ConstruoMain ();
+  virtual ~ConstruoMain ();
 
   char* get_title ();
   int main (int argc, char* argv[]);
