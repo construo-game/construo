@@ -20,7 +20,7 @@
 #ifndef HEADER_CONSTRUO_SELECTION_HXX
 #define HEADER_CONSTRUO_SELECTION_HXX
 
-#include <vector>
+#include <list>
 #include "vector2d.hxx"
 
 class Particle;
@@ -30,7 +30,7 @@ class World;
 class Selection
 {
 private:
-  typedef std::vector<Particle*> SelectionLst;
+  typedef std::list<Particle*> SelectionLst;
   /** Collection of particles */
   SelectionLst selection;
 
@@ -68,10 +68,17 @@ public:
   /** @return true if no particle is in the selection */
   bool empty() const;
 
-  /** Check if the world has changed, if so clear selecetion */
+  /** Check if the world has changed, if so clear selection */
   void validate();
 
   void rotate(float rot_angle, Vector2d rotate_center);
+
+  /** Join particles that are on nearly the same position 
+   *
+   *  @param toleranz minimum distance of to particles below which they
+   *  get joined (in world coordinates) 
+   */
+  void join_doubles(float toleranz);
 
   SelectionLst::size_type size() { return selection.size(); }
   SelectionLst::iterator begin() { return selection.begin(); };

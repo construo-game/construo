@@ -65,6 +65,7 @@ public:
   virtual void on_duplicate_press (int x, int y) {}
   virtual void on_delete_press (int x, int y) {}
   virtual void on_fix_press (int x, int y) {}
+  virtual void on_join_press (int x, int y) {}
 
   virtual void on_mouse_enter () {}
   virtual void on_mouse_leave () {}

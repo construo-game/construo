@@ -230,6 +230,12 @@ WorldViewComponent::on_duplicate_press (int screen_x, int screen_y)
 }
 
 void
+WorldViewComponent::on_join_press (int x, int y)
+{
+  current_tool->on_join_press (x, y);
+}
+
+void
 WorldViewComponent::on_fix_press (int screen_x, int screen_y)
 {
   current_tool->on_fix_press (screen_x, screen_y);

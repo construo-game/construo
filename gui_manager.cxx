@@ -128,6 +128,10 @@ GUIManager::process_button_events (ButtonEvent& button)
           current_component->on_fix_press (x, y);
           break;
 
+        case BUTTON_JOIN:
+          current_component->on_join_press (x, y);
+          break;
+
         case BUTTON_GRID:
           current_component->on_grid_press(x, y);
           break;

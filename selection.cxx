@@ -114,8 +114,11 @@ Selection::select_particles (Vector2d p1, Vector2d p2)
 {
   world = Controller::instance()->get_world ();
   
-  selection = world->get_particles (p1.x, p1.y,
-                                    p2.x, p2.y);
+  std::vector<Particle*> particles = world->get_particles (p1.x, p1.y,
+                                                           p2.x, p2.y);
+
+  selection = SelectionLst(particles.begin(),
+                           particles.end());
 }
 
 void
@@ -199,6 +202,49 @@ Selection::validate()
       //std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
       clear();
     }
+}
+
+void
+Selection::join_doubles(float toleranz)
+{
+  // FIXME: Undo add undo, if stuff is going to change
+  Controller::instance()->push_undo();
+  World& world = *Controller::instance()->get_world ();
+  
+  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+    {
+      SelectionLst::iterator j = i;
+      ++j;
+      for (; j != selection.end (); ++j)
+        {
+          if (Vector2d::distance((*j)->pos, (*i)->pos) < toleranz)
+            {
+              // Join two particles
+              std::cout << "joining particles: " << (*j)->pos << " " << (*i)->pos << std::endl;
+              (*j)->pos      = ((*j)->pos + (*i)->pos) * 0.5f;
+              (*j)->velocity = ((*j)->velocity + (*i)->velocity) * 0.5f;
+             
+              //selection.remove(*i);
+
+              { // Everything that is connected to the particle 'i'
+                // which should get removed, needs to get connected to
+                // 'j'
+                std::vector<Spring*>& springs = world.get_spring_mgr ();
+                for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
+                  {
+                    if ((*s)->particles.first == (*i))
+                      (*s)->particles.first = (*j);
+                        
+                    if ((*s)->particles.second == (*i))
+                      (*s)->particles.second = (*j);
+                  }
+              }
+
+              world.remove_particle(*i);
+            }
+        }
+    }
+  clear();
 }
 
 /* EOF */

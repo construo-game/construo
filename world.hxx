@@ -90,7 +90,8 @@ public:
   void add_rect_collider(const Vector2d&, const Vector2d&);
   void add_spring (Particle*, Particle*);
 
-  /** removes the given particle and all objects which reference it */
+  /** removes the given particle and all objects/springs which
+      reference to it */
   void remove_particle (Particle*);
 
   /** remove the given spring */

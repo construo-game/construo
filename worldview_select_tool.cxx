@@ -314,4 +314,11 @@ WorldViewSelectTool::on_button_press (int button_id, int x, int y)
     }
 }
 
+void
+WorldViewSelectTool::on_join_press (int x, int y)
+{
+  std::cout << "Join pressed" << std::endl;
+  selection.join_doubles(5.0f);
+}
+
 /* EOF */

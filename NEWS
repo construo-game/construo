@@ -1,6 +1,8 @@
 Construo 0.2.1
 ==============
 
+ * added a blender like 'remove doubles', press 'j'
+
  * fixed 'make install'
 
  * added grid support (press 'g')

@@ -66,6 +66,7 @@ public:
   void on_duplicate_press (int x, int y);
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
+  void on_join_press (int x, int y);
 };
 
 #endif

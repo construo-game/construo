@@ -96,7 +96,11 @@ public:
         y /= f;
       }
   }
-
+  
+  static
+  float distance(const Vector2d& a, const Vector2d& b) {
+    return (a - b).norm();
+  }
 };
 
 inline 

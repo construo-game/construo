@@ -399,6 +399,10 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       event.button.id = BUTTON_CLEAR;
       break;
 
+    case 'j':
+      event.button.id = BUTTON_JOIN;
+      break;
+
     case 'a':
       event.button.id = BUTTON_ACTIONCAM;
       break;
