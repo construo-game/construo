@@ -85,29 +85,29 @@ ConstruoTargets=""
 dnl -------------------
 dnl -- Check for X11 --
 dnl -------------------
-if test -n "$X_DISPLAY_MISSING"; then
+if test "$no_x" = "yes"; then
    echo ""
    echo "### Error: Couldn't find X11 header files, probally x11-devel packages"
    echo "###        not installed?"
    echo ""
 else
-    ConstruoTargets="$ConstruoTargets construo.x11"
+    ConstruoTargets="$ConstruoTargets construo.x11${EXEEXT}"
     x11_LIBS="$x11_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
     x11_CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+
+    AC_CHECK_LIB(Xext, XMissingExtension,
+        [x11_LIBS="$x11_LIBS -lXext"
+         AC_DEFINE(HAVE_LIBXEXT, 1, [Xext is available])],
+         [], $x11_LIBS)
+
+    AC_CHECK_LIB( Xxf86vm, XF86VidModeSwitchToMode,
+      [x11_LIBS="$x11_LIBS -lXxf86vm"
+       AC_DEFINE(HAVE_LIBXXF86VM, 1, [VidMode is available])],
+       [], $x11_LIBS)
+
+    AC_SUBST(x11_LIBS)
+    AC_SUBST(x11_CXXFLAGS)
 fi
-
-AC_CHECK_LIB(Xext, XMissingExtension,
-[x11_LIBS="$x11_LIBS -lXext"
- AC_DEFINE(HAVE_LIBXEXT, 1, [Xext is available])],
-[], $x11_LIBS)
-
-AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,
-[x11_LIBS="$x11_LIBS -lXxf86vm"
- AC_DEFINE(HAVE_LIBXXF86VM, 1, [VidMode is available])],
-[], $x11_LIBS)
-
-AC_SUBST(x11_LIBS)
-AC_SUBST(x11_CXXFLAGS)
 
 dnl --------------------
 dnl -- Check for Glut --
@@ -116,6 +116,14 @@ dnl --------------------
 dnl On MacOSX $target gives: powerpc-apple-darwin6.6 and the define __apple__
 dnl This doesn't seem entirily correct and there is a -framework GLUT
 case "$target_os" in
+     cygwin*)
+        AC_CHECK_LIB(glut32,   main, 
+                     [ConstruoTargets="$ConstruoTargets construo.glut${EXEEXT}"
+                      AC_SUBST(glut_LIBS, "-lglut32 -lglu32 -lopengl32")
+                      AC_SUBST(glut_CXXFLAGS, "")],
+                     [AC_MSG_WARN([Couldn't detect glut])
+                     ], [-lglu32 -lopengl32])
+        ;;
      darwin*)
         MY_CHECK_GLUT_OSX([
         ConstruoTargets="$ConstruoTargets construo.glut"
@@ -128,6 +136,7 @@ case "$target_os" in
           ConstruoTargets="$ConstruoTargets construo.glut"
           glut_LIBS="-lglut"
           AC_SUBST(glut_LIBS)
+          AC_SUBST(glut_CXXFLAGS, "")
          ],
         [])
         ;;
@@ -138,7 +147,7 @@ dnl -- Check for FreeGlut --
 dnl ------------------------
 AC_CHECK_LIB(freeglut-1.3, glutMainLoop,
 [
-  ConstruoTargets="$ConstruoTargets construo.freeglut"
+  ConstruoTargets="$ConstruoTargets construo.freeglut${EXEEXT}"
   AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3")
 dnl  echo "Freeglut: " $freeglut_LIBS
 ],
