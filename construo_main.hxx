@@ -32,7 +32,8 @@ class World;
 class ConstruoMain
 {
 private:
-  std::vector<World*> world_stack;
+  std::vector<World*> undo_world_stack;
+  std::vector<World*> redo_world_stack;
   CL_Vector click_pos;
 
   void load_particles (xmlDocPtr doc, xmlNodePtr arg_cur);

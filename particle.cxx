@@ -23,9 +23,9 @@
 Particle::Particle (lisp_object_t* obj)
 {
   obj = lisp_cdr(obj);
-  std::cout << "Loading particle: " << std::endl;
-  lisp_dump(obj, stdout);
-  std::cout << std::endl;
+  //std::cout << "Loading particle: " << std::endl;
+  //lisp_dump(obj, stdout);
+  //std::cout << std::endl;
 
   LispReader reader(obj);
   reader.read_vector ("pos", &pos);

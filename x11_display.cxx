@@ -216,6 +216,14 @@ X11Display::keep_alive ()
                 ev.button.pressed = true;
                 events.push(Event(ev));
               }
+            else if (sym == XK_r)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_REDO;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
             else if (sym == XK_1)
               {
                 Event ev;

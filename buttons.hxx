@@ -29,6 +29,7 @@ enum {
   BUTTON_CLEAR,     // clear the current scene
   BUTTON_DELETE,    // delete the current object
   BUTTON_UNDO,      // bring the world back to its state before the simulation start
+  BUTTON_REDO,      // bring the world back to its state before the last undo
   BUTTON_QUICKSAVE1,
   BUTTON_QUICKLOAD1
 };

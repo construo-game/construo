@@ -23,15 +23,15 @@
 LispReader::LispReader (lisp_object_t* l)
   : lst (l)
 {
-  std::cout << "LispReader: " << std::flush;
-  lisp_dump(lst, stdout);
-  std::cout << std::endl;
+  //std::cout << "LispReader: " << std::flush;
+  //lisp_dump(lst, stdout);
+  //std::cout << std::endl;
 }
 
 lisp_object_t*
 LispReader::search_for(const char* name)
 {
-  std::cout << "LispReader::search_for(" << name << ")" << std::endl;
+  //std::cout << "LispReader::search_for(" << name << ")" << std::endl;
   lisp_object_t* cursor = lst;
 
   while(!lisp_nil_p(cursor))

@@ -56,6 +56,7 @@ public:
     : id (++id_counter), pos (arg_pos),
       velocity (arg_velocity)
   {
+    totale_force = CL_Vector ();
     fixed = false;
     mass = 10.0;
   }
@@ -83,6 +84,7 @@ public:
   void add_force (CL_Vector force)
   {
     if (fixed) return;
+
     totale_force += force;
   }
 
@@ -104,6 +106,8 @@ public:
     if (fixed) return;
 
     velocity += totale_force * mass * delta;
+
+    //velocity *= .999999f ;
 
     pos += velocity * delta;
 

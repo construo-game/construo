@@ -318,12 +318,12 @@ ConstruoMain::load_xml (std::string filename)
 
       if (strcmp((char*) cur->name, "particle-list") == 0)
 	{
-	  std::cout << "Loading particle list" << std::endl;
+	  //std::cout << "Loading particle list" << std::endl;
 	  load_particles (doc, cur);
 	}
       else if (strcmp((char*)cur->name, "spring-list") == 0)
 	{
-	  std::cout << "Loading springs list" << std::endl;
+	  //std::cout << "Loading springs list" << std::endl;
 	  load_springs (doc, cur);
 	}
       else
@@ -408,9 +408,7 @@ ConstruoMain::process_events ()
                 case BUTTON_START:
                   {
                     if (!running)
-                      {
-                        world_stack.push_back(world->duplicate());
-                      }
+                      undo_world_stack.push_back(world->duplicate());
                     running = !running;
                   }
                   break;
@@ -418,17 +416,20 @@ ConstruoMain::process_events ()
                   if (c_particle)
                     {
                       Particle* nc_particle = world->get_particle (x, y);
-                      if (nc_particle) // connect to particles
+                      if (nc_particle != c_particle)
                         {
-                          world->add_spring (c_particle, nc_particle);
+                          if (nc_particle) // connect to particles
+                            {
+                              world->add_spring (c_particle, nc_particle);
+                            }
+                          else // add a new particle and connect it with the current one
+                            {
+                              nc_particle = new Particle (CL_Vector(x, y), CL_Vector());
+                              world->add_particle (nc_particle);
+                              world->add_spring (c_particle, nc_particle);
+                            }
+                          c_particle = 0;
                         }
-                      else // add a new particle and connect it with the current one
-                        {
-                          nc_particle = new Particle (CL_Vector(x, y), CL_Vector());
-                          world->add_particle (nc_particle);
-                          world->add_spring (c_particle, nc_particle);
-                        }
-                      c_particle = 0;
                     }
                   else
                     {
@@ -468,22 +469,38 @@ ConstruoMain::process_events ()
                   break;
                 case BUTTON_CLEAR:
                   std::cout << "Clear" << std::endl;
-                  world->clear ();
+                  undo_world_stack.push_back(world);
+                  world = new World ();
                   c_particle = 0;
                   running = false;
                   break;
                   
                 case BUTTON_UNDO:
-                  if (!world_stack.empty())
+                  if (!undo_world_stack.empty())
                     {
-                      delete world; // fixme: memory hole
-                      world = world_stack.back();
-                      world_stack.pop_back();
+                      //delete world; // fixme: memory hole
+                      redo_world_stack.push_back (world);
+                      world = undo_world_stack.back();
+                      undo_world_stack.pop_back();
                       running = false;
                     }
                   else
                     {
                       std::cout << "Undo stack empty" << std::endl;
+                    }
+                  break;
+                  
+                case BUTTON_REDO:
+                  if (!redo_world_stack.empty())
+                    {
+                      undo_world_stack.push_back (world);
+                      world = redo_world_stack.back();
+                      redo_world_stack.pop_back();
+                      running = false;
+                    }
+                  else
+                    {
+                      std::cout << "Redo stack empty" << std::endl;
                     }
                   break;
 
@@ -498,7 +515,7 @@ ConstruoMain::process_events ()
                   break;
 
                 case BUTTON_QUICKLOAD1:
-                  world_stack.push_back(world);
+                  undo_world_stack.push_back(world);
                   std::cout << "Loading World..." << std::endl;
                   world = new World ("/tmp/bla.lisp");
                   running = false;
@@ -584,8 +601,9 @@ ConstruoMain::main (int argc, char* argv[])
       graphic_context->draw_string (600, 44, "[right ] - remove spot");
       graphic_context->draw_string (600, 58, "[  c   ] - clear screen");
       graphic_context->draw_string (600, 70, "[  f   ] - fix current spot");
-      graphic_context->draw_string (600, 82, "[  u   ] - rewind to last state");
-      graphic_context->draw_string (600, 94, "[escape] - quit");
+      graphic_context->draw_string (600, 82, "[  u   ] - undo to last state");
+      graphic_context->draw_string (600, 94, "[  r   ] - redo (undo an undo)");
+      graphic_context->draw_string (600, 106, "[escape] - quit");
 
       if (running)
         graphic_context->draw_string (graphic_context->get_width () - 60,

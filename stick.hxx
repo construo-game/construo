@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_STICK_HXX
 
 #include <iostream>
+#include <assert.h>
 #include "particle.hxx"
 #include "world.hxx"
 #include "lisp_reader.hxx"
@@ -47,6 +48,8 @@ public:
     particles.second = s;
     destroyed = false;
     length = fabs((f->pos - s->pos).norm ());
+
+    assert (length != 0);
   }
 
   Stick (World* world, lisp_object_t* cursor);
