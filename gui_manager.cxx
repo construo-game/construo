@@ -28,7 +28,6 @@
 #include "events.hxx"
 #include "gui_component.hxx"
 #include "gui_manager.hxx"
-#include "gui_window.hxx"
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
 
