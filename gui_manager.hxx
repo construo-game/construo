@@ -56,9 +56,8 @@ public:
 
   static inline GUIManager* instance() { return instance_; }
   
-  /** Launches the main-loop of the GUIManager, doesn't return until
-      quit() is called. */
-  void run ();
+  /** Launches a single run from the games main loop */
+  void run_once ();
 
   /** Stops the GUIManager */
   void quit();

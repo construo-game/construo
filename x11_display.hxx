@@ -26,7 +26,6 @@
 #include "math.hxx"
 #include "graphic_context.hxx"
 #include "input_context.hxx"
-#include "keep_alive.hxx"
 
 #define X11_FULLSCREEN_MODE true
 #define X11_WINDOW_MODE     false
@@ -41,8 +40,7 @@ struct FlipRect
 
 /** X11Display driver */
 class X11Display : public GraphicContext,
-                   public InputContext,
-                   public KeepAlive
+                   public InputContext
 {
 private:
   bool doublebuffer;
@@ -79,11 +77,11 @@ public:
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_string(float x, float y, const std::string& str, Color color);
 
-  void set_fullscreen (bool fullscreen);
-  void restore_mode ();
-
   int get_width () { return width; }
   int get_height () { return height; }
+
+  void set_fullscreen (bool fullscreen);
+  void restore_mode ();
 
   void clear ();
   
@@ -100,9 +98,6 @@ public:
   int get_mouse_y ();
 
   bool get_key (int key);
-
-  /** Pools for events (FIXME: should be unused) */
-  void keep_alive ();
 
   /** Waits for events to come in, blocks until new events are available */
   void wait_for_events_blocking ();

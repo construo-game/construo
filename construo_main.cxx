@@ -23,8 +23,19 @@
 #include "config.h"
 #include "world.hxx"
 #include "construo_error.hxx"
-#include "x11_display.hxx"
-#include "unix_system.hxx"
+
+#define USE_GLUT_DISPLAY 1
+
+#ifdef USE_X11_DISPLAY
+#  include "x11_display.hxx"
+#  include "unix_system.hxx"
+#else 
+#  ifdef USE_GLUT_DISPLAY
+#    include "glut_display.hxx"
+#    include "unix_system.hxx"
+#  endif
+#endif
+
 #include "controller.hxx"
 #include "command_line.hxx"
 #include "settings.hxx"
@@ -55,45 +66,16 @@ ConstruoMain::on_exit()
 {
   if (!controller->has_been_run())
     controller->save_world(system_context->get_construo_rc_path() + "laststate.construo");
+
+  std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
+            << "  New versions and more information can be found at:\n\n"
+            << "    * http://fs.fsf.org/construo/\n\n"
+            << "  Comments, critique, suggestions self build\n  construction and patches can be send to:\n\n"
+            << "    * Ingo Ruhnke <grumbel@gmx.de>\n\n" << std::endl;
 }
 
 int 
 ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
-{
-  //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
-  //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
-
-  GUIManager* gui_manager = new GUIManager ();
-
-  if (argc == 2)
-    {
-      controller  = new Controller (argv[1]);
-    }
-  else
-    {
-      try 
-        {
-          controller = new Controller (system_context->get_construo_rc_path() + "laststate.construo");
-        } 
-      catch (ConstruoError& err) 
-        {
-          std::cout << "ConstruoMain: " << err.msg << std::endl;
-          controller = new Controller ();
-        }
-    }
-
-
-  gui_manager->run ();
-
-  on_exit();
-
-  return 0;
-}
-
-////////////////////////
-// Real Main Function //
-////////////////////////
-int main (int argc, char** argv)
 {
   CommandLine::parse(argc, argv);
 
@@ -104,8 +86,14 @@ int main (int argc, char** argv)
     }
 
   try {
+#ifdef USE_X11_DISPLAY
     X11Display display (settings.screen_width, settings.screen_height, 
                         settings.fullscreen);
+#elif USE_GLUT_DISPLAY
+    GlutDisplay display (settings.screen_width, settings.screen_height);
+#else
+#  error "No display type defined"
+#endif
     UnixSystem system;
 
     // Init the display, input systems
@@ -117,16 +105,47 @@ int main (int argc, char** argv)
     std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
               << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
 
-    ConstruoMain app;
-    construo_main = &app;
-    
-    int ret_val = app.main (argc, argv);
+    GUIManager* gui_manager = new GUIManager ();
 
-    return ret_val;
+    if (argc == 2)
+      {
+        controller  = new Controller (argv[1]);
+      }
+    else
+      {
+        try 
+          {
+            controller = new Controller (system_context->get_construo_rc_path() + "laststate.construo");
+          } 
+        catch (ConstruoError& err) 
+          {
+            std::cout << "ConstruoMain: " << err.msg << std::endl;
+            controller = new Controller ();
+          }
+      }
+  
+    display.run();
+    
+    delete gui_manager;
+
   } catch (ConstruoError& err) {
     std::cout << "Error ocurred: " << err.msg << std::endl;
     return EXIT_FAILURE;
   }
+
+  on_exit();
+
+  return 0;
+}
+
+////////////////////////
+// Real Main Function //
+////////////////////////
+int main (int argc, char** argv)
+{
+  ConstruoMain app;
+  construo_main = &app;
+  return app.main (argc, argv);
 }
 
 /* EOF */

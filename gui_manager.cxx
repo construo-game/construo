@@ -104,37 +104,30 @@ GUIManager::~GUIManager ()
 }
   
 void
-GUIManager::run ()
+GUIManager::run_once ()
 { 
-  int counter = 0;
+  process_events ();
 
-  while (!do_quit)
-    {
-      counter += 1;
-
-      process_events ();
-
-      Controller::instance()->update ();
-      graphic_context->clear ();
+  Controller::instance()->update ();
+  graphic_context->clear ();
       
-      draw_status();
+  draw_status();
 
-      for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-        {
-          (*i)->draw (graphic_context);
-        }
+  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+    {
+      (*i)->draw (graphic_context);
+    }
           
-      graphic_context->flip ();
-      //KeepAliveMgr::keep_alive ();
-      if (Controller::instance()->is_running())
-        {
-          system_context->sleep (0); // limit CPU usage via brute force
-          input_context->wait_for_events();
-        }
-      else
-        {
-          input_context->wait_for_events_blocking();
-        }
+  graphic_context->flip ();
+
+  if (Controller::instance()->is_running())
+    {
+      system_context->sleep (0); // limit CPU usage via brute force
+      input_context->wait_for_events();
+    }
+  else
+    {
+      input_context->wait_for_events_blocking();
     }
 }
 
@@ -314,7 +307,7 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         default:
-          std::cout << "Got unhandled BUTTON_EVENT press: " << button.id << std::endl;
+          std::cout << "Got unhandled BUTTON_EVENT release: " << button.id << std::endl;
           break;
         }
     }
@@ -353,8 +346,6 @@ GUIManager::process_button_events (ButtonEvent& button)
 void
 GUIManager::process_events ()
 {
-  Event event;
-
   int x = input_context->get_mouse_x();
   int y = input_context->get_mouse_y();
       
@@ -395,6 +386,7 @@ GUIManager::process_events ()
         }
     }
 
+  Event event;
   while (input_context->get_event (&event))
     {
       if (current_component)

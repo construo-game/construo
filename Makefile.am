@@ -26,8 +26,8 @@ buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            \
 color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        \
 config.cxx    construo_main.hxx   input_context.hxx    spring.hxx           world.cxx       \
 config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
-construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_display.cxx \
-construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     x11_display.hxx \
+construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     \
+construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     \
 lispreader.c  lispreader.h       lisp_reader.hxx lisp_reader.cxx \
 particle.cxx  spring.cxx  particle_factory.hxx particle_factory.cxx \
 lisp_writer.hxx lisp_writer.cxx \
@@ -51,9 +51,13 @@ worldview_zoom_tool.hxx worldview_zoom_tool.cxx \
 collider.hxx \
 rect_collider.hxx rect_collider.cxx \
 gui_label.hxx gui_label.cxx \
-string_converter.hxx
+string_converter.hxx \
+glut_display.hxx glut_display.cxx
 
-LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
+#x11_display.hxx x11_display.cxx
+
+#LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
+LDADD=-L/usr/X11R6/lib/ -lglut 
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

@@ -438,15 +438,6 @@ X11Display::read_event ()
 }
 
 void
-X11Display::keep_alive ()
-{
-  while (XPending (display) > 0)
-    {
-      wait_for_events ();
-    }
-}
-
-void
 X11Display::send_load_or_save(int n)
 {
   if (shift_pressed)
