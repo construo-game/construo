@@ -36,6 +36,9 @@ public:
   virtual void draw_string(int x, int y, const std::string& str, Color color = Color (0xFFFFFF)) =0;
   virtual void clear () =0;
   virtual void flip () =0;
+
+  virtual int get_width ()  =0;
+  virtual int get_height () =0;
 };
 
 #endif

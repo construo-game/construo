@@ -44,6 +44,17 @@ public:
   /** @return the particles closed to the given coordinates */
   Particle* get_particle (int x, int y);
   void add_spring (Particle*, Particle*);
+  /** The world will take care of the deletion */
+  void add_particle (Particle*);
+
+  /** removes the given particle and all objects which reference it */
+  void remove_particle (Particle*);
+
+  /** remove the given stick */
+  void remove_stick (Stick*);
+
+  /** removes everything from the world */
+  void clear ();
 private:
   World (const World&);
   World& operator= (const World&);

@@ -21,10 +21,13 @@
 #define HEADER_CONSTRUO_BUTTONS_HXX
 
 enum {
-  BUTTON_PRIMARY,   // primary mouse button
-  BUTTON_SECONDARY, // secondary mouse button
+  BUTTON_PRIMARY,   // primary mouse button (inserts particles)
+  BUTTON_SECONDARY, // secondary mouse button (unused)
+  BUTTON_FIX,       // fix a particle at the current position
   BUTTON_ESCAPE,    // escape key
-  BUTTON_START      // space key or third mouse button
+  BUTTON_START,     // space key or third mouse button
+  BUTTON_CLEAR,     // clear the current scene
+  BUTTON_DELETE     // delete the current object
 };
 
 #endif

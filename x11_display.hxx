@@ -52,6 +52,9 @@ public:
   void draw_fill_circle(int x, int y, int r, Color color);
   void draw_string(int x, int y, const std::string& str, Color color);
 
+  int get_width () { return width; }
+  int get_height () { return height; }
+
   void clear ();
   void flip ();
 

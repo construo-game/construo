@@ -1,4 +1,21 @@
 Construo 0.1.0
 ==============
 
+ * fixed-particles are now possible
+ 
+ * in-game help screen available
+
+ * removal of particles is possible
+
+ * load/save now with thumbnails and without filenames
+
+ * rewritten to use only plain Xlib, no additional libraries required
+
+ * XML is replaced by s-expressions, this removes another library
+   dependency and results in better readable files
+
+ * added abstraction layer, ports to other libraries or OSs should be
+   quite easy (OpenGL port might follow sooner or later)
+
+
 # EOF #

@@ -43,6 +43,8 @@ public:
   /** the mass of the particle as 1/mass */
   float mass;
 
+  bool fixed;
+
   /** totale force acting on particle (used as temp-var in update() to
       collect the forces)*/
   CL_Vector totale_force;
@@ -51,6 +53,7 @@ public:
     : id (++id_counter), pos (arg_pos),
       velocity (arg_velocity)
   {
+    fixed = false;
     mass = 10.0;
   }
 
@@ -76,6 +79,7 @@ public:
 
   void add_force (CL_Vector force)
   {
+    if (fixed) return;
     totale_force += force;
   }
 
@@ -84,8 +88,18 @@ public:
     totale_force = CL_Vector ();
   }
 
+  void set_fixed (bool f) {
+    fixed = f;
+  }
+
+  bool get_fixed () {
+    return fixed;
+  }  
+
   void update (float delta) 
   {
+    if (fixed) return;
+
     velocity += totale_force * mass * delta;
 
     pos += velocity * delta;
@@ -97,9 +111,9 @@ public:
       velocity.x =  fabs(velocity.x);
       pos.x = 0;
       velocity *= damp;
-    } else if (pos.x > 800) {
+    } else if (pos.x > 799) {
       velocity.x =  -fabs(velocity.x);
-      pos.x = 800;
+      pos.x = 799;
       velocity *= damp;
     }
 
@@ -108,17 +122,17 @@ public:
       velocity.y =  fabs(velocity.y);
       pos.y = 0;
       velocity *= damp;
-    } else if (pos.y > 600) {
+    } else if (pos.y > 599) {
       velocity.y =  -fabs(velocity.y);
-      pos.y = 600;
+      pos.y = 599;
       velocity *= damp;
     }
 
     /*
-    CL_Vector dist = pos - CL_Vector (400, 300);
-    if (dist.norm () < 50.0f)
+      CL_Vector dist = pos - CL_Vector (400, 300);
+      if (dist.norm () < 50.0f)
       {
-	velocity = -velocity;
+      velocity = -velocity;
       }*/
     clear_force ();
   }
@@ -126,9 +140,18 @@ public:
   void draw (GraphicContext* gc)
   {
     //int size = int(10.0f/(mass*mass)) + 1;
-    gc->draw_fill_circle (int(pos.x), int (pos.y),
-                          2,
-                          Color(1.0f, 0.0f, 0.0f));
+    if (fixed)
+      {
+        gc->draw_fill_circle (int(pos.x), int (pos.y),
+                              4,
+                              Color(0.6f, 0.6f, 0.6f));
+      }
+    else
+      {
+        gc->draw_fill_circle (int(pos.x), int (pos.y),
+                              2,
+                              Color(1.0f, 0.0f, 0.0f));
+      }
   }
 
   /** draws the particle in highlight mode (aka if mouse is over it) */

@@ -26,22 +26,11 @@ bool stick_destroyed (Stick* stick)
 
 World::World ()
 {
-  // FIXME: testing stuff
-  for (int i = 0; i < 10; ++i)
-    {
-      Particle* particle = new Particle (CL_Vector (rand()%800, rand()%600), 
-                                         CL_Vector ());
-      Particle* last_particle = new Particle (CL_Vector (rand()%800, rand()%600), CL_Vector ());
-    
-      sticks.push_back (new Stick (last_particle, particle));
-      
-      particles.push_back (last_particle);
-      particles.push_back (particle);
-    }
 }
 
 World::~World ()
 {
+  clear ();
 }
 
 void
@@ -141,6 +130,60 @@ void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
   sticks.push_back (new Stick (last_particle, particle));
+}
+
+void
+World::add_particle (Particle* p)
+{
+  particles.push_back (p);
+}
+
+void
+World::remove_particle (Particle* p)
+{
+  // Remove everyting that references the particle
+  for (StickIter i = sticks.begin (); i != sticks.end ();)
+    {
+      if ((*i)->particles.first == p || (*i)->particles.second == p)
+        {
+          delete *i;
+          i = sticks.erase(i);
+        }
+      else
+        {
+          ++i;
+        }
+    }
+
+  // Remove the particle itself
+  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+    {
+      if (*i == p)
+        {
+          delete *i;
+          particles.erase(i);
+          return;
+        }
+    }
+}
+
+void
+World::remove_stick (Stick* s)
+{
+  sticks.remove(s);
+}
+
+void
+World::clear ()
+{
+  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+    delete *i;
+ 
+  for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+    delete *i;
+
+  particles.clear ();
+  sticks.clear ();
 }
 
 /* EOF */

@@ -41,6 +41,7 @@ private:
   Particle* c_particle;
   bool running;
   bool slow_down;
+  bool do_quit;
   Config config;
 
   World* world;

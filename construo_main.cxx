@@ -36,6 +36,7 @@ ConstruoMain::ConstruoMain ()
   running = false;
   c_particle = 0;
   load_xml (config.get_construo_dir () + "/" + "quicksave1.xml");
+  do_quit = false;
 }
 
 ConstruoMain::~ConstruoMain ()
@@ -84,52 +85,52 @@ void
 ConstruoMain::on_key_press(int key_id)
 {
 #if 0
-  else if (device == CL_Input::keyboards[0])
-    {
-      switch (key.id) {
-      case CL_KEY_SPACE:
-	running = !running;
-	break;
-      case CL_KEY_C:
-	particles.clear ();
-	sticks.clear ();
-	break;
-      case CL_KEY_S:
-	{
-	  std::string filename;
-	  std::cout << "Please input filename for saving: " << std::flush;
-	  std::cin >> filename;
-	  save_xml (config.get_construo_dir () + "/" + filename);
-	}
-	break;
-      case CL_KEY_L:
-	{
-	  std::string filename;
-	  std::cout << "Please input filename for loading: " << std::flush;
-	  std::cin >> filename;
-	  load_xml (config.get_construo_dir () + "/" + filename);
-	}
-	break;
-      case CL_KEY_V:
-	zero_out_velocity ();
-	break;
-      case CL_KEY_D:
-	slow_down = !slow_down;
-	break;
-      case CL_KEY_1:
-	load_or_save_xml (config.get_construo_dir () + "/" + "quicksave1.xml");
-	break;
-      case CL_KEY_2:
-	load_or_save_xml (config.get_construo_dir () + "/" + "quicksave2.xml");
-	break;
-      case CL_KEY_3:
-	load_or_save_xml (config.get_construo_dir () + "/" + "quicksave3.xml");
-	break;
-      case CL_KEY_4:
-	load_or_save_xml (config.get_construo_dir () + "/" + "quicksave4.xml");
-	break;	
-      }
-    }
+ else if (device == CL_Input::keyboards[0])
+   {
+     switch (key.id) {
+     case CL_KEY_SPACE:
+       running = !running;
+       break;
+     case CL_KEY_C:
+       particles.clear ();
+       sticks.clear ();
+       break;
+     case CL_KEY_S:
+       {
+         std::string filename;
+         std::cout << "Please input filename for saving: " << std::flush;
+         std::cin >> filename;
+         save_xml (config.get_construo_dir () + "/" + filename);
+       }
+       break;
+     case CL_KEY_L:
+       {
+         std::string filename;
+         std::cout << "Please input filename for loading: " << std::flush;
+         std::cin >> filename;
+         load_xml (config.get_construo_dir () + "/" + filename);
+       }
+       break;
+     case CL_KEY_V:
+       zero_out_velocity ();
+       break;
+     case CL_KEY_D:
+       slow_down = !slow_down;
+       break;
+     case CL_KEY_1:
+       load_or_save_xml (config.get_construo_dir () + "/" + "quicksave1.xml");
+       break;
+     case CL_KEY_2:
+       load_or_save_xml (config.get_construo_dir () + "/" + "quicksave2.xml");
+       break;
+     case CL_KEY_3:
+       load_or_save_xml (config.get_construo_dir () + "/" + "quicksave3.xml");
+       break;
+     case CL_KEY_4:
+       load_or_save_xml (config.get_construo_dir () + "/" + "quicksave4.xml");
+       break;	
+     }
+   }
 #endif
 }
 
@@ -391,6 +392,8 @@ void
 ConstruoMain::process_events ()
 {
   Event event;
+  int x = input_context->get_mouse_x();
+  int y = input_context->get_mouse_y();
 
   while (input_context->get_event (&event))
     {
@@ -407,10 +410,17 @@ ConstruoMain::process_events ()
                 case BUTTON_PRIMARY:
                   if (c_particle)
                     {
-                      Particle* nc_particle = world->get_particle (input_context->get_mouse_x(),
-                                                                   input_context->get_mouse_y());
-                      if (nc_particle)
-                        world->add_spring (c_particle, nc_particle);
+                      Particle* nc_particle = world->get_particle (x, y);
+                      if (nc_particle) // connect to particles
+                        {
+                          world->add_spring (c_particle, nc_particle);
+                        }
+                      else // add a new particle and connect it with the current one
+                        {
+                          nc_particle = new Particle (CL_Vector(x, y), CL_Vector());
+                          world->add_particle (nc_particle);
+                          world->add_spring (c_particle, nc_particle);
+                        }
                       c_particle = 0;
                     }
                   else
@@ -419,12 +429,50 @@ ConstruoMain::process_events ()
                                                         input_context->get_mouse_y());
                       if (!c_particle)
                         {
-                          // add particle
+                          Particle* p = new Particle (CL_Vector(x, y), CL_Vector());
+                          world->add_particle (p);// add particle
+                          c_particle = p;
                         }
                     }
                   break;
+                case BUTTON_FIX:
+                  {
+                    Particle* particle = world->get_particle (x, y);
+                    std::cout << "Fixing particle: " << particle << std::endl;
+                    if (particle)
+                      {
+                        std::cout << "particle: " << particle->get_fixed () << std::endl;
+                        particle->set_fixed (!particle->get_fixed ());
+                      }
+                  }
+                  break;
+                case BUTTON_DELETE:
+                  std::cout << "Deleteing " << c_particle << std::endl;
+                  if (c_particle)
+                    {
+                      c_particle = 0;
+                    }
+                  else
+                    {
+                      Particle* p = world->get_particle (input_context->get_mouse_x(),
+                                                         input_context->get_mouse_y());
+                      world->remove_particle (p);
+                    }
+                  break;
+                case BUTTON_CLEAR:
+                  std::cout << "Clear" << std::endl;
+                  world->clear ();
+                  break;
+
+                case BUTTON_ESCAPE:
+                  do_quit = true;
+                  break;
+
+                default:
+                  std::cout << "Got unhandled BUTTON_EVENT: " << event.button.id << std::endl;
+                  break;
                 }
-              std::cout << "GOt Event: " << event.button.id << std::endl;
+              //std::cout << "GOt Event: " << event.button.id << std::endl;
               break;
             default:
               std::cout << "ConstruoMain: Unhandled event: " << event.type << std::endl;
@@ -445,7 +493,7 @@ ConstruoMain::main (int argc, char* argv[])
 
   world = new World ();
 
-  while (!input_context->get_keycode (KEY_ESCAPE))
+  while (!do_quit)
     {
       double delta;
 
@@ -469,17 +517,45 @@ ConstruoMain::main (int argc, char* argv[])
       graphic_context->clear ();
       world->draw (graphic_context);
           
-      {
+      { // draw 'marker'
         Particle* p = world->get_particle (input_context->get_mouse_x (),
-                                          input_context->get_mouse_y ());
+                                           input_context->get_mouse_y ());
         if (p)
           {
             p->draw_highlight (graphic_context);
           }
+
+        if (c_particle)
+          {
+            if (p)
+              graphic_context->draw_line (int(c_particle->pos.x), int(c_particle->pos.y),
+                                          int(p->pos.x), int(p->pos.y),
+                                          Color(0.3f, 0.3f, 0.3f));
+            else
+              graphic_context->draw_line (int(c_particle->pos.x), int(c_particle->pos.y),
+                                          input_context->get_mouse_x(), input_context->get_mouse_y(),
+                                          Color(0.3f, 0.3f, 0.3f));
+          }
       }
 
-      graphic_context->draw_string (10, 20, "Construo V0.1.0");
-      graphic_context->draw_string (10, 32, "===============");
+      graphic_context->draw_string (10, 20, "..:: Construo V0.1.0 ::..");
+      graphic_context->draw_string (10, 32, "=========================");
+
+      
+      graphic_context->draw_string (600, 20, "[ left ] - insert/connect spots");
+      graphic_context->draw_string (600, 32, "[middle] - start/stop simulation");
+      graphic_context->draw_string (600, 44, "[right ] - remove spot");
+      graphic_context->draw_string (600, 58, "[  c   ] - clear screen");
+      graphic_context->draw_string (600, 70, "[escape] - quit");
+
+      if (running)
+        graphic_context->draw_string (graphic_context->get_width () - 60,
+                                      graphic_context->get_height () - 10,
+                                      "[RUNNING]", Color(0xFF0000));
+      else
+        graphic_context->draw_string (graphic_context->get_width () - 60,
+                                      graphic_context->get_height () - 10,
+                                      "[STOPPED]", Color(0x00FF00));
 
       graphic_context->flip ();
       KeepAliveMgr::keep_alive ();

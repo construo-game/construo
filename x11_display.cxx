@@ -18,6 +18,8 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <iostream>
+#include <X11/Xutil.h>
+#include <X11/keysym.h>
 #include "construo_error.hxx"
 #include "x11_display.hxx"
 
@@ -160,13 +162,52 @@ X11Display::keep_alive ()
             if (event.xbutton.button == 1)
               ev.button.id = BUTTON_PRIMARY;
             else if (event.xbutton.button == 3)
-              ev.button.id = BUTTON_SECONDARY;
+              ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
             else
               ev.button.id = BUTTON_START;
 
             ev.button.pressed = true;
 
             events.push(Event(ev));
+          }
+          break;
+
+        case KeyPress:
+          {
+            KeySym sym = XLookupKeysym(&event.xkey,0);
+            std::cout << "keypress: " << sym << " " << XK_f << std::endl;
+            if (sym == XK_f) // FIXME: a bit much duplicate code
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_FIX;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_c)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_CLEAR;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_Delete)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_DELETE;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_Escape)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_ESCAPE;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
           }
           break;
 

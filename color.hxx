@@ -38,7 +38,7 @@ struct Color
   : r (r), g (g), b (b), a (a) {}
 
   /** Convert the color into 0xRRGGBB format */
-  int get_rgb () { return int(255 * r) | (int((255 * g)) << 8) | (int((255 * b)) << 16); }
+  int get_rgb () { return int(255 * b) | (int((255 * g)) << 8) | (int((255 * r)) << 16); }
 };
 
 #endif
