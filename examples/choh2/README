@@ -1,0 +1,112 @@
+Construo House of Horror II README
+==================================
+
+Prepare yourself for...
+
+ ,#####,
+:#'       ,####,  ,#,   #,  ,####, ,########, ,#####,  ,#,  ,#,  ,####,
+:#       :#'  '#: :# #, #: :#,,,  '   '##'    :#:  :#: :#:  :#: :#'  '#:
+:#,      :#,  ,#: :# '# #:  '''''#,    ##     :#####:  :#:,,:#: :#,  ,#:
+ '#####'  '####'  '#   '#' '#####'    ,##,    :#: '##'  '####'   '####'
+
+        H O U S E   O F   H O R R O R
+       ========== ,#######, ==========
+                    || ||
+                    || ||
+                  '#######'
+--------------------------------------------------------------------------
+
+Contents
+=========
+
+1. Introduction
+2. What are the files in this package?
+3. Installation notes
+4. Construction list
+5. Last words from the author
+
+
+1. Introduction
+================
+
+This is the wonderful sequel to the "Construo House of Horror".
+Still not much technical knowledge about construction, but at
+least a whacky load of silly ideas. So have a laugh, while lots
+of stick-men get tortured, ripped apart or crushed :)
+Actually these constructions are pretty interesting as well,
+because they demonstrate a lot of possibilities in the Construo
+program, like for instance:
+The first construction in the package resembles a vehicle with
+rotating wheels (although the vehicle doesn't move very far).
+The vehicle construction only takes two stickmen lives, but
+I'll make it up to you in the other constructions :)
+
+
+2. What are the files in this package?
+=======================================
+
+The ".construo"-files, which you will find in this package,
+are saved constructions created with Construo V0.1.0.
+
+
+3. Installation notes
+======================
+
+Follow these steps into stick-man hell:
+
+ 1) Make a backup of your previous Construo constructions
+    (they're usually located in $HOME/.construo):
+	cd $HOME/.construo
+	mkdir backup
+	cp *.construo backup
+
+ 2) Go back to the directory where you unpacked these files.
+    Copy the CHoH2 constructions into home Construo directory:
+	cp *.construo $HOME/.construo
+
+ 3) START CONSTRUO!
+    (if installed into system, just type "construo" without the quotes)
+
+IMPORTANT: When you run the constructions (numbered 1-9), you
+must turn on SLOW-MOTION (space-bar) or else you won't get
+to see the fun :) Another important thing to notice is that,
+in the first run not all constructions work like I intended,
+but they should work fine if you press 'u' (undo) while running
+and then start the simulation again (that is, as to V0.1.0).
+
+Have fun!
+
+
+4. Construction list (yeah, I named my inventions, too)
+========================================================
+
+NOTE: Some of these constructions seem to be hogging quite
+      some CPU power. I simulated them on a 1200 MHz machine,
+      so whether you need to turn on SLOW-MOTION or not of course
+      depends on your processor speed. You do the math...
+
+Savegame | Name
+       1 | Death wheels
+       2 | Boulder Crash
+       3 | No Arms, No Escape
+       4 | Beer Can of Death :o)
+       5 | The Terrible End of a Happy Family
+       6 | Heavy-weight Punishment
+       7 | Wheel of Bad Luck
+       8 | Hang On To Your Short Lives
+       9 | Slow Death, Painful Death
+
+
+5. Last words from the author
+==============================
+
+I take NO responsibilities as to whatever harm these barbarian
+constructions do to you, your dog or your kids. They are NOT
+serious in any way and should NOT be treated as such.
+And as they say on the Jackass show: "Don't try this at home!"
+
+I'm surprised you even read this far... Go on! Try it out!
+
+		-----	Mark Joakim Bekker Michelsen
+			Denmark
+			fem_gram_skovbaerte@hotmail.com
