@@ -34,6 +34,7 @@ CommandLine::error (const std::string& msg)
 void
 CommandLine::parse (int argc, char** argv)
 {
+  // FIXME: Replace this with getopt_long() or argp()
   for (int i = 1; i < argc; ++i) // Skip Programm name
     {
       //std::cout << "Arg: " << argv[i] << std::endl;
@@ -69,6 +70,10 @@ CommandLine::parse (int argc, char** argv)
               || strcmp(argv[i], "-d") == 0)
             {
               settings.doublebuffer = false;
+            }
+          else if (strcmp(argv[i], "--datadir") == 0)
+            {
+              settings.datadir = argv[++i];
             }
           else if (strcmp(argv[i], "-g") == 0
                    || strcmp(argv[i], "--geometry") == 0)
@@ -118,6 +123,7 @@ CommandLine::print_help ()
             << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
             << "  --disable-antialiasing      Switch into non antialiased mode\n"
             << "  --disable-alphablending     Switch into non alphablended mode\n"
+            << "  --datadir DIR               Set the datadir of Construo to DIR\n"
             << std::endl;
 }
 

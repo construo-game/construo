@@ -16,7 +16,7 @@
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 # init automake/conf
-AC_INIT(construo, 0.2.1)
+AC_INIT(construo, 0.2.1rc1)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR(construo.hxx)
 AM_CONFIG_HEADER(config.h)
@@ -56,6 +56,12 @@ AC_CHECK_HEADER([sstream],
                 [],
                 [AC_MSG_NOTICE([using replacement sstream from compatlib/])
                 CXXFLAGS="$CXXFLAGS -Icompatlib/"])
+
+dnl Checking for the install prefix and then use it to define PINGUS_DATADIR
+dnl PINGUS_EXPAND_DIR(pingus_datadir, "$datadir/games/$PACKAGE")
+dnl AC_DEFINE_UNQUOTED(PINGUS_DATADIR, "$pingus_datadir", [Location of Pingus data files])
+dnl AC_DEFINE(CONSTRUO_DATADIR, $datadir/games/$PACKAGE, [Location of Construo datafiles])
+AC_DEFINE_DIR(DATADIR, datadir, [Location of datafiles])
 
 ConstruoTargets=""
 

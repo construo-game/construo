@@ -22,6 +22,7 @@
 #include "particle.hxx"
 #include "config.h"
 #include "world.hxx"
+#include "path_manager.hxx"
 #include "construo_error.hxx"
 
 #ifdef USE_X11_DISPLAY
@@ -109,6 +110,18 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     std::cout << PACKAGE_STRING"\n" << std::endl;
     std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
               << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
+
+    if (!settings.datadir.empty())
+      path_manager.add_path(settings.datadir);
+
+    path_manager.add_path(".");
+    path_manager.add_path("..");
+    path_manager.add_path(CONSTRUO_DATADIR); 
+    if (!path_manager.find_path("examples/"))
+      {
+        std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
+        ::exit(EXIT_FAILURE);
+      }
 
     gui_manager = new GUIManager ();
 

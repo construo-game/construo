@@ -48,6 +48,9 @@ public:
       on the command line */
   std::string startup_file;
 
+  /** directory with data files */
+  std::string datadir;
+
   Settings ();
 };
 

@@ -15,7 +15,7 @@
 ##  along with this program; if not, write to the Free Software
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-pkgdatadir = $(datadir)/games/@PACKAGE@/examples/
+pkgdatadir = $(datadir)/games/@PACKAGE@/examples
 
 nobase_dist_pkgdata_DATA = *.construo choh/*.construo choh2/*.construo
 

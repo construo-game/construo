@@ -20,6 +20,10 @@
 #ifndef HEADER_CONSTRUO_CONSTRUO_HXX
 #define HEADER_CONSTRUO_CONSTRUO_HXX
 
+#include <config.h>
+
+#define CONSTRUO_DATADIR DATADIR"/games/"PACKAGE
+
 class SystemContext;
 class InputContext;
 class GraphicContext;

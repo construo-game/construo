@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Location of datafiles */
+#undef DATADIR
+
 /* Enable debuging */
 #undef DEBUG
 

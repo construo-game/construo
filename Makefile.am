@@ -26,6 +26,7 @@ EXTRA_PROGRAMS = construo.x11 construo.glut construo.freeglut
 noinst_LIBRARIES = libconstruo.a
 
 libconstruo_a_SOURCES = \
+path_manager.hxx path_manager.cxx \
 buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            \
 color.hxx     input_context.cxx    particle.hxx        \
 config.cxx    input_context.hxx    spring.hxx           world.cxx       \

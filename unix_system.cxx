@@ -32,6 +32,7 @@
 #include "construo_error.hxx"
 #include "string_utils.hxx"
 #include "construo.hxx"
+#include "path_manager.hxx"
 #include "unix_system.hxx"
 
 using namespace StringUtils;
@@ -200,8 +201,8 @@ UnixSystem::translate_filename (const std::string& filename)
       return construo_rc_path + filename.substr(6);
     }
   else if (has_prefix(filename, "/examples/"))
-    { // FIXME: No handling of the installation directory!
-      return "examples/" + filename.substr(10); 
+    { 
+      return path_manager.complete("examples/") + filename.substr(10); 
     }
   else
     return filename;
@@ -279,7 +280,6 @@ UnixSystem::read_directory(const std::string& arg_pathname)
         }
       else
         {
-          // FIXME: Error checking here
           struct dirent* entry;
 
           while ((entry = readdir(dir)) != 0)
