@@ -80,8 +80,8 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
                                      Colors::new_spring, 2);
     }
 
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(input_context->get_mouse_y ());
 
   Particle* selected_particle = world.get_particle (x, y);
   if (selected_particle)
@@ -135,13 +135,14 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
     }
   else
     {
-      // We are going to add a new particle and making it the last
-      // one, so that the next click would result in a new spring
+      // We are going to create a new particle and making it the
+      // current one, so that the next click would result in a new
+      // spring
       current_particle = world.get_particle (x, y);
 
       if (current_particle)
         {
-          // We have clicked on a particle, so make it the current one
+          // We have clicked on a particle and made it  the current
         }
       else
         {
