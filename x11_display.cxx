@@ -28,7 +28,7 @@ X11Display::X11Display(int w, int h)
   if (!display)
     throw ConstruoError("X11Display: Couldn't conncet to X server");
 
-  int screen = DefaultScreen(gd_display);
+  int screen = DefaultScreen(display);
   XSetWindowAttributes attributes;
 
   attributes.background_pixel = BlackPixel(display, screen);
@@ -42,7 +42,7 @@ X11Display::X11Display(int w, int h)
     ButtonReleaseMask    |
     StructureNotifyMask;
 
-  window = XCreateWindow(gd_display, RootWindow(gd_display, gd_screen),
+  window = XCreateWindow(display, RootWindow(display, screen),
                          0,0, // position
                          width, height, 0,
                          CopyFromParent, InputOutput, CopyFromParent, 
@@ -54,20 +54,47 @@ X11Display::X11Display(int w, int h)
   XGCValues gcv;
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
-  gc = XCreateGC(display, drawable, GCForeground, &gcv);
+  gc = XCreateGC(display, window, GCForeground, &gcv);
+}
+
+X11Display::~X11Display ()
+{
+  XCloseDisplay(display);
 }
 
 void
-X11Display::draw_line(int x1, int y1, int x2, int y2, int color, int wide)
+X11Display::draw_line(int x1, int y1, int x2, int y2, Color color, int wide)
 {
-  XSetForceground(display, gc, color);
+  XSetForeground(display, gc, color.get_rgb());
   XDrawLine (display, window, gc, x1, y1, x2, y2);
 }
 
 void
-X11Display::draw_filled_rect(int x1, int y1, int x2, int y2, int color)
+X11Display::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
 {
   // not impl
+}
+
+void
+X11Display::draw_rect(int x1, int y1, int x2, int y2, Color color)
+{
+}
+
+void
+X11Display::draw_string(int x, int y, const std::string& str)
+{
+}
+
+int
+X11Display::get_mouse_x ()
+{
+  return mouse_x;
+}
+
+int
+X11Display::get_mouse_y ()
+{
+  return mouse_y;
 }
 
 /* EOF */

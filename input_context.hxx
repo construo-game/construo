@@ -25,8 +25,8 @@ class InputContext
 {
 private:
 public:
-  int get_mouse_x () =0;
-  int get_mouse_y () =0;
+  virtual int get_mouse_x () =0;
+  virtual int get_mouse_y () =0;
 };
 
 #endif

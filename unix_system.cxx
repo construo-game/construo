@@ -1,5 +1,5 @@
 //  $Id$
-// 
+//
 //  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
@@ -12,29 +12,31 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_COLOR_HXX
-#define HEADER_CONSTRUO_COLOR_HXX
+#include <sys/time.h>
+#include <time.h>
+#include "unix_system.hxx"
 
-/** */
-struct Color
-{
-  float r;
-  float g;
-  float b;
-  float a;
-  
-  Color (float r, float g, float b, float a = 1.0f)
-  : r (r), g (g), b (b), a (a) {}
+UnixSystem::UnixSystem ()
+{ // riped out of ClanLib-0.7
+  timeval tv;
+  gettimeofday(&tv, NULL);
+  start_time = (long) tv.tv_sec*(long) 1000+(long) tv.tv_usec/(long) 1000;
+}
 
-  /** Convert the color into 0xRRGGBB format */
-  int get_rgb () { return int(255 * r) | (int((255 * g)) << 8) | (int((255 * b)) << 16); }
-};
+unsigned int 
+UnixSystem::get_time ()
+{ // riped out of ClanLib-0.7
+  timeval tv;
+  gettimeofday(&tv, NULL);
 
-#endif
+  long tid = (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000 - start_time;
+
+  return tid;
+}
 
 /* EOF */

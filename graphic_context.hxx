@@ -20,6 +20,7 @@
 #ifndef HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
 #define HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
 
+#include <string>
 #include "color.hxx"
 
 /** Graphic abstraction interface */
@@ -30,7 +31,7 @@ public:
   virtual void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0) =0;
   virtual void draw_rect(int x1, int y1, int x2, int y2, Color color) =0;
   virtual void draw_fill_rect(int x1, int y1, int x2, int y2, Color color) =0;
-  virtual void draw_string(int x, int y, const char* str) =0;
+  virtual void draw_string(int x, int y, const std::string& str) =0;
 };
 
 #endif

@@ -23,8 +23,8 @@ construo_SOURCES = \
  graphic_context.hxx \
  input_context.hxx \
  system_context.hxx \
- x11_display.hxx \
- vector.hxx \
- vector.cxx
+ x11_display.hxx x11_display.cxx \
+ vector.hxx  vector.cxx \
+ unix_system.hxx unix_system.cxx
 
 # EOF #

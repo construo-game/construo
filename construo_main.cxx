@@ -24,6 +24,9 @@
 #include "construo_main.hxx"
 #include "config.h"
 
+#include "x11_display.hxx"
+#include "unix_system.hxx"
+
 unsigned int Particle::id_counter;
 
 Construo::Construo ()
@@ -550,7 +553,16 @@ Construo::main (int argc, char* argv[])
 
 int main (int argc, char** argv)
 {
-  std::cout << "Construo " << VERSION << std::endl;;
+  std::cout << "Construo " << VERSION << std::endl;
+
+  X11Display display (640, 480);
+  UnixSystem system;
+  
+  // Init the display, input systems
+  graphic_context = &display;
+  input_context   = &display;
+  system_context  = &system;
+
 }
 
 /* EOF */

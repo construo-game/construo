@@ -17,43 +17,20 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_X11_DISPLAY_HXX
-#define HEADER_X11_DISPLAY_HXX
+#ifndef HEADER_CONSTRUO_UNIX_SYSTEM_HXX
+#define HEADER_CONSTRUO_UNIX_SYSTEM_HXX
 
-#include <X11/Xlib.h>
-#include "graphic_context.hxx"
-#include "input_context.hxx"
+#include "system_context.hxx"
 
-/** X11Display driver */
-class X11Display : public GraphicContext,
-                   public InputContext
+/** This class wraps a bunch of unix functions to provide file-io and
+    the current time */
+class UnixSystem : public SystemContext
 {
 private:
-  int       width;
-  int       height;
-  Display*  display;
-  Window    window;
-  GC        gc;
-
-  int mouse_x;
-  int mouse_y;
+  unsigned int start_time;
 public:
-  X11Display (int w, int h);
-  ~X11Display ();
-
-  // Graphic Context stuff
-  void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0);
-  void draw_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_fill_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_string(int x, int y, const std::string& str);
-
-  // Input Context stuff
-  int get_mouse_x ();
-  int get_mouse_y ();
-
-private:
-  X11Display (const X11Display&);
-  X11Display& operator= (const X11Display&);
+  UnixSystem ();
+  unsigned int get_time ();
 };
 
 #endif
