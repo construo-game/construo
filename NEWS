@@ -1,3 +1,18 @@
+Construo 0.2.0
+==============
+
+ * Fixed id-overlap bug which caused construction to get corrput
+  (wrong particles connected together)
+
+ * added zooming plus mouse-wheel support
+
+ * added scrolling with cursorkeys and mouse
+
+ * added GUI
+
+ * House of Horror Part1 and Part2 added
+
+
 Construo 0.1.0
 ==============
 

@@ -36,7 +36,8 @@ gui_component.hxx \
 worldview_component.hxx worldview_component.cxx \
 controller.hxx controller.cxx \
 gui_buttons.hxx gui_buttons.cxx \
-zoom_graphic_context.cxx zoom_graphic_context.hxx 
+zoom_graphic_context.cxx zoom_graphic_context.hxx \
+colors.hxx colors.cxx
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

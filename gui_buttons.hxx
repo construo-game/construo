@@ -26,6 +26,7 @@
 class GUIButton : public GUIComponent
 {
 protected:
+  std::string title;
   int x_pos;
   int y_pos;
   int width;
@@ -35,7 +36,7 @@ protected:
   bool pressed;
 
 public:
-  GUIButton (int x_pos_, int y_pos_, int width_, int height_);
+  GUIButton (const std::string& title, int x_pos_, int y_pos_, int width_, int height_);
 
   bool is_at (int x, int y);
 
@@ -48,13 +49,21 @@ public:
 
   void draw (GraphicContext*);
 
-  virtual void draw_content (GraphicContext*) =0;
+  virtual void draw_content (GraphicContext*);
 };
 
 class GUIRunButton : public GUIButton
 {
 public:
   GUIRunButton ();
+  void draw_content (GraphicContext*);
+  void on_primary_button_click (int x, int y);
+};
+
+class GUISlowMoButton : public GUIButton
+{
+public:
+  GUISlowMoButton ();
   void draw_content (GraphicContext*);
   void on_primary_button_click (int x, int y);
 };
@@ -67,6 +76,27 @@ public:
   void on_primary_button_click (int x, int y);
 };
 
+class GUIZoomInButton : public GUIButton
+{
+public:
+  GUIZoomInButton ();
+  void on_primary_button_click (int x, int y);
+};
+
+class GUIZoomOutButton : public GUIButton
+{
+public:
+  GUIZoomOutButton ();
+  void on_primary_button_click (int x, int y);
+};
+
+
+class GUIQuitButton : public GUIButton
+{
+public:
+  GUIQuitButton ();
+  void on_primary_button_click (int x, int y);
+};
 
 #endif
 

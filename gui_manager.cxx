@@ -32,15 +32,23 @@
 
 extern Controller* controller;
 
+WorldViewComponent* worldview_component;
+
 GUIManager::GUIManager ()
 {
   do_quit = false;
 
   last_component = 0;
 
-  components.push_back (new WorldViewComponent ());
+  worldview_component = new WorldViewComponent ();
+  components.push_back (worldview_component);
+
   components.push_back (new GUIRunButton ());
+  components.push_back (new GUISlowMoButton  ());
   components.push_back (new GUIUndoButton ());
+  components.push_back (new GUIZoomInButton ());
+  components.push_back (new GUIZoomOutButton ());
+  components.push_back (new GUIQuitButton ());
 }
   
 void
@@ -113,6 +121,7 @@ GUIManager::draw_status ()
 void
 GUIManager::quit()
 {
+  do_quit = true;
 }
 
 GUIComponent*
