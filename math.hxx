@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2000 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
