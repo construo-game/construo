@@ -29,6 +29,9 @@ public:
 
   /** sleep for the given number of milisec */
   virtual void sleep (unsigned long) =0;
+
+  /** @return '$HOME/.construo/' */
+  virtual std::string get_construo_rc_path () =0;
 };
 
 #endif

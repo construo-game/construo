@@ -31,6 +31,7 @@ class Stick;
 class World
 {
 private:
+  bool has_been_run;
   std::list<Particle*> particles;
   typedef std::list<Particle*>::iterator ParticleIter;
   typedef std::list<Particle*>::const_iterator CParticleIter;
@@ -71,6 +72,8 @@ public:
   /** removes everything from the world */
   void clear ();
   
+  bool get_has_been_run () { return has_been_run; }
+
   void write_lisp (const std::string& filename);
 private:
   World& operator= (const World&);

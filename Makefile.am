@@ -15,6 +15,10 @@
 ##  along with this program; if not, write to the Free Software
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+SUBDIRS = examples
+
+bindir=$(prefix)/games
+
 bin_PROGRAMS = construo
 
 construo_SOURCES = \
@@ -26,5 +30,8 @@ construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_d
 construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     x11_display.hxx \
 lispreader.c  lispreader.h   lispifier.hxx lispifier.cxx lisp_reader.hxx lisp_reader.cxx \
 particle.cxx  stick.cxx
+
+# pkgdatadir = $(datadir)/games/@PACKAGE@
+EXTRA_DIST= TODO xml2sexpr.sh
 
 # EOF #

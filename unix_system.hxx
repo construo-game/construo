@@ -20,6 +20,7 @@
 #ifndef HEADER_CONSTRUO_UNIX_SYSTEM_HXX
 #define HEADER_CONSTRUO_UNIX_SYSTEM_HXX
 
+#include <string>
 #include "system_context.hxx"
 
 /** This class wraps a bunch of unix functions to provide file-io and
@@ -28,10 +29,13 @@ class UnixSystem : public SystemContext
 {
 private:
   unsigned int start_time;
+  std::string construo_rc_path;
 public:
   UnixSystem ();
+  virtual ~UnixSystem ();
   unsigned int get_time ();
   void sleep (unsigned long);
+  std::string get_construo_rc_path();
 };
 
 #endif

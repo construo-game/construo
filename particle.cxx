@@ -22,6 +22,9 @@
 
 Particle::Particle (lisp_object_t* obj)
 {
+  fixed = false;
+  mass = 10.0;
+
   obj = lisp_cdr(obj);
   //std::cout << "Loading particle: " << std::endl;
   //lisp_dump(obj, stdout);

@@ -21,10 +21,15 @@
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include "construo_error.hxx"
+#include "config.h"
 #include "x11_display.hxx"
+#include "construo_main.hxx"
+
+extern ConstruoMain* construo_main;
+Atom wm_delete_window;
 
 X11Display::X11Display(int w, int h)
-  : width(w), height(h)
+  : width(w), height(h), shift_pressed (false)
 {
   std::cout << "Opening X11 display" << std::endl;
   display = XOpenDisplay(NULL);
@@ -40,11 +45,13 @@ X11Display::X11Display(int w, int h)
 
   attributes.event_mask = 
     KeyPressMask         |
+    KeyReleaseMask       |
     ExposureMask         | 
     PointerMotionMask    |
     ButtonPressMask      |
     ButtonReleaseMask    |
-    StructureNotifyMask;
+    StructureNotifyMask  |
+    ExposureMask;
 
   window = XCreateWindow(display, RootWindow(display, screen),
                          0,0, // position
@@ -52,6 +59,40 @@ X11Display::X11Display(int w, int h)
                          CopyFromParent, InputOutput, CopyFromParent, 
                          CWBackPixel|CWBorderPixel|CWEventMask,
                          &attributes);
+
+  { // Communicate a bit with the window manager
+    char *title = "Construo " VERSION;
+
+    XTextProperty text_property;
+    XStringListToTextProperty(&title, 1, &text_property);
+    XSizeHints size_hints;
+    size_hints.x = 0;
+    size_hints.y = 0;
+    size_hints.flags  = PSize | PMinSize | PMaxSize;
+
+    size_hints.width  = width;
+    size_hints.height = height;
+    
+    size_hints.min_width  = width;
+    size_hints.min_height = height;
+    size_hints.max_width  = width;
+    size_hints.max_height = height;
+
+    XSetWMProperties(
+                     display,
+                     window,
+                     &text_property,
+                     &text_property,
+                     0,
+                     0,
+                     &size_hints,
+                     0,
+                     0);
+
+    // Set WM_DELETE_WINDOW atom in WM_PROTOCOLS property (to get window_delete requests).
+    wm_delete_window = XInternAtom (display, "WM_DELETE_WINDOW", False);
+    XSetWMProtocols (display, window, &wm_delete_window, 1);
+  }
 
   drawable = XCreatePixmap (display, window, width, height, 
                             DefaultDepth(display, screen));  
@@ -71,6 +112,7 @@ X11Display::~X11Display ()
 {
   std::cout << "Closing X11 display" << std::endl;
   XFreePixmap (display, drawable);
+  XDestroyWindow (display, window);
   XCloseDisplay(display);
 }
 
@@ -155,6 +197,9 @@ X11Display::keep_alive ()
             flip ();
           break;
 
+        case NoExpose:
+          break;
+
         case ButtonPress:
           {
             Event ev;
@@ -172,82 +217,138 @@ X11Display::keep_alive ()
           }
           break;
 
+        case ButtonRelease:
+          break;
+
         case KeyPress:
           {
             KeySym sym = XLookupKeysym(&event.xkey,0);
-            std::cout << "keypress: " << sym << " " << XK_f << std::endl;
-            if (sym == XK_f) // FIXME: a bit much duplicate code
+            
+            switch (sym)
               {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_FIX;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_c)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_CLEAR;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_Delete)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_DELETE;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_Escape)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_ESCAPE;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_u)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_UNDO;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_r)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_REDO;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_1)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_QUICKSAVE1;
-                ev.button.pressed = true;
-                events.push(Event(ev));
-              }
-            else if (sym == XK_2)
-              {
-                Event ev;
-                ev.button.type = BUTTON_EVENT;
-                ev.button.id = BUTTON_QUICKLOAD1;
-                ev.button.pressed = true;
-                events.push(Event(ev));
+              case XK_Shift_L:
+              case XK_Shift_R:
+                shift_pressed = true;
+                break;
+              case XK_f:
+                send_button_press(BUTTON_FIX);
+                break;
+              case XK_c:
+                send_button_press(BUTTON_CLEAR);
+                break;
+              case XK_Delete:
+                send_button_press(BUTTON_DELETE);
+                break;
+              case XK_Escape:
+                send_button_press(BUTTON_ESCAPE);
+                break;
+              case XK_u:
+                send_button_press(BUTTON_UNDO);
+                break;
+              case XK_r:
+                send_button_press(BUTTON_REDO);
+                break;
+              case XK_space:
+                send_button_press(BUTTON_TOGGLESLOWMO);
+                break;
+
+              case XK_0:
+                 send_load_or_save(0);
+                 break;
+              case XK_1:
+                 send_load_or_save(1);
+                break;
+              case XK_2:
+                 send_load_or_save(2);
+                 break;
+              case XK_3:
+                 send_load_or_save(3);
+                 break;
+              case XK_4:
+                 send_load_or_save(4);
+                 break;
+              case XK_5:
+                 send_load_or_save(5);
+                 break;
+              case XK_6:
+                 send_load_or_save(6);
+                 break;
+              case XK_7:
+                 send_load_or_save(7);
+                 break;
+              case XK_8:
+                 send_load_or_save(8);
+                 break;
+              case XK_9:
+                 send_load_or_save(9);
+                 break;
+              
+              default:
+                std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_f << std::endl;
+                break;
               }
           }
           break;
 
+        case KeyRelease:
+          {
+            KeySym sym = XLookupKeysym(&event.xkey,0);
+            
+            switch (sym)
+              {
+              case XK_Shift_L:
+              case XK_Shift_R:
+                shift_pressed = false;
+                break;
+              default:
+                //std::cout << "X11Display: unhandled keyrelease: " << sym << " " << XK_f << std::endl;
+                break;
+              }
+          }
+          break;
+
+        case ConfigureNotify:
+          //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height 
+          //<< "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+          break;
+
+        case DestroyNotify:
+          std::cout << "Window got destroyed" << std::endl;
+          break;
+
+        case ClientMessage:
+          std::cout << "X11Display: got client message" << std::endl;
+          // Window close request
+          if ((int) event.xclient.data.l[0] == (int) wm_delete_window) {
+            std::cout << "Window is destroyed" << std::endl;
+            construo_main->quit();
+          }
+          break;
+
         default: 
-          //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+          std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
           break;
         }
     }
+}
+
+void
+X11Display::send_load_or_save(int n)
+{
+  if (shift_pressed)
+    send_button_press(BUTTON_QUICKLOAD0 + n);
+  else
+    send_button_press(BUTTON_QUICKSAVE0 + n);
+}
+
+void
+X11Display::send_button_press (int i)
+{
+  Event ev;
+  ev.button.type = BUTTON_EVENT;
+  ev.button.id = i;
+  ev.button.pressed = true;
+  events.push(Event(ev)); 
 }
 
 void

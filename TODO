@@ -1,12 +1,23 @@
-Release 0.1.0:
-* make sure that 'make install' works, add some more docs
+* slow motion
 
 Release 0.2.0:
 * Create GUI (simple buttons)
 * make every key bound function accessible via the GUI
-
+* make the window resizable
 
 Release 0.3.0:
 * make OpenGL display implementation, add alpha support (can be faked
   by fading to black on non-alpha displays)
 * port to windows
+
+--- in the future ---
+ - add different types of sticks
+ - make stick properties editable
+ - add a better load/save interface
+ - make it 3D
+ - add some randomness
+ - add wind/earthquake or other things
+ - make use of non-flad ground
+ - add zoom
+
+# EOF #

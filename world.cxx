@@ -28,10 +28,12 @@ bool stick_destroyed (Stick* stick)
 
 World::World ()
 {
+  has_been_run = false;
 }
 
 World::World (const std::string& filename)
 {
+  has_been_run = false;
   FILE* in;
   lisp_stream_t stream;
 
@@ -176,6 +178,8 @@ World::draw (GraphicContext* gc)
 void
 World::update (float delta)
 {
+  has_been_run = true;
+
   // Main Movement and Forces
   for (int k = 0;  k < 20; ++k)
     {

@@ -1,5 +1,27 @@
-INSTALLATION
-~~~~~~~~~~~~
+Installing Construo
+===================
 
-Currently not supported... you are on your own.
+Construo doesn't depend on any other library beside Xlib, so a normal:
 
+ % ./configure
+ % make
+
+should work. Optionally you can run:
+
+ % make install
+
+to install the game, but you can also simply run it from its source
+directory. To start it from the source directory just type:
+
+ % ./construo
+
+or if you want to launch an example, type:
+
+ % ./construo examples/<filename>.construo
+
+If you have construo xml files from an earlier release, you can
+convert them with them with the xml2sexpr.sh script like this:
+
+ % xml2sexpr.sh < oldfile.xml > newfile.construo
+
+# EOF #

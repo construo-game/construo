@@ -7,14 +7,14 @@ Construo 0.1.0
 
  * removal of particles is possible
 
- * rewind to the state before the 'run' is possible
-
- * load/save now with thumbnails and without filenames
+ * rewind to the state before the 'run' is possible (aka undo)
 
  * rewritten to use only plain Xlib, no additional libraries required
 
  * XML is replaced by s-expressions, this removes another library
    dependency and results in better readable files
+
+ * added a bunch of example files
 
  * added abstraction layer, ports to other libraries or OSs should be
    quite easy (OpenGL port might follow sooner or later)

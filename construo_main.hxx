@@ -69,8 +69,17 @@ public:
 
   Particle* current_particle ();
 
+  void quit() { do_quit = true; }
+  void on_exit();
 private:
   void process_events ();
+
+  std::string get_slot_filename(int n);
+  void save_to_slot (int n);
+  void load_from_slot (int n);
+
+  void load_world (const std::string& filename);
+  void save_world (const std::string& filename);
 };
 
 #endif

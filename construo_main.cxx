@@ -30,6 +30,7 @@
 #include "unix_system.hxx"
 
 int Particle::id_counter;
+ConstruoMain* construo_main;
 
 ConstruoMain::ConstruoMain ()
 {
@@ -133,6 +134,13 @@ ConstruoMain::on_key_press(int key_id)
      }
    }
 #endif
+}
+
+void
+ConstruoMain::on_exit()
+{
+  if (!world->get_has_been_run())
+    save_world(system_context->get_construo_rc_path() + "laststate.construo");
 }
 
 void
@@ -508,18 +516,34 @@ ConstruoMain::process_events ()
                   do_quit = true;
                   break;
 
-                case BUTTON_QUICKSAVE1:
-                  std::cout << "Saving World..." << std::endl;
-                  world->write_lisp ("/tmp/bla.lisp");
-                  std::cout << "Saving World... DONE" << std::endl;
+                case BUTTON_TOGGLESLOWMO:
+                  slow_down = !slow_down;
                   break;
 
+                case BUTTON_QUICKSAVE0:
+                case BUTTON_QUICKSAVE1:
+                case BUTTON_QUICKSAVE2:
+                case BUTTON_QUICKSAVE3:
+                case BUTTON_QUICKSAVE4:
+                case BUTTON_QUICKSAVE5:
+                case BUTTON_QUICKSAVE6:
+                case BUTTON_QUICKSAVE7:
+                case BUTTON_QUICKSAVE8:
+                case BUTTON_QUICKSAVE9:
+                  save_to_slot (event.button.id - BUTTON_QUICKSAVE0);
+                  break;
+
+                case BUTTON_QUICKLOAD0:
                 case BUTTON_QUICKLOAD1:
-                  undo_world_stack.push_back(world);
-                  std::cout << "Loading World..." << std::endl;
-                  world = new World ("/tmp/bla.lisp");
-                  running = false;
-                  std::cout << "Loading World... DONE" << std::endl;
+                case BUTTON_QUICKLOAD2:
+                case BUTTON_QUICKLOAD3:
+                case BUTTON_QUICKLOAD4:
+                case BUTTON_QUICKLOAD5:
+                case BUTTON_QUICKLOAD6:
+                case BUTTON_QUICKLOAD7:
+                case BUTTON_QUICKLOAD8:
+                case BUTTON_QUICKLOAD9:
+                  load_from_slot (event.button.id - BUTTON_QUICKLOAD0);
                   break;
 
                 default:
@@ -535,6 +559,24 @@ ConstruoMain::process_events ()
     }
 }
 
+void
+ConstruoMain::load_world (const std::string& filename)
+{
+  undo_world_stack.push_back(world);
+  std::cout << "Loading World..." << std::endl;
+  world = new World (filename);
+  running = false;
+  std::cout << "Loading World... DONE" << std::endl; 
+}
+
+void
+ConstruoMain::save_world (const std::string& filename)
+{
+  std::cout << "Saving World..." << std::endl;
+  world->write_lisp (filename);
+  std::cout << "Saving World... DONE" << std::endl;
+}
+
 int 
 ConstruoMain::main (int argc, char* argv[])
 {
@@ -545,27 +587,47 @@ ConstruoMain::main (int argc, char* argv[])
   //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
   //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
 
-  world = new World ();
+  if (argc == 2)
+    {
+      world = new World (argv[1]);
+    }
+  else
+    {
+      try {
+        world = new World(system_context->get_construo_rc_path() + "laststate.construo");
+      } catch (ConstruoError& err) {
+        std::cout << "ConstruoMain: " << err.msg << std::endl;
+        world = new World ();
+      }
+    }
 
   while (!do_quit)
     {
-      double delta;
-
       process_events ();
-      
-      if (slow_down)
-	delta = delta_manager.getset ()/50.0;
-      else
-	{
-	  if (input_context->get_keycode (KEY_ENTER))
-	    delta = delta_manager.getset ();
-	  else
-	    delta = delta_manager.getset ()/5.0;
-	}
+
+      double delta = delta_manager.getset ();
 
       if (running)
         {
-          world->update (delta);
+          float min_skip;
+
+          if (slow_down)
+            {
+              delta /= 50.0f;
+              min_skip = 0.001f;
+            }
+          else
+            {
+              delta /= 5.0f;
+              min_skip = 0.01f;
+            }
+      
+          float i = 0.0f;
+          while (i < delta)
+            {
+              world->update (min_skip);
+              i += min_skip;
+            }
         }
 
       graphic_context->clear ();
@@ -592,18 +654,21 @@ ConstruoMain::main (int argc, char* argv[])
           }
       }
 
-      graphic_context->draw_string (10, 20, "..:: Construo V0.1.0pre1 ::..");
+      graphic_context->draw_string (10, 20, "..:: Construo V"VERSION" ::..");
       graphic_context->draw_string (10, 32, "=============================");
+   
+      graphic_context->draw_string (400, 20, "      [1-9] - quick save");
+      graphic_context->draw_string (400, 32, "[shift 1-9] - quick load");
+      graphic_context->draw_string (400, 44, "   [escape] - quit");
+      graphic_context->draw_string (400, 56, "    [space] - toggle slow motion");
 
-      
-      graphic_context->draw_string (600, 20, "[ left ] - insert/connect spots");
-      graphic_context->draw_string (600, 32, "[middle] - start/stop simulation");
-      graphic_context->draw_string (600, 44, "[right ] - remove spot");
-      graphic_context->draw_string (600, 58, "[  c   ] - clear screen");
-      graphic_context->draw_string (600, 70, "[  f   ] - fix current spot");
-      graphic_context->draw_string (600, 82, "[  u   ] - undo to last state");
-      graphic_context->draw_string (600, 94, "[  r   ] - redo (undo an undo)");
-      graphic_context->draw_string (600, 106, "[escape] - quit");
+      graphic_context->draw_string (600,  20, "  [left] - insert/connect spots");
+      graphic_context->draw_string (600,  32, "[middle] - start/stop simulation");
+      graphic_context->draw_string (600,  44, " [right] - remove spot");
+      graphic_context->draw_string (600,  56, "     [c] - clear screen");
+      graphic_context->draw_string (600,  68, "     [f] - fix current spot");
+      graphic_context->draw_string (600,  80, "     [u] - undo to last state");
+      graphic_context->draw_string (600,  92, "     [r] - redo (undo an undo)");
 
       if (running)
         graphic_context->draw_string (graphic_context->get_width () - 60,
@@ -614,10 +679,19 @@ ConstruoMain::main (int argc, char* argv[])
                                       graphic_context->get_height () - 10,
                                       "[STOPPED]", Color(0x00FF00));
 
+      if (slow_down)
+        {
+          graphic_context->draw_string (10,
+                                        graphic_context->get_height () - 10,
+                                        "[SLOW-MOTION]", Color(0x00FFFF));
+        }
+
       graphic_context->flip ();
       KeepAliveMgr::keep_alive ();
       system_context->sleep (1000);
     }
+
+  on_exit();
 
   delete world;
 
@@ -626,26 +700,60 @@ ConstruoMain::main (int argc, char* argv[])
 
 int main (int argc, char** argv)
 {
-  std::cout << "Construo " << VERSION << std::endl;
-
-  try 
+  if (argc == 2 && argv[1][0] == '-')
     {
-  X11Display display (800, 600);
-  UnixSystem system;
-  
-  // Init the display, input systems
-  graphic_context = &display;
-  input_context   = &display;
-  system_context  = &system;
-  
-  ConstruoMain app;
-  return app.main (argc, argv);
-    }
-  catch (ConstruoError& err)
-    {
-      std::cout << "Error ocurred: " << err.msg << std::endl;
+      std::cout << "Usage: " << argv[0] << " [FILENAME]" << std::endl;
       return EXIT_FAILURE;
     }
+
+  try {
+    X11Display display (800, 600);
+    UnixSystem system;
+  
+    // Init the display, input systems
+    graphic_context = &display;
+    input_context   = &display;
+    system_context  = &system;
+  
+    std::cout << PACKAGE_STRING"\n" << std::endl;
+    std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
+              << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
+
+    ConstruoMain app;
+    construo_main = &app;
+
+    return app.main (argc, argv);
+  } catch (ConstruoError& err) {
+    std::cout << "Error ocurred: " << err.msg << std::endl;
+    return EXIT_FAILURE;
+  }
+}
+
+std::string
+ConstruoMain::get_slot_filename(int n)
+{
+  const std::string& str = system_context->get_construo_rc_path();
+  return str + std::string("quicksave") + char('0' + n) + ".construo";
+}
+
+void
+ConstruoMain::save_to_slot (int n)
+{
+  try {
+    save_world (get_slot_filename (n));
+  } catch (ConstruoError& err) {
+    std::cout << "ConstruoMain: Error: " << err.msg << std::endl;
+  }
+}
+
+void
+ConstruoMain::load_from_slot (int n)
+{
+  try {
+    load_world (get_slot_filename (n));
+  } catch (ConstruoError& err) {
+    std::cout << "ConstruoMain: Error: " << err.msg << std::endl;
+  }
 }
 
 /* EOF */

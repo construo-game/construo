@@ -16,7 +16,7 @@
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 # init automake/conf
-AC_INIT(construo, 0.1.0pre2)
+AC_INIT(construo, 0.1.0)
 AC_CONFIG_SRCDIR(construo.hxx)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
@@ -43,7 +43,7 @@ echo "   CXXFLAGS = $CXXFLAGS"
 echo "   LIBS     = $LIBS"
 echo ""
 
-AC_CONFIG_FILES(Makefile)
+AC_CONFIG_FILES(Makefile examples/Makefile)
 AC_OUTPUT
 
 # EOF #

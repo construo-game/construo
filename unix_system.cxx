@@ -20,6 +20,11 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#include "construo_error.hxx"
 #include "unix_system.hxx"
 
 UnixSystem::UnixSystem ()
@@ -27,6 +32,44 @@ UnixSystem::UnixSystem ()
   timeval tv;
   gettimeofday(&tv, NULL);
   start_time = (long) tv.tv_sec*(long) 1000+(long) tv.tv_usec/(long) 1000;
+
+  char* home = getenv("HOME");
+  if (home)
+    {
+      construo_rc_path = std::string(home) + std::string("/.construo/");
+    }
+  else
+    {
+      throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
+    }
+
+  // create $HOME directory if not already there
+  struct stat buf;
+
+  if (stat(construo_rc_path.c_str(), &buf) != 0) // Couldn't find directory, create it
+    {
+      if (mkdir(construo_rc_path.c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP) != 0)
+        {
+          throw ConstruoError(std::string("UnixSystem: ") + construo_rc_path + ": "
+                              + strerror(errno));
+        }
+    }
+  else
+    {
+      if (S_ISDIR(buf.st_rdev)) // Is not a directory
+        {
+          throw ConstruoError("Error: " + construo_rc_path + " is not a directory!");
+        }
+      
+      if (access(construo_rc_path.c_str (), R_OK | W_OK | X_OK) != 0) // not readable/writeable
+        {
+          throw ConstruoError("Error: " + construo_rc_path + " is not read or writeable!");
+        }
+    }     
+}
+
+UnixSystem::~UnixSystem ()
+{
 }
 
 unsigned int 
@@ -44,6 +87,12 @@ void
 UnixSystem::sleep (unsigned long t)
 {
   usleep (t);
+}
+
+std::string 
+UnixSystem::get_construo_rc_path()
+{
+  return construo_rc_path;
 }
 
 /* EOF */

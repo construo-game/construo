@@ -1,41 +1,17 @@
 Construo
 ~~~~~~~~
+
 Construo is a programm for constructing wire-frame objects and let
 them react on physical forces, its neither a real simulation nor a
-game, its just a little toy app.
+real game, its just a little toy app which can be a nice way to waste
+time. Some game-like elements might follow later.
 
 The newest version can be found at:
 
-  http://pingus.seul.org/~grumbel/construo/
+  http://www.nongnu.org/construo/
 
 For questions write a mail to:
 
   Ingo Ruhnke <grumbel@gmx.de>
 
-Usage
-~~~~~
-mouse:     Use the mouse to position new nodes and connect them. 
-space:     Let physics take action
-c:         Clear the workspace
-1-4:       Quicksave your workspace
-Shift 1-4: Quickload a workspace
-l:         Load a file
-s:         Save a file
-d:         slow motion
-
-Todo:
-~~~~~
- - do a complete rewrite, source is to ugly
- - rewrite in OpenGL
- - add different types of sticks
- - make stick properties editable
- - add a better load/save interface
- - make it 3D
- - add some randomness
- - add wind/earthquake or other things
- - add solid nodes
- - make use of non-flad ground
- - add zoom
-
-$Date$
-
+# EOF #

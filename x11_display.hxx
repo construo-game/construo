@@ -38,6 +38,7 @@ private:
   Drawable  drawable;
   GC        gc;
 
+  bool shift_pressed;
   int mouse_x;
   int mouse_y;
 public:
@@ -66,6 +67,9 @@ public:
 
   void keep_alive ();
 private:
+  void send_button_press (int i);
+  void send_load_or_save(int n);
+
   X11Display (const X11Display&);
   X11Display& operator= (const X11Display&);
 };

@@ -26,6 +26,8 @@ Stick::Stick (World* world, lisp_object_t* cursor)
   
   int first_id = -1;
   int second_id = -1;
+  length = -1;
+
   LispReader reader(cursor);
   reader.read_int ("first", &first_id);
   reader.read_int ("second", &second_id);
@@ -37,6 +39,35 @@ Stick::Stick (World* world, lisp_object_t* cursor)
   if (particles.first == 0 || particles.second == 0)
     {
       throw ConstruoError ("Spring: Pair lookup failed");
+    }
+
+  if (length == -1)
+    {
+      std::cout << "Spring: length missing in data file, recalculating" << std::endl;
+      length = fabs((particles.first->pos - particles.second->pos).norm ());
+    }
+}
+
+void
+Stick::update (float delta)
+{
+  CL_Vector dist = particles.first->pos - particles.second->pos;
+  float stretch = dist.norm ()/length - 1.0f;
+  stretch *= 2.0f; // Materialkoeffizent
+  //std::cout << "stretch: " << stretch << std::endl;
+
+  if (fabs(stretch) > max_stretch && 
+      length > 10.0f) // atomar spring
+    {
+      destroyed = true;
+    }
+  else
+    {
+      dist.normalize ();
+      CL_Vector force = dist * stretch * back_force;
+      //std::cout << "Force: " << force << std::endl;
+      particles.first->add_force (-force);
+      particles.second->add_force (force);
     }
 }
 

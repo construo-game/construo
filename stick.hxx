@@ -62,27 +62,7 @@ public:
 	<< "</spring>" << std::endl;
   }
   
-  void update (float delta)
-  {
-    CL_Vector dist = particles.first->pos - particles.second->pos;
-    float stretch = dist.norm ()/length - 1.0f;
-    stretch *= 2.0f; // Materialkoeffizent
-    //std::cout << "stretch: " << stretch << std::endl;
-
-    if (fabs(stretch) > max_stretch)
-      {
-	destroyed = true;
-      }
-    else
-      {
-	dist.normalize ();
-	CL_Vector force = dist * stretch * back_force;
-	//std::cout << "Force: " << force << std::endl;
-	particles.first->add_force (-force);
-	particles.second->add_force (force);
-      }
-  }
-  
+  void update (float delta);
   void draw ()
   {
     CL_Vector dist = particles.first->pos - particles.second->pos;

@@ -1,1 +1,12 @@
-Ingo Ruhnke <grumbel@gmx.de>
+Programmer/Maintairer:
+----------------------
+ Ingo Ruhnke <grumbel@gmx.de>
+
+
+Special thanks to:
+------------------
+ Mark Probst for his lispreader library
+ Jeff Lander for his 'Collision Response: Bouncy, Trouncy, Fun' article
+ The ClanLib people for the library that was used in the first Construo version
+
+# EOF #
