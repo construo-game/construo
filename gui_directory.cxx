@@ -60,22 +60,39 @@ GUIDirectory::~GUIDirectory ()
 void
 GUIDirectory::draw (GraphicContext* gc)
 {
-  int x_pos = 50;
-  int y_pos = 37;
+  int row = 0;
+  int column = 0;
+  int count = 0;
+
   for(std::vector<GUIFileButton*>::iterator i = files.begin();
-      i != files.end();
+      i != files.end() && count < 8;
       ++i)
     {
-      (*i)->set_position(x_pos, y_pos);
+      (*i)->set_position(column * (200 + 50) + 50,
+                         row * (150 + 37) + 30);
       (*i)->draw(gc); 
-      
-      x_pos += 250;
-      if (x_pos > 800)
+
+      column += 1;
+      if (column >= 3) // row is full
         {
-          x_pos = 50;
-          y_pos += 187;
+          column = 0;
+          row += 1;
         }
+      if (row >= 3)
+        return;
     }  
+}
+
+void
+GUIDirectory::move_up ()
+{
+  
+}
+
+void
+GUIDirectory::move_down ()
+{
+  
 }
 
 /* EOF */

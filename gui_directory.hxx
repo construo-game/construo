@@ -36,6 +36,11 @@ public:
   ~GUIDirectory ();
 
   void draw (GraphicContext*);
+
+  /** Move the shown directory content up */
+  void move_up ();
+  /** Move the shown directory content down */
+  void move_down ();
 };
 
 #endif
