@@ -5,12 +5,16 @@ Release 0.1.1:
 * fix broken demos (complex*, explode, ...)
 * fix assertion on broken files
 * limit screen updates
-* if I load-file, run, stop, connect, run, stop, undo I get a
-  corrupt scene with connections where they don't belong (undo-bug)
 * author field
 * date field
 * make springs removable
 * remove obsolete xml code
+
+probally FIXED:
+* if I load-file, run, stop, connect, run, stop, undo I get a
+  corrupt scene with connections where they don't belong (undo-bug)
+  [id bug, ids override each other]
+
 
 Release 0.2.0:
 * Create GUI (simple buttons)

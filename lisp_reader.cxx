@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ LispReader::search_for(const char* name)
       if (!lisp_cons_p(cur) || !lisp_symbol_p (lisp_car(cur)))
         {
           lisp_dump(cur, stdout);
-          throw ConstruoError ("LispReader: Read error in search_for");
+          throw ConstruoError (std::string("LispReader: Read error in search_for ") + name);
         }
       else
         {

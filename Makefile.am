@@ -24,12 +24,13 @@ bin_PROGRAMS = construo
 construo_SOURCES = \
 buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            vector.cxx      \
 color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        vector.hxx      \
-config.cxx    construo_main.hxx   input_context.hxx    stick.hxx           world.cxx       \
+config.cxx    construo_main.hxx   input_context.hxx    spring.hxx           world.cxx       \
 config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
 construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_display.cxx \
 construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     x11_display.hxx \
-lispreader.c  lispreader.h   lispifier.hxx lispifier.cxx lisp_reader.hxx lisp_reader.cxx \
-particle.cxx  stick.cxx
+lispreader.c  lispreader.h       lisp_reader.hxx lisp_reader.cxx \
+particle.cxx  spring.cxx  particle_factory.hxx particle_factory.cxx \
+lisp_writer.hxx lisp_writer.cxx
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

@@ -21,28 +21,28 @@
 #define HEADER_CONSTRUO_WORLD_HXX
 
 #include <list>
-#include "stick.hxx"
+#include "spring.hxx"
 #include "particle.hxx"
 
 class Particle;
-class Stick;
+class ParticleFactory;
+class Spring;
 
 /** This class holds all particles and springs */
 class World
 {
 private:
   bool has_been_run;
-  std::list<Particle*> particles;
-  typedef std::list<Particle*>::iterator ParticleIter;
-  typedef std::list<Particle*>::const_iterator CParticleIter;
+  ParticleFactory* particle_mgr;
 
-  std::list<Stick*> sticks;
-  typedef std::list<Stick*>::iterator StickIter;
-  typedef std::list<Stick*>::const_iterator CStickIter;
+  std::list<Spring*> springs;
+  typedef std::list<Spring*>::iterator SpringIter;
+  typedef std::list<Spring*>::const_iterator CSpringIter;
 
   void parse_scene (lisp_object_t* lst);
   void parse_springs (lisp_object_t* lst);
   void parse_particles (lisp_object_t* lst);
+
 public:
   World ();
   World (const World& w);
@@ -57,17 +57,14 @@ public:
   /** @return the particles closed to the given coordinates */
   Particle* get_particle (int x, int y);
   void add_spring (Particle*, Particle*);
-  /** The world will take care of the deletion */
-  void add_particle (Particle*);
 
   /** removes the given particle and all objects which reference it */
   void remove_particle (Particle*);
 
-  /** remove the given stick */
-  void remove_stick (Stick*);
+  /** remove the given spring */
+  void remove_spring (Spring*);
 
-  /** return the particle with the given id */
-  Particle* lookup_particle (int id);
+  ParticleFactory* get_particle_mgr() { return particle_mgr; }
 
   /** removes everything from the world */
   void clear ();

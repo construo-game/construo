@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -18,9 +18,10 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "construo_error.hxx"
-#include "stick.hxx"
+#include "particle_factory.hxx"
+#include "spring.hxx"
 
-Stick::Stick (World* world, lisp_object_t* cursor)
+Spring::Spring (World* world, lisp_object_t* cursor)
 {
   cursor = lisp_cdr(cursor); // Skip the identifer
   
@@ -33,8 +34,8 @@ Stick::Stick (World* world, lisp_object_t* cursor)
   reader.read_int ("second", &second_id);
   reader.read_float ("length", &length);
 
-  particles.first = world->lookup_particle (first_id);
-  particles.second = world->lookup_particle (second_id);
+  particles.first  = world->get_particle_mgr()->lookup_particle (first_id);
+  particles.second = world->get_particle_mgr()->lookup_particle (second_id);
 
   if (particles.first == 0 || particles.second == 0)
     {
@@ -49,7 +50,7 @@ Stick::Stick (World* world, lisp_object_t* cursor)
 }
 
 void
-Stick::update (float delta)
+Spring::update (float delta)
 {
   CL_Vector dist = particles.first->pos - particles.second->pos;
   float stretch = dist.norm ()/length - 1.0f;
@@ -69,6 +70,19 @@ Stick::update (float delta)
       particles.first->add_force (-force);
       particles.second->add_force (force);
     }
+}
+
+void
+Spring::draw ()
+{
+  CL_Vector dist = particles.first->pos - particles.second->pos;
+  float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
+  
+  float color = fabs((stretch/max_stretch));
+  
+  graphic_context->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
+                              int(particles.second->pos.x), int(particles.second->pos.y),
+                              Color(color, 1.0f - color, 0.0f));
 }
 
 /* EOF */

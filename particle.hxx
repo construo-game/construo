@@ -21,7 +21,7 @@
 #define HEADER_CONSTRUO_PARTICLE_HXX
 
 #include <iostream>
-#include "lispifier.hxx"
+#include "lisp_writer.hxx"
 #include "construo.hxx"
 #include "graphic_context.hxx"
 #include "vector.hxx"
@@ -29,9 +29,6 @@
 class Particle
 {
 public:
-  // FIXME: Place this in a factory
-  static int id_counter;
-
   /** Id of the particle */
    int id;
 
@@ -50,35 +47,9 @@ public:
       collect the forces)*/
   CL_Vector totale_force;
 
-  Particle (lisp_object_t*);
-
-  Particle (CL_Vector arg_pos, CL_Vector arg_velocity)
-    : id (++id_counter), pos (arg_pos),
-      velocity (arg_velocity)
-  {
-    totale_force = CL_Vector ();
-    fixed = false;
-    mass = 10.0;
-  }
-
-  void set_id (int arg_id)
-  {
-    if (arg_id > id_counter)
-      id_counter = arg_id;
-    id = arg_id;
-  }
-
   int get_id ()
   {
     return id;
-  }
-
-  void write_xml (std::ostream& out)
-  {
-    out << "    <particle id=\"" << id << "\">"
-      	<< "<position>" << to_xml (pos) << "</position>"
-	<< "<velocity>" << to_xml (velocity) << "</velocity>"
-	<< "</particle>" << std::endl;
   }
 
   void add_force (CL_Vector force)
@@ -173,7 +144,7 @@ public:
 
   lisp_object_t* serialize()
   {
-    Lispifier obj ("particle");
+    LispWriter obj ("particle");
     obj.write_int ("id", id);
     obj.write_vector ("pos", pos);
     obj.write_vector ("velocity", velocity);
@@ -181,6 +152,13 @@ public:
     obj.write_float ("mass", mass);
     return obj.get_lisp ();
   }
+
+  friend class ParticleFactory;
+
+private:
+  Particle (lisp_object_t*);
+  Particle (int i, const CL_Vector& arg_pos, const CL_Vector& arg_velocity, float m, bool f);
+  Particle (const Particle&);
 };
 
 #endif

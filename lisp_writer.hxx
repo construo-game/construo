@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_LISPIFIER_HXX
-#define HEADER_LISPIFIER_HXX
+#ifndef HEADER_CONSTRUO_LISP_WRITER_HXX
+#define HEADER_CONSTRUO_LISP_WRITER_HXX
 
 #include <vector>
 
@@ -29,7 +29,7 @@ extern "C" {
 #include "vector.hxx"
 
 /** */
-class Lispifier
+class LispWriter
 {
 private:
   std::vector<lisp_object_t*> lisp_objs;
@@ -38,7 +38,7 @@ private:
   lisp_object_t* make_list3 (lisp_object_t*, lisp_object_t*, lisp_object_t*);
   lisp_object_t* make_list2 (lisp_object_t*, lisp_object_t*);
 public:
-  Lispifier (const char* name);
+  LispWriter (const char* name);
   void write_vector (const char* name, const CL_Vector& pos);
   void write_float (const char* name, float f);
   void write_int (const char* name, int i);

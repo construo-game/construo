@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -20,18 +20,21 @@
 #include "config.h"
 #include "construo_error.hxx"
 #include "world.hxx"
+#include "particle_factory.hxx"
 
-bool stick_destroyed (Stick* stick)
+bool spring_destroyed (Spring* spring)
 {
-  return stick->destroyed;
+  return spring->destroyed;
 }
 
 World::World ()
+  : particle_mgr (new ParticleFactory())
 {
   has_been_run = false;
 }
 
 World::World (const std::string& filename)
+  : particle_mgr (0)
 {
   has_been_run = false;
   FILE* in;
@@ -65,8 +68,10 @@ World::World (const std::string& filename)
   
   lisp_free (root_obj);
 
-  std::cout << "particles: " << particles.size () << std::endl;
-  std::cout << "springs:   " << sticks.size () << std::endl;
+  ConstruoAssert(particle_mgr, "No Particles given in file, load failed");
+
+  std::cout << "particles: " << particle_mgr->size () << std::endl;
+  std::cout << "springs:   " << springs.size () << std::endl;
 }
 
 void
@@ -106,7 +111,7 @@ World::parse_springs (lisp_object_t* cursor)
   while(!lisp_nil_p(cursor))
     {
       lisp_object_t* cur = lisp_car(cursor);
-      sticks.push_back(new Stick (this, cur));
+      springs.push_back(new Spring (this, cur));
       cursor = lisp_cdr (cursor);
     }  
 }
@@ -114,31 +119,21 @@ World::parse_springs (lisp_object_t* cursor)
 void
 World::parse_particles (lisp_object_t* cursor)
 {
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* cur = lisp_car(cursor);
-      particles.push_back(new Particle (cur));
-      cursor = lisp_cdr (cursor);
-    }
+  particle_mgr = new ParticleFactory(cursor);
 }
 
 World::World (const World& w)
 {
-  for (CParticleIter i = w.particles.begin (); 
-       i != w.particles.end (); 
-       ++i)
+  particle_mgr = new ParticleFactory (*w.particle_mgr);
+  
+  for (CSpringIter i = w.springs.begin (); i != w.springs.end (); ++i)
     {
-      particles.push_back (new Particle (*(*i)));
-    }
-
-  for (CStickIter i = w.sticks.begin (); i != w.sticks.end (); ++i)
-    {
-      Particle* first  = lookup_particle((*i)->particles.first->get_id());
-      Particle* second = lookup_particle((*i)->particles.second->get_id());
+      Particle* first  = particle_mgr->lookup_particle((*i)->particles.first->get_id());
+      Particle* second = particle_mgr->lookup_particle((*i)->particles.second->get_id());
 
       if (first && second)
         {
-          sticks.push_back (new Stick (first, second, (*i)->length));
+          springs.push_back (new Spring (first, second, (*i)->length));
         }
       else
         {
@@ -152,27 +147,13 @@ World::~World ()
   clear ();
 }
 
-Particle*
-World::lookup_particle (int id)
-{
-  for (ParticleIter i = particles.begin (); 
-       i != particles.end (); 
-       ++i)
-    {
-      if ((*i)->get_id () == id)
-        return *i;
-    }
-  return 0;
-}
-
 void
 World::draw (GraphicContext* gc)
 {
-  for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     (*i)->draw ();
 
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-    (*i)->draw (gc);
+  particle_mgr->draw(gc);
 }
 
 void
@@ -185,7 +166,7 @@ World::update (float delta)
     {
       {
         // FIXME: Hardcoded Force Emitters
-        for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+        for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
           {
             // Gravity
             (*i)->add_force (CL_Vector (0.0, 1.0));
@@ -205,39 +186,35 @@ World::update (float delta)
               }	    */
           }
 
-        for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+        for (SpringIter i = springs.begin (); i != springs.end (); ++i)
           (*i)->update (delta);
 
-        for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-          {
-            (*i)->update (delta);
-          }
+        particle_mgr->update(delta);
       }
     }
 
-  // Stick splitting
-  for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+  // Spring splitting
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     {
       if ((*i)->destroyed)
         {
           if ((((*i)->particles.first->pos 
                 - (*i)->particles.second->pos)).norm () > 10.0f)
             {
-              CL_Vector pos = 
-                ((*i)->particles.first->pos + (*i)->particles.second->pos)*0.5f;
-              Particle* p1 = new Particle (pos, CL_Vector ());
-              Particle* p2 = new Particle (pos, CL_Vector ());
-              p1->velocity = (*i)->particles.first->velocity * 0.5f;
-              p2->velocity = (*i)->particles.second->velocity * 0.5f;
-              particles.push_back (p1);
-              particles.push_back (p2);
-              sticks.push_back (new Stick ((*i)->particles.first, p1));
-              sticks.push_back (new Stick ((*i)->particles.second, p2));
+              // Calc midpoint
+              CL_Vector pos = ((*i)->particles.first->pos
+                               + (*i)->particles.second->pos) * 0.5f;
+
+              Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f);
+              Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f);
+
+              springs.push_back (new Spring ((*i)->particles.first, p1));
+              springs.push_back (new Spring ((*i)->particles.second, p2));
             }
         }
     }
 
-  sticks.remove_if (stick_destroyed);
+  springs.remove_if (spring_destroyed);
 }
 
 Particle* 
@@ -247,7 +224,7 @@ World::get_particle (int x, int y)
   float min_dist = 15;
   CL_Vector mouse_pos (x, y);
 
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+  for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
       CL_Vector diff = mouse_pos - (*i)->pos;
       if (diff.norm () < min_dist)
@@ -263,25 +240,19 @@ World::get_particle (int x, int y)
 void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
-  sticks.push_back (new Stick (last_particle, particle));
-}
-
-void
-World::add_particle (Particle* p)
-{
-  particles.push_back (p);
+  springs.push_back (new Spring (last_particle, particle));
 }
 
 void
 World::remove_particle (Particle* p)
 {
   // Remove everyting that references the particle
-  for (StickIter i = sticks.begin (); i != sticks.end ();)
+  for (SpringIter i = springs.begin (); i != springs.end ();)
     {
       if ((*i)->particles.first == p || (*i)->particles.second == p)
         {
           delete *i;
-          i = sticks.erase(i);
+          i = springs.erase(i);
         }
       else
         {
@@ -289,35 +260,24 @@ World::remove_particle (Particle* p)
         }
     }
 
-  // Remove the particle itself
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-    {
-      if (*i == p)
-        {
-          delete *i;
-          particles.erase(i);
-          return;
-        }
-    }
+  particle_mgr->remove_particle(p);
 }
 
 void
-World::remove_stick (Stick* s)
+World::remove_spring (Spring* s)
 {
-  sticks.remove(s);
+  springs.remove(s);
 }
 
 void
 World::clear ()
 {
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-    delete *i;
+  particle_mgr->clear();
  
-  for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     delete *i;
 
-  particles.clear ();
-  sticks.clear ();
+  springs.clear ();
 }
 
 void
@@ -338,19 +298,9 @@ World::write_lisp (const std::string& filename)
   fputs(";; Written by " PACKAGE_STRING "\n", out);
   fputs("(construo-scene\n", out);
   //fputs("  (version 1)\n", out);
-  fputs("  (particles\n", out);
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
-    {
-      lisp_object_t* obj = (*i)->serialize ();
-      fputs("    ", out);
-      lisp_dump (obj, out);
-      lisp_free(obj);
-      fputc('\n', out);
-    }
-  fputs("  )\n", out);
-
+  particle_mgr->write_lisp(out);
   fputs("  (springs\n", out);
-  for (CStickIter i = sticks.begin (); i != sticks.end (); ++i)
+  for (CSpringIter i = springs.begin (); i != springs.end (); ++i)
     {
       lisp_object_t* obj = (*i)->serialize ();
       fputs("    ", out);

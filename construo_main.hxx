@@ -23,7 +23,7 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#include "stick.hxx"
+#include "spring.hxx"
 #include "particle.hxx"
 #include "config.hxx"
 
@@ -36,8 +36,6 @@ private:
   std::vector<World*> redo_world_stack;
   CL_Vector click_pos;
 
-  void load_particles (xmlDocPtr doc, xmlNodePtr arg_cur);
-  void load_springs (xmlDocPtr doc, xmlNodePtr arg_cur);
   Particle* last_particle;
 
   Particle* c_particle;
@@ -55,18 +53,8 @@ public:
   int main (int argc, char* argv[]);
 
   void zero_out_velocity ();
-  void load_or_save_xml (std::string filename);
-  void load_xml (std::string filename);
-  void save_xml (std::string filename);
 
   Particle* id_to_particle (unsigned int i);
-
-  void on_mouse_press(int button_no);
-  void on_mouse_release(int button_no);
-
-  void on_key_press(int key_id);
-  void on_key_release(int key_id);
-
   Particle* current_particle ();
 
   void quit() { do_quit = true; }

@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,21 +22,5 @@
 SystemContext*  system_context  =0;
 InputContext*   input_context   =0;
 GraphicContext* graphic_context =0;
-
-std::string to_xml (const CL_Vector& vec)
-{
-#if 0
-  std::ostrstream out;
-  out << "<cl-vector>"
-      << "<x>" << vec.x << "</x>"
-      << "<y>" << vec.y << "</y>"
-      << "<z>" << vec.z << "</z>"
-      << "</cl-vector>" << std::ends;
-  std::string str (out.str ());
-  out.freeze (false);
-  return str;
-#endif
-  return "";
-}
 
 /* EOF */

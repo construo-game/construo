@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,33 +17,33 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include "lispifier.hxx"
+#include "lisp_writer.hxx"
 
-Lispifier::Lispifier (const char* name)
+LispWriter::LispWriter (const char* name)
 {
   lisp_objs.push_back(lisp_make_symbol (name));
 }
 
 void
-Lispifier::append (lisp_object_t* obj)
+LispWriter::append (lisp_object_t* obj)
 {
   lisp_objs.push_back(obj);
 }
 
 lisp_object_t*
-Lispifier::make_list3 (lisp_object_t* a, lisp_object_t* b, lisp_object_t* c)
+LispWriter::make_list3 (lisp_object_t* a, lisp_object_t* b, lisp_object_t* c)
 {
   return lisp_make_cons (a, lisp_make_cons(b, lisp_make_cons(c, lisp_nil())));
 }
 
 lisp_object_t*
-Lispifier::make_list2 (lisp_object_t* a, lisp_object_t* b)
+LispWriter::make_list2 (lisp_object_t* a, lisp_object_t* b)
 {
   return lisp_make_cons (a, lisp_make_cons(b, lisp_nil()));
 }
 
 void
-Lispifier::write_vector (const char* name, const CL_Vector& pos)
+LispWriter::write_vector (const char* name, const CL_Vector& pos)
 {
   append(lisp_make_cons (lisp_make_symbol (name),
                          make_list3(lisp_make_real(pos.x),
@@ -52,49 +52,49 @@ Lispifier::write_vector (const char* name, const CL_Vector& pos)
 }
 
 void
-Lispifier::write_float (const char* name, float f)
+LispWriter::write_float (const char* name, float f)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lisp_make_real(f)));
 }
 
 void 
-Lispifier::write_int (const char* name, int i)
+LispWriter::write_int (const char* name, int i)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lisp_make_integer(i)));
 }
 
 void
-Lispifier::write_string (const char* name, const char* str)
+LispWriter::write_string (const char* name, const char* str)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lisp_make_string(str)));
 }
 
 void
-Lispifier::write_symbol (const char* name, const char* symname)
+LispWriter::write_symbol (const char* name, const char* symname)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lisp_make_symbol(symname)));
 }
 
 void
-Lispifier::write_lisp_obj(const char* name, lisp_object_t* lst)
+LispWriter::write_lisp_obj(const char* name, lisp_object_t* lst)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lst));
 }
 
 void
-Lispifier::write_boolean (const char* name, bool b)
+LispWriter::write_boolean (const char* name, bool b)
 {
   append(make_list2 (lisp_make_symbol (name),
                      lisp_make_boolean(b)));
 }
 
 lisp_object_t*
-Lispifier::get_lisp ()
+LispWriter::get_lisp ()
 {
   lisp_object_t* lisp_obj = lisp_nil();
   

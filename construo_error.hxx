@@ -22,6 +22,10 @@
 
 #include <string>
 
+#ifndef NODEBUG
+#  define ConstruoAssert(expr, str) assert(expr && str)
+#endif
+
 class ConstruoError
 {
 public:
