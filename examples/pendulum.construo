@@ -1,0 +1,35 @@
+;; Written by construo 0.2.1rc2
+(construo-scene
+  (version 3)
+  (author "Pasi Kallinen" "")
+  (particles
+    (particle (id 0) (pos 656.630432 130.138901) (velocity 0.000000 0.000000) (fixed #t) (mass 0.100000))
+    (particle (id 1) (pos 677.495361 -834.314758) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 2) (pos 677.495544 18.856321) (velocity -507.729828 -173.880493) (fixed #f) (mass 0.100000))
+    (particle (id 3) (pos 700.678894 134.775742) (velocity 0.000000 0.000000) (fixed #t) (mass 0.100000))
+    (particle (id 4) (pos 679.813721 -250.078598) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 5) (pos 676.771912 -500.957581) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 6) (pos 671.448059 -894.009644) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 7) (pos 625.176025 -826.915222) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 8) (pos 696.897644 -766.761658) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+    (particle (id 9) (pos 726.974426 -824.601624) (velocity 0.000000 0.000000) (fixed #f) (mass 0.100000))
+  )
+  (springs
+    (spring (first 0) (second 1) (length 964.679321) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 2) (length 853.171082) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 3) (length 969.367798) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 4) (length 584.240723) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 4) (second 5) (length 250.897415) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 6) (second 7) (length 81.503143) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 7) (second 8) (length 93.607918) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 8) (second 9) (length 65.192596) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 9) (second 6) (length 88.885605) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 6) (second 1) (length 60.000408) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 7) (length 52.840004) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 9) (length 50.423435) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+    (spring (first 1) (second 8) (length 70.284210) (stiffness 50.000000) (damping 0.100000) (maxstretch 0.150000))
+  )
+  (colliders
+  ))
+
+;; EOF ;;
