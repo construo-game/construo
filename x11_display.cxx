@@ -84,7 +84,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
                          &attributes);
 
   { // Communicate a bit with the window manager
-    char *title = "Construo " VERSION;
+    char *title = construo_main->get_title();
 
     XTextProperty text_property;
     XStringListToTextProperty(&title, 1, &text_property);

@@ -25,6 +25,7 @@
 #include <list>
 #include "config.hxx"
 
+class GUIManager;
 class World;
 
 class ConstruoMain
@@ -32,7 +33,7 @@ class ConstruoMain
 private:
   bool do_quit;
   Config config;
-
+  GUIManager* gui_manager;
 public:
   ConstruoMain ();
   virtual ~ConstruoMain ();
@@ -40,12 +41,18 @@ public:
   char* get_title ();
   int main (int argc, char* argv[]);
 
+  /** Exit ConstruoMain and do all stuff necesarry for a clean
+      shutdown */
+  void exit();
+private:
   /** Called once the game is going to end, used to do the lastsave
       and similar things */
   void on_exit();
-private:
+
   void process_events ();
 };
+
+extern ConstruoMain* construo_main;
 
 #endif
 

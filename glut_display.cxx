@@ -31,6 +31,7 @@
 #include "buttons.hxx"
 #include "events.hxx"
 #include "settings.hxx"
+#include "construo_main.hxx"
 #include "screen_manager.hxx"
 #include "glut_display.hxx"
 
@@ -81,7 +82,7 @@ GlutDisplay::GlutDisplay (int w, int h)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(width, height);
   //glutInitWindowPosition(100, 100); don't care
-  glutSetWindow(glutCreateWindow(argv[0]));
+  glutSetWindow(glutCreateWindow(construo_main->get_title()));
 
   glutDisplayFunc(::display_func);
   glutReshapeFunc(::reshape_func);
@@ -355,8 +356,7 @@ GlutDisplay::idle_func ()
     }
   else
     {
-      // FIXME: is there a more gracefull way to end this?
-      exit(EXIT_SUCCESS);
+      construo_main->exit();
     }
 }
 

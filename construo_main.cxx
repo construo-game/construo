@@ -45,8 +45,9 @@ ConstruoMain* construo_main;
 Controller*   controller;
 
 ConstruoMain::ConstruoMain ()
+  : do_quit(false),
+    gui_manager(0)
 {
-  do_quit = false;
 }
 
 ConstruoMain::~ConstruoMain ()
@@ -56,7 +57,15 @@ ConstruoMain::~ConstruoMain ()
 char* 
 ConstruoMain::get_title ()
 {
-  return "Construo";
+  return "Construo " VERSION;
+}
+
+void
+ConstruoMain::exit()
+{
+  on_exit();
+  delete gui_manager;
+  ::exit(EXIT_SUCCESS);
 }
 
 void
@@ -101,7 +110,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
               << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
 
-    GUIManager* gui_manager = new GUIManager ();
+    gui_manager = new GUIManager ();
 
     if (!settings.startup_file.empty())
       {
@@ -120,12 +129,10 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
           }
       }
   
+    // For some targets this will never return
     display.run();
 
-    on_exit();
-    
-    delete gui_manager;
-
+    exit();
   } catch (ConstruoError& err) {
     std::cout << "Error ocurred: " << err.msg << std::endl;
     return EXIT_FAILURE;
