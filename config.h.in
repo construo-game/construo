@@ -9,6 +9,12 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Xext is available */
+#undef HAVE_LIBXEXT
+
+/* VidMode is available */
+#undef HAVE_LIBXXF86VM
+
 /* Define to 1 if you have the `z' library (-lz). */
 #undef HAVE_LIBZ
 

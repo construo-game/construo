@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <config.h>
 #include <iostream>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -38,7 +39,6 @@
 #include "cursor_collider_mask.xbm"
 
 #include "construo_error.hxx"
-#include "config.h"
 #include "x11_display.hxx"
 #include "settings.hxx"
 #include "construo_main.hxx"
@@ -53,6 +53,12 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   : doublebuffer (settings.doublebuffer),
     width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
 {
+#ifndef HAVE_LIBXXF86VM
+  fullscreen_ = false;
+  std::cout << "X11Display: libXxf86vm missing, fullscreen support not\n"
+            << "            available, please recompile." << std::endl;
+#endif
+
   std::cout << "Opening X11 display" << std::endl;
   display = XOpenDisplay(NULL);
 
@@ -145,7 +151,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
                  &gcv);
 
   if (fullscreen)
-    set_fullscreen();
+    enter_fullscreen();
 
   {
     // Visual* visual = XDefaultVisual(display, DefaultScreen(display));
@@ -208,7 +214,7 @@ X11Display::~X11Display ()
   if (fullscreen)
     {
       std::cout << "X11Display: Restoring video mode" << std::endl;
-      restore_mode ();
+      leave_fullscreen ();
     }
   
   if (doublebuffer)
@@ -714,9 +720,12 @@ X11Display::save_mode()
 }
 
 void
-X11Display::set_fullscreen ()
+X11Display::enter_fullscreen ()
 {
-#ifdef HAVE_LIBXXF86VM
+#ifndef HAVE_LIBXXF86VM
+  std::cout << "X11Display: libXxf86vm missing, fullscreen support not\n"
+            << "            available, please recompile." << std::endl;
+#else
   int event_base;
   int error_base;
 
@@ -844,13 +853,13 @@ X11Display::toggle_fullscreen()
   std::cout << "Fullscreen state: " << fullscreen << std::endl;
 
   if (fullscreen)
-    restore_mode();
+    leave_fullscreen();
   else
-    set_fullscreen();
+    enter_fullscreen();
 }
 
 void
-X11Display::restore_mode ()
+X11Display::leave_fullscreen()
 {
 #ifdef HAVE_LIBXXF86VM
   std::cout << "X11Display::restore_mode()" << std::endl;

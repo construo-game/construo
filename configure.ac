@@ -96,11 +96,13 @@ else
 fi
 
 AC_CHECK_LIB(Xext, XMissingExtension,
-[x11_LIBS="$x11_LIBS -lXext"],
+[x11_LIBS="$x11_LIBS -lXext"
+ AC_DEFINE(HAVE_LIBXEXT, 1, [Xext is available])],
 [], $x11_LIBS)
 
 AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,
-[x11_LIBS="$x11_LIBS -lXxf86vm"],
+[x11_LIBS="$x11_LIBS -lXxf86vm"
+ AC_DEFINE(HAVE_LIBXXF86VM, 1, [VidMode is available])],
 [], $x11_LIBS)
 
 AC_SUBST(x11_LIBS)

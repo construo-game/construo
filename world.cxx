@@ -513,8 +513,8 @@ World::remove_particle (Particle* p)
 void
 World::remove_spring (Spring* s)
 {
-  std::cout << "particles: " << particle_mgr->size () << std::endl;
-  std::cout << "springs:   " << springs.size () << std::endl;
+  //std::cout << "particles: " << particle_mgr->size () << std::endl;
+  //std::cout << "springs:   " << springs.size () << std::endl;
 
   delete s;
   springs.erase(std::remove(springs.begin (), springs.end (), s), 

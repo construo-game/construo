@@ -147,15 +147,15 @@ worldview_zoom_tool.hxx \
 zoom_graphic_context.cxx \
 zoom_graphic_context.hxx
 
-construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
+construo_x11_SOURCES  = construo_main.cxx construo_main.hxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a @x11_LIBS@
 construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY @x11_CXXFLAGS@
 
-construo_glut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
+construo_glut_SOURCES = construo_main.cxx construo_main.hxx glut_display.hxx glut_display.cxx
 construo_glut_LDADD   = libconstruo.a @glut_LIBS@
 construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_GLUT
 
-construo_freeglut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
+construo_freeglut_SOURCES = construo_main.cxx construo_main.hxx glut_display.hxx glut_display.cxx
 construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
 construo_freeglut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_FREEGLUT
 

@@ -97,9 +97,15 @@ private:
   std::vector<FlipRect> flip_rects;
   std::vector<FlipRect> last_flip_rects;
 
-  void set_fullscreen();
+  /** Save the current visual mode for later restoration after leaving
+      fullscreen */
   void save_mode();
-  void restore_mode();
+
+  /** Switch to fullscreen */
+  void enter_fullscreen();
+
+  /** Leave fullscreen */
+  void leave_fullscreen();
 public:
   X11Display (int w, int h, bool fullscreen_);
   virtual ~X11Display ();
