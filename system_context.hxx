@@ -20,6 +20,7 @@
 #ifndef HEADER_SYSTEM_CONTEXT_HXX
 #define HEADER_SYSTEM_CONTEXT_HXX
 
+#include <stdio.h>
 #include <string>
 #include <vector>
 

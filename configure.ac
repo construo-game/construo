@@ -24,9 +24,14 @@ AM_CONFIG_HEADER(config.h)
 # check for some programs
 AC_PROG_CXX
 AC_PROG_RANLIB
-AC_PROG_CC
 AC_PROG_INSTALL
 AC_PATH_XTRA
+AC_LANG(C++)
+
+AC_CHECK_HEADER([sstream],
+                [],
+                [AC_MSG_NOTICE([using replacement sstream from compatlib/])
+                CXXFLAGS="$CXXFLAGS -Icompatlib/"])
 
 ConstruoTargets=""
 

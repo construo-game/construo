@@ -82,6 +82,6 @@ construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
 construo_freeglut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_FREEGLUT
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
-EXTRA_DIST= TODO xml2sexpr.sh
+EXTRA_DIST= TODO xml2sexpr.sh compatlib/sstream
 
 # EOF #
