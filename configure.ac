@@ -28,6 +28,13 @@ AC_PROG_INSTALL
 AC_PATH_XTRA
 AC_LANG(C++)
 
+AC_MSG_CHECKING([whether we are enabling profiling])
+AC_ARG_ENABLE([profiling],
+              AC_HELP_STRING([--enable-profiling],
+                             [enable gprof profiling (default: no)]),
+              [AC_MSG_RESULT([yes]); CXXFLAGS="$CXXFLAGS -pg"],
+              [AC_MSG_RESULT([no])])
+
 AC_CHECK_HEADER([sstream],
                 [],
                 [AC_MSG_NOTICE([using replacement sstream from compatlib/])
@@ -45,6 +52,8 @@ else
     LIBS="$LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
     CXXFLAGS="$CXXFLAGS $X_CFLAGS"
 fi
+
+AC_CHECK_LIB(z, gzopen)
 
 AC_CHECK_LIB(Xext, XMissingExtension)
 AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode)

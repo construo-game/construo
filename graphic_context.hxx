@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
 
 #include <string>
+#include <vector>
 #include "math.hxx"
 #include "vector2d.hxx"
 #include "color.hxx"
@@ -30,6 +31,17 @@ class GraphicContext
 {
 private:
 public:
+  struct Line
+  {
+    float x1, y1;
+    float x2, y2;
+  };
+
+  struct Circle
+  {
+    float x, y, r;
+  };
+
   void draw_circle(const Vector2d& pos, float radius, Color color)
   {
     draw_circle (pos.x, pos.y, radius, color);
@@ -64,9 +76,11 @@ public:
     draw_fill_rect (pos1.x, pos1.y, pos2.x, pos2.y, color);
   }
 
+  virtual void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) =0;
   virtual void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) =0;
   virtual void draw_rect(float x1, float y1, float x2, float y2, Color color) =0;
   virtual void draw_circle(float x, float y, float radius, Color color) =0;
+  virtual void draw_circles(std::vector<Circle>& circles, Color color) =0;
   virtual void draw_fill_circle(float x, float y, float radius, Color color) =0;
   virtual void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) =0;
   virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;

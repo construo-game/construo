@@ -21,7 +21,7 @@
 
 namespace StringUtils
 {
-  bool is_prefix (const std::string& str, const std::string& prefix)
+  bool has_prefix (const std::string& str, const std::string& prefix)
   {
     if (prefix.length() > str.length())
       {
@@ -38,7 +38,7 @@ namespace StringUtils
       }
   }
 
-  bool is_suffix (const std::string& str, const std::string& suffix)
+  bool has_suffix (const std::string& str, const std::string& suffix)
   {
     if (suffix.length() > str.length())
       {

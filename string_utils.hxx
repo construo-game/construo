@@ -55,8 +55,8 @@ namespace StringUtils
       }
   }
 
-  bool is_prefix (const std::string& str, const std::string& prefix);
-  bool is_suffix (const std::string& str, const std::string& suffix);
+  bool has_prefix (const std::string& str, const std::string& prefix);
+  bool has_suffix (const std::string& str, const std::string& suffix);
 }
 
 #endif

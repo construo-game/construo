@@ -47,10 +47,12 @@ public:
   GlutDisplay (int w, int h);
   virtual ~GlutDisplay();
 
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_circle(float x, float y, float r, Color color);
+  void draw_circles(std::vector<Circle>& circles, Color color);
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_string(float x, float y, const std::string& str, Color color);
   void draw_string_centered(float x, float y, const std::string& str, Color color);

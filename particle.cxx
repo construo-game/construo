@@ -31,7 +31,8 @@ Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity
     velocity (arg_velocity), 
     mass (m), 
     fixed (f),
-    totale_force (0,0)
+    totale_force (0,0),
+    spring_links (0)
 {
 }
 
@@ -41,7 +42,8 @@ Particle::Particle (const Particle& p)
     velocity (p.velocity),
     mass (p.mass),
     fixed (p.fixed),
-    totale_force (0,0)
+    totale_force (0,0),
+    spring_links (0)
 {
 }
 
@@ -54,7 +56,7 @@ Particle::serialize()
   obj.write_vector ("velocity", velocity);
   obj.write_boolean ("fixed", fixed);
   obj.write_float ("mass", mass);
-  return obj.get_lisp ();
+  return obj.create_lisp ();
 }
 
 void
@@ -76,6 +78,8 @@ Particle::draw_infos (ZoomGraphicContext* gc)
                                     "Fixed:    " + to_string (fixed));
   gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 45.0f),
                                     "Mass :    " + to_string (get_mass()));
+  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 70.0f),
+                                    "Links :    " + to_string (spring_links));
 }
 
 void

@@ -17,6 +17,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <config.h>
+
 #ifdef HAVE_FREEGLUT
 #  include <GL/freeglut.h>
 #else
@@ -24,6 +26,7 @@
 #endif
 
 #include <stdio.h>
+#include <assert.h>
 #include <iostream>
 #include "buttons.hxx"
 #include "events.hxx"
@@ -121,6 +124,20 @@ GlutDisplay::~GlutDisplay()
 {
 }
 
+void
+GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
+{
+  glLineWidth (wide);
+  
+  glBegin (GL_LINES);
+  for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
+    {
+      glVertex2f (i->x1, i->y1);
+      glVertex2f (i->x2, i->y2);     
+    }
+  glEnd ();
+}
+
 void 
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
@@ -160,9 +177,19 @@ GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 }
 
 void
+GlutDisplay::draw_circles(std::vector<Circle>& circles, Color color)
+{
+  for (std::vector<Circle>::iterator i = circles.begin(); i != circles.end(); ++i)
+    {
+      draw_circle(i->x, i->y, i->r, color);
+    }
+}
+
+void
 GlutDisplay::draw_circle(float x, float y, float r, Color color)
 {
   glColor4f (color.r, color.g, color.b, color.a);
+  
   GLUquadricObj* qobj = gluNewQuadric ();
   gluQuadricDrawStyle(qobj, GLU_SILHOUETTE);
   //gluQuadricNormals (qobj, GLU_FLAT);
@@ -370,6 +397,14 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 
     case 'c':
       event.button.id = BUTTON_CLEAR;
+      break;
+
+    case 'a':
+      event.button.id = BUTTON_ACTIONCAM;
+      break;
+
+    case 'o':
+      event.button.id = BUTTON_HIDEDOTS;
       break;
 
     case '!':

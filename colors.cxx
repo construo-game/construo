@@ -25,8 +25,8 @@ namespace Colors
   Color button_fg_hover   (0x009f9fFF);
   Color button_fg_passive (0x007f7fFF);
 
-  Color button_bg_pressed (0x000000AA);
-  Color button_bg_hover   (0x006060AA);
+  Color button_bg_pressed (0x000000FF);
+  Color button_bg_hover   (0x006060EE);
   Color button_bg_passive (0x004f4fAA);
   Color button_bg_active  (0x00AAAAAA);
 

@@ -49,6 +49,9 @@ public:
       collect the forces)*/
   Vector2d totale_force;
 
+  /** Number of connection this particle has to other springs */
+  int spring_links;
+
   /** The id of the particle, used for de/serialisation and copying of
       the World. The id is uniq only for a single world. */
   int get_id () {

@@ -20,6 +20,11 @@
 #include <assert.h>
 #include <algorithm>
 #include "config.h"
+
+#ifdef HAVE_LIBZ
+#  include <zlib.h>
+#endif
+
 #include "math.hxx"
 #include "construo_error.hxx"
 #include "world.hxx"
@@ -28,6 +33,7 @@
 #include "controller.hxx"
 #include "rect.hxx"
 #include "rect_collider.hxx"
+#include "string_utils.hxx"
 
 World* World::current_world = 0; 
 
@@ -36,11 +42,6 @@ World::World ()
 {
   file_version = 0;
   has_been_run = false;
-  /*
-  colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
-  colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
-  colliders.push_back (new RectCollider (400, 500, 500, 600)); // FIXME
-  */
 }
 
 World::World (const std::string& filename)
@@ -49,27 +50,78 @@ World::World (const std::string& filename)
   std::cout << "World: Trying to load: " << filename << std::endl;
   file_version = 0;
 
-  /*
-  colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
-  colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
-  colliders.push_back (new RectCollider (-300, -600, -100, -550)); // FIXME
-  colliders.push_back (new RectCollider (-100, -150, 50, -50)); // FIXME
-  */
   has_been_run = false;
-  FILE* in;
-  lisp_stream_t stream;
-
-  in = system_context->open_input_file(filename);
-  if (!in)
-    {
-      throw ConstruoError ("World: Couldn't open " + filename);
-      return;
-    }
-
-  lisp_stream_init_file (&stream, in);
+  lisp_object_t* root_obj = 0;
   
-  lisp_object_t* root_obj = lisp_read (&stream);
+  // Try to read a file and store the content in root_obj
+  if (StringUtils::has_suffix(filename, ".construo.gz"))
+    {
+#ifdef HAVE_LIBZ
+      lisp_stream_t stream;
+      int chunk_size = 128 * 1024; // allocate 256kb, should be enough for most levels
+      char* buf;
+      int buf_pos = 0;
+      int try_number = 1;
+      bool done = false;
 
+      buf = static_cast<char*>(malloc(chunk_size));
+      if (!buf)
+        {
+          throw ConstruoError ("World: Out of memory while opening " + filename);
+        }
+
+      gzFile in = gzopen(system_context->translate_filename(filename).c_str (), "rb");
+
+      while (!done)
+        {
+          int ret = gzread(in, buf + buf_pos, chunk_size);
+          if (ret == -1)
+            {
+              free (buf);
+              throw ConstruoError ("World: Out of memory while opening " + filename);
+            }
+          else if (ret == chunk_size) // buffer got full, eof not yet there
+            {
+              std::cout << "World: Read buffer to small, allocating more space" << std::endl;
+
+              buf_pos = chunk_size * try_number;
+              try_number += 1;
+              buf = static_cast<char*>(realloc(buf, chunk_size * try_number));
+
+              if (!buf)
+                {
+                  throw ConstruoError ("World: Out of memory while opening " + filename);
+                }
+            }
+          else // (ret < chunk_size)
+            {
+              // everything fine, encountered EOF 
+              done = true;
+            }
+        }
+      
+      lisp_stream_init_string (&stream, buf);
+      root_obj = lisp_read (&stream);
+      
+      free(buf);
+      gzclose(in);
+#else
+      throw ConstruoError ("World: Reading of compressed files not supported, recompile with zlib support or extract the levelfile manually, " + filename);
+#endif
+    }
+  else
+    {
+      lisp_stream_t stream;
+      FILE* in = system_context->open_input_file(filename);
+      if (!in)
+        {
+          throw ConstruoError ("World: Couldn't open " + filename);
+          return;
+        }
+      lisp_stream_init_file (&stream, in);
+      root_obj = lisp_read (&stream);
+    }
+  
   if (root_obj->type == LISP_TYPE_EOF || root_obj->type == LISP_TYPE_PARSE_ERROR)
     {
       std::cout << "World: Parse Error in file " << filename << std::endl;
@@ -224,8 +276,28 @@ World::draw (ZoomGraphicContext* gc)
 void 
 World::draw_springs(ZoomGraphicContext* gc)
 {
-  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
-    (*i)->draw (gc);
+#ifdef NEW_SPRING_CODE
+  std::vector<GraphicContext::Line> lines (springs.size());
+
+  Vector2d dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
+  float stretch = fabs(dist.norm ()/springs[0]->length - 1.0f) * 10.0f; 
+  float color = fabs((stretch/springs[0]->max_stretch));
+
+  for (unsigned int i = 0; i < springs.size(); ++i)
+    {
+      //(*i)->draw (gc);
+      lines[i].x1 = springs[i]->particles.first->pos.x;
+      lines[i].y1 = springs[i]->particles.first->pos.y;
+      lines[i].x2 = springs[i]->particles.second->pos.x;
+      lines[i].y2 = springs[i]->particles.second->pos.y;
+    }
+  gc->draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
+#else
+  for (SpringIter i = springs.begin(); i != springs.end(); ++i)
+    {
+      (*i)->draw (gc);
+    }
+#endif
 }
 
 void 
@@ -499,11 +571,10 @@ World::write_lisp (const std::string& filename)
       lisp_object_t* obj = (*i)->serialize ();
       fputs("    ", out);
       lisp_dump (obj, out);
-      lisp_free(obj);
       fputc('\n', out);
+      lisp_free(obj);
     }
   fputs("  )\n", out);
-
 
   fputs ("  (colliders\n", out);
   for (Colliders::iterator i = colliders.begin(); i != colliders.end(); ++i)
@@ -511,8 +582,8 @@ World::write_lisp (const std::string& filename)
       lisp_object_t* obj = (*i)->serialize ();
       fputs("    ", out);
       lisp_dump (obj, out);
-      lisp_free(obj);
       fputc('\n', out);
+      lisp_free(obj);
     }
   fputs("  )", out);
 
@@ -520,6 +591,33 @@ World::write_lisp (const std::string& filename)
   fputs(")\n\n;; EOF ;;\n", out);
 
   fclose(out);
+
+  if (StringUtils::has_suffix(filename, ".gz"))
+    { // Rewrite file compressed
+      std::cout << "World: Filename ends with .gz, rewriting " << filename << " compressed" << std::endl;
+
+      int len = 512*1024;
+      int read_len;
+      char* buf;
+      buf = static_cast<char*>(malloc(len));
+      if (!buf)
+        {
+          throw ConstruoError("Out of memory");
+        }
+      FILE* in = system_context->open_input_file(filename);
+      read_len = fread (buf, sizeof (char), len, in);
+      if (len >= read_len)
+        {
+          throw ConstruoError("World: Internal error, read buffer to small");
+        }
+      fclose (in);
+      
+      // Write the buffer in compressed format
+      gzFile out = gzopen(system_context->translate_filename(filename).c_str(), "wb");
+      gzwrite (out, buf, len);
+      gzclose (out);
+      free (buf);
+    }
 }
 
 WorldBoundingBox

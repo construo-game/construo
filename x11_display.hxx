@@ -21,6 +21,7 @@
 #define HEADER_X11_DISPLAY_HXX
 
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #ifdef HAVE_LIBXXF86VM
 #  include <X11/extensions/xf86vmode.h>
@@ -47,7 +48,9 @@ class X11Display : public GraphicContext,
 {
 private:
   bool doublebuffer;
+#ifdef HAVE_LIBXXF86VM
   XF86VidModeModeLine orig_modeline;
+#endif
   int orig_viewport_x;
   int orig_viewport_y;
   int orig_dotclock;
@@ -56,6 +59,7 @@ private:
   int       height;
   Display*  display;
   Window    window;
+  Colormap  colormap;
   Drawable  drawable;
   GC        gc;
 
@@ -73,10 +77,13 @@ public:
   virtual ~X11Display ();
 
   // Graphic Context stuff
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_circle(float x, float y, float r, Color color);
+  void draw_circles(std::vector<Circle>& circles, Color color);
+
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_string(float x, float y, const std::string& str, Color color);
   void draw_string_centered(float x, float y, const std::string& str, Color color);
@@ -112,6 +119,7 @@ public:
 
   void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
 
+  unsigned int get_color_value(Color& color);
 private:
   bool read_event ();
   void send_button_press (int i);

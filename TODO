@@ -1,10 +1,13 @@
-Release 0.2.0:
+Release 0.2.1:
 * update Changelog
 * fix assertion on broken files
 * fix broken demos (complex*, explode, ...)
-* 
+* fix make install
+* let it act nicly on the lack of examples/ directory
 
 Release 0.3.0:
+* Magnetic forces, aka gravity forces which reflect some particles and
+   attract others 
 * config file support and an option menu to switch off stress-color,
   change the coloring scheme and things like that
 * make the window resizable

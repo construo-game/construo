@@ -23,7 +23,7 @@
 #include <vector>
 
 class GUIComponent;
-class ButtonEvent;
+struct ButtonEvent;
 
 /** The GUIManager is basically the place where the main loop runs */
 class GUIManager

@@ -93,7 +93,7 @@ LispWriter::write_boolean (const char* name, bool b)
 }
 
 lisp_object_t*
-LispWriter::get_lisp ()
+LispWriter::create_lisp ()
 {
   lisp_object_t* lisp_obj = lisp_nil();
   

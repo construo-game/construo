@@ -59,6 +59,8 @@ public:
 
   /** @return a list of files available in the given directory */
   virtual std::vector<std::string> read_directory(const std::string& pathname) =0;
+
+  virtual std::string translate_filename (const std::string&) =0;
 };
 
 #endif

@@ -225,6 +225,7 @@ WorldGUIManager::draw_overlay ()
       
     case WorldViewComponent::ZOOM_MODE:
       graphic_context->draw_string (600,  20, "  [left] - zoom into region");
+      graphic_context->draw_string (600,  44, " [right] - zoom out");
       break;
 
     case WorldViewComponent::COLLIDER_MODE:

@@ -31,7 +31,6 @@ private:
   unsigned int start_time;
   std::string construo_rc_path;
   
-  std::string translate_filename (const std::string&);
 public:
   UnixSystem ();
   virtual ~UnixSystem ();
@@ -48,6 +47,8 @@ public:
 
   FileType get_file_type(const std::string& filename);
   std::vector<std::string> read_directory(const std::string& pathname);
+
+  std::string translate_filename (const std::string&);
 };
 
 #endif

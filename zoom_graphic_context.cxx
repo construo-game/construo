@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <iostream>
+#include <assert.h>
 #include "construo.hxx"
 #include "math.hxx"
 #include "zoom_graphic_context.hxx"
@@ -103,6 +104,19 @@ ZoomGraphicContext::world_to_screen_y (float y)
 }
 
 void
+ZoomGraphicContext::draw_lines (std::vector<Line>& lines, Color color, int wide)
+{
+  for (std::vector<Line>::iterator i = lines.begin(); i != lines.end(); ++i)
+    {
+      i->x1 = world_to_screen_x(i->x1);
+      i->y1 = world_to_screen_y(i->y1);
+      i->x2 = world_to_screen_x(i->x2);
+      i->y2 = world_to_screen_y(i->y2);
+    }
+  parent_gc->draw_lines (lines, color, wide);
+}
+
+void
 ZoomGraphicContext::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   parent_gc->draw_line(world_to_screen_x(x1),
@@ -120,6 +134,19 @@ ZoomGraphicContext::draw_rect(float x1, float y1, float x2, float y2, Color colo
                        world_to_screen_x(x2),
                        world_to_screen_y(y2),
                        color);
+}
+
+void
+ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
+{
+  for (std::vector<Circle>::iterator i = circles.begin(); i != circles.end(); ++i)
+    {
+      i->x = world_to_screen_x(i->x);
+      i->y = world_to_screen_x(i->y);
+      i->r = Math::max(2.0f, i->r * zoom);
+    }
+  
+  parent_gc->draw_circles(circles, color);
 }
 
 void
@@ -186,7 +213,7 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
   if (1)
     {
       float old_zoom = zoom;
-      set_zoom(zoom * 1.2);
+      set_zoom(zoom * 1.2f);
       x_offset = screen_x/zoom - screen_x/old_zoom + x_offset;
       y_offset = screen_y/zoom - screen_y/old_zoom + y_offset;
 
@@ -195,11 +222,12 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
     {
       x_offset = (x + x_offset)/1.2f - x;
       y_offset = (y + y_offset)/1.2f - y;
-      zoom *= 1.2;
+      zoom *= 1.2f;
     }
 
   return true;
 }
+
 bool
 ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
 {

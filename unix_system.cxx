@@ -173,7 +173,7 @@ UnixSystem::get_file_type(const std::string& filename)
         }
       else if (S_ISREG(buf.st_mode))
         {
-          if (is_suffix(filename, ".construo"))
+          if (has_suffix(filename, ".construo") || has_suffix(filename, ".construo.gz"))
             return FT_CONSTRUO_FILE;
           else
             {
@@ -195,11 +195,11 @@ UnixSystem::translate_filename (const std::string& filename)
       assert("root directory is not translatable");
       return "";
     }
-  else if (is_prefix(filename, "/user/"))
+  else if (has_prefix(filename, "/user/"))
     {
       return "/home/ingo/.construo/" + filename.substr(6); 
     }
-  else if (is_prefix(filename, "/examples/"))
+  else if (has_prefix(filename, "/examples/"))
     {
       return "examples/" + filename.substr(10); 
     }

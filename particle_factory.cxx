@@ -123,11 +123,22 @@ ParticleFactory::remove_particle (Particle* p)
     }
 }
 
+struct particle_obsolete
+{
+  inline bool operator()(Particle* p)
+  {
+    return (p->spring_links == 0 && p->velocity.x == 0);
+  }
+};
+
 void
 ParticleFactory::update (float delta)
 {
   for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
     (*i)->update(delta);
+
+  particles.erase(std::remove_if(particles.begin(), particles.end(), particle_obsolete()),
+                  particles.end());
 }
 
 void

@@ -53,9 +53,11 @@ public:
   /** Resets the clipping to the old state */
   void unlock ();
   
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_circle(float x, float y, float r, Color color);
+  void draw_circles(std::vector<Circle>& circles, Color color);
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
@@ -71,9 +73,43 @@ public:
 
   void set_parent_gc (GraphicContext* gc);
 
+  /** 
+   * Zoom Out the GraphicContext by one 'unit', using the x and y
+   * position as center.
+   * 
+   * @param x x in screen coordinates
+   * @param y y in screen coordinates
+   * 
+   * @return true if zoom was successfull, false if zoom boundaries
+   * have been reached
+   */
   bool zoom_in (int x, int y);
+
+  /** 
+   * Zoom Into the GraphicContext by one 'unit', using the x and y
+   * position as center.
+   * 
+   * @param x x in screen coordinates
+   * @param y y in screen coordinates
+   * 
+   * @return true if zoom was successfull, false if zoom boundaries
+   * have been reached
+   */  
   bool zoom_out (int x, int y);
+  
+  /** 
+   * Zoom into the given area, all coordinates in world units
+   * 
+   * @param x1 left border in world coordinates
+   * @param y1 top border in world coordinates
+   * @param x2 right border in world coordinates
+   * @param y2 bottom border in world coordinates
+   */
   void zoom_to (int x1, int y1, int x2, int y2);
+
+  /** Move to the given x and y world coordinates to the center of the
+      screen */
+  void move_to (float x, float y);
 
   /** Allows a client application to make use of the partent GC in
       case it wants to draw elements which should not get scaled */
@@ -82,14 +118,16 @@ public:
   /** Move the current position relativly x/y width */
   void translate_offset (int x, int y);
 
+ /** FIXME: What exactly is an offset?! */
   void set_offset (float x, float y);
 
-  /** Move to the given x and y world coordinates */
-  void move_to (float x, float y);
-
+  /** FIXME: What exactly is an offset?! */
   float get_x_offset () { return x_offset; }
+
+  /** FIXME: What exactly is an offset?! */
   float get_y_offset () { return y_offset; }
 
+  /** @return current zoom factor in use */
   float get_zoom () const { return zoom; }
 
   /** Set the zoom factor, if zoom is to large/small false will
@@ -97,13 +135,22 @@ public:
       value */
   bool  set_zoom (const float& z);
 
-  float screen_to_world_x (float);
-  float screen_to_world_y (float);
+  /** Convert a coordinate from screen units to world units */
+  float screen_to_world_x (float x);
 
-  float world_to_screen_x (float);
-  float world_to_screen_y (float);
+  /** Convert a coordinate from screen units to world units */
+  float screen_to_world_y (float y);
 
+  /** Convert a coordinate from world units to screen units */
+  float world_to_screen_x (float x);
+
+  /** Convert a coordinate from world units to screen units */
+  float world_to_screen_y (float y);
+
+  /** Convert a coordinate from screen units to world units */
   Vector2d screen_to_world (const Vector2d&);
+
+  /** Convert a coordinate from world units to screen units */
   Vector2d world_to_screen (const Vector2d&);
 
   void flip (int x1, int y1, int x2, int y2);

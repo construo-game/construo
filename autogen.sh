@@ -1,7 +1,7 @@
 #!/bin/sh
 
-aclocal-1.6
-automake-1.6 --add-missing --force --copy
+aclocal-1.7
+automake-1.7 --add-missing --force --copy
 autoconf
 
 # EOF #

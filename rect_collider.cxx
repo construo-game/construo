@@ -148,7 +148,7 @@ RectCollider::serialize()
   LispWriter obj ("rect");
   obj.write_vector ("pos1", Vector2d(x1, y1));
   obj.write_vector ("pos2", Vector2d(x2, y2));
-  return obj.get_lisp ();
+  return obj.create_lisp ();
 }
 
 /* EOF */

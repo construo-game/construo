@@ -45,6 +45,8 @@ public:
 
   Spring (World* world, lisp_object_t* cursor);
 
+  ~Spring ();
+
   void update (float delta);
   void draw (ZoomGraphicContext* gc);
   void draw_highlight (ZoomGraphicContext* gc);

@@ -77,4 +77,16 @@ WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
                                                     (int)Math::max(y, click_pos.y));
 }
 
+void
+WorldViewZoomTool::on_secondary_button_press (int x, int y)
+{
+  WorldViewComponent::instance()->get_gc()->zoom_out(x, y);
+}
+
+void
+WorldViewZoomTool::on_secondary_button_release (int x, int y)
+{
+  
+}
+
 /* EOF */

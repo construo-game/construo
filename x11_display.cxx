@@ -74,11 +74,13 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     StructureNotifyMask  |
     ExposureMask;
 
+  colormap = DefaultColormap (display, screen);
+  attributes.colormap = colormap;
   window = XCreateWindow(display, RootWindow(display, screen),
                          0,0, // position
                          width, height, 0,
                          CopyFromParent, InputOutput, CopyFromParent, 
-                         CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWEventMask,
+                         CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
                          &attributes);
 
   { // Communicate a bit with the window manager
@@ -161,16 +163,51 @@ X11Display::~X11Display ()
 }
 
 void
+X11Display::draw_lines (std::vector<Line>& lines, Color color, int wide)
+{
+  std::vector<XSegment> segments (lines.size());
+  
+  for (std::vector<Line>::size_type i = 0; i < lines.size(); ++i)
+    {
+      segments[i].x1 = static_cast<short>(lines[i].x1);
+      segments[i].y1 = static_cast<short>(lines[i].y1);
+      segments[i].x2 = static_cast<short>(lines[i].x2);      
+      segments[i].y2 = static_cast<short>(lines[i].y2);
+    }
+
+  XDrawSegments(display, drawable, gc, &*segments.begin(), segments.size());
+}
+
+void
+X11Display::draw_circles(std::vector<Circle>& circles, Color color)
+{
+  std::vector<XArc> arcs (circles.size());
+  for (std::vector<Circle>::size_type i = 0; i < circles.size(); ++i)
+    {
+      arcs[i].x = static_cast<short>(circles[i].x - circles[i].r);
+      arcs[i].y = static_cast<short>(circles[i].y - circles[i].r);
+      arcs[i].width  = static_cast<short>(2 * circles[i].r);
+      arcs[i].height = static_cast<short>(2 * circles[i].r);
+      arcs[i].angle1 = 0;
+      arcs[i].angle2 = 360 * 64;
+    }
+
+  XSetForeground(display, gc, get_color_value(color));
+  XFillArcs(display, drawable, gc, 
+            &*arcs.begin(), arcs.size());
+}
+
+void
 X11Display::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XDrawLine (display, drawable, gc, (int) x1, (int) y1, (int) x2, (int) y2);
 }
 
 void
 X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XFillRectangle (display, drawable, gc, 
                   int(x1), int(y1), 
                   int(x2 - x1), int(y2 - y1));
@@ -180,7 +217,7 @@ void
 X11Display::draw_fill_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XFillArc(display, drawable, gc, 
            int(x-r), int(y-r),
            int(r*2), int(r*2), 0, 
@@ -191,14 +228,14 @@ void
 X11Display::draw_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XDrawArc(display, drawable, gc, int(x-r), int(y-r), int(r*2.0f), int(r*2.0f), 0, 360*64);
 }
 
 void
 X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XDrawRectangle (display, drawable, gc, 
                   int(x1), int(y1), 
                   int(x2 - x1), int(y2 - y1));
@@ -207,14 +244,14 @@ X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 void
 X11Display::draw_string(float x, float y, const std::string& str, Color color)
 {
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XDrawString (display, drawable, gc, int(x), int(y), str.c_str (), str.length ());
 }
 
 void
 X11Display::draw_string_centered(float x, float y, const std::string& str, Color color)
 {
-  XSetForeground(display, gc, color.get_rgb());
+  XSetForeground(display, gc, get_color_value(color));
   XDrawString (display, drawable, gc, 
                int(x) - ((str.length() * 6) / 2), int(y), 
                str.c_str (), str.length ());
@@ -424,7 +461,7 @@ X11Display::read_event ()
             break;
               
           default:
-            std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_f << std::endl;
+            std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_grave << std::endl;
             break;
           }
       }
@@ -721,6 +758,20 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
                       0, 0, // clip origin
                       rect, 1,
                       Unsorted);
+}
+
+unsigned int
+X11Display::get_color_value(Color& color)
+{
+  XColor x_color;
+
+  x_color.red   = int(color.r * 65535);
+  x_color.green = int(color.g * 65535);
+  x_color.blue  = int(color.b * 65535);
+
+  XAllocColor(display, colormap, &x_color);
+
+  return x_color.pixel;
 }
 
 /* EOF */

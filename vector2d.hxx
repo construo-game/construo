@@ -20,6 +20,7 @@
 #ifndef HEADER_VECTOR2D_HXX
 #define HEADER_VECTOR2D_HXX
 
+#include <math.h>
 #include <iostream>
 
 /** */

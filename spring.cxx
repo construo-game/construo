@@ -32,6 +32,9 @@ Spring::Spring (Particle* f, Particle* s, float l)
   stiffness   = 50.0f;
   damping     = .1f;
   max_stretch = 0.15f;
+
+  f->spring_links += 1;
+  s->spring_links += 1;
 }
 
 Spring::Spring (Particle* f, Particle* s) 
@@ -44,6 +47,9 @@ Spring::Spring (Particle* f, Particle* s)
   stiffness   = 50.0f;
   damping     = .1f;
   max_stretch = 0.15f;
+
+  f->spring_links += 1;
+  s->spring_links += 1;
 
   assert (length != 0);
 }
@@ -77,11 +83,20 @@ Spring::Spring (World* world, lisp_object_t* cursor)
       throw ConstruoError ("Spring: Pair lookup failed");
     }
 
+  particles.first->spring_links  += 1;
+  particles.second->spring_links += 1;
+
   if (length == -1)
     {
       //std::cout << "Spring: length missing in data file, recalculating" << std::endl;     
       length = fabs((particles.first->pos - particles.second->pos).norm ());
     }
+}
+
+Spring::~Spring ()
+{
+  particles.first->spring_links -= 1;
+  particles.second->spring_links -= 1;
 }
 
 void
@@ -154,7 +169,7 @@ Spring::serialize()
   obj.write_float ("damping",     damping);
   obj.write_float ("maxstretch", max_stretch);
 
-  return obj.get_lisp ();
+  return obj.create_lisp ();
 }
 
 void

@@ -45,6 +45,9 @@ public:
   
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);
+
+  void on_secondary_button_press (int x, int y);
+  void on_secondary_button_release (int x, int y);
 };
 
 #endif
