@@ -1,0 +1,17 @@
+Release 0.1.0:
+* finish Display API
+* finish X11 API implementation
+* create Mouse/Keyboard API (hooks and get functions)
+* port Construo to the new Display/Input API
+* add autoconf/automake support, can be pretty minimal
+* make sure that 'make install' works, add some more docs
+
+Release 0.2.0:
+* Create GUI (simple buttons)
+* make every key bound function accessible via the GUI
+
+
+Release 0.3.0:
+* make OpenGL display implementation, add alpha support (can be faked
+  by fading to black on non-alpha displays)
+* port to windows
