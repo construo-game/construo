@@ -55,7 +55,7 @@ ParticleFactory::ParticleFactory (World* w, lisp_object_t* cursor)
         case 0:
         case 1:
         case 2:
-          mass = 1.0f/mass;
+          mass = 1.0f/10.0f;
           break;
         }
 

@@ -114,7 +114,8 @@ Particle::update (float delta)
   velocity += totale_force * delta * (1.0f/mass);
 
   // damping
-  velocity -= (velocity * (1.0f/mass) * delta) * 0.01f;
+  if (0)
+    velocity -= (velocity * (1.0f/mass) * delta) * 0.01f;
 
   //velocity *= .999999f ;
 

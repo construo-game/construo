@@ -23,6 +23,7 @@
 #  include <GL/glut.h>
 #endif
 
+#include <stdio.h>
 #include <iostream>
 #include "buttons.hxx"
 #include "events.hxx"

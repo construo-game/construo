@@ -20,7 +20,11 @@ Construo 0.2.0
  
  * added optional glut support for hardware accelerated OpenGL
 
+ * support for anti-aliased lines and transparency (only under OpenGL)
+
  * fixed particle physics, particle mass now has an impact
+
+ * particle velocity editing is possible
 
 
 Construo 0.1.0
