@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@ class GUIManager;
 class ScreenManager
 {
 private:
+  bool do_quit;
+
   GUIManager* current_gui_manager;
 
   GUIManager* load_gui_manager;
@@ -39,6 +41,8 @@ public:
   static ScreenManager* instance ();
   
   void set_gui (int gui_id);
+
+  void quit();
 
   bool is_finished ();
 

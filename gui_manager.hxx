@@ -52,7 +52,7 @@ private:
   GUIComponent* find_component_at (int, int);
 public:
   GUIManager ();
-  ~GUIManager ();
+  virtual ~GUIManager ();
   
   /** Launches a single run from the games main loop */
   void run_once ();

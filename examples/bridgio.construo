@@ -406,6 +406,11 @@
     (spring (first 415) (second 1766) (length 57.000000))
     (spring (first 673) (second 1767) (length 37.483330))
     (spring (first 1765) (second 1766) (length 20.615528))
-  ))
+  )
+(colliders
+(rect (pos1 360.0 -530.0) (pos2 600.0 -300.0))
+(rect (pos1 10.0 -500.0) (pos2 100.0 10.0))
+)
+)
 
 ;; EOF ;;

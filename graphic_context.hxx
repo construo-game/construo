@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
 
 #include <string>
+#include "math.hxx"
 #include "vector2d.hxx"
 #include "color.hxx"
 
@@ -51,7 +52,11 @@ public:
 
   void draw_rect (const Vector2d& pos1, const Vector2d& pos2, Color color)
   {
-    draw_rect (pos1.x, pos1.y, pos2.x, pos2.y, color);
+    draw_rect (Math::min(pos1.x, pos2.x),
+               Math::min(pos1.y, pos2.y),
+               Math::max(pos1.x, pos2.x),
+               Math::max(pos1.y, pos2.y),
+               color);
   }
 
   void draw_fill_rect (const Vector2d& pos1, const Vector2d& pos2, Color color)

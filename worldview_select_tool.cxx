@@ -40,6 +40,11 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 void
 WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 {
+}
+
+void
+WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
+{
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
 
@@ -94,11 +99,6 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
       gc->get_parent_gc()->draw_circle(gc->world_to_screen(selection.get_center ()),
                                        8.0f, Colors::selection_rect);
     }
-}
-
-void
-WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
-{
 }
 
 void

@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ GUIFileButton::GUIFileButton (const std::string& arg_filename)
     filename (arg_filename),
     mouse_over (false)
 {
-  std::cout << "FILENAME: " << filename << std::endl;
+  //std::cout << "FILENAME: " << filename << std::endl;
 }
 
 GUIFileButton::~GUIFileButton ()
@@ -36,14 +36,14 @@ GUIFileButton::~GUIFileButton ()
 void
 GUIFileButton::on_primary_button_press (int x, int y)
 {
-  std::cout << "GUIFileButton::on_primary_button_press (int x, int y)" << std::endl;
+  //std::cout << "GUIFileButton::on_primary_button_press (int x, int y)" << std::endl;
   on_click ();
 }
 
 void
 GUIFileButton::on_primary_button_release (int x, int y)
 {
-  std::cout << "GUIFileButton::on_primary_button_release (int x, int y)" << std::endl;
+  //std::cout << "GUIFileButton::on_primary_button_release (int x, int y)" << std::endl;
 }
 
 /* EOF */

@@ -26,13 +26,14 @@
 class RectCollider : public Collider
 {
 private:
-  int x1;
-  int y1;
-  int x2;
-  int y2;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
 
 public:
-  RectCollider (int x1_, int y1_, int x2_, int y2_);
+  RectCollider (World* world, lisp_object_t* cursor);
+  RectCollider (float x1_, float y1_, float x2_, float y2_);
 
   bool is_at (const Vector2d& pos);
   void bounce ();

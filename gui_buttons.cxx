@@ -234,7 +234,7 @@ GUIQuitButton::GUIQuitButton ()
 void
 GUIQuitButton::on_click()
 {
-  WorldGUIManager::instance()->quit();
+  ScreenManager::instance()->quit();
 }
 
 

@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ public:
   static WorldGUIManager* instance() { return instance_; }
 
   WorldGUIManager ();
+  virtual ~WorldGUIManager ();
 
   void draw_overlay (); 
 };

@@ -24,6 +24,7 @@
 #include "worldview_insert_tool.hxx"
 #include "worldview_select_tool.hxx"
 #include "worldview_zoom_tool.hxx"
+#include "worldview_collider_tool.hxx"
 #include "worldview_component.hxx"
 
 WorldViewComponent* WorldViewComponent::instance_;
@@ -35,9 +36,10 @@ WorldViewComponent::WorldViewComponent ()
 
   scrolling = false;
 
-  select_tool  = new WorldViewSelectTool ();
-  insert_tool  = new WorldViewInsertTool ();
-  zoom_tool    = new WorldViewZoomTool ();
+  select_tool   = new WorldViewSelectTool ();
+  insert_tool   = new WorldViewInsertTool ();
+  zoom_tool     = new WorldViewZoomTool ();
+  collider_tool = new WorldViewColliderTool ();
 
   current_tool = insert_tool;
   mode = INSERT_MODE;
@@ -62,6 +64,11 @@ WorldViewComponent::set_mode (Mode m)
     {
       current_tool = zoom_tool;
       mode = ZOOM_MODE;
+    }
+  else if (m == COLLIDER_MODE)
+    {
+      current_tool = collider_tool;
+      mode = COLLIDER_MODE;
     }
   else
     {
@@ -108,13 +115,16 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   switch (mode)
     {
     case ZOOM_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Zoom Mode ]");
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[  Zoom Mode  ]");
       break;
     case INSERT_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Insert Mode]");
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Insert Mode ]");
       break;
     case SELECT_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Select Mode]");
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Select Mode ]");
+      break;
+    case COLLIDER_MODE:
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Collider Mode]");
       break;
     }
 

@@ -22,8 +22,26 @@
 #include "particle_factory.hxx"
 #include "controller.hxx"
 #include "rect_collider.hxx"
+#include "construo_error.hxx"
 
-RectCollider::RectCollider (int x1_, int y1_, int x2_, int y2_)
+RectCollider::RectCollider (World* world, lisp_object_t* cursor)
+{
+  Vector2d pos1, pos2;
+  
+  LispReader reader(cursor);
+  if (reader.read_vector("pos1", &pos1) == false
+      || reader.read_vector("pos2", &pos2) == false)
+    {
+      throw ConstruoError("RectCollider entry incomplete");
+    }
+
+  x1 = pos1.x;
+  y1 = pos1.y;
+  x2 = pos2.x;
+  y2 = pos2.y;
+}
+
+RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_)
   : x1 (x1_), y1 (y1_), x2 (x2_), y2 (y2_)
 {
 }

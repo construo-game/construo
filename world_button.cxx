@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -24,17 +24,10 @@
 #include "construo_error.hxx"
 
 WorldButton::WorldButton (const std::string& arg_filename)
-  : GUIFileButton (arg_filename)
+  : GUIFileButton (arg_filename),
+    world(0),
+    file_broken(false)
 {
-  std::cout << "Creating WorldButton" << std::endl;
-
-  try {
-    world = new World(filename);
-  } catch (ConstruoError& err) {
-    std::cout << "ERROR: " << err.msg << std::endl;
-    std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
-    world = 0;
-  }
 }
 
 WorldButton::~WorldButton ()
@@ -42,8 +35,26 @@ WorldButton::~WorldButton ()
 }
 
 void
+WorldButton::load_world ()
+{
+  if (world == 0 && !file_broken)
+    {
+      try {
+        world = new World(filename);
+      } catch (ConstruoError& err) {
+        std::cout << "ERROR: " << err.msg << std::endl;
+        std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
+        world = 0;
+        file_broken = true;
+      }
+    }
+}
+
+void
 WorldButton::draw (GraphicContext* parent_gc)
 {
+  load_world();
+
   parent_gc->draw_fill_rect (x_pos, y_pos, 
                              x_pos +  width, y_pos + height,
                              Color (0xBB0000FF));

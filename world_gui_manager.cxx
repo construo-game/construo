@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -51,6 +51,10 @@ void switch_to_zoom_mode() {
   WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE);
 }
 
+void switch_to_collider_mode() {
+  WorldViewComponent::instance()->set_mode (WorldViewComponent::COLLIDER_MODE);
+}
+
 void switch_to_select_mode() {
   WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE);
 }
@@ -71,6 +75,7 @@ WorldGUIManager::WorldGUIManager ()
   add(new GUIGenericButton ("InsertMode", 700, 130, 90, 25, switch_to_insert_mode));
   add(new GUIGenericButton ("SelectMode", 700, 160, 90, 25, switch_to_select_mode));
   add(new GUIGenericButton ("ZoomMode",   700, 190, 90, 25, switch_to_zoom_mode));
+  add(new GUIGenericButton ("ColliderMode",   700, 100, 90, 25, switch_to_collider_mode));
 
   add(new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
   add(new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
@@ -88,6 +93,10 @@ WorldGUIManager::WorldGUIManager ()
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
     add (window);
   */
+}
+
+WorldGUIManager::~WorldGUIManager ()
+{
 }
 
 void

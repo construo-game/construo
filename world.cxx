@@ -26,6 +26,7 @@
 #include "particle_factory.hxx"
 #include "system_context.hxx"
 #include "controller.hxx"
+#include "rect.hxx"
 #include "rect_collider.hxx"
 
 World* World::current_world = 0; 
@@ -35,20 +36,25 @@ World::World ()
 {
   file_version = 0;
   has_been_run = false;
+  /*
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
   colliders.push_back (new RectCollider (400, 500, 500, 600)); // FIXME
+  */
 }
 
 World::World (const std::string& filename)
   : particle_mgr (0)
 {
+  std::cout << "World: Trying to load: " << filename << std::endl;
   file_version = 0;
+
+  /*
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
   colliders.push_back (new RectCollider (-300, -600, -100, -550)); // FIXME
   colliders.push_back (new RectCollider (-100, -150, 50, -50)); // FIXME
-
+  */
   has_been_run = false;
   FILE* in;
   lisp_stream_t stream;
@@ -83,8 +89,8 @@ World::World (const std::string& filename)
 
   ConstruoAssert(particle_mgr, "No Particles given in file, load failed");
 
-  std::cout << "particles: " << particle_mgr->size () << std::endl;
-  std::cout << "springs:   " << springs.size () << std::endl;
+  //std::cout << "particles: " << particle_mgr->size () << std::endl;
+  //std::cout << "springs:   " << springs.size () << std::endl;
 }
 
 void
@@ -107,6 +113,10 @@ World::parse_scene (lisp_object_t* cursor)
           else if (strcmp(lisp_symbol(lisp_car(cur)), "springs") == 0)
             {
               parse_springs(lisp_cdr(cur));
+            }
+          else if (strcmp(lisp_symbol(lisp_car(cur)), "colliders") == 0)
+            {
+              parse_colliders(lisp_cdr(cur));
             }
           else if (strcmp(lisp_symbol(lisp_car(cur)), "version") == 0)
             {
@@ -131,6 +141,25 @@ World::parse_springs (lisp_object_t* cursor)
       springs.push_back(new Spring (this, cur));
       cursor = lisp_cdr (cursor);
     }  
+}
+
+void
+World::parse_colliders (lisp_object_t* cursor)
+{
+  while(!lisp_nil_p(cursor))
+    {
+      lisp_object_t* cur = lisp_car(cursor);
+      if (strcmp(lisp_symbol(lisp_car(cur)), "rect") == 0)
+        {
+          colliders.push_back(new RectCollider(this, lisp_cdr(cur)));
+        }
+      else
+        {
+          std::cout << "WARNING: Unknown collider type '" << lisp_symbol(lisp_car(cur))
+                    << "' skipping" << std::endl;
+        }
+      cursor = lisp_cdr (cursor);
+    }
 }
 
 void
@@ -483,6 +512,14 @@ int
 World::get_num_springs()
 {
   return springs.size ();
+}
+
+void
+World::add_rect_collider(const Vector2d& pos1, const Vector2d& pos2)
+{
+  Rect<float> rect (pos1.x, pos1.y, pos2.x, pos2.y);
+
+  colliders.push_back(new RectCollider(rect.x1, rect.y1, rect.x2, rect.y2));
 }
 
 /* EOF */

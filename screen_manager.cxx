@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -24,11 +24,12 @@
 ScreenManager* ScreenManager::instance_ = 0;
 
 ScreenManager::ScreenManager ()
+  : do_quit(false)
 {
   load_gui_manager  = new LoadGUIManager();
   world_gui_manager = new WorldGUIManager();
 
-  current_gui_manager = load_gui_manager;
+  current_gui_manager = world_gui_manager;
 }
 
 void
@@ -40,7 +41,13 @@ ScreenManager::run_once ()
 bool
 ScreenManager::is_finished ()
 {
-  return false;
+  return do_quit;
+}
+
+void
+ScreenManager::quit()
+{
+  do_quit = true;
 }
 
 void

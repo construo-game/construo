@@ -29,13 +29,14 @@ class WorldViewTool;
 class WorldViewInsertTool;
 class WorldViewSelectTool;
 class WorldViewZoomTool;
+class WorldViewColliderTool;
 
 /** GUI Component that manages the view and the editing of the
     world */
 class WorldViewComponent : public GUIComponent
 {
 public:
-  enum Mode { INSERT_MODE, SELECT_MODE, ZOOM_MODE };
+  enum Mode { INSERT_MODE, SELECT_MODE, ZOOM_MODE, COLLIDER_MODE };
 
 private:
   Mode mode;
@@ -56,6 +57,7 @@ private:
   WorldViewSelectTool* select_tool;
   WorldViewInsertTool* insert_tool;
   WorldViewZoomTool*   zoom_tool;
+  WorldViewColliderTool*   collider_tool;
 
   static WorldViewComponent* instance_;
 public:

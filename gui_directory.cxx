@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction gamee
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -100,9 +100,9 @@ GUIDirectory::place_components ()
 void
 GUIDirectory::move_up ()
 {
-  offset -= 3;
-  if (offset < 0)
-    offset = 0;
+  if (offset > 3)
+    offset -= 3;
+
   place_components ();
 }
 
@@ -110,8 +110,10 @@ void
 GUIDirectory::move_down ()
 {
   offset += 3;
-  if (offset >= files.size())
+
+  if (offset >= int(files.size()))
     offset -= 3;
+
   place_components ();
 }
 

@@ -16,7 +16,7 @@
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 # init automake/conf
-AC_INIT(construo, 0.2.0pre1)
+AC_INIT(construo, 0.2.0pre2)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR(construo.hxx)
 AM_CONFIG_HEADER(config.h)
@@ -79,5 +79,10 @@ echo ""
 echo "   CXXFLAGS = $CXXFLAGS"
 echo "   LIBS     = $LIBS"
 echo "   Targets  = $ConstruoTargets"
+echo ""
+echo "Now type 'make' and everything should work, if not, write a bug reports to:"
+echo ""
+echo "  Ingo Ruhnke <grumbel@gmx.de>"
+echo ""
 
 # EOF #
