@@ -140,6 +140,9 @@ ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
   
   zoom *= (1.0f/1.2f);
 
+  //if (zoom > 20)
+  //zoom = 20;
+
   return true;
 }
 
@@ -180,6 +183,7 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
   float screen_relation = get_width ()/get_height();
   float rect_relation   = width/height; 
   
+  
   if (rect_relation > screen_relation)
     {
       zoom = 800/width;
@@ -188,6 +192,9 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
     {
       zoom = 600/height;
     }
+
+  if (zoom > 20)
+    zoom = 20;
 
   x_offset = (get_width()  / (2*zoom)) - center_x;
   y_offset = (get_height() / (2*zoom)) - center_y;

@@ -95,6 +95,9 @@ public:
 
   void write_lisp (const std::string& filename);
 
+  int get_num_particles();
+  int get_num_springs();
+
   WorldBoundingBox calc_bounding_box();
 private:
   static World* current_world;

@@ -92,6 +92,8 @@ public:
   void scroll_up ();
   void scroll_down ();
 
+  float get_zoom (); 
+
   /** */
   bool is_at (int x, int y) { return true; }
 };

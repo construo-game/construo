@@ -49,7 +49,9 @@ worldview_select_tool.hxx worldview_select_tool.cxx \
 worldview_insert_tool.hxx worldview_insert_tool.cxx \
 worldview_zoom_tool.hxx worldview_zoom_tool.cxx \
 collider.hxx \
-rect_collider.hxx rect_collider.cxx
+rect_collider.hxx rect_collider.cxx \
+gui_label.hxx gui_label.cxx \
+string_converter.hxx
 
 LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 

@@ -30,6 +30,17 @@
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
+static char zoom_tool_cursor[] = {
+    /* -------- -------- */  0x00,
+    /* -------- -------- */  0x00,
+    /* ------xx xx------ */  0x18,                         
+    /* ----xxxx xxxx---- */  0x3c,
+    /* ----xxxx xxxx---- */  0x3c,
+    /* ------xx xx------ */  0x18,
+    /* -------- -------- */  0x00,
+    /* -------- -------- */  0x00
+};
+
 X11Display::X11Display(int w, int h, bool fullscreen_)
   : doublebuffer (settings.doublebuffer),
     width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
@@ -119,6 +130,18 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 
   if (fullscreen)
     set_fullscreen (true);
+
+  if (0) // custom cursor code
+    {
+      XColor cursor_fg;
+      XColor cursor_bg;
+
+      //set colors here
+
+      Pixmap cursor_pm = XCreateBitmapFromData (display, window, zoom_tool_cursor, 8, 8);
+      Cursor cursor = XCreatePixmapCursor(display, cursor_pm, None, &cursor_bg, &cursor_fg, 4, 4);
+      XDefineCursor (display, window, cursor);
+    }
 }
 
 X11Display::~X11Display ()

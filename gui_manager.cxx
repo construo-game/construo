@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <config.h>
+#include "string_converter.hxx"
 #include "construo.hxx"
 #include "graphic_context.hxx"
 #include "input_context.hxx"
@@ -32,6 +33,19 @@
 #include "gui_buttons.hxx"
 
 GUIManager* GUIManager::instance_;
+
+void switch_to_insert_mode() {
+  WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE);
+}
+
+void switch_to_zoom_mode() {
+  WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE);
+}
+
+void switch_to_select_mode() {
+  WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE);
+}
+
 
 GUIManager::GUIManager ()
 {
@@ -50,6 +64,10 @@ GUIManager::GUIManager ()
   components.push_back (new GUIZoomOutButton ());
   components.push_back (new GUIQuitButton ());
 
+  components.push_back (new GUIGenericButton ("InsertMode", 700, 130, 90, 25, switch_to_insert_mode));
+  components.push_back (new GUIGenericButton ("SelectMode", 700, 160, 90, 25, switch_to_select_mode));
+  components.push_back (new GUIGenericButton ("ZoomMode",   700, 190, 90, 25, switch_to_zoom_mode));
+  
   /*
     GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
@@ -65,8 +83,12 @@ GUIManager::~GUIManager ()
 void
 GUIManager::run ()
 { 
+  int counter = 0;
+
   while (!do_quit)
     {
+      counter += 1;
+
       process_events ();
 
       Controller::instance()->update ();
@@ -78,7 +100,7 @@ GUIManager::run ()
         {
           (*i)->draw (graphic_context);
         }
-
+          
       graphic_context->flip ();
       //KeepAliveMgr::keep_alive ();
       if (Controller::instance()->is_running())
@@ -111,6 +133,17 @@ GUIManager::draw_status ()
   graphic_context->draw_string (600,  68, "     [f] - fix current spot");
   graphic_context->draw_string (600,  80, "     [u] - undo to last state");
   graphic_context->draw_string (600,  92, "     [r] - redo (undo an undo)");
+
+  World& world = *Controller::instance()->get_world ();
+
+  graphic_context->draw_string (700,  530, "Particles: ");
+  graphic_context->draw_string (770,  530, to_string(world.get_num_particles()));
+
+  graphic_context->draw_string (700,  545, "Springs: ");
+  graphic_context->draw_string (770,  545, to_string(world.get_num_springs()));
+
+  graphic_context->draw_string (700,  560, "Zoom: ");
+  graphic_context->draw_string (770,  560, to_string(WorldViewComponent::instance()->get_zoom()));
 
   if (Controller::instance()->is_running ())
     graphic_context->draw_string (graphic_context->get_width () - 60,

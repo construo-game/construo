@@ -91,6 +91,8 @@ Particle::draw (GraphicContext* gc)
 void
 Particle::update (float delta)
 {
+  const float max_velocity = 1000.0f;
+
   if (fixed) return;
 
   velocity += totale_force * mass * delta;
@@ -134,6 +136,13 @@ Particle::update (float delta)
     velocity = -velocity;
     }*/
   clear_force ();
+
+  // Avoid to fast things
+  if (velocity.norm () > max_velocity)
+    {
+      velocity.normalize();
+      velocity *= max_velocity;
+    }
 }
 
 

@@ -52,10 +52,20 @@ WorldViewComponent::set_mode (Mode m)
       current_tool = insert_tool;
       mode = INSERT_MODE;
     }
-  else
+  else if (m == SELECT_MODE)
     {
       current_tool = select_tool;
       mode = SELECT_MODE;
+    }
+  else if (m == ZOOM_MODE)
+    {
+      current_tool = zoom_tool;
+      mode = ZOOM_MODE;
+    }
+  else
+    {
+      std::cout << "Unknown Mode" << std::endl;
+      assert (false);
     }
 
   current_tool->activate ();
@@ -208,6 +218,12 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
     {
       current_tool->on_mouse_move (x, y, of_x, of_y);
     }
+}
+
+float
+WorldViewComponent::get_zoom ()
+{
+  return gc.get_zoom ();
 }
 
 /* EOF */

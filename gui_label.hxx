@@ -1,6 +1,6 @@
 //  $Id$
-//
-//  Construo - A wire-frame construction game
+// 
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -12,25 +12,33 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include "construo.hxx"
+#ifndef HEADER_CONSTRUO_GUI_LABEL_HXX
+#define HEADER_CONSTRUO_GUI_LABEL_HXX
 
-/* Global variables, mainly the different system components */
+#include <string>
+#include "gui_component.hxx"
 
-SystemContext*  system_context  =0;
-InputContext*   input_context   =0;
-GraphicContext* graphic_context =0;
+/** */
+class GUILabel : public GUIComponent
+{
+private:
+  int x;
+  int y;
+  int width;
+  int height;
 
-#ifdef CONSTRUO_0_1_0
-const double back_force = 500.0;
-const double max_stretch = 0.1f;
-#else
-const double back_force = 1500.0;
-const double max_stretch = 0.15f;
+  std::string title;
+public:
+  GUILabel (int x, int y, int width, int height, const std::string& title_);
+  
+  void draw (GraphicContext*);
+};
+
 #endif
 
 /* EOF */

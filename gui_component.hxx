@@ -44,6 +44,14 @@ public:
   /** @return true if the component is present at the given location */
   virtual bool is_at (int x, int y);
 
+  void set_position (int x, int y) { x_pos = x, y_pos = y; }
+  void set_width (int w) { width = w; }
+  void set_height (int h) { height = h; }
+  int get_x_pos () { return x_pos; }
+  int get_y_pos () { return y_pos; }
+  int get_width () { return width; }
+  int get_height () { return height; }
+
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}
 

@@ -96,6 +96,24 @@ public:
   void on_click();
 };
 
+class GUIGenericButton : public GUIButton
+{
+private:
+  typedef void (*Func)();
+  Func func;
+public:
+  GUIGenericButton (const std::string& title, int x, int y, int width, int height, Func f)
+    : GUIButton (title, x, y, width, height),
+      func (f)
+  {
+  }
+
+  void on_click () 
+  {
+    func ();
+  }
+};
+
 #endif
 
 /* EOF */

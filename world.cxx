@@ -34,6 +34,7 @@ World::World ()
   has_been_run = false;
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
+  colliders.push_back (new RectCollider (400, 500, 500, 600)); // FIXME
 }
 
 World::World (const std::string& filename)
@@ -41,6 +42,8 @@ World::World (const std::string& filename)
 {
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
+  colliders.push_back (new RectCollider (-300, -600, -100, -550)); // FIXME
+  colliders.push_back (new RectCollider (-100, -150, 50, -50)); // FIXME
 
   has_been_run = false;
   FILE* in;
@@ -229,8 +232,9 @@ World::update (float delta)
               Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f);
               Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f);
 
-              new_springs.push_back (new Spring ((*i)->particles.first, p1));
-              new_springs.push_back (new Spring ((*i)->particles.second, p2));
+              // FIXME: Insert a more sofistikated string splitter here
+              new_springs.push_back (new Spring ((*i)->particles.first, p1, (*i)->length/2));
+              new_springs.push_back (new Spring ((*i)->particles.second, p2, (*i)->length/2));
             }
         }
     }
@@ -455,6 +459,18 @@ World::calc_bounding_box()
     }
 
   return bbox;
+}
+
+int
+World::get_num_particles()
+{
+  return particle_mgr->size ();
+}
+
+int
+World::get_num_springs()
+{
+  return springs.size ();
 }
 
 /* EOF */
