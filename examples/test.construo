@@ -1,0 +1,22 @@
+
+(construo-scene
+  (particles 
+    (particle (id 20279) (pos  476  129  0 ) (velocity  0  0  0 ) )
+    (particle (id 20280) (pos  476  186  0 ) (velocity  0  0  0 ) )
+    (particle (id 20281) (pos  402  172  0 ) (velocity  0  0  0 ) )
+    (particle (id 20282) (pos  230  178  0 ) (velocity  0  0  0 ) )
+    (particle (id 20283) (pos  230  132  0 ) (velocity  0  0  0 ) )
+    (particle (id 20284) (pos  232  96  0 ) (velocity  0  0  0 ) )
+    (particle (id 20285) (pos  375  110  0 ) (velocity  0  0  0 ) )
+    (particle (id 20286) (pos  386  0  0 ) (velocity  0  0  0 ) )
+    (particle (id 20287) (pos  350  80  0 ) (velocity  0  0  0 ) )
+    (particle (id 20288) (pos  528  153  0 ) (velocity  0  0  0 ) )
+  )
+  (springs 
+    (spring (first 20279)(second 20280))
+    (spring (first 20281)(second 20282))
+    (spring (first 20283)(second 20284))
+    (spring (first 20285)(second 20286))
+    (spring (first 20287)(second 20288))
+  )
+)
