@@ -33,17 +33,25 @@ private:
   std::map<std::string, GUIDirectory*> directories;
 
   GUIDirectory* current_directory;
-
+  
   GUIDirectory* get_directory (const std::string& pathname);
+
+  static GUIFileManager* instance_;
 public:
   GUIFileManager ();
   ~GUIFileManager ();
+
+  static GUIFileManager* instance() { return instance_; }
+  
+  void draw_overlay (GraphicContext* gc);
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */
   void open_directory (const std::string& pathname);
 
-  void draw (GraphicContext*);
+  /** move one directory up, aka cut the last directory from a
+      directory pathname */
+  void directory_up();
 };
 
 #endif

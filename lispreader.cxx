@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "construo_error.hxx"
 #include <lispreader.h>
 
 #define TOKEN_ERROR                   -1
@@ -546,7 +547,8 @@ lisp_symbol (lisp_object_t *obj)
 char*
 lisp_string (lisp_object_t *obj)
 {
-    assert(obj->type == LISP_TYPE_STRING);
+  if (obj->type != LISP_TYPE_STRING)
+    ConstruoError::raise("lispreader Error: obj->type != LISP_TYPE_STRING");
 
     return obj->v.string;
 }
@@ -572,8 +574,9 @@ lisp_real (lisp_object_t *obj)
 lisp_object_t*
 lisp_car (lisp_object_t *obj)
 {
-    assert(obj->type == LISP_TYPE_CONS || obj->type == LISP_TYPE_PATTERN_CONS);
-
+  if (!(obj->type == LISP_TYPE_CONS || obj->type == LISP_TYPE_PATTERN_CONS))
+    ConstruoError::raise("lispreader Error: !(obj->type == LISP_TYPE_CONS || obj->type == LISP_TYPE_PATTERN_CONS)");
+    
     return obj->v.cons.car;
 }
 

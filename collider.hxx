@@ -31,6 +31,7 @@ private:
   
 public:
   virtual void draw (GraphicContext*) =0;
+  virtual void draw_highlight (GraphicContext*) =0;
 
   /** @return true if the collider is at the given world coordinates,
       used for drag&drop */

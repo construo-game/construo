@@ -30,6 +30,7 @@ class GUIFileButton;
 class GUIDirectory : public GUIChildManager
 {
 private:
+  std::string pathname;
   std::vector<GUIFileButton*> files;
   int offset;
   
@@ -37,6 +38,10 @@ private:
 public:
   GUIDirectory (const std::string& pathname);
   ~GUIDirectory ();
+
+  void draw_overlay (GraphicContext* gc);
+
+  std::string get_path() { return pathname; }
 
   /** Move the shown directory content up */
   void move_up ();

@@ -22,10 +22,7 @@
 
 #include <vector>
 
-extern "C" {
-#include "lispreader.h"
-}
-
+#include "lispreader.hxx"
 #include "vector2d.hxx"
 
 /** */

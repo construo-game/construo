@@ -22,9 +22,7 @@
 
 #include <vector>
 #include "vector2d.hxx"
-extern "C" {
-#include "lispreader.h"
-}
+#include "lispreader.hxx"
 
 class ZoomGraphicContext;
 class Particle;

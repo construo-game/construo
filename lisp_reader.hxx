@@ -20,10 +20,7 @@
 #ifndef HEADER_LISP_READER_HXX
 #define HEADER_LISP_READER_HXX
 
-extern "C" {
-#include "lispreader.h"
-}
-
+#include "lispreader.hxx"
 #include "vector2d.hxx"
 
 /** */

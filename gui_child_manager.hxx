@@ -41,8 +41,10 @@ public:
 
   void add (GUIComponent*);
   void remove (GUIComponent*);
+  void replace(GUIComponent* old_comp, GUIComponent* new_comp);
 
   void draw (GraphicContext* gc);
+  virtual void draw_overlay (GraphicContext* gc) {}
 
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);

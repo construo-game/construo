@@ -38,6 +38,7 @@ public:
   bool is_at (const Vector2d& pos);
   void bounce ();
   void draw (GraphicContext* gc);
+  void draw_highlight (GraphicContext* gc);
 };
 
 #endif

@@ -49,6 +49,19 @@ GUIChildManager::remove (GUIComponent* comp)
 }
 
 void
+GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
+{
+  for (ComponentLst::iterator i = components.begin(); i != components.end(); ++i)
+    {
+      if (*i == old_comp)
+        {
+          *i = new_comp;
+          return;
+        }
+    }
+}
+
+void
 GUIChildManager::draw (GraphicContext* parent_gc)
 {
   gc.set_parent_gc (parent_gc);
@@ -69,10 +82,12 @@ GUIChildManager::draw (GraphicContext* parent_gc)
                         x_pos + width, y_pos, 
                         Colors::button_fg_passive);
 
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (ComponentLst::reverse_iterator i = components.rbegin (); i != components.rend (); ++i)
     {
       (*i)->draw (&gc);
     }
+
+  draw_overlay(parent_gc);
 }
 
 void

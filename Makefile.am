@@ -32,7 +32,7 @@ config.cxx    input_context.hxx    spring.hxx           world.cxx       \
 config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
 construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     \
 construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     \
-lispreader.c  lispreader.h       lisp_reader.hxx lisp_reader.cxx \
+lispreader.cxx  lispreader.hxx       lisp_reader.hxx lisp_reader.cxx \
 particle.cxx  spring.cxx  particle_factory.hxx particle_factory.cxx \
 lisp_writer.hxx lisp_writer.cxx \
 gui_manager.hxx gui_manager.cxx \

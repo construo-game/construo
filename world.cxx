@@ -69,6 +69,12 @@ World::World (const std::string& filename)
   lisp_stream_init_file (&stream, in);
   
   lisp_object_t* root_obj = lisp_read (&stream);
+
+  if (root_obj->type == LISP_TYPE_EOF || root_obj->type == LISP_TYPE_PARSE_ERROR)
+    {
+      std::cout << "World: Parse Error in file " << filename << std::endl;
+    }
+
   lisp_object_t* cur = lisp_car(root_obj);
   
   if (!lisp_symbol_p (cur))

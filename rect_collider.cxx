@@ -111,4 +111,11 @@ RectCollider::draw (GraphicContext* gc)
   gc->draw_rect (x1, y1, x2, y2, Colors::rect_collider_fg);
 }
 
+void
+RectCollider::draw_highlight (GraphicContext* gc)
+{
+  //gc->draw_fill_rect (x1, y1, x2, y2, Colors::rect_collider_bg);
+  gc->draw_rect (x1, y1, x2, y2, Colors::selection_rect);
+}
+
 /* EOF */

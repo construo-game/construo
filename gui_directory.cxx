@@ -21,10 +21,12 @@
 #include "system_context.hxx"
 #include "world_button.hxx"
 #include "gui_directory_button.hxx"
+#include "gui_file_manager.hxx"
 #include "gui_directory.hxx"
 
-GUIDirectory::GUIDirectory (const std::string& pathname)
-  : GUIChildManager (0, 0, 800, 600)
+GUIDirectory::GUIDirectory (const std::string& arg_pathname)
+  : GUIChildManager (0, 0, 800, 600),
+    pathname (arg_pathname)
 {
   std::vector<std::string> dir = system_context->read_directory(pathname);
   
@@ -95,6 +97,12 @@ GUIDirectory::place_components ()
 
       ++count;
     }
+}
+
+void
+GUIDirectory::draw_overlay (GraphicContext* gc)
+{
+  
 }
 
 void

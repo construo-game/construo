@@ -27,6 +27,7 @@
 #include <dirent.h>
 #include <pwd.h>
 #include <errno.h>
+#include <iostream>
 #include "construo_error.hxx"
 #include "string_utils.hxx"
 #include "unix_system.hxx"
@@ -132,6 +133,10 @@ UnixSystem::get_user_email()
 FileType
 UnixSystem::get_file_type(const std::string& filename)
 {
+  if (filename == "/examples/"
+      || filename == "/user/")
+    return FT_DIRECTORY;
+
   if (is_suffix(filename, ".construo"))
     return FT_CONSTRUO_FILE;
   else
@@ -142,10 +147,13 @@ std::string
 UnixSystem::translate_filename (const std::string& filename)
 {
   if (filename == "/")
-    return "/home/ingo/.construo/"; 
+    {
+      assert("root directory is not translatable");
+      return "";
+    }
   else if (is_prefix(filename, "/user/"))
     {
-      return "/home/ingo/.construo/";  filename.substr(6); 
+      return "/home/ingo/.construo/" + filename.substr(6); 
     }
   else if (is_prefix(filename, "/examples/"))
     {
@@ -158,27 +166,38 @@ UnixSystem::translate_filename (const std::string& filename)
 FILE*
 UnixSystem::open_input_file(const std::string& filename)
 {
+  std::cout << "UnixSystem: open_input_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "r");
 }
 
 std::vector<std::string>
 UnixSystem::read_directory(const std::string& arg_pathname)
 {
-  std::vector<std::string> dir_lst;
-  std::string pathname = translate_filename (arg_pathname);
-
-  DIR* dir = ::opendir (pathname.c_str());
-  // FIXME: Error checking here
-  struct dirent* entry;
-
-  while ((entry = readdir(dir)) != 0)
+  if (arg_pathname == "/")
     {
-      dir_lst.push_back(entry->d_name);
+      std::vector<std::string> ret;
+      ret.push_back("examples/");
+      ret.push_back("user/");
+      return ret;
     }
-  
-  closedir (dir);
+  else
+    {
+      std::vector<std::string> dir_lst;
+      std::string pathname = translate_filename (arg_pathname);
 
-  return dir_lst;
+      DIR* dir = ::opendir (pathname.c_str());
+      // FIXME: Error checking here
+      struct dirent* entry;
+
+      while ((entry = readdir(dir)) != 0)
+        {
+          dir_lst.push_back(entry->d_name);
+        }
+  
+      closedir (dir);
+
+      return dir_lst;
+    }
 }
 
 /* EOF */

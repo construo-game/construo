@@ -33,6 +33,10 @@ public:
 
   ConstruoError(const std::string& str)
     : msg(str) {}
+
+  static void raise(const std::string& str) {
+    throw ConstruoError (str);
+  }
 };
 
 #endif
