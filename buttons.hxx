@@ -29,10 +29,13 @@ enum ButtonTypes {
   BUTTON_START,     // space key or third mouse button
   BUTTON_CLEAR,     // clear the current scene
   BUTTON_DELETE,    // delete the current object
+  BUTTON_DUPLICATE,    // duplicate the current select
+  BUTTON_FLIP,      // flip the current object horizontally
   BUTTON_UNDO,      // bring the world back to its state before the simulation start
   BUTTON_REDO,      // bring the world back to its state before the last undo
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_TOGGLESLOWMO, 
+  BUTTON_RUN,         // starts or stops the simulation
   BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)
 
   BUTTON_ZOOM_OUT,

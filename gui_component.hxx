@@ -60,7 +60,8 @@ public:
 
   virtual void on_tertiary_button_press (int x, int y) {}
   virtual void on_tertiary_button_release (int x, int y) {}
-  
+
+  virtual void on_duplicate_press (int x, int y) {}
   virtual void on_delete_press (int x, int y) {}
   virtual void on_fix_press (int x, int y) {}
 

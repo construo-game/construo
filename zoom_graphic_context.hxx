@@ -20,6 +20,7 @@
 #ifndef HEADER_ZOOM_GRAPHIC_CONTEXT_HXX
 #define HEADER_ZOOM_GRAPHIC_CONTEXT_HXX
 
+#include "vector2d.hxx"
 #include "graphic_context.hxx"
 
 /** A GraphicContext, that wraps another GraphicContext and adds
@@ -59,6 +60,10 @@ public:
   bool zoom_out (int x, int y);
   void zoom_to (int x1, int y1, int x2, int y2);
 
+  /** Allows a client application to make use of the partent GC in
+      case it wants to draw elements which should not get scaled */
+  GraphicContext* get_parent_gc () { return parent_gc; }
+
   /** Move the current position relativly x/y width */
   void translate_offset (int x, int y);
 
@@ -82,6 +87,9 @@ public:
 
   float world_to_screen_x (float);
   float world_to_screen_y (float);
+
+  Vector2d screen_to_world (const Vector2d&);
+  Vector2d world_to_screen (const Vector2d&);
 
   void flip (int x1, int y1, int x2, int y2);
 };

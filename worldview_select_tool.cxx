@@ -141,15 +141,12 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_primary_button_release (int x, int y)
 {
-  World& world = *Controller::instance()->get_world ();
-      
   GUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   
   if (mode == GETTING_SELECTION_MODE)
     { 
-      selection = world.get_particles (int(click_pos.x), int(click_pos.y),
-                                       WorldViewComponent::instance()->get_gc()->screen_to_world_x (x),
-                                       WorldViewComponent::instance()->get_gc()->screen_to_world_y (y));
+      selection.select_particles(click_pos,
+                                 WorldViewComponent::instance()->get_gc()->screen_to_world (Vector2d(x,y)));
       mode = IDLE_MODE;
     }
 }
@@ -160,17 +157,15 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
   mode = ROTATING_SELECTION_MODE;
   GUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
 
-  click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  click_pos.y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
-  
-  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-    {
-      rotate_center.x += (*i)->pos.x;
-      rotate_center.y += (*i)->pos.y;
-    }
+  click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
 
-  rotate_center.x /= selection.size ();
-  rotate_center.y /= selection.size ();
+  if (!selection.empty())
+    {
+      rotate_center = selection.get_center();
+    }
+  else
+    {
+    }
 }
 
 void
@@ -258,19 +253,7 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
                                 click_pos.x - rotate_center.x);
         float rot_angle = new_angle - old_angle;
 
-        for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-          {
-            Vector2d& pos = (*i)->pos;
-      
-            pos.x -= rotate_center.x;
-            pos.y -= rotate_center.y;
-      
-            float angle  = atan2(pos.y, pos.x) + rot_angle;
-            float length = pos.norm ();
-
-            pos.x = (cos (angle)*length) + rotate_center.x;
-            pos.y = (sin (angle)*length) + rotate_center.y;
-          }
+        selection.rotate (rot_angle, rotate_center);
 
         click_pos = new_pos;
       }
@@ -278,6 +261,12 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
     default:
       break;
     }
+}
+
+void
+WorldViewSelectTool::on_duplicate_press (int x, int y)
+{
+  selection.duplicate ();
 }
 
 /* EOF */

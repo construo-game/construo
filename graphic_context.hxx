@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
 
 #include <string>
+#include "vector2d.hxx"
 #include "color.hxx"
 
 /** Graphic abstraction interface */
@@ -28,6 +29,36 @@ class GraphicContext
 {
 private:
 public:
+  void draw_circle(const Vector2d& pos, float radius, Color color)
+  {
+    draw_circle (pos.x, pos.y, radius, color);
+  }
+
+  void draw_fill_circle(const Vector2d& pos, float radius, Color color)
+  {
+    draw_fill_circle (pos.x, pos.y, radius, color);
+  }
+
+  void draw_string(const Vector2d& pos, const std::string& str, Color color = Color (0xFFFFFF))
+  {
+    draw_string (pos.x, pos.y, str, color);
+  }
+
+  void draw_line (const Vector2d& pos1, const Vector2d& pos2, Color color, int wide = 0)
+  {
+    draw_line (pos1.x, pos1.y, pos2.x, pos2.y, color, wide);
+  }
+
+  void draw_rect (const Vector2d& pos1, const Vector2d& pos2, Color color)
+  {
+    draw_rect (pos1.x, pos1.y, pos2.x, pos2.y, color);
+  }
+
+  void draw_fill_rect (const Vector2d& pos1, const Vector2d& pos2, Color color)
+  {
+    draw_fill_rect (pos1.x, pos1.y, pos2.x, pos2.y, color);
+  }
+
   virtual void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) =0;
   virtual void draw_rect(float x1, float y1, float x2, float y2, Color color) =0;
   virtual void draw_circle(float x, float y, float radius, Color color) =0;

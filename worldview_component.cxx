@@ -163,6 +163,12 @@ WorldViewComponent::on_delete_press (int screen_x, int screen_y)
 }
 
 void
+WorldViewComponent::on_duplicate_press (int screen_x, int screen_y)
+{
+  current_tool->on_duplicate_press (screen_x, screen_y);
+}
+
+void
 WorldViewComponent::on_fix_press (int screen_x, int screen_y)
 {
   current_tool->on_fix_press (screen_x, screen_y);

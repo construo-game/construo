@@ -21,6 +21,7 @@
 #define HEADER_RECT_HXX
 
 #include "math.hxx"
+#include "vector2d.hxx"
 
 /** */
 template<class T>
@@ -33,6 +34,10 @@ public:
   T x2;
   T y2;
   
+  Rect () 
+  {
+  }
+
   Rect (const T& x1_,
         const T& y1_,
         const T& x2_,
@@ -51,6 +56,12 @@ public:
   T get_height () 
   {
     return x2 - x1;
+  }
+
+  Vector2d get_center () const 
+  {
+    return Vector2d ((x1 + x2)/2.0f,
+                     (y1 + y2)/2.0f);
   }
 };
 

@@ -57,7 +57,8 @@ rect_collider.hxx rect_collider.cxx \
 gui_label.hxx gui_label.cxx \
 string_converter.hxx \
 rect.hxx \
-construo_main.hxx
+construo_main.hxx \
+selection.hxx selection.cxx 
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a -L/usr/X11R6/lib/ -lXext -lXxf86vm

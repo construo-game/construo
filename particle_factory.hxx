@@ -53,6 +53,9 @@ public:
   Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity,
                           float m, bool f = false);
 
+  /** Duplicate a particle */
+  Particle* add_particle (const Particle& particle);
+
   /** Remove a particle by pointer */
   void remove_particle (Particle*);
 

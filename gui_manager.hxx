@@ -65,6 +65,9 @@ public:
   /** Stops the GUIManager */
   void quit();
 
+  /** @return true if somebody has quit the GUIManager */
+  bool finished () { return do_quit; }
+
   void grab_mouse (GUIComponent*);
   void ungrab_mouse (GUIComponent*);
 };

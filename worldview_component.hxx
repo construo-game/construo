@@ -83,6 +83,7 @@ public:
 
   void on_mouse_move (int x, int y, int of_x, int of_y);
 
+  void on_duplicate_press (int x, int y);
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 

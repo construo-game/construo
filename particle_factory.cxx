@@ -88,6 +88,15 @@ ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velo
   return p;
 }
 
+Particle*
+ParticleFactory::add_particle (const Particle& particle)
+{
+  Particle* p = new Particle (particle);
+  p->id = particle_id_count++,
+  particles.push_back(p);
+  return p;
+}
+
 void
 ParticleFactory::remove_particle (Particle* p)
 {

@@ -20,6 +20,7 @@
 #ifndef HEADER_CONSTRUO_WORLDVIEW_SELECT_TOOL_HXX
 #define HEADER_CONSTRUO_WORLDVIEW_SELECT_TOOL_HXX
 
+#include "selection.hxx"
 #include "worldview_tool.hxx"
 
 class Particle;
@@ -28,12 +29,7 @@ class Particle;
 class WorldViewSelectTool : public WorldViewTool
 {
 private:
-  typedef std::vector<Particle*> Selection;
   Selection selection;
-  /** Pointer to the world for which the selection is valid, if world
-      changes (on undo) the selection becomes invalid and has do be
-      cleared */
-  World* selected_world;
 
   typedef enum { GETTING_SELECTION_MODE, 
                  MOVING_SELECTION_MODE, 
@@ -64,6 +60,8 @@ public:
 
   void on_mouse_move (int x, int y, int of_x, int of_y);
 
+  void on_flip_press (int x, int y);
+  void on_duplicate_press (int x, int y);
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 };

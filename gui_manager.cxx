@@ -237,6 +237,9 @@ GUIManager::process_button_events (ButtonEvent& button)
         case BUTTON_DELETE:
           current_component->on_delete_press (x, y);
           break;
+        case BUTTON_DUPLICATE:
+          current_component->on_duplicate_press (x, y);
+          break;
 
         case BUTTON_SCROLL_LEFT:
           current_component->scroll_left ();
@@ -283,6 +286,10 @@ GUIManager::process_button_events (ButtonEvent& button)
 
         case BUTTON_TOGGLESLOWMO:
           Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active ());
+          break;
+
+        case BUTTON_RUN:
+          Controller::instance()->start_simulation ();
           break;
 
         case BUTTON_QUICKSAVE0:

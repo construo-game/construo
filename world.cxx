@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <assert.h>
 #include <algorithm>
 #include "config.h"
 #include "math.hxx"
@@ -345,6 +346,7 @@ World::zero_out_velocity ()
 void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
+  assert (last_particle && particle);
   springs.push_back (new Spring (last_particle, particle));
 }
 

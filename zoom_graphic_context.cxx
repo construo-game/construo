@@ -29,6 +29,20 @@ ZoomGraphicContext::ZoomGraphicContext ()
   parent_gc  = NULL;
 }
 
+Vector2d
+ZoomGraphicContext::screen_to_world (const Vector2d& pos)
+{
+  return Vector2d ((pos.x / zoom) - x_offset,
+                   (pos.y / zoom) - y_offset);  
+}
+
+Vector2d
+ZoomGraphicContext::world_to_screen (const Vector2d& pos)
+{
+  return Vector2d ((pos.x + x_offset) * zoom,
+                   (pos.y + y_offset) * zoom);
+}
+
 float
 ZoomGraphicContext::screen_to_world_x (float x)
 {

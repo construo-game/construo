@@ -56,9 +56,9 @@ Particle::serialize()
 void
 Particle::draw_highlight (ZoomGraphicContext* gc)
 {
-  gc->draw_fill_circle (int(pos.x), int (pos.y),
-                        6 / gc->get_zoom() + Math::max(1.0f, 2.0f*get_mass()),
-                        Color(1.0f, 1.0f, 1.0f));
+  gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+                                         6,
+                                         Color(1.0f, 1.0f, 1.0f));
 }
 
 void
@@ -69,15 +69,15 @@ Particle::draw (ZoomGraphicContext* gc)
     {
       if (fixed)
         {
-          gc->draw_fill_circle (int(pos.x), int (pos.y),
-                                Math::round(4 / gc->get_zoom()),
-                                Color(0.6f, 0.6f, 0.6f));
+          gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+                                                 4,
+                                                 Color(0.6f, 0.6f, 0.6f));
         }
       else
         {
-          gc->draw_fill_circle (int(pos.x), int (pos.y),
-                                Math::round(Math::max(1.0f, 2.0f*get_mass())),
-                                Color(1.0f, 0.0f, 0.0f));
+          gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+                                                 Math::round(Math::max(3.0f, 2.0f*get_mass())),
+                                                 Color(1.0f, 0.0f, 0.0f));
         }
     }
 

@@ -124,19 +124,17 @@ Spring::draw (ZoomGraphicContext* gc)
       || 
       particles.second->pos.y < 598.5f)
     {
-      gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
-                     int(particles.second->pos.x), int(particles.second->pos.y),
-                     Color(color, 1.0f - color, 0.0f));
+      gc->GraphicContext::draw_line (particles.first->pos,
+                                     particles.second->pos,
+                                     Color(color, 1.0f - color, 0.0f));
     }
 }
 
 void
 Spring::draw_highlight (ZoomGraphicContext* gc)
 {
-  gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
-                 int(particles.second->pos.x), int(particles.second->pos.y),
-                 Color(0xEEEEEE), 
-                 10);
+  gc->GraphicContext::draw_line (particles.first->pos, particles.second->pos,
+                                 Color(0xEEEEEE), 10);
 }
 
 

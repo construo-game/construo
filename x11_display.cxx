@@ -356,10 +356,15 @@ X11Display::read_event ()
           case XK_r:
             send_button_press(BUTTON_REDO);
             break;
+          case XK_d:
+            send_button_press(BUTTON_DUPLICATE);
+            break;
           case XK_space:
+            send_button_press(BUTTON_RUN);
+            break;
+          case XK_Tab:
             send_button_press(BUTTON_TOGGLESLOWMO);
             break;
-
           case XK_0:
             send_load_or_save(0);
             break;
@@ -617,7 +622,7 @@ X11Display::set_fullscreen (bool fullscreen)
 void
 X11Display::run()
 {
-  while (true)
+  while (!GUIManager::instance ()->finished ())
     {
       if (Controller::instance()->is_running())
         {
