@@ -833,8 +833,7 @@ X11Display::run()
         }
       else
         {
-          //wait_for_events_blocking();
-          wait_for_events();
+          wait_for_events_blocking();
         }
     }
 }
