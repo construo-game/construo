@@ -138,7 +138,10 @@ ParticleFactory::update (float delta)
   for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
     (*i)->update(delta);
 
-  particles.erase(std::remove_if(particles.begin(), particles.end(), particle_obsolete()),
+  // FIXME: There is no need to do this on any update, doing it only
+  //once a second should be enough
+  particles.erase(std::remove_if(particles.begin(), particles.end(),
+                                 particle_obsolete()),
                   particles.end());
 }
 
@@ -166,9 +169,9 @@ ParticleFactory::lookup_particle (int id)
 void
 ParticleFactory::clear ()
 {
- for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
-   delete *i;
- particles.clear ();
+  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
+    delete *i;
+  particles.clear ();
 }
 
 void

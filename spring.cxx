@@ -143,10 +143,10 @@ Spring::draw (ZoomGraphicContext* gc)
       || 
       particles.second->pos.y < 598.5f)
     {
-      gc->GraphicContext::draw_line (particles.first->pos,
-                                     particles.second->pos,
-                                     Color(color, 1.0f - color, 0.0f),
-                                     2);
+      gc->GraphicContext::draw_line(particles.first->pos,
+                                    particles.second->pos,
+                                    Color(color, 1.0f - color, 0.0f),
+                                    2);
     }
 }
 

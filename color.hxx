@@ -39,7 +39,12 @@ struct Color
   : r (r), g (g), b (b), a (a) {}
 
   /** Convert the color into 0xRRGGBB format */
-  inline unsigned int get_rgb () { return int(255 * b) | (int((255 * g)) << 8) | (int((255 * r)) << 16); }
+  inline unsigned int get_as_rrggbb () const 
+  {
+    return ((unsigned int)(255 * b))
+      |   (((unsigned int)(255 * g)) << 8)
+      |   (((unsigned int)(255 * r)) << 16); 
+  }
 };
 
 #endif

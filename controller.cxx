@@ -115,7 +115,7 @@ Controller::update ()
       else
         {
           delta /= 5.0f/20.0f;
-          min_skip = 0.02;//; 0.007f;
+          min_skip = 0.02; // 0.02
         }
       
       float i = 0.0f;

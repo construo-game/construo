@@ -88,6 +88,9 @@ private:
   int  mouse_x;
   int  mouse_y;
 
+  /** Color Depth of the Display */
+  int depth;
+
   /** true if display is in fullscreen mode, false for window mode */
   bool fullscreen;
 

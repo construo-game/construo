@@ -49,25 +49,6 @@
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
-static char zoom_tool_cursor[] = {
-  /* -------- -------- */  0x00,
-  /* -------- -------- */  0x00,
-  /* ------xx xx------ */  0x18,                         
-  /* ----xxxx xxxx---- */  0x3c,
-  /* ----xxxx xxxx---- */  0x3c,
-  /* ------xx xx------ */  0x18,
-  /* -------- -------- */  0x00,
-  /* -------- -------- */  0x00,
-  /* -------- -------- */  0x00,
-  /* -------- -------- */  0x00,
-  /* ------xx xx------ */  0x18,                         
-  /* ----xxxx xxxx---- */  0x3c,
-  /* ----xxxx xxxx---- */  0x3c,
-  /* ------xx xx------ */  0x18,
-  /* -------- -------- */  0x00,
-  /* -------- -------- */  0x00
-};
-
 X11Display::X11Display(int w, int h, bool fullscreen_)
   : doublebuffer (settings.doublebuffer),
     width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
@@ -167,12 +148,22 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     set_fullscreen();
 
   {
+    // Visual* visual = XDefaultVisual(display, DefaultScreen(display));
+    depth = DefaultDepth(display, DefaultScreen(display));
+    if (depth != 16 && depth != 32)
+      {
+        std::cout << "X11Display: Warring color depth '" << depth 
+                  << "' not supported, Construo will be slow!" << std::endl;
+      }
+  }
+
+  {
     // Black&White
     XColor cursor_fg = get_xcolor(Color(1.0f, 1.0f, 1.0f));
     XColor cursor_bg = get_xcolor(Color(0, 0, 0));
       
     cursor_scroll_pix = XCreateBitmapFromData (display, window, (char*)cursor_scroll_bits, 
-                                           cursor_scroll_width, cursor_scroll_height);
+                                               cursor_scroll_width, cursor_scroll_height);
     cursor_scroll_mask = XCreateBitmapFromData (display, window, (char*)cursor_scroll_mask_bits, 
                                                 cursor_scroll_width, cursor_scroll_height);
     cursor_scroll = XCreatePixmapCursor(display, cursor_scroll_pix, cursor_scroll_mask, &cursor_bg, &cursor_fg, 
@@ -275,8 +266,8 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
   std::vector<XArc> arcs (circles.size());
   for (std::vector<Circle>::size_type i = 0; i < circles.size(); ++i)
     {
-      arcs[i].x = static_cast<short>(circles[i].x - circles[i].r);
-      arcs[i].y = static_cast<short>(circles[i].y - circles[i].r);
+      arcs[i].x      = static_cast<short>(circles[i].x - circles[i].r);
+      arcs[i].y      = static_cast<short>(circles[i].y - circles[i].r);
       arcs[i].width  = static_cast<short>(2 * circles[i].r);
       arcs[i].height = static_cast<short>(2 * circles[i].r);
       arcs[i].angle1 = 0;
@@ -837,12 +828,13 @@ X11Display::run()
 
       if (Controller::instance()->is_running())
         {
-          system_context->sleep (0); // limit CPU usage via brute force
+          system_context->sleep (0); // FIXME: limit CPU usage via brute force
           wait_for_events();
         }
       else
         {
-          wait_for_events_blocking();
+          //wait_for_events_blocking();
+          wait_for_events();
         }
     }
 }
@@ -912,15 +904,27 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
 unsigned int
 X11Display::get_color_value(const Color& color)
 {
-  XColor x_color;
+  switch (depth)
+    {
+    case 32:
+      // FIXME Cast evil?!
+      return static_cast<unsigned int>(color.get_as_rrggbb());
+    case 16:
+      return int(31 * color.b) | (int((63 * color.g)) << 5) | (int((31 * color.r)) << 11);
+    default:
+      { // This is extremly slow!
+        XColor x_color;
 
-  x_color.red   = int(color.r * 65535);
-  x_color.green = int(color.g * 65535);
-  x_color.blue  = int(color.b * 65535);
+        x_color.red   = int(color.r * 65535);
+        x_color.green = int(color.g * 65535);
+        x_color.blue  = int(color.b * 65535);
 
-  XAllocColor(display, colormap, &x_color);
+        XAllocColor(display, colormap, &x_color);
 
-  return x_color.pixel;
+        return x_color.pixel;
+      }
+      break;
+    }
 }
 
 XColor

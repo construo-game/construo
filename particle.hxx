@@ -57,7 +57,7 @@ public:
 
   /** The id of the particle, used for de/serialisation and copying of
       the World. The id is uniq only for a single world. */
-  int get_id () {
+  inline int get_id () const {
     return id;
   }
 

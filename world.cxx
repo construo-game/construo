@@ -381,7 +381,8 @@ World::update (float delta)
 
   // Remove any springs that are marked as destroyed
   // FIXME: Could be faster
-  for (SpringIter i = springs.begin (); i != springs.end ();)
+  SpringIter i = springs.begin ();
+  while ( i != springs.end ())
     {
       if ((*i)->destroyed)
         {

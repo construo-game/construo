@@ -28,7 +28,6 @@ AC_PROG_INSTALL
 AC_PATH_XTRA
 AC_LANG(C++)
 
-
 AC_MSG_CHECKING([whether we are enabling debug-mode])
 AC_ARG_ENABLE([debug],
               AC_HELP_STRING([--enable-debug],
@@ -41,15 +40,27 @@ if test x$enable_debug = xyes; then
   CXXFLAGS="-g -O0"
 fi
 
-AC_MSG_CHECKING([whether we are enabling profiling])
-AC_ARG_ENABLE([profiling],
-              AC_HELP_STRING([--enable-profiling],
+AC_MSG_CHECKING([whether we are enabling gprof profiling-support])
+AC_ARG_ENABLE([gprof],
+              AC_HELP_STRING([--enable-gprof],
                              [enable gprof profiling (default: no)]),,
-              [enable_profiling=no])
-AC_MSG_RESULT($enable_profiling)
+              [enable_gprof=no])
+AC_MSG_RESULT($enable_gprof)
 
-if test x$enable_profiling = xyes; then
+if test x$enable_gprof = xyes; then
   CXXFLAGS="$CXXFLAGS -pg"
+fi
+
+AC_MSG_CHECKING([whether we are enabling FunctionCheck profiling])
+AC_ARG_ENABLE([fcheck],
+              AC_HELP_STRING([--enable-fcheck],
+                             [enable fcheck profiling (default: no)]),,
+              [enable_fcheck=no])
+AC_MSG_RESULT($enable_fcheck)
+
+if test x$enable_fcheck = xyes; then
+  CXXFLAGS="`fc-config --cflags`"
+  LIBS="$LIBS `fc-config --libs`"
 fi
 
 AC_CHECK_HEADER([sstream],

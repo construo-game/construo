@@ -90,6 +90,7 @@ public:
   /** remove the given spring */
   void remove_spring (Spring*);
 
+  /** Remove the gives collider from the world */
   void remove_collider (Collider*);
 
   ParticleFactory* get_particle_mgr() { return particle_mgr; }
