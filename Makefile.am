@@ -19,7 +19,9 @@ SUBDIRS = examples
 
 bindir=$(prefix)/games
 
-bin_PROGRAMS = construo.x11 construo.glut
+bin_PROGRAMS = @ConstruoTargets@
+
+EXTRA_PROGRAMS = construo.x11 construo.glut
 
 noinst_LIBRARIES = libconstruo.a
 

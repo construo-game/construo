@@ -133,6 +133,8 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
   
   zoom *= 1.2;
 
+  // FIXME: add max/min zoom handling here
+
   return true;
 }
 bool
@@ -148,6 +150,7 @@ ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
   //move_to (x, y);
   zoom *= (1.0f/1.2f);
 
+  // FIXME: add max/min zoom handling here
 
   return true;
 }

@@ -28,23 +28,35 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PATH_XTRA
 
+ConstruoTargets=""
+
+
 if test ! -n X_DISPLAY_MISSING; then
-    echo ""
-    echo "### Error: Couldn't find X11 header files, probally x11-devel packages"
-    echo "###        not installed?"
-    echo ""
-    exit 1
+   echo ""
+   echo "### Error: Couldn't find X11 header files, probally x11-devel packages"
+   echo "###        not installed?"
+   echo ""
+   exit 1
+else
+    ConstruoTargets="$ConstruoTargets construo.x11"
+    LIBS="$LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
+    CXXFLAGS="$CXXFLAGS $X_CFLAGS"
 fi
 
-LIBS="$LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
-CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+AC_CHECK_LIB(glut, glutMainLoop,
+[
+ConstruoTargets="$ConstruoTargets construo.glut"
+LIBS="$LIBS -lglut"
+])
+
+AC_SUBST(ConstruoTargets)
+
+AC_CONFIG_FILES(Makefile examples/Makefile)
+AC_OUTPUT
 
 echo ""
 echo "   CXXFLAGS = $CXXFLAGS"
 echo "   LIBS     = $LIBS"
-echo ""
-
-AC_CONFIG_FILES(Makefile examples/Makefile)
-AC_OUTPUT
+echo "   Targets  = $ConstruoTargets"
 
 # EOF #

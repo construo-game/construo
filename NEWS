@@ -8,7 +8,7 @@ Construo 0.2.0
 
  * added scrolling with cursorkeys and mouse
 
- * added GUI
+ * added simple GUI
 
  * House of Horror Part1 and Part2 added
  
@@ -17,6 +17,10 @@ Construo 0.2.0
  * moving of objects is possible 
 
  * rotation of objects is possible
+ 
+ * added optional glut support for hardware accelerated OpenGL
+
+ * fixed particle physics, particle mass now has an impact
 
 
 Construo 0.1.0
