@@ -31,6 +31,7 @@ class GUIManager
 private:
   unsigned int frame_count;
   unsigned int start_time;
+  float current_fps;
 
   /** component where the mouse is currently over */
   GUIComponent* last_component;
@@ -51,6 +52,9 @@ private:
 public:
   GUIManager ();
   virtual ~GUIManager ();
+
+  /** @return the current frames per second */
+  float get_fps() const { return current_fps; }
   
   /** Launches a single run from the games main loop */
   virtual void run_once ();
@@ -65,7 +69,7 @@ public:
   void quit();
 
   /** add a GUIComponent, the component will get deleted after in the
-      destruction of the guimanager */
+   *  destruction of the guimanager */
   void add (GUIComponent*);
 
   void grab_mouse (GUIComponent*);

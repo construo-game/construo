@@ -23,20 +23,7 @@
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 
-#include "cursor_insert.xbm"
-#include "cursor_insert_mask.xbm"
-
-#include "cursor_select.xbm"
-#include "cursor_select_mask.xbm"
-
-#include "cursor_zoom.xbm"
-#include "cursor_zoom_mask.xbm"
-
-#include "cursor_scroll.xbm"
-#include "cursor_scroll_mask.xbm"
-
-#include "cursor_collider.xbm"
-#include "cursor_collider_mask.xbm"
+#include "cursors/cursors.hxx"
 
 #include "construo_error.hxx"
 #include "x11_display.hxx"
@@ -209,11 +196,11 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 
 X11Display::~X11Display ()
 {
-  std::cout << "Closing X11 display" << std::endl;
+  //std::cout << "Closing X11 display" << std::endl;
   
   if (fullscreen)
     {
-      std::cout << "X11Display: Restoring video mode" << std::endl;
+      //std::cout << "X11Display: Restoring video mode" << std::endl;
       leave_fullscreen ();
     }
   

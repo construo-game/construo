@@ -54,21 +54,21 @@ Controller::load_world (const std::string& filename)
   if (world)
     undo_world_stack.push_back(world);
 
-  std::cout << "Loading World..." << std::endl;
+  //std::cout << "Loading World..." << std::endl;
   world = new World (filename);
 
   WorldViewComponent::instance()->on_world_change();
 
   running = false;
-  std::cout << "Loading World... DONE" << std::endl; 
+  //std::cout << "Loading World... DONE" << std::endl; 
 }
 
 void
 Controller::save_world (const std::string& filename)
 {
-  std::cout << "Saving World..." << std::endl;
+  //std::cout << "Saving World..." << std::endl;
   world->write_lisp (filename);
-  std::cout << "Saving World... DONE" << std::endl;
+  //std::cout << "Saving World... DONE" << std::endl;
 }
 
 

@@ -103,7 +103,7 @@ WorldButton::draw (GraphicContext* parent_gc)
 void
 WorldButton::on_click ()
 {
-  std::cout << "WorldButton: detected click on: " << filename << std::endl;
+  //std::cout << "WorldButton: detected click on: " << filename << std::endl;
   if (mode == SAVE_BUTTON)
     {
       Controller::instance()->save_world(filename);

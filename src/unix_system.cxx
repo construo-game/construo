@@ -212,7 +212,7 @@ UnixSystem::translate_filename (const std::string& filename)
 FILE*
 UnixSystem::open_input_file(const std::string& filename)
 {
-  std::cout << "UnixSystem: open_input_file: " << translate_filename (filename) << std::endl;
+  //std::cout << "UnixSystem: open_input_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "r");
 }
 

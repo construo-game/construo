@@ -19,7 +19,6 @@
 
 #include <iostream>
 #include <unistd.h>
-#include "globals.hxx"
 #include "path_manager.hxx"
 
 PathManager path_manager;

@@ -30,7 +30,6 @@
 #include "gui_manager.hxx"
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
-#include "globals.hxx"
 #include "root_graphic_context.hxx"
 #include "screen_manager.hxx"
 
@@ -39,12 +38,13 @@ using namespace StringUtils;
 GUIManager::GUIManager ()
 {
   frame_count = 0;
+  current_fps = 0.0f;
+
   start_time  = system_context->get_time ();
 
   last_component     = 0;
   grabbing_component = 0;
   current_component  = 0;
-
 }
 
 GUIManager::~GUIManager ()

@@ -42,7 +42,7 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
 
       FileType type = system_context->get_file_type (filename);
 
-      std::cout << "Creating object for: " << filename << std::endl;
+      //std::cout << "Creating object for: " << filename << std::endl;
 
       if (type == FT_DIRECTORY)
         {

@@ -73,7 +73,7 @@ ConstruoMain::exit()
 void
 ConstruoMain::on_exit()
 {
-  std::cout << "Calling on_exit()" << std::endl;
+  //std::cout << "Calling on_exit()" << std::endl;
 
   //if (!controller->has_been_run())
   {

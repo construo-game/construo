@@ -158,7 +158,7 @@ GUIRunButton::draw_content (GraphicContext* gc)
 void
 GUIRunButton::on_click()
 {
-  std::cout << "Button pressed" << std::endl;
+  //std::cout << "Button pressed" << std::endl;
   Controller::instance()->start_simulation ();
 }
 

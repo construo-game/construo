@@ -18,7 +18,7 @@
 # init automake/conf
 AC_INIT(construo, 0.2.2)
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR(construo.hxx)
+AC_CONFIG_SRCDIR(src/construo.hxx)
 AM_CONFIG_HEADER(config.h)
 
 # check for some programs
@@ -142,7 +142,7 @@ fi
 
 AC_SUBST(ConstruoTargets)
 
-AC_CONFIG_FILES(Makefile examples/Makefile)
+AC_CONFIG_FILES(Makefile src/Makefile examples/Makefile)
 AC_OUTPUT
 
 echo ""

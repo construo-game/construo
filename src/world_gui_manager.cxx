@@ -27,7 +27,6 @@
 #include "gui_buttons.hxx"
 #include "gui_window.hxx"
 #include "gui_label.hxx"
-#include "globals.hxx"
 #include "screen_manager.hxx"
 #include "root_graphic_context.hxx"
 #include "world_gui_manager.hxx"
@@ -262,7 +261,7 @@ WorldGUIManager::draw_overlay ()
   */
   int bottom_line = graphic_context->get_height() - 10;
   graphic_context->draw_string (10, bottom_line-20, "FPS: ");
-  graphic_context->draw_string (80, bottom_line-20, to_string(current_fps));
+  graphic_context->draw_string (80, bottom_line-20, to_string(get_fps()));
 
   graphic_context->draw_string (10, bottom_line, "Pos: ");
   graphic_context->draw_string (80, bottom_line, 

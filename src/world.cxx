@@ -47,7 +47,7 @@ World::World ()
 World::World (const std::string& filename)
   : particle_mgr (0)
 {
-  std::cout << "World: Trying to load: " << filename << std::endl;
+  std::cout << "World: Loading '" << filename << "'..." << std::endl;
   file_version = 0;
 
   has_been_run = false;
@@ -553,7 +553,7 @@ World::write_lisp (const std::string& filename)
       return; 
     }
 
-  std::cout << "Writing to: " << filename << std::endl;
+  std::cout << "World: Writing to: " << filename << std::endl;
 
   fputs(";; Written by " PACKAGE_STRING "\n", out);
   fputs("(construo-scene\n", out);
