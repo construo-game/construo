@@ -25,14 +25,14 @@
 #include "path_manager.hxx"
 #include "construo_error.hxx"
 
-#ifdef USE_X11_DISPLAY
+#if defined(USE_X11_DISPLAY)
 #  include "x11_display.hxx"
 #  include "unix_system.hxx"
-#else 
-#  ifdef USE_GLUT_DISPLAY
-#    include "glut_display.hxx"
-#    include "unix_system.hxx"
-#  endif
+#elif defined(USE_GLUT_DISPLAY)
+#  include "glut_display.hxx"
+#  include "unix_system.hxx"
+#else
+#  error "No Display target defined!"
 #endif
 
 #include "controller.hxx"

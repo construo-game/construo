@@ -16,7 +16,7 @@
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 # init automake/conf
-AC_INIT(construo, 0.2.1)
+AC_INIT(construo, 0.2.2)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR(construo.hxx)
 AM_CONFIG_HEADER(config.h)
@@ -31,13 +31,13 @@ AC_LANG(C++)
 AC_MSG_CHECKING([whether we are enabling debug-mode])
 AC_ARG_ENABLE([debug],
               AC_HELP_STRING([--enable-debug],
-                             [enable debug support (default: yes)]),,
-              [enable_debug=yes])
+                             [enable debug support (default: no)]),,
+              [enable_debug=no])
 AC_MSG_RESULT($enable_debug)
 
 if test x$enable_debug = xyes; then
   AC_DEFINE(DEBUG, 1, [Enable debuging])
-  CXXFLAGS="-g -O0"
+  CXXFLAGS="-g -O0 -Wall -Werror"
 fi
 
 AC_MSG_CHECKING([whether we are enabling gprof profiling-support])
@@ -74,8 +74,16 @@ dnl AC_DEFINE_UNQUOTED(PINGUS_DATADIR, "$pingus_datadir", [Location of Pingus da
 dnl AC_DEFINE(CONSTRUO_DATADIR, $datadir/games/$PACKAGE, [Location of Construo datafiles])
 AC_DEFINE_DIR(DATADIR, datadir, [Location of datafiles])
 
+AC_CHECK_LIB(z, gzopen)
+
+dnl --------------------------------------
+dnl -- Check for usable Display Targets --
+dnl --------------------------------------
 ConstruoTargets=""
 
+dnl -------------------
+dnl -- Check for X11 --
+dnl -------------------
 if test -n "$X_DISPLAY_MISSING"; then
    echo ""
    echo "### Error: Couldn't find X11 header files, probally x11-devel packages"
@@ -83,29 +91,41 @@ if test -n "$X_DISPLAY_MISSING"; then
    echo ""
 else
     ConstruoTargets="$ConstruoTargets construo.x11"
-    LIBS="$LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
-    CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+    x11_LIBS="$x11_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
+    x11_CXXFLAGS="$CXXFLAGS $X_CFLAGS"
 fi
 
-AC_CHECK_LIB(z, gzopen)
+AC_CHECK_LIB(Xext, XMissingExtension,
+[x11_LIBS="$x11_LIBS -lXext"],
+[], $x11_LIBS)
 
-AC_CHECK_LIB(Xext, XMissingExtension)
-AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode)
+AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,
+[x11_LIBS="$x11_LIBS -lXxf86vm"],
+[], $x11_LIBS)
 
+AC_SUBST(x11_LIBS)
+AC_SUBST(x11_CXXFLAGS)
+
+dnl --------------------
+dnl -- Check for Glut --
+dnl --------------------
 AC_CHECK_LIB(glut, glutMainLoop,
 [
-ConstruoTargets="$ConstruoTargets construo.glut"
-AC_SUBST(glut_LIBS,"-lglut")
+  ConstruoTargets="$ConstruoTargets construo.glut"
+  AC_SUBST(glut_LIBS,"-lglut")
 ],
 [])
 
+dnl ------------------------
+dnl -- Check for FreeGlut --
+dnl ------------------------
 AC_CHECK_LIB(freeglut-1.3, glutMainLoop,
 [
-ConstruoTargets="$ConstruoTargets construo.freeglut"
-AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3")
-echo "Freeglut: " $freeglut_LIBS
+  ConstruoTargets="$ConstruoTargets construo.freeglut"
+  AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3")
+dnl  echo "Freeglut: " $freeglut_LIBS
 ],
-[], "-lXxf86vm")
+[])
 
 if test -z "$ConstruoTargets"; then
    echo ""
@@ -126,9 +146,9 @@ AC_OUTPUT
 echo ""
 echo "   CXXFLAGS  = $CXXFLAGS"
 echo "   LIBS      = $LIBS"
-echo "   Targets   = $ConstruoTargets"
+echo "   Targets   =$ConstruoTargets"
 echo "   Debugging = $enable_debug"
-echo "   Profiling = $enable_profiling"
+echo "   Profiling = GProf: $enable_gprof FunctionCheck: $enable_fcheck"
 echo ""
 echo "Now type 'make' and everything should work, if not, write a bug reports to:"
 echo ""

@@ -26,64 +26,130 @@ EXTRA_PROGRAMS = construo.x11 construo.glut construo.freeglut
 noinst_LIBRARIES = libconstruo.a
 
 libconstruo_a_SOURCES = \
-path_manager.hxx path_manager.cxx \
-buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            \
-color.hxx     input_context.cxx    particle.hxx        \
-config.cxx    input_context.hxx    spring.hxx           world.cxx       \
-config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
-construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     \
-construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     \
-lispreader.cxx  lispreader.hxx       lisp_reader.hxx lisp_reader.cxx \
-particle.cxx  spring.cxx  particle_factory.hxx particle_factory.cxx \
-lisp_writer.hxx lisp_writer.cxx \
-gui_manager.hxx gui_manager.cxx \
-gui_component.hxx \
-worldview_component.hxx worldview_component.cxx \
-controller.hxx controller.cxx \
-gui_buttons.hxx gui_buttons.cxx \
-zoom_graphic_context.cxx zoom_graphic_context.hxx \
-root_graphic_context.cxx root_graphic_context.hxx \
-colors.hxx colors.cxx \
-gui_child_manager.hxx gui_child_manager.cxx \
-gui_component.cxx \
-command_line.hxx command_line.cxx \
-settings.hxx  settings.cxx \
-vector2d.hxx \
-math.hxx  \
-worldview_tool.hxx worldview_tool.cxx \
-worldview_select_tool.hxx worldview_select_tool.cxx \
-worldview_insert_tool.hxx worldview_insert_tool.cxx \
-worldview_zoom_tool.hxx worldview_zoom_tool.cxx \
-worldview_collider_tool.hxx worldview_collider_tool.cxx \
+bounding_box.cxx \
+bounding_box.hxx \
+buttons.hxx \
 collider.hxx \
-rect_collider.hxx rect_collider.cxx \
-gui_label.hxx gui_label.cxx \
-string_utils.hxx string_utils.cxx \
-rect.hxx \
-construo_main.hxx \
-selection.hxx selection.cxx \
-world_button.hxx world_button.cxx \
-gui_directory_button.hxx gui_directory_button.cxx \
-gui_file_button.hxx gui_file_button.cxx \
-gui_file_manager.hxx gui_file_manager.cxx \
-gui_directory.hxx gui_directory.cxx \
-world_gui_manager.hxx world_gui_manager.cxx \
-load_gui_manager.hxx load_gui_manager.cxx \
-save_gui_manager.hxx save_gui_manager.cxx \
-screen_manager.hxx screen_manager.cxx \
-gui_window.hxx gui_window.cxx \
-globals.hxx globals.cxx \
-gui_new_file_button.hxx gui_new_file_button.cxx \
-cursor_collider.xbm       cursor_scroll.xbm         cursor_zoom.xbm \
-cursor_collider_mask.xbm  cursor_scroll_mask.xbm    cursor_zoom_mask.xbm \
-cursor_insert.xbm         cursor_select.xbm \
-cursor_insert_mask.xbm    cursor_select_mask.xbm \
+color.hxx \
+colors.cxx \
+colors.hxx \
+command_line.cxx \
+command_line.hxx \
+config.cxx \
+config.hxx \
+construo.cxx \
+construo.hxx \
+construo_error.hxx \
+controller.cxx \
+controller.hxx \
+cursor_collider.xbm \
+cursor_collider_mask.xbm \
+cursor_insert.xbm \
+cursor_insert_mask.xbm \
+cursor_scroll.xbm \
+cursor_scroll_mask.xbm \
+cursor_select.xbm \
+cursor_select_mask.xbm \
+cursor_zoom.xbm \
+cursor_zoom_mask.xbm \
 cursors.hxx \
-bounding_box.hxx bounding_box.cxx
+delta_manager.hxx \
+events.hxx \
+force_emitter.hxx \
+globals.cxx \
+globals.hxx \
+graphic_context.hxx \
+gui_buttons.cxx \
+gui_buttons.hxx \
+gui_child_manager.cxx \
+gui_child_manager.hxx \
+gui_component.cxx \
+gui_component.hxx \
+gui_directory.cxx \
+gui_directory.hxx \
+gui_directory_button.cxx \
+gui_directory_button.hxx \
+gui_file_button.cxx \
+gui_file_button.hxx \
+gui_file_manager.cxx \
+gui_file_manager.hxx \
+gui_label.cxx \
+gui_label.hxx \
+gui_manager.cxx \
+gui_manager.hxx \
+gui_new_file_button.cxx \
+gui_new_file_button.hxx \
+gui_window.cxx \
+gui_window.hxx \
+input_context.cxx \
+input_context.hxx \
+keep_alive.hxx \
+keep_alive_mgr.cxx \
+keep_alive_mgr.hxx \
+keys.hxx \
+lisp_reader.cxx \
+lisp_reader.hxx \
+lisp_writer.cxx \
+lisp_writer.hxx \
+lispreader.cxx \
+lispreader.hxx \
+load_gui_manager.cxx \
+load_gui_manager.hxx \
+math.hxx \
+particle.cxx \
+particle.hxx \
+particle_factory.cxx \
+particle_factory.hxx \
+path_manager.cxx \
+path_manager.hxx \
+rect.hxx \
+rect_collider.cxx \
+rect_collider.hxx \
+root_graphic_context.cxx \
+root_graphic_context.hxx \
+save_gui_manager.cxx \
+save_gui_manager.hxx \
+screen_manager.cxx \
+screen_manager.hxx \
+selection.cxx \
+selection.hxx \
+settings.cxx \
+settings.hxx \
+spring.cxx \
+spring.hxx \
+spring_type.hxx \
+string_utils.cxx \
+string_utils.hxx \
+system_context.hxx \
+unix_system.cxx \
+unix_system.hxx \
+vector.cxx \
+vector.hxx \
+vector2d.hxx \
+world.cxx \
+world.hxx \
+world_button.cxx \
+world_button.hxx \
+world_gui_manager.cxx \
+world_gui_manager.hxx \
+worldview_collider_tool.cxx \
+worldview_collider_tool.hxx \
+worldview_component.cxx \
+worldview_component.hxx \
+worldview_insert_tool.cxx \
+worldview_insert_tool.hxx \
+worldview_select_tool.cxx \
+worldview_select_tool.hxx \
+worldview_tool.cxx \
+worldview_tool.hxx \
+worldview_zoom_tool.cxx \
+worldview_zoom_tool.hxx \
+zoom_graphic_context.cxx \
+zoom_graphic_context.hxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
-construo_x11_LDADD    = libconstruo.a
-construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY
+construo_x11_LDADD    = libconstruo.a @x11_LIBS@
+construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY @x11_CXXFLAGS@
 
 construo_glut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
 construo_glut_LDADD   = libconstruo.a @glut_LIBS@
