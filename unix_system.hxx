@@ -29,6 +29,9 @@ class UnixSystem : public SystemContext
 {
 private:
   unsigned int start_time;
+
+  /** The location of the users construo directory, aka ~/.construo/,
+      the name contains a trailing slash */
   std::string construo_rc_path;
   
 public:

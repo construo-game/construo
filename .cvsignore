@@ -6,6 +6,7 @@ missing
 autom4te.cache
 install-sh
 depcomp
+construo.freeglut
 construo.x11
 construo.glut
 mkinstalldirs
