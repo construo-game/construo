@@ -833,6 +833,8 @@ X11Display::run()
 {
   while (!ScreenManager::instance ()->is_finished ())
     {
+      ScreenManager::instance ()->run_once();
+
       if (Controller::instance()->is_running())
         {
           system_context->sleep (0); // limit CPU usage via brute force
@@ -842,7 +844,6 @@ X11Display::run()
         {
           wait_for_events_blocking();
         }
-      ScreenManager::instance ()->run_once();
     }
 }
 
