@@ -21,7 +21,7 @@
 
 #if defined(HAVE_FREEGLUT)
 #  include <GL/freeglut.h>
-#elif defined(__apple__)
+#elif defined(__APPLE__)
 #  include <glut.h>
 #else
 #  include <GL/glut.h>

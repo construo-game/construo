@@ -119,7 +119,8 @@ case "$target_os" in
      darwin*)
         MY_CHECK_GLUT_OSX([
         ConstruoTargets="$ConstruoTargets construo.glut"
-        AC_SUBST(glut_LIBS, "-I/System/Library/Frameworks/GLUT.framework/Headers/ -framework GLUT -framework OpenGL -framework Foundation")])
+        AC_SUBST(glut_LIBS, "-framework GLUT -framework OpenGL -framework Foundation")
+        AC_SUBST(glut_CXXFLAGS, "-I/System/Library/Frameworks/GLUT.framework/Headers/")])
         ;;
      *)
         AC_CHECK_LIB(glut, glutMainLoop,

@@ -11,7 +11,7 @@ AC_DEFUN([AC_DEFINE_DIR], [
 AC_DEFUN([MY_CHECK_GLUT_OSX], [
  AC_MSG_CHECKING([for glut])
  save_libs="$LIBS"
- LIBS="-I/System/Library/Frameworks/GLUT.framework/Headers/ -framework GLUT -framework OpenGL -framework Foundation"
+ LIBS="-framework GLUT -framework OpenGL -framework Foundation"
  AC_TRY_LINK_FUNC(glutMainLoop,
         [glut_available=yes
         $1],

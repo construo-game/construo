@@ -150,7 +150,7 @@ construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY @x11_CXXFLAGS@
 
 construo_glut_SOURCES = construo_main.cxx construo_main.hxx glut_display.hxx glut_display.cxx
 construo_glut_LDADD   = libconstruo.a @glut_LIBS@
-construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_GLUT
+construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_GLUT @glut_CXXFLAGS@
 
 construo_freeglut_SOURCES = construo_main.cxx construo_main.hxx glut_display.hxx glut_display.cxx
 construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
