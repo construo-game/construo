@@ -850,7 +850,7 @@ X11Display::run()
 void
 X11Display::toggle_fullscreen()
 {
-  std::cout << "Fullscreen state: " << fullscreen << std::endl;
+  //std::cout << "Fullscreen state: " << fullscreen << std::endl;
 
   if (fullscreen)
     leave_fullscreen();

@@ -36,11 +36,19 @@ private:
 public:
   RootGraphicContext() {}
   virtual ~RootGraphicContext() {}
+
   void set_cursor(CursorType);
-  virtual void set_cursor_real(CursorType) =0;
-  
   void push_cursor();
   void pop_cursor();
+
+  virtual void set_cursor_real(CursorType) =0;
+
+  /** Enter fullscreen mode */
+  virtual void enter_fullscreen() =0;
+  
+  /** Leave fullscreen and return to windowed mode */
+  virtual void leave_fullscreen() =0;
+
 private:
   RootGraphicContext (const RootGraphicContext&);
   RootGraphicContext& operator= (const RootGraphicContext&);

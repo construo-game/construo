@@ -100,12 +100,6 @@ private:
   /** Save the current visual mode for later restoration after leaving
       fullscreen */
   void save_mode();
-
-  /** Switch to fullscreen */
-  void enter_fullscreen();
-
-  /** Leave fullscreen */
-  void leave_fullscreen();
 public:
   X11Display (int w, int h, bool fullscreen_);
   virtual ~X11Display ();
@@ -131,6 +125,9 @@ public:
   
   /** Flip the double buffered display */
   void flip ();
+
+  void enter_fullscreen();
+  void leave_fullscreen();
 
   /** perform the real flip, only flip marked reagions */
   void real_flip ();

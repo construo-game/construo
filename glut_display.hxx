@@ -78,7 +78,6 @@ public:
   void flip ();
   void flip (int x1, int y1, int x2, int y2);
 
-  void set_fullscreen (bool fullscreen);
   bool get_fullscreen () { return is_fullscreen; }
 
   int get_width()  { return width; }
@@ -102,10 +101,10 @@ public:
   
   void push_quick_draw();
   void pop_quick_draw();
-private:
+
   void enter_fullscreen();
   void leave_fullscreen();
-
+private:
   GlutDisplay (const GlutDisplay&);
   GlutDisplay& operator= (const GlutDisplay&);
 };
