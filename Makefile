@@ -1,10 +1,10 @@
 all : construo
 
 construo : Construo.cxx Construo.hxx DeltaManager.hxx Makefile Config.hxx Config.cxx
-	g++ -O2 -Wall `xml2-config --cflags`  Config.cxx Construo.cxx -o construo -lclanDisplay -lclanApp -lclanCore `xml2-config --libs`
+	$(CXX) -O2 -Wall `xml2-config --cflags`  Config.cxx Construo.cxx -o construo -lclanDisplay -lclanApp -lclanCore `xml2-config --libs`
 
 construo-static : Construo.cxx Construo.hxx DeltaManager.hxx Makefile Config.hxx Config.cxx
-	g++ -O2 -Wall Config.cxx Construo.cxx -o construo-static libclanstatic.a libHermes.a \
+	$(CXX) -O2 -Wall Config.cxx Construo.cxx -o construo-static libclanstatic.a libHermes.a \
 -L/usr/X11R6/lib/ \
 -static \
 -lxml2 \
