@@ -1,3 +1,140 @@
+2003-01-09 00:14  grumbel
+
+	* Makefile.am, NEWS, collider.hxx, construo_error.hxx,
+	gui_child_manager.cxx, gui_child_manager.hxx, gui_directory.cxx,
+	gui_directory.hxx, gui_directory_button.cxx, gui_file_manager.cxx,
+	gui_file_manager.hxx, lisp_reader.hxx, lisp_writer.hxx,
+	lispreader.c, lispreader.cxx, lispreader.h, lispreader.hxx,
+	particle_factory.hxx, rect_collider.cxx, rect_collider.hxx,
+	unix_system.cxx, world.cxx: - made lispreader C++ so that it can
+	throw exceptions on error - fixed the filemanager a bit, loading
+	should now work 95%
+
+2003-01-08 03:29  grumbel
+
+	* worldview_collider_tool.cxx, worldview_collider_tool.hxx: added
+	collider to the fileformat and to the toolbox
+
+2003-01-08 03:25  grumbel
+
+	* Makefile.am, configure.ac, graphic_context.hxx, gui_buttons.cxx,
+	gui_directory.cxx, gui_directory.hxx, gui_directory_button.cxx,
+	gui_directory_button.hxx, gui_file_button.cxx, gui_file_button.hxx,
+	gui_file_manager.cxx, gui_file_manager.hxx, gui_manager.hxx,
+	lispreader.c, load_gui_manager.cxx, load_gui_manager.hxx,
+	rect_collider.cxx, rect_collider.hxx, screen_manager.cxx,
+	screen_manager.hxx, string_utils.cxx, world.cxx, world.hxx,
+	world_button.cxx, world_button.hxx, world_gui_manager.cxx,
+	world_gui_manager.hxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_select_tool.cxx,
+	examples/bridgio.construo: added collider to the fileformat and to
+	the toolbox
+
+2003-01-08 00:18  grumbel
+
+	* screen_manager.cxx, screen_manager.hxx, world_gui_manager.cxx,
+	world_gui_manager.hxx: some missing files
+
+2003-01-07 22:34  grumbel
+
+	* gui_child_manager.cxx, gui_directory.cxx, selection.cxx,
+	selection.hxx, world_button.cxx, worldview_select_tool.cxx,
+	x11_display.cxx, zoom_graphic_context.cxx,
+	zoom_graphic_context.hxx: - fixed some more input bugs
+
+2003-01-07 22:01  grumbel
+
+	* events.hxx, gui_buttons.cxx, gui_buttons.hxx,
+	gui_child_manager.cxx, gui_child_manager.hxx, gui_directory.cxx,
+	gui_directory.hxx, gui_file_manager.cxx, gui_manager.cxx,
+	input_context.cxx, load_gui_manager.cxx, load_gui_manager.hxx,
+	x11_display.cxx, x11_display.hxx: - removed a handfull of debug
+	messages
+
+2003-01-07 16:07  grumbel
+
+	* Makefile.am, glut_display.cxx, gui_buttons.cxx,
+	gui_child_manager.cxx, gui_child_manager.hxx, gui_component.hxx,
+	gui_directory.cxx, gui_directory.hxx, gui_file_button.cxx,
+	gui_file_button.hxx, gui_file_manager.cxx, gui_file_manager.hxx,
+	gui_manager.cxx, gui_manager.hxx, world_button.cxx,
+	worldview_component.cxx, worldview_select_tool.cxx,
+	x11_display.cxx, zoom_graphic_context.cxx: some fixes for the
+	filemanager, already half working now
+
+2003-01-07 04:09  grumbel
+
+	* examples/wheels.construo: another demo construction
+
+2003-01-07 04:08  grumbel
+
+	* gui_directory.cxx, gui_directory.hxx: fixed directory layout a
+	bit
+
+2003-01-07 03:48  grumbel
+
+	* ChangeLog, graphic_context.hxx, gui_directory.cxx,
+	gui_file_button.cxx, gui_file_button.hxx, gui_file_manager.cxx,
+	gui_manager.cxx, gui_manager.hxx, spring.cxx, world_button.cxx,
+	x11_display.cxx, x11_display.hxx, zoom_graphic_context.cxx,
+	zoom_graphic_context.hxx: - added clipping to the x11 target -
+	fixed the filemanager a bit
+
+2003-01-07 01:38  grumbel
+
+	* Makefile.am, controller.cxx, graphic_context.hxx, gui_button.cxx,
+	gui_button.hxx, gui_directory.cxx, gui_directory.hxx,
+	gui_directory_button.cxx, gui_directory_button.hxx,
+	gui_file_button.cxx, gui_file_button.hxx, gui_file_manager.cxx,
+	gui_file_manager.hxx, gui_manager.cxx, gui_manager.hxx,
+	particle.cxx, spring.cxx, string_converter.hxx, string_utils.cxx,
+	string_utils.hxx, system_context.hxx, unix_system.cxx,
+	unix_system.hxx, world.cxx, world.hxx, world_button.cxx,
+	world_button.hxx, zoom_graphic_context.cxx,
+	zoom_graphic_context.hxx: added some framework code for the not-yet
+	working filemanager
+
+2003-01-06 20:23  grumbel
+
+	* NEWS, configure.ac, glut_display.cxx, particle.cxx,
+	particle_factory.cxx, selection.cxx: fixed compiling under gcc\2.95
+
+2003-01-06 01:54  grumbel
+
+	* examples/: borg.construo, bridge.construo, dodge.construo,
+	joe.construo, rocket.construo: - a handfull of new construoctions
+
+2003-01-06 00:59  grumbel
+
+	* buttons.hxx, glut_display.cxx, glut_display.hxx,
+	gui_component.hxx, gui_manager.cxx, particle.cxx,
+	worldview_component.cxx, worldview_component.hxx,
+	worldview_select_tool.cxx, worldview_select_tool.hxx,
+	worldview_tool.hxx, x11_display.cxx: - added damping - added
+	generic button events - added object flipping
+
+2003-01-05 21:51  grumbel
+
+	* INSTALL, Makefile.am, autogen.sh, config.h.in, configure.ac,
+	glut_display.cxx, glut_display.hxx, gui_manager.cxx, particle.cxx,
+	particle.hxx, particle_factory.cxx, particle_factory.hxx,
+	selection.cxx, selection.hxx, world.cxx, world.hxx,
+	worldview_insert_tool.cxx, worldview_select_tool.cxx,
+	x11_display.cxx, x11_display.hxx: - added a handfull more checks to
+	the configure script - changed mass to be just mass, not 1.0f/mass
+	- added fullscreen support to glut (doesn't work)
+
+2003-01-05 16:29  grumbel
+
+	* color.hxx, colors.cxx, colors.hxx, command_line.cxx,
+	command_line.hxx, construo_main.cxx, glut_display.cxx,
+	graphic_context.hxx, gui_buttons.cxx, gui_manager.cxx,
+	input_context.hxx, particle.cxx, rect_collider.cxx, settings.cxx,
+	settings.hxx, spring.cxx, world.cxx, worldview_component.cxx,
+	worldview_insert_tool.cxx, worldview_select_tool.cxx,
+	worldview_zoom_tool.cxx, zoom_graphic_context.hxx: added
+	alphablending and antialiasing for the glut target
+
 2003-01-04 21:12  grumbel
 
 	* collider.hxx, command_line.cxx, command_line.hxx,
