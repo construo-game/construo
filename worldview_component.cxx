@@ -141,14 +141,24 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
       && Controller::instance()->is_running())
     {
       // Live Action Cam
-      const WorldBoundingBox& box = world.calc_bounding_box();
+      const BoundingBox& box = world.calc_bounding_box();
+      // Zoom to the bounding box
       gc.zoom_to((int) box.x1, (int)box.y1,
                  (int)box.x2, (int)box.y2);
+      // Zoom out two times so that the area isn't covered up by the
+      // GUI
       gc.zoom_out (get_width()/2, get_height()/2);
       gc.zoom_out (get_width()/2, get_height()/2);
     }
 
   current_tool->draw_background (&gc);
+
+  if (0) // draw bounding box
+    {
+      const BoundingBox& box = world.calc_bounding_box();
+      gc.draw_rect(box.x1, box.y1, box.x2, box.y2, 
+                   Color(1.0f, 1.0f, 1.0f));
+    }
 
   world.draw_colliders (&gc);
   world.draw_springs (&gc);

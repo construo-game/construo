@@ -44,7 +44,7 @@ private:
 public:
   static GlutDisplay* instance () { return instance_; }
 
-  GlutDisplay (int w, int h);
+  GlutDisplay (int w, int h, int fullscreen);
   virtual ~GlutDisplay();
 
   void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);

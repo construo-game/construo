@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction gamee
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,39 +17,31 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_COLLIDER_HXX
-#define HEADER_CONSTRUO_COLLIDER_HXX
+#ifndef HEADER_BOUNDING_BOX_HXX
+#define HEADER_BOUNDING_BOX_HXX
 
-#include "vector2d.hxx"
-#include "particle.hxx"
-#include "bounding_box.hxx"
-#include "graphic_context.hxx"
+class Vector2d;
 
-/** */
-class Collider
+class BoundingBox
 {
-private:
-  
 public:
-  virtual Collider* duplicate() const =0;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
 
-  virtual void draw (GraphicContext*) =0;
-  virtual void draw_highlight (GraphicContext*) =0;
+  BoundingBox();
+  BoundingBox(float x1_, float y1_, float x2_, float y2_);
 
-  virtual Vector2d get_pos() =0;
-  virtual void     set_pos(const Vector2d&) =0;
+  /** Join the current bounding box with another bounding box, letting
+   *  the resulting box cover both boxes */
+  void join(const BoundingBox& box);
 
-  /** @return true if the collider is at the given world coordinates,
-      used for drag&drop */
-  virtual bool is_at (const Vector2d& pos) =0;
-
-  /** act on a particle */
-  virtual void bounce () =0;
-
-  virtual BoundingBox get_bounding_box() const =0;
-
-  virtual lisp_object_t* serialize() =0;
+  /** Let the bounding box be enlarge so that it also coveres pos */
+  void join(const Vector2d& pos);
 };
+
+std::ostream& operator << (std::ostream& os, const BoundingBox& box);
 
 #endif
 

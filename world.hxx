@@ -24,18 +24,11 @@
 #include "spring.hxx"
 #include "particle.hxx"
 #include "collider.hxx"
+#include "bounding_box.hxx"
 
 class Particle;
 class ParticleFactory;
 class Spring;
-
-struct WorldBoundingBox
-{
-  float x1;
-  float y1;
-  float x2;
-  float y2;
-};
 
 /** This class holds all particles and springs */
 class World
@@ -113,12 +106,18 @@ public:
       to fix broken model files */
   void zero_out_velocity ();
 
+  /** Write the current world down to a file */
   void write_lisp (const std::string& filename);
 
+  /** @return the number of particles in the world */
   int get_num_particles();
+
+  /** @return the number of springs in the world */
   int get_num_springs();
 
-  WorldBoundingBox calc_bounding_box();
+  /** Callculate the bounding box of the world from the particle and
+   *  collider it contains. */
+  BoundingBox calc_bounding_box();
 private:
   static World* current_world;
 public:

@@ -266,6 +266,8 @@ World::~World ()
 void
 World::draw (ZoomGraphicContext* gc)
 {
+  // FIXME: This is *not* used in the WorldViewComponent!
+
   current_world = this;
 
   draw_colliders(gc);
@@ -620,10 +622,10 @@ World::write_lisp (const std::string& filename)
     }
 }
 
-WorldBoundingBox
+BoundingBox
 World::calc_bounding_box()
 {
-  WorldBoundingBox bbox;
+  BoundingBox bbox;
 
   if (particle_mgr->size() > 0)
     {
@@ -641,11 +643,12 @@ World::calc_bounding_box()
 
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
-      bbox.x1 = Math::min(bbox.x1, (*i)->pos.x);
-      bbox.y1 = Math::min(bbox.y1, (*i)->pos.y);
+      bbox.join((*i)->pos);
+    }
 
-      bbox.x2 = Math::max(bbox.x2, (*i)->pos.x);
-      bbox.y2 = Math::max(bbox.y2, (*i)->pos.y);
+  for (Colliders::iterator i = colliders.begin(); i != colliders.end(); ++i)
+    {
+      bbox.join((*i)->get_bounding_box());
     }
 
   return bbox;

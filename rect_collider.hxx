@@ -27,10 +27,10 @@ class RectCollider : public Collider
 {
 private:
   // FIXME: Use the Rect class here
-  float x1;
-  float y1;
-  float x2;
-  float y2;
+  float x1;                     /**< left border */
+  float y1;                     /**< top border */
+  float x2;                     /**< right border */
+  float y2;                     /**< bottom border */
 
 public:
   RectCollider (lisp_object_t* cursor);
@@ -45,6 +45,8 @@ public:
   void bounce ();
   void draw (GraphicContext* gc);
   void draw_highlight (GraphicContext* gc);
+
+  BoundingBox get_bounding_box() const;
 
   lisp_object_t* serialize();
 };

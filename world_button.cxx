@@ -73,7 +73,7 @@ WorldButton::draw (GraphicContext* parent_gc)
   if (world)
     {
       // FIXME: bounding box should be calculated in construtor
-      const WorldBoundingBox& box = world->calc_bounding_box();
+      const BoundingBox& box = world->calc_bounding_box();
       gc.zoom_to((int) box.x1, (int)box.y1,
                  (int)box.x2,  (int)box.y2);
       world->draw_colliders (&gc);

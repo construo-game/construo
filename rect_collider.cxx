@@ -48,7 +48,10 @@ RectCollider::RectCollider (lisp_object_t* cursor)
 }
 
 RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_)
-  : x1 (x1_), y1 (y1_), x2 (x2_), y2 (y2_)
+  : x1 (Math::min(x1_, x2_)), 
+    y1 (Math::min(y1_, y2_)), 
+    x2 (Math::max(x1_, x2_)), 
+    y2 (Math::max(y1_, y2_))
 {
 }
 
@@ -140,6 +143,12 @@ RectCollider::draw_highlight (GraphicContext* gc)
 {
   //gc->draw_fill_rect (x1, y1, x2, y2, Colors::rect_collider_bg);
   gc->draw_rect (x1, y1, x2, y2, Colors::selection_rect);
+}
+
+BoundingBox
+RectCollider::get_bounding_box() const
+{
+  return BoundingBox(x1, y1, x2, y2);
 }
 
 lisp_object_t*

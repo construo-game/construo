@@ -67,7 +67,7 @@ void mouse_motion_func (int x, int y)
   GlutDisplay::instance()->mouse_motion_func(x, y);
 }
 
-GlutDisplay::GlutDisplay (int w, int h)
+GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
 {
   instance_ = this;
 
@@ -112,6 +112,7 @@ GlutDisplay::GlutDisplay (int w, int h)
   //glEnable(GL_SCISSOR_TEST);
   //glScissor(0, 0, settings.screen_width, settings.screen_height);
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
+  set_fullscreen(fullscreen);
 }
 
 void
@@ -546,6 +547,7 @@ GlutDisplay::set_fullscreen (bool fullscreen)
       glutEnterGameMode();
       is_fullscreen = true;
 #else
+      std::cout << "Starting fullscreen" << std::endl;
       glutFullScreen();
 #endif
     }

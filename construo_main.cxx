@@ -96,7 +96,7 @@ ConstruoMain::init_system()
   display = new X11Display(settings.screen_width, settings.screen_height, 
                            settings.fullscreen);
 #elif USE_GLUT_DISPLAY
-  display = new GlutDisplay(settings.screen_width, settings.screen_height);
+  display = new GlutDisplay(settings.screen_width, settings.screen_height, settings.fullscreen);
 #else
 #  error "No display type defined"
 #endif
