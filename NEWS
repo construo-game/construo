@@ -15,7 +15,7 @@ Construo 0.2.1
 
  * fixes crash-bug in with user/ directory
 
- * fixed some missing keybindings
+ * fixed some missing keybindings fixed
 
  * fixed missing #ifdef/#endif for XVidMode, caused compile failure if
    Xvidmode is not present
@@ -25,6 +25,8 @@ Construo 0.2.1
  * some small optimizations 
 
  * fixed problems with 16bit XServers
+
+ * more example constrution
  
 
 Construo 0.2.0
