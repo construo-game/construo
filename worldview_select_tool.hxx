@@ -34,6 +34,7 @@ private:
   typedef enum { GETTING_SELECTION_MODE, 
                  MOVING_SELECTION_MODE, 
                  ROTATING_SELECTION_MODE,
+                 SCALING_SELECTION_MODE,
                  IDLE_MODE } Mode;
   Mode mode;
 
@@ -46,6 +47,10 @@ private:
 
   /** The center of a rotation */
   Vector2d rotate_center;
+
+  /** The center of a scalation */
+  Vector2d scale_center;
+  float old_scale_factor;
 public:
   WorldViewSelectTool ();
   ~WorldViewSelectTool ();
@@ -66,6 +71,7 @@ public:
 
   void on_button_press (int button_id, int x, int y);
 
+  void on_scale_press (int x, int y);
   void on_flip_press (int x, int y);
   void on_duplicate_press (int x, int y);
   void on_delete_press (int x, int y);

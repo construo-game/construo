@@ -110,7 +110,7 @@ GUIManager::process_button_events (ButtonEvent& button)
       switch (button.id)
         {
         case BUTTON_FULLSCREEN:
-          
+          // graphic_centext->toggle_fullscreen();
           break;
 
         case BUTTON_START:
@@ -127,6 +127,10 @@ GUIManager::process_button_events (ButtonEvent& button)
 
         case BUTTON_TERTIARY:
           current_component->on_tertiary_button_press(x, y);
+          break;
+
+        case BUTTON_SCALE:
+          current_component->on_scale_press (x, y);
           break;
 
         case BUTTON_FIX:

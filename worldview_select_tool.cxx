@@ -32,6 +32,7 @@
 WorldViewSelectTool::WorldViewSelectTool ()
 {
   mode = IDLE_MODE;
+  old_scale_factor = 1.0f;
 }
 
 WorldViewSelectTool::~WorldViewSelectTool ()
@@ -120,35 +121,55 @@ WorldViewSelectTool::deactivate ()
 void
 WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 {
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
-  
-  World& world = *Controller::instance()->get_world ();
-
-  WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
-
-  mode = GETTING_SELECTION_MODE;
-  
-  click_pos.x = x;
-  click_pos.y = y;
-
-  // If the mouse clicks on a particle from the selection, we move the selection
-  Particle* new_current_particle = world.get_particle (x, y);
-  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+  switch (mode)
     {
-      if (new_current_particle == *i)
-        {
-          Controller::instance()->push_undo();
-          mode = MOVING_SELECTION_MODE;
-          move_diff = Vector2d();
-          break;
-        }
-    }
+    case IDLE_MODE:
+      {
+        float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+        float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  
+        World& world = *Controller::instance()->get_world ();
+
+        WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+
+        mode = GETTING_SELECTION_MODE;
+  
+        click_pos.x = x;
+        click_pos.y = y;
+
+        // If the mouse clicks on a particle from the selection, we move the selection
+        Particle* new_current_particle = world.get_particle (x, y);
+        for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+          {
+            if (new_current_particle == *i)
+              {
+                Controller::instance()->push_undo();
+                mode = MOVING_SELECTION_MODE;
+                move_diff = Vector2d();
+                break;
+              }
+          }
       
-  // If mouse clicks into empty space, we make a new selection 
-  if (mode == GETTING_SELECTION_MODE)
-    {
-      selection.clear ();
+        // If mouse clicks into empty space, we make a new selection 
+        if (mode == GETTING_SELECTION_MODE)
+          {
+            selection.clear ();
+          }
+      }
+      break;
+  
+    case SCALING_SELECTION_MODE:
+      {
+        graphic_context->pop_cursor();
+        WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+        mode = IDLE_MODE;
+        graphic_context->pop_cursor();
+        old_scale_factor = 1.0f;
+      }
+      
+    default:
+      // Do nothing, so that we don't mess up other modes 
+      break;
     }
 }
 
@@ -157,45 +178,75 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
 {
   WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   
-  if (mode == GETTING_SELECTION_MODE)
-    { 
-      selection.select_particles(click_pos,
-                                 WorldViewComponent::instance()->get_gc()->screen_to_world (Vector2d(x,y)));
-      mode = IDLE_MODE;
-    }
-  else if (mode == MOVING_SELECTION_MODE)
+  switch(mode)
     {
-      mode = IDLE_MODE;
+    case GETTING_SELECTION_MODE:
+      { 
+        selection.select_particles(click_pos,
+                                   WorldViewComponent::instance()->get_gc()->screen_to_world (Vector2d(x,y)));
+        mode = IDLE_MODE;
+      }
+      break;
+
+    case MOVING_SELECTION_MODE:
+      {
+        mode = IDLE_MODE;
+      }
+      break;
     }
 }
 
 void
 WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
-  Controller::instance()->push_undo();
-  graphic_context->push_cursor();
-  graphic_context->set_cursor(CURSOR_ROTATE);
-
-  mode = ROTATING_SELECTION_MODE;
-  WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
-
-  click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
-
-  if (!selection.empty())
+  switch (mode)
     {
-      rotate_center = selection.get_center();
-    }
-  else
-    {
+    case IDLE_MODE:
+      if (!selection.empty())
+        {
+          Controller::instance()->push_undo();
+          graphic_context->push_cursor();
+          graphic_context->set_cursor(CURSOR_ROTATE);
+
+          mode = ROTATING_SELECTION_MODE;
+          WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
+
+          click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
+      
+          rotate_center = selection.get_center();
+        }
+      break;
+
+    case SCALING_SELECTION_MODE:
+      {
+        graphic_context->pop_cursor();
+        WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+        mode = IDLE_MODE;
+        graphic_context->pop_cursor();
+        selection.scale(1.0f/old_scale_factor, scale_center);
+        old_scale_factor = 1.0f;
+      }
+      break;
+
+    default:
+      break;
     }
 }
 
 void
 WorldViewSelectTool::on_secondary_button_release (int x, int y)
 {
-  graphic_context->pop_cursor();
-  WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
-  mode = IDLE_MODE;
+  switch (mode)
+    {
+    case ROTATING_SELECTION_MODE:
+      graphic_context->pop_cursor();
+      WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+      mode = IDLE_MODE;
+      break;
+
+    default:
+      break;
+    }
 }
 
 void
@@ -287,6 +338,16 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
           }
       }
       break;
+
+    case SCALING_SELECTION_MODE:
+      {
+        Vector2d new_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
+        float scale_factor = fabsf((scale_center - new_pos).norm()/(scale_center - click_pos).norm());
+        selection.scale(1.0f/old_scale_factor, scale_center);
+        selection.scale(scale_factor, scale_center);
+        old_scale_factor = scale_factor;
+      }
+      break;
     case ROTATING_SELECTION_MODE:
       {
         Vector2d new_pos(WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x),
@@ -305,6 +366,25 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
       break;
     default:
       break;
+    }
+}
+
+void
+WorldViewSelectTool::on_scale_press (int x, int y)
+{
+  if (!selection.empty())
+    {
+      rotate_center = selection.get_center();
+      Controller::instance()->push_undo();
+      graphic_context->push_cursor();
+      graphic_context->set_cursor(CURSOR_SCALE);
+
+      click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y));
+      WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+
+      mode = SCALING_SELECTION_MODE;
+
+      scale_center = selection.get_center();
     }
 }
 

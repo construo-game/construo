@@ -52,7 +52,7 @@ public:
   void select_particles (Vector2d p1, Vector2d p2);
 
   /** scales the selection by the given factor */
-  void scale (float factor);
+  void scale (float factor, Vector2d center);
 
   void flip();
 
@@ -68,7 +68,8 @@ public:
   /** @return true if no particle is in the selection */
   bool empty() const;
 
-  /** Check if the world has changed, if so clear selection */
+  /** Check if the world has changed, if so clear selection FIXME: add
+      a bit more docu here */
   void validate();
 
   void rotate(float rot_angle, Vector2d rotate_center);

@@ -361,6 +361,12 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
 }
 
 void
+WorldViewComponent::on_scale_press(int x, int y)
+{
+  current_tool->on_scale_press(x,y);
+}
+
+void
 WorldViewComponent::on_grid_press(int x, int y)
 {
   use_grid = !use_grid;

@@ -146,11 +146,12 @@ AC_CONFIG_FILES(Makefile examples/Makefile)
 AC_OUTPUT
 
 echo ""
-echo "   CXXFLAGS  = $CXXFLAGS"
-echo "   LIBS      = $LIBS"
-echo "   Targets   =$ConstruoTargets"
-echo "   Debugging = $enable_debug"
-echo "   Profiling = GProf: $enable_gprof FunctionCheck: $enable_fcheck"
+echo "   CXXFLAGS      = $CXXFLAGS"
+echo "   LIBS          = $LIBS"
+echo "   Debugging     = $enable_debug"
+echo "   GProf         = $enable_gprof"
+echo "   FunctionCheck = $enable_fcheck"
+echo "   Targets       =$ConstruoTargets"
 echo ""
 echo "Now type 'make' and everything should work, if not, write a bug reports to:"
 echo ""

@@ -1,6 +1,8 @@
 Construo 0.2.2
 ==============
 
+ * added scaling, press 's' in select-mode
+
  * fixed problem with new particles disappearing in run-mode
 
  * made the ground look a bit nicer

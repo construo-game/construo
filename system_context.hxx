@@ -24,6 +24,9 @@
 #include <string>
 #include <vector>
 
+/** Simple enum for the different file types that Constro supports,
+ *  since it doesn't really support much, it only contains directory,
+ *  construo file and unknown file */
 enum FileType {
   FT_DIRECTORY,
   FT_CONSTRUO_FILE,

@@ -35,6 +35,7 @@ enum ButtonTypes {
   BUTTON_REDO,      // bring the world back to its state before the last undo
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_SETVELOCITY,   // set the velocity of the selection
+  BUTTON_SCALE,     // Scale the currently selected object
   BUTTON_TOGGLESLOWMO, 
   BUTTON_FULLSCREEN,  // Toggle fullscreen mode
   BUTTON_JOIN,  // Join objects that are close together

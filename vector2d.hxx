@@ -81,6 +81,7 @@ public:
     return Vector2d(x * f, y * f);
   }
 
+  /** @return the length of the vector, also known as norm */
   inline 
   float norm() const {
     return sqrt (x*x + y*y);

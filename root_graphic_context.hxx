@@ -41,8 +41,10 @@ public:
   void push_cursor();
   void pop_cursor();
 
+protected:
   virtual void set_cursor_real(CursorType) =0;
 
+public:
   /** Enter fullscreen mode */
   virtual void enter_fullscreen() =0;
   

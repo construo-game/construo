@@ -61,6 +61,9 @@ public:
   virtual void on_tertiary_button_press (int x, int y) {}
   virtual void on_tertiary_button_release (int x, int y) {}
 
+  // FIXME: Join these under some generic event handling, like:
+  // void on_button_press(int button_id, int x, int y);
+  virtual void on_scale_press(int x, int y) {}
   virtual void on_grid_press(int x, int y) {}
   virtual void on_duplicate_press (int x, int y) {}
   virtual void on_delete_press (int x, int y) {}

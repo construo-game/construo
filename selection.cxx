@@ -55,30 +55,26 @@ Selection::get_center ()
 }
 
 void
-Selection::scale (float factor)
+Selection::scale (float factor, Vector2d center)
 {
   validate();
 
   if (!selection.empty())
-    {
-      Particle& p = **selection.begin();
-      Rect<float> selection_box (p.pos.x, p.pos.y, p.pos.x, p.pos.y);
-      
+    {    
       for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
         {
-          selection_box.x1 = Math::min(selection_box.x1, (*i)->pos.x);
-          selection_box.y1 = Math::min(selection_box.y1, (*i)->pos.y);
-
-          selection_box.x2 = Math::max(selection_box.x2, (*i)->pos.x);
-          selection_box.y2 = Math::max(selection_box.y2, (*i)->pos.y);
+          (*i)->pos = center + (((*i)->pos - center) * factor);
+          
+          std::vector<Spring*>& springs = world->get_spring_mgr ();
+          for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
+            {
+              if ((*s)->particles.first == (*i) || ((*s)->particles.second == (*i)))
+                {
+                  (*s)->recalc_length();
+                }
+            }
         }
-      Vector2d midpoint = selection_box.get_center ();
-      
-      for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
-        {
-          (*i)->pos = (midpoint - (*i)->pos) * factor;
-        }
-    }
+    }     
 }
 
 void

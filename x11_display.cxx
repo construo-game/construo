@@ -469,6 +469,10 @@ X11Display::read_event ()
             send_button_press(BUTTON_ACTIONCAM);
             break;
 
+          case XK_s:
+            send_button_press(BUTTON_SCALE);
+            break;
+              
           case XK_j:
             send_button_press(BUTTON_JOIN);
             break;
