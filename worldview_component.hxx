@@ -65,8 +65,7 @@ public:
   WorldViewComponent ();
   ~WorldViewComponent ();
 
-  static WorldViewComponent* instance() { return instance_; }
-
+  static inline WorldViewComponent* instance() { return instance_; }
 
   ZoomGraphicContext* get_gc () { return &gc; }
   void draw (GraphicContext* parent_gc);

@@ -32,12 +32,14 @@ World::World ()
   : particle_mgr (new ParticleFactory())
 {
   has_been_run = false;
-  colliders.push_back (new RectCollider (100, 100, 300, 300));
+  colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
 }
 
 World::World (const std::string& filename)
   : particle_mgr (0)
 {
+  colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
+
   has_been_run = false;
   FILE* in;
   lisp_stream_t stream;
@@ -127,6 +129,8 @@ World::parse_particles (lisp_object_t* cursor)
 // Copy Constructor
 World::World (const World& old_world)
 {
+  colliders = old_world.colliders;
+
   // FIXME: Could need optimizations
   particle_mgr = new ParticleFactory (*old_world.particle_mgr);
   
@@ -156,6 +160,11 @@ World::draw (GraphicContext* gc)
 {
   current_world = this;
 
+  for (Colliders::iterator i = colliders.begin (); i != colliders.end (); ++i)
+    {
+      (*i)->draw(gc);
+    }
+
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     (*i)->draw (gc);
 
@@ -173,36 +182,35 @@ World::update (float delta)
   has_been_run = true;
 
   // Main Movement and Forces
-  for (int k = 0;  k < 20; ++k)
+  // FIXME: Hardcoded Force Emitters
+  for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
-      {
-        // FIXME: Hardcoded Force Emitters
-        for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
-          {
-            // Gravity
-            (*i)->add_force (Vector2d (0.0, 1.0));
+      // Gravity
+      (*i)->add_force (Vector2d (0.0, 1.0));
 		    
-            // Central Gravity force:
-            /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
-              if (direction.norm () != 0.0f)
-              (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
-            */
+      // Central Gravity force:
+      /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
+        if (direction.norm () != 0.0f)
+        (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
+      */
             
-            /*
-              for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
-              {
-              Vector2d diff = (*j)->pos - (*i)->pos;
-              if (diff.norm () != 0.0f)
-              (*i)->add_force (diff * ((10.0f - (*j)->mass)/(diff.norm () * diff.norm ())));
-              }	    */
-          }
-
-        for (SpringIter i = springs.begin (); i != springs.end (); ++i)
-          (*i)->update (delta);
-
-        particle_mgr->update(delta);
-      }
+      /*
+        for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
+        {
+        Vector2d diff = (*j)->pos - (*i)->pos;
+        if (diff.norm () != 0.0f)
+        (*i)->add_force (diff * ((10.0f - (*j)->mass)/(diff.norm () * diff.norm ())));
+        }	    */
     }
+
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
+    (*i)->update (delta);
+  
+  particle_mgr->update(delta);
+  
+  //std::cout << "Colliders: " << colliders.size () << std::endl;
+  for (Colliders::iterator i = colliders.begin (); i != colliders.end (); ++i)
+    (*i)->bounce ();
 
   // Spring splitting
   std::vector<Spring*> new_springs;

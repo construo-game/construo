@@ -54,7 +54,7 @@ public:
   GUIManager ();
   ~GUIManager ();
 
-  static GUIManager* instance () { return instance_; }
+  static inline GUIManager* instance() { return instance_; }
   
   /** Launches the main-loop of the GUIManager, doesn't return until
       quit() is called. */

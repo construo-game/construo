@@ -102,13 +102,13 @@ Controller::update ()
 
       if (slow_down)
         {
-          delta /= 50.0f;
+          delta /= 50.0f/20.0f;
           min_skip = 0.0007f;
         }
       else
         {
-          delta /= 5.0f;
-          min_skip = 0.007f;
+          delta /= 5.0f/20.0f;
+          min_skip = 0.02;//; 0.007f;
         }
       
       float i = 0.0f;

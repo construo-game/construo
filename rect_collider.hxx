@@ -35,7 +35,7 @@ public:
   RectCollider (int x1_, int y1_, int x2_, int y2_);
 
   bool is_at (const Vector2d& pos);
-  void bounce (Particle& particle);
+  void bounce ();
   void draw (GraphicContext* gc);
 };
 

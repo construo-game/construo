@@ -83,7 +83,7 @@ GUIManager::run ()
       //KeepAliveMgr::keep_alive ();
       if (Controller::instance()->is_running())
         {
-          system_context->sleep (10000); // limit CPU usage via brute force
+          system_context->sleep (0); // limit CPU usage via brute force
           input_context->wait_for_events();
         }
       else

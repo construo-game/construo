@@ -37,7 +37,7 @@ public:
   virtual bool is_at (const Vector2d& pos) =0;
 
   /** act on a particle */
-  virtual void bounce (Particle& particle) =0;
+  virtual void bounce () =0;
 };
 
 #endif

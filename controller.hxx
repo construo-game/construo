@@ -46,7 +46,7 @@ public:
   Controller (const std::string& filename);
   ~Controller ();
 
-  static Controller* instance() { return instance_; }
+  static inline Controller* instance() { return instance_; }
 
   bool has_been_run () { return world && world->get_has_been_run (); }
   
