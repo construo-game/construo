@@ -30,7 +30,10 @@ class GUIManager
 {
 private:
   bool do_quit;
-  
+
+  unsigned int frame_count;
+  unsigned int start_time;
+
   /** component where the mouse is currently over */
   GUIComponent* last_component;
   GUIComponent* current_component;

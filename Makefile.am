@@ -19,12 +19,14 @@ SUBDIRS = examples
 
 bindir=$(prefix)/games
 
-bin_PROGRAMS = construo
+bin_PROGRAMS = construo.x11 construo.glut
 
-construo_SOURCES = \
+noinst_LIBRARIES = libconstruo.a
+
+libconstruo_a_SOURCES = \
 buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            \
-color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        \
-config.cxx    construo_main.hxx   input_context.hxx    spring.hxx           world.cxx       \
+color.hxx     input_context.cxx    particle.hxx        \
+config.cxx    input_context.hxx    spring.hxx           world.cxx       \
 config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
 construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     \
 construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     \
@@ -52,12 +54,16 @@ collider.hxx \
 rect_collider.hxx rect_collider.cxx \
 gui_label.hxx gui_label.cxx \
 string_converter.hxx \
-glut_display.hxx glut_display.cxx
+rect.hxx \
+construo_main.hxx
 
-#x11_display.hxx x11_display.cxx
+construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
+construo_x11_LDADD    = libconstruo.a -L/usr/X11R6/lib/ -lXext -lXxf86vm
+construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY
 
-#LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
-LDADD=-L/usr/X11R6/lib/ -lglut 
+construo_glut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
+construo_glut_LDADD   = libconstruo.a -L/usr/X11R6/lib/ -lglut 
+construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

@@ -104,6 +104,8 @@ public:
 
   void wait_for_events ();
 
+  void run();
+
 private:
   bool read_event ();
   void send_button_press (int i);

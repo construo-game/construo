@@ -60,6 +60,7 @@ GlutDisplay::GlutDisplay (int w, int h)
 {
   instance_ = this;
 
+  update_display = 0;
   width  = w;
   height = h;
 
@@ -79,7 +80,7 @@ GlutDisplay::GlutDisplay (int w, int h)
   glutMotionFunc (::mouse_motion_func);
   glutPassiveMotionFunc (::mouse_motion_func);
 
-  //glutIdleFunc (::idle_func);
+  glutIdleFunc (::idle_func);
   glutKeyboardFunc(::keyboard_func);
   
   glClearColor (0.0, 0.0, 0.0, 0.1);
@@ -184,23 +185,6 @@ GlutDisplay::get_mouse_y ()
 }
 
 void
-GlutDisplay::wait_for_events ()
-{
-  block = false;
-  //display_func();
-  //glutIdleFunc (0);
-}
-
-void
-GlutDisplay::wait_for_events_blocking ()
-{
-  block = true;
-  //display_func();
-  
-  glutIdleFunc (::idle_func);
-}
-
-void
 GlutDisplay::clear ()
 {
   glClear(GL_COLOR_BUFFER_BIT);
@@ -223,6 +207,7 @@ void
 GlutDisplay::reshape_func(int w, int h)
 {
   glViewport (0,0, w, h);
+  glLoadIdentity();
   gluOrtho2D (0, w, h, 0);
 }
 
@@ -241,7 +226,7 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
   Event event;
   event.type = BUTTON_EVENT;
   
-  std::cout << "mouse button press: " << button << " " << button_state <<  " " << x << " " << y << std::endl;
+  //std::cout << "mouse button press: " << button << " " << button_state <<  " " << x << " " << y << std::endl;
 
   if (button_state == 0)
     event.button.pressed = true;
@@ -275,14 +260,18 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
 void
 GlutDisplay::idle_func ()
 {
-  display_func();
-  //std::cout << "." <<std::flush;
+  /*  if (Controller::instance()->is_running() || update_display > 0)
+    {
+      //system_context->sleep (0); // limit CPU usage via brute force
+      update_display = 0;
+    }*/
+  GUIManager::instance ()->run_once();
 }
 
 void
 GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 {
-  std::cout << "keypress: " << int(key) << " " << x << " " << y << std::endl;
+  //std::cout << "keypress: " << int(key) << " " << x << " " << y << std::endl;
 
   Event event;
   event.type = BUTTON_EVENT;
@@ -317,7 +306,7 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 void
 GlutDisplay::mouse_motion_func (int x, int y)
 {
-  std::cout << "Motion: " << x << " " << y << std::endl;
+  //std::cout << "Motion: " << x << " " << y << std::endl;
   mouse_x = x;
   mouse_y = y;
 }

@@ -27,6 +27,9 @@
 #include "settings.hxx"
 #include "construo_main.hxx"
 
+#include "controller.hxx"
+#include "gui_manager.hxx"
+
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
@@ -608,6 +611,24 @@ X11Display::set_fullscreen (bool fullscreen)
   else
     {
       std::cout << "X11Display: Couldn't get available video modes" << std::endl;
+    }
+}
+
+void
+X11Display::run()
+{
+  while (true)
+    {
+      if (Controller::instance()->is_running())
+        {
+          system_context->sleep (0); // limit CPU usage via brute force
+          wait_for_events();
+        }
+      else
+        {
+          wait_for_events_blocking();
+        }
+      GUIManager::instance ()->run_once();
     }
 }
 

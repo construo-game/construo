@@ -24,6 +24,7 @@
 #include "worldview_component.hxx"
 #include "particle.hxx"
 #include "gui_manager.hxx"
+#include "rect.hxx"
 #include "worldview_select_tool.hxx"
 
 WorldViewSelectTool::WorldViewSelectTool ()
@@ -40,6 +41,7 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
+
   if (mode == GETTING_SELECTION_MODE)
     {
       gc->draw_rect (Math::min(x, click_pos.x),
@@ -47,6 +49,42 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
                      Math::max(x, click_pos.x),
                      Math::max(y, click_pos.y),
                      Color(0xFFFFFF));
+    }
+
+
+
+  if (!selection.empty())
+    {
+      Particle& p = **selection.begin();
+      Rect<float> selection_box (p.pos.x, p.pos.y, p.pos.x, p.pos.y);
+      
+      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+        {
+          selection_box.x1 = Math::min(selection_box.x1, (*i)->pos.x);
+          selection_box.y1 = Math::min(selection_box.y1, (*i)->pos.y);
+
+          selection_box.x2 = Math::max(selection_box.x2, (*i)->pos.x);
+          selection_box.y2 = Math::max(selection_box.y2, (*i)->pos.y);
+        }
+
+      float border = 20.0f / gc->get_zoom();
+      gc->draw_rect (selection_box.x1 - border, selection_box.y1 - border, 
+                     selection_box.x2 + border, selection_box.y2 + border, 
+                     Color(0xAAAAAA));
+
+      float rsize = 5.0f / gc->get_zoom();
+      gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize, 
+                          selection_box.x1 - border + rsize, selection_box.y1 - border + rsize, 
+                          Color(0xFFFF00));
+      gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize, 
+                          selection_box.x2 + border + rsize, selection_box.y1 - border + rsize, 
+                          Color(0xFFFF00));
+      gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize, 
+                          selection_box.x1 - border + rsize, selection_box.y2 + border + rsize, 
+                          Color(0xFFFF00));
+      gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
+                          selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
+                          Color(0xFFFF00));
     }
 
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
@@ -83,6 +121,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 
   mode = GETTING_SELECTION_MODE;
 
+  // If the mouse clicks on a particle from the selection, we move the selection
   Particle* new_current_particle = world.get_particle (x, y);
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {
@@ -90,6 +129,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
         mode = MOVING_SELECTION_MODE;
     }
       
+  // If mouse clicks into empty space, we make a new selection 
   if (mode == GETTING_SELECTION_MODE)
     {
       selection.clear ();

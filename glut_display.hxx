@@ -37,6 +37,8 @@ private:
   int mouse_y;
 
   bool block;
+
+  int update_display;
 public:
   static GlutDisplay* instance () { return instance_; }
 
@@ -60,8 +62,6 @@ public:
   bool get_key (int key);
   int  get_mouse_x ();
   int  get_mouse_y ();
-  void wait_for_events ();
-  void wait_for_events_blocking ();
 
   void run();
 

@@ -64,6 +64,9 @@ GUIManager::GUIManager ()
   instance_ = this;
   do_quit = false;
 
+  frame_count = 0;
+  start_time  = system_context->get_time ();
+
   last_component     = 0;
   grabbing_component = 0;
   current_component  = 0;
@@ -106,6 +109,18 @@ GUIManager::~GUIManager ()
 void
 GUIManager::run_once ()
 { 
+  frame_count += 1;
+
+  if (start_time + 3000 < system_context->get_time ())
+    {
+      float passed_time = (system_context->get_time () - start_time) / 1000.0f;
+      
+      std::cout << "FPS: " << frame_count / passed_time << std::endl;
+      
+      frame_count = 0;
+      start_time  = system_context->get_time ();
+    }
+
   process_events ();
 
   Controller::instance()->update ();
@@ -119,16 +134,6 @@ GUIManager::run_once ()
     }
           
   graphic_context->flip ();
-
-  if (Controller::instance()->is_running())
-    {
-      system_context->sleep (0); // limit CPU usage via brute force
-      input_context->wait_for_events();
-    }
-  else
-    {
-      input_context->wait_for_events_blocking();
-    }
 }
 
 void

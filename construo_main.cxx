@@ -24,8 +24,6 @@
 #include "world.hxx"
 #include "construo_error.hxx"
 
-#define USE_GLUT_DISPLAY 1
-
 #ifdef USE_X11_DISPLAY
 #  include "x11_display.hxx"
 #  include "unix_system.hxx"
