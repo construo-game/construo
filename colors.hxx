@@ -24,28 +24,33 @@
 
 namespace Colors
 {
-  extern Color button_fg_pressed;
-  extern Color button_fg_hover;
-  extern Color button_fg_passive;
+extern Color button_fg_pressed;
+extern Color button_fg_hover;
+extern Color button_fg_passive;
 
-  extern Color button_bg_pressed;
-  extern Color button_bg_hover;
-  extern Color button_bg_passive;
-  extern Color button_bg_active;
+extern Color button_bg_pressed;
+extern Color button_bg_hover;
+extern Color button_bg_passive;
+extern Color button_bg_active;
 
-  /** Color for new springs and other helper lines */
-  extern Color new_spring;
+/** Color for new springs and other helper lines */
+extern Color new_spring;
 
-  extern Color selection_rect;
-  extern Color selection_resizer;
+extern Color selection_rect;
+extern Color selection_resizer;
 
-  /** Color for collidables */
-  extern Color rect_collider_fg;
-  extern Color rect_collider_bg;
+/** Color for collidables */
+extern Color rect_collider_fg;
+extern Color rect_collider_bg;
+extern Color ground_color;
 
-  /** Color for highlighted particles or springs */
-  extern Color highlight;
-}
+/** Color for highlighted particles or springs */
+extern Color highlight;
+
+/** Color of the background grid */
+extern Color grid_color;
+
+} // namespace
 
 #endif
 

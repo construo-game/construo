@@ -35,7 +35,7 @@ WorldViewComponent::WorldViewComponent ()
   instance_ = this;
 
   scrolling = false;
-  use_grid  = true;
+  use_grid  = false;
 
   select_tool   = new WorldViewSelectTool ();
   insert_tool   = new WorldViewInsertTool ();
@@ -90,23 +90,23 @@ WorldViewComponent::~WorldViewComponent ()
 void
 WorldViewComponent::draw_grid()
 {
-  ZoomGraphicContext& gc = *get_gc();
-
   int start_x = Math::round_to(gc.screen_to_world_x(0), 10) - 10;
   int end_x   = Math::round_to(gc.screen_to_world_x(gc.get_width()), 10) + 10;
 
   int start_y = Math::round_to(gc.screen_to_world_y(0), 10) - 10;
   int end_y   = Math::round_to(gc.screen_to_world_y(gc.get_height()), 10) + 10;
 
+  gc.push_quick_draw();
   for(int y = start_y; y < end_y; y += 10)
     gc.draw_line(start_x, y, 
                  end_x, y,
-                 Color(0.4f, 0.4f, 0.4f), 1);
+                 Colors::grid_color, 1);
 
   for(int x = start_x; x < end_x; x += 10)
     gc.draw_line(x, start_y, 
                  x, end_y,
-                 Color(0.4f, 0.4f, 0.4f), 1);
+                 Colors::grid_color, 1);
+  gc.pop_quick_draw();
 }
 
 void
@@ -120,8 +120,13 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   if (use_grid)
     draw_grid();
 
-  //Draw the buttom border line
-  gc.draw_line (-10000, 599, 10000, 599, Colors::rect_collider_fg);
+  // Draw the buttom border line
+  if (gc.screen_to_world_y(gc.get_height()) >= 599)
+    gc.draw_fill_rect(gc.screen_to_world_x(0), 
+                 599, // FIXME: 599 is a relict from earlier versions, should be 0
+                 gc.screen_to_world_x(gc.get_width()),
+                 gc.screen_to_world_y(gc.get_height()), // FIXME: 599 is a relict from earlier versions, should be 0
+                 Colors::ground_color);
 
   World& world = *Controller::instance()->get_world();
 

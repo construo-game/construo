@@ -66,6 +66,7 @@ private:
 
   static WorldViewComponent* instance_;
 
+  /** Draw the background grid to which new dots align */
   void draw_grid();
 public:
   void set_mode (Mode m); 

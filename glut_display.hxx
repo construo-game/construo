@@ -81,7 +81,9 @@ public:
   void mouse_motion_func (int x, int y);
 
   void set_clip_rect (int x1, int y1, int x2, int y2);
-
+  
+  void push_quick_draw();
+  void pop_quick_draw();
 private:
   GlutDisplay (const GlutDisplay&);
   GlutDisplay& operator= (const GlutDisplay&);

@@ -547,4 +547,22 @@ GlutDisplay::set_clip_rect (int x1, int y1, int x2, int y2)
   //glScissor(x1, y1, x2-x1+1, y2-y1+1);
 }
 
+void
+GlutDisplay::push_quick_draw()
+{
+  if (settings.antialiasing && settings.alphablending)
+    {
+      glDisable(GL_LINE_SMOOTH);
+    }
+}
+
+void
+GlutDisplay::pop_quick_draw()
+{
+  if (settings.antialiasing && settings.alphablending)
+    {
+      glEnable(GL_LINE_SMOOTH);
+    }
+}
+
 /* EOF */

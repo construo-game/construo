@@ -154,6 +154,9 @@ public:
   Vector2d world_to_screen (const Vector2d&);
 
   void flip (int x1, int y1, int x2, int y2);
+
+  void push_quick_draw() { parent_gc->push_quick_draw(); }
+  void pop_quick_draw()  { parent_gc->pop_quick_draw(); }
 };
 
 #endif

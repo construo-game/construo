@@ -58,6 +58,14 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
   World& world = *Controller::instance()->get_world();
 
   Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world (input_context->get_mouse_pos ());
+
+  Vector2d new_particle_pos;
+          
+  if (WorldViewComponent::instance()->uses_grid())
+    new_particle_pos = Vector2d(Math::round_to(click_pos.x, 10),
+                                Math::round_to(click_pos.y, 10));
+  else
+    new_particle_pos = Vector2d(click_pos.x, click_pos.y);
   
   Spring* selected_spring = world.get_spring (click_pos.x, click_pos.y);
 
@@ -68,7 +76,7 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
       
   if (current_particle)
     {
-      gc->GraphicContext::draw_line (current_particle->pos, click_pos,
+      gc->GraphicContext::draw_line (current_particle->pos, new_particle_pos,
                                      Colors::new_spring, 2);
     }
 
@@ -82,14 +90,6 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
     }
   else
     {
-      Vector2d new_particle_pos;
-          
-      if (WorldViewComponent::instance()->uses_grid())
-        new_particle_pos = Vector2d(Math::round_to(click_pos.x, 10),
-                                    Math::round_to(click_pos.y, 10));
-      else
-        new_particle_pos = Vector2d(click_pos.x, click_pos.y);
-
       gc->draw_fill_circle(new_particle_pos.x,
                            new_particle_pos.y,
                            3.0f,
