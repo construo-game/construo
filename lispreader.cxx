@@ -26,7 +26,7 @@
 #include <string.h>
 
 #include "construo_error.hxx"
-#include <lispreader.h>
+#include <lispreader.hxx>
 
 #define TOKEN_ERROR                   -1
 #define TOKEN_EOF                     0

@@ -140,7 +140,9 @@ UnixSystem::get_file_type(const std::string& filename)
   if (is_suffix(filename, ".construo"))
     return FT_CONSTRUO_FILE;
   else
-    return FT_UNKNOWN_FILE;
+    {
+      return FT_UNKNOWN_FILE;
+    }
 }
 
 std::string
