@@ -71,21 +71,33 @@ Spring::Spring (World* world, lisp_object_t* cursor)
 void
 Spring::update (float delta)
 {
+  const float stiffness = 50.0f;
+  const float damping = .1f;
+  
   Vector2d dist = particles.first->pos - particles.second->pos;
-  float stretch = dist.norm ()/length - 1.0f;
-  stretch *= 2.0f; // Materialkoeffizent
-  //std::cout << "stretch: " << stretch << std::endl;
 
-  if (fabs(stretch) > max_stretch && 
+  // Calculate the stretchness of the spring, 0.0 if unstretch, else
+  // <> 0
+  float stretch = (dist.norm () - length);
+  
+  //std::cout << "Stretch: " << stretch << std::endl;
+  if (fabs(stretch/length) > max_stretch && 
       length > 10.0f) // atomar spring
-    {
+    { // If the spring is streched above limits, let it get destroyed
       destroyed = true;
     }
   else
     {
+      stretch *= stiffness;
+      float dterm = (dist.dot(particles.first->velocity - particles.second->velocity) * damping)/dist.norm ();
+
       dist.normalize ();
-      Vector2d force = dist * stretch * back_force;
-      //std::cout << "Force: " << force << std::endl;
+      Vector2d force = dist * (stretch + dterm);
+      
+      /*std::cout << "DTerm: " << dterm << " HTerm: " << stretch 
+                << " Force: " << force
+                << std::endl;*/
+
       particles.first->add_force (-force);
       particles.second->add_force (force);
     }

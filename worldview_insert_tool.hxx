@@ -30,7 +30,9 @@ class WorldViewInsertTool : public WorldViewTool
 private:
   /** The currently selected particle or NULL in case none is selected */
   Particle* current_particle;
-
+  
+  /** mass of the particles that are inserted on a primary press */
+  float particle_mass;
 public:
   WorldViewInsertTool ();
   ~WorldViewInsertTool ();
@@ -46,6 +48,9 @@ public:
 
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
+
+  void  set_particle_mass (float p) { particle_mass = p; }
+  float get_particle_mass () { return particle_mass; }
 };
 
 #endif

@@ -191,7 +191,7 @@ World::update (float delta)
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
       // Gravity
-      (*i)->add_force (Vector2d (0.0, 1.0));
+      (*i)->add_force (Vector2d (0.0, 10.0f) * (1/(*i)->mass));
 		    
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
@@ -229,8 +229,9 @@ World::update (float delta)
               Vector2d pos = ((*i)->particles.first->pos
                                + (*i)->particles.second->pos) * 0.5f;
 
-              Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f);
-              Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f);
+              // FIXME: particle mass needs to be recalculated
+              Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f, 10.0f);
+              Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f, 10.0f);
 
               // FIXME: Insert a more sofistikated string splitter here
               new_springs.push_back (new Spring ((*i)->particles.first, p1, (*i)->length/2));

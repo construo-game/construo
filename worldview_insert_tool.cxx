@@ -28,6 +28,7 @@
 WorldViewInsertTool::WorldViewInsertTool ()
 {
   current_particle = 0;
+  particle_mass = 10.0f;
 }
 
 WorldViewInsertTool::~WorldViewInsertTool () 
@@ -89,7 +90,7 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
             }
           else // add a new particle and connect it with the current one
             {
-              new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
+              new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d(), particle_mass);
               world.add_spring (current_particle, new_current_particle);
             }
           current_particle = 0;
@@ -100,7 +101,8 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
       current_particle = world.get_particle (x, y);
       if (!current_particle)
         {
-          Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
+          Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d(), 
+                                                                particle_mass);
           current_particle = p;
         }
     }

@@ -38,8 +38,8 @@ WorldViewComponent::WorldViewComponent ()
   insert_tool  = new WorldViewInsertTool ();
   zoom_tool    = new WorldViewZoomTool ();
 
-  current_tool = zoom_tool;
-  mode = ZOOM_MODE;
+  current_tool = insert_tool;
+  mode = INSERT_MODE;
 }
 
 void

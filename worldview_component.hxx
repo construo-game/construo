@@ -67,6 +67,8 @@ public:
 
   static inline WorldViewComponent* instance() { return instance_; }
 
+  WorldViewInsertTool* get_insert_tool() { return insert_tool; }
+
   ZoomGraphicContext* get_gc () { return &gc; }
   void draw (GraphicContext* parent_gc);
 

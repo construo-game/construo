@@ -60,6 +60,11 @@ public:
     return Vector2d(x + vec.x, y + vec.y);
   }
 
+  inline
+  float dot(const Vector2d& vec) const {
+    return (x * vec.x) + (y * vec.y);
+  }
+
   inline 
   Vector2d operator- () const  {
     return Vector2d(-x, -y);

@@ -36,7 +36,7 @@ ParticleFactory::ParticleFactory (lisp_object_t* cursor)
       lisp_object_t* obj = lisp_car(cursor);
       Vector2d pos;
       Vector2d velocity;
-      float mass = 10.0;
+      float mass = 15.0f;
       bool fixed = false;
       int id = -1;
             

@@ -81,7 +81,7 @@ Particle::draw (GraphicContext* gc)
         }
     }
 
-  if (0) // draw normals
+  if (0)
     gc->draw_line (int (pos.x), int (pos.y),
                    int (pos.x + velocity.x), int (pos.y + velocity.y),
                    Color (0.0f, 0.0f, 1.0f));
@@ -95,7 +95,7 @@ Particle::update (float delta)
 
   if (fixed) return;
 
-  velocity += totale_force * mass * delta;
+  velocity += totale_force * delta * mass;
 
   //velocity *= .999999f ;
 

@@ -30,9 +30,20 @@
 #include "gui_manager.hxx"
 #include "gui_window.hxx"
 #include "worldview_component.hxx"
+#include "worldview_insert_tool.hxx"
 #include "gui_buttons.hxx"
 
 GUIManager* GUIManager::instance_;
+
+void increase_particle_mass() {
+  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
+  wc.set_particle_mass(wc.get_particle_mass() / 5.0f);
+}
+
+void decrease_particle_mass() {
+  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
+  wc.set_particle_mass(wc.get_particle_mass() * 5.0f);
+}
 
 void switch_to_insert_mode() {
   WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE);
@@ -67,6 +78,9 @@ GUIManager::GUIManager ()
   components.push_back (new GUIGenericButton ("InsertMode", 700, 130, 90, 25, switch_to_insert_mode));
   components.push_back (new GUIGenericButton ("SelectMode", 700, 160, 90, 25, switch_to_select_mode));
   components.push_back (new GUIGenericButton ("ZoomMode",   700, 190, 90, 25, switch_to_zoom_mode));
+
+  components.push_back (new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
+  components.push_back (new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
   
   /*
     GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
@@ -135,6 +149,10 @@ GUIManager::draw_status ()
   graphic_context->draw_string (600,  92, "     [r] - redo (undo an undo)");
 
   World& world = *Controller::instance()->get_world ();
+
+  graphic_context->draw_string (600,  430, "Particles Mass: ");
+  graphic_context->draw_string (700,  430, 
+                                to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
 
   graphic_context->draw_string (700,  530, "Particles: ");
   graphic_context->draw_string (770,  530, to_string(world.get_num_particles()));

@@ -50,8 +50,8 @@ public:
   /** Copy a particle manager, the id's will be keep */
   ParticleFactory (const ParticleFactory&);
 
-  Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity = Vector2d(),
-                          float m = 10.0f, bool f = false);
+  Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity,
+                          float m, bool f = false);
 
   /** Remove a particle by pointer */
   void remove_particle (Particle*);

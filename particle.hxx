@@ -84,8 +84,8 @@ public:
   friend class ParticleFactory;
 
 private:
-  Particle (lisp_object_t*);
-  Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f);
+  // Nobody beside the ParticleFactory can create particles
+  Particle (int id_, const Vector2d& arg_pos, const Vector2d& arg_velocity, float mass_, bool fixed_);
   Particle (const Particle&);
 };
 
