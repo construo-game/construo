@@ -26,6 +26,8 @@
 #include "x11_display.hxx"
 #include "unix_system.hxx"
 #include "controller.hxx"
+#include "command_line.hxx"
+#include "settings.hxx"
 #include "gui_manager.hxx"
 
 #include "construo_main.hxx"
@@ -94,6 +96,8 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 ////////////////////////
 int main (int argc, char** argv)
 {
+  CommandLine::parse(argc, argv);
+
   if (argc == 2 && argv[1][0] == '-')
     {
       std::cout << "Usage: " << argv[0] << " [FILENAME]" << std::endl;
@@ -101,10 +105,10 @@ int main (int argc, char** argv)
     }
 
   try {
-    X11Display display (800, 600);
+    X11Display display (settings.screen_width, settings.screen_height, 
+                        settings.fullscreen);
     UnixSystem system;
-    display.set_fullscreen (true);
-  
+
     // Init the display, input systems
     graphic_context = &display;
     input_context   = &display;
@@ -118,8 +122,6 @@ int main (int argc, char** argv)
     construo_main = &app;
     
     int ret_val = app.main (argc, argv);
-
-    display.restore_mode ();
 
     return ret_val;
   } catch (ConstruoError& err) {

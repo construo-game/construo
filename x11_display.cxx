@@ -29,8 +29,8 @@
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
-X11Display::X11Display(int w, int h)
-  : width(w), height(h), shift_pressed (false)
+X11Display::X11Display(int w, int h, bool fullscreen_)
+  : width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
 {
   std::cout << "Opening X11 display" << std::endl;
   display = XOpenDisplay(NULL);
@@ -43,7 +43,10 @@ X11Display::X11Display(int w, int h)
 
   attributes.background_pixel  = BlackPixel(display, screen);
   attributes.border_pixel      = WhitePixel(display, screen);
-  attributes.override_redirect = True;
+  if (fullscreen)
+    attributes.override_redirect = True;
+  else
+    attributes.override_redirect = False;
 
   attributes.event_mask = 
     KeyPressMask         |
@@ -104,18 +107,24 @@ X11Display::X11Display(int w, int h)
   XGCValues gcv;
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
-  gcv.line_width = 2;
+  gcv.line_width = 0;
   gc = XCreateGC(display, window, 
                  GCLineWidth | GCForeground | GCBackground,
                  &gcv);
+
+  if (fullscreen)
+    set_fullscreen (true);
 }
 
 X11Display::~X11Display ()
 {
   std::cout << "Closing X11 display" << std::endl;
+  if (fullscreen)
+    restore_mode ();
+  
   XFreePixmap (display, drawable);
   XDestroyWindow (display, window);
-  XCloseDisplay(display);
+  XCloseDisplay(display); 
 }
 
 void
@@ -494,7 +503,6 @@ X11Display::set_fullscreen (bool fullscreen)
               XSetWindowAttributes attributes;
               attributes.override_redirect = True;
               XChangeWindowAttributes(display, window, CWOverrideRedirect, &attributes);
-              XSync(display, False);
             }
 
           std::cout << "Switching to: "
@@ -516,6 +524,18 @@ X11Display::set_fullscreen (bool fullscreen)
                   std::cout << "X11Display: Couldn't grab the pointer" << std::endl;
                 }
             }
+        }
+      else // No mode found
+        {
+          std::cout << "Disabling override redirect" << std::endl;
+          // Fullscreen not possible, switch Window attributes back to windowed mode
+          XSetWindowAttributes attributes;
+          attributes.override_redirect = False;
+          XChangeWindowAttributes(display, window, CWOverrideRedirect, &attributes);
+
+          // Remap the Window to let the allow override to take effect
+          XUnmapWindow (display, window);
+          XMapRaised(display, window);
         }
     }
   else
@@ -549,6 +569,8 @@ X11Display::restore_mode ()
                           &modeinfo);
   XF86VidModeSetViewPort(display, DefaultScreen(display),
                          orig_viewport_x, orig_viewport_y);
+
+  fullscreen = false;
 }
 
 /* EOF */

@@ -27,6 +27,9 @@
 #include "input_context.hxx"
 #include "keep_alive.hxx"
 
+#define X11_FULLSCREEN_MODE true
+#define X11_WINDOW_MODE     false
+
 /** X11Display driver */
 class X11Display : public GraphicContext,
                    public InputContext,
@@ -48,8 +51,11 @@ private:
   bool shift_pressed;
   int  mouse_x;
   int  mouse_y;
+
+  /** true if display is in fullscreen mode, false for window mode */
+  bool fullscreen;
 public:
-  X11Display (int w, int h);
+  X11Display (int w, int h, bool fullscreen_);
   virtual ~X11Display ();
 
   // Graphic Context stuff
