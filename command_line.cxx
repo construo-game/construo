@@ -62,12 +62,17 @@ CommandLine::parse (int argc, char** argv)
             {
               settings.alphablending = false;
             }
-          else if (strcmp(argv[i], "--disable-antialiasing") == 0)
+          else if (strcmp(argv[i], "--disable-antialiasing") == 0
+                   || strcmp(argv[i], "-d") == 0)
             {
               settings.antialiasing = false;
             }
-          else if (strcmp(argv[i], "--disable-doublebuffer") == 0
-              || strcmp(argv[i], "-d") == 0)
+          else if (strcmp(argv[i], "--disable-thicklines") == 0
+                   || strcmp(argv[i], "-l") == 0)
+            {
+              settings.thick_lines = false;
+            }
+          else if (strcmp(argv[i], "--disable-doublebuffer") == 0)
             {
               settings.doublebuffer = false;
             }
@@ -119,9 +124,10 @@ CommandLine::print_help ()
             << "  -h, --help                  display this help text\n"
             << "  -v,--version                Print version number of the programm\n"
             << "  -f, --fullscreen            switch to fullscreen mode if available\n"
-            << "  -d, --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
             << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
-            << "  --disable-antialiasing      Switch into non antialiased mode\n"
+            << "  -d, --disable-antialiasing  Switch into non antialiased mode\n"
+            << "  -l, --disable-thicklines    Disable thick (slow) line drawing\n"
+            << "  --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
             << "  --disable-alphablending     Switch into non alphablended mode\n"
             << "  --datadir DIR               Set the datadir of Construo to DIR\n"
             << std::endl;

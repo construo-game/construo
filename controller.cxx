@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "worldview_component.hxx"
 #include "construo_error.hxx"
 #include "controller.hxx"
 
@@ -55,6 +56,9 @@ Controller::load_world (const std::string& filename)
 
   std::cout << "Loading World..." << std::endl;
   world = new World (filename);
+
+  WorldViewComponent::instance()->on_world_change();
+
   running = false;
   std::cout << "Loading World... DONE" << std::endl; 
 }

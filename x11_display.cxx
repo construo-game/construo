@@ -153,7 +153,12 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   XGCValues gcv;
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
-  gcv.line_width = 2;
+
+  if (settings.thick_lines)
+    gcv.line_width = 2;
+  else
+    gcv.line_width = 0;
+
   gc = XCreateGC(display, window, 
                  GCLineWidth | GCForeground | GCBackground,
                  &gcv);

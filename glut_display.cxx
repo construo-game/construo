@@ -607,6 +607,7 @@ GlutDisplay::set_clip_rect (int x1, int y1, int x2, int y2)
 {
   //std::cout << "Setting cliprect: " << x1<< " " <<y1<< " " <<x2-x1+1<< " " <<y2-y1+1<<std::endl;
   // FIXME: doesn't really work for some reason
+  //std::cout << "Clip: " <<  x1 << ", " << y1 << " - " <<  x2-x1+1 << "x" << y2-y1+1 << std::endl;
   //glScissor(x1, y1, x2-x1+1, y2-y1+1);
 }
 

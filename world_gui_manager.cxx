@@ -206,16 +206,17 @@ WorldGUIManager::update()
 void
 WorldGUIManager::draw_overlay ()
 {
-  graphic_context->draw_string (10, 20, "      [1-9] - quick save");
-  graphic_context->draw_string (10, 32, "[shift 1-9] - quick load");
-  graphic_context->draw_string (10, 44, "    [space] - run simulation");
-  graphic_context->draw_string (10, 56, "      [tab] - toggle slow motion");
+  graphic_context->draw_string (10,  20, "      [1-9] - quick save");
+  graphic_context->draw_string (10,  32, "[shift 1-9] - quick load");
+  graphic_context->draw_string (10,  44, "    [space] - run simulation");
+  graphic_context->draw_string (10,  56, "      [tab] - toggle slow motion");
+  graphic_context->draw_string (10,  68, "      [F11] - toggle fullscreen");
 
   graphic_context->draw_string (200,  20, "     [c] - clear scene");
   graphic_context->draw_string (200,  32, "     [u] - undo to last state");
   graphic_context->draw_string (200,  44, "     [r] - redo (undo an undo)");
   graphic_context->draw_string (200,  56, "   [+/-] - zoom in/out");
-
+  graphic_context->draw_string (200,  68, "     [g] - toggle grid");
 
   graphic_context->draw_string (600,  32, "[middle] - scroll");
 
@@ -230,10 +231,12 @@ WorldGUIManager::draw_overlay ()
     case WorldViewComponent::SELECT_MODE:
       graphic_context->draw_string (600,  20, "  [left] - create/move selection");
       graphic_context->draw_string (600,  44, " [right] - rotate selection");
+
       graphic_context->draw_string (400,  20, "     [v] - set velocity");
       graphic_context->draw_string (400,  32, "     [d] - duplicate selection");
       graphic_context->draw_string (400,  44, "     [h] - flip selection");
       graphic_context->draw_string (400,  56, "     [f] - fix selection");
+      graphic_context->draw_string (400,  68, "     [j] - join dots");
       break;
       
     case WorldViewComponent::ZOOM_MODE:

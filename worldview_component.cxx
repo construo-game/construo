@@ -45,6 +45,8 @@ WorldViewComponent::WorldViewComponent ()
 
   current_tool = insert_tool;
   mode = INSERT_MODE;
+  
+  on_world_change();
 }
 
 void
@@ -331,6 +333,22 @@ float
 WorldViewComponent::get_zoom ()
 {
   return gc.get_zoom ();
+}
+
+void
+WorldViewComponent::on_world_change()
+{
+  std::cout << "Fitting world into view" << std::endl;
+  World& world = *Controller::instance()->get_world();
+
+  const BoundingBox& box = world.calc_bounding_box();
+  // Zoom to the bounding box
+  gc.zoom_to((int) box.x1, (int)box.y1,
+             (int)box.x2, (int)box.y2);
+  // Zoom out two times so that the area isn't covered up by the
+  // GUI
+  gc.zoom_out (get_width()/2, get_height()/2);
+  gc.zoom_out (get_width()/2, get_height()/2);
 }
 
 /* EOF */

@@ -37,6 +37,9 @@ public:
 
   /** Enable anti aliasing*/
   bool antialiasing;
+
+  /** Enable thick lines (more than 1 pixel width */
+  bool thick_lines;
   
   /** Screen width in pixel */
   int  screen_width;

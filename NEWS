@@ -1,6 +1,10 @@
 Construo 0.2.1
 ==============
 
+ * added switch to disable thick lines in X11
+
+ * added runtime switching to fullscreen, press 'F11'
+
  * different cursors for different tools
 
  * added a blender like 'remove doubles', press 'j'

@@ -29,6 +29,7 @@ Settings::Settings ()
   screen_height = 600;
   alphablending = true;
   antialiasing  = true;
+  thick_lines   = true;
 }
 
 /* EOF */

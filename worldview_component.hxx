@@ -113,6 +113,9 @@ public:
 
   float get_zoom (); 
 
+  /** Called once the world has changed, aka a new world got loaded */
+  void on_world_change();
+
   /** */
   bool is_at (int x, int y) { return true; }
 };
