@@ -1,6 +1,8 @@
 Construo 0.2.1
 ==============
 
+ * added grid support (press 'g')
+
  * fixes crash-bug in with user/ directory
 
  * added missing set-velocity and clear key event for glut
