@@ -46,10 +46,10 @@ WorldViewSelectTool::draw_background (GraphicContext* gc)
 
   if (mode == GETTING_SELECTION_MODE)
     {
-      gc->draw_rect (Math::min(x, int(selection_start.x)),
-                     Math::min(y, int(selection_start.y)),
-                     Math::max(x, int(selection_start.x)),
-                     Math::max(y, int(selection_start.y)),
+      gc->draw_rect (Math::min(x, int(click_pos.x)),
+                     Math::min(y, int(click_pos.y)),
+                     Math::max(x, int(click_pos.x)),
+                     Math::max(y, int(click_pos.y)),
                      Color(0xFFFFFF));
     }
 
@@ -97,8 +97,8 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
   if (mode == GETTING_SELECTION_MODE)
     {
       selection.clear ();
-      selection_start.x = x;
-      selection_start.y = y;
+      click_pos.x = x;
+      click_pos.y = y;
     }
 }
 
@@ -111,7 +111,7 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
   
   if (mode == GETTING_SELECTION_MODE)
     { 
-      selection = world.get_particles (int(selection_start.x), int(selection_start.y),
+      selection = world.get_particles (int(click_pos.x), int(click_pos.y),
                                        worldview_component->get_gc()->screen_to_world_x (x),
                                        worldview_component->get_gc()->screen_to_world_y (y));
       mode = IDLE_MODE;
@@ -119,14 +119,29 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_secondary_button_press (int x, int y)
+WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
   mode = ROTATING_SELECTION_MODE;
+  gui_manager->grab_mouse (worldview_component);  
+
+  click_pos.x = worldview_component->get_gc()->screen_to_world_x (screen_x);
+  click_pos.y = worldview_component->get_gc()->screen_to_world_y (screen_y);
+  
+  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+    {
+      rotate_center.x += (*i)->pos.x;
+      rotate_center.y += (*i)->pos.y;
+    }
+
+  rotate_center.x /= selection.size ();
+  rotate_center.y /= selection.size ();
 }
 
 void
 WorldViewSelectTool::on_secondary_button_release (int x, int y)
 {
+  gui_manager->ungrab_mouse (worldview_component);
+  mode = IDLE_MODE;
 }
 
 void
@@ -170,12 +185,13 @@ WorldViewSelectTool::on_fix_press (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_mouse_move (int x, int y, int of_x, int of_y)
+WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of_y)
 {
   World& world = *controller->get_world ();
 
-  if (mode == MOVING_SELECTION_MODE)
+  switch (mode)
     {
+    case MOVING_SELECTION_MODE:
       for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
         {
           // Will lead to round errors 
@@ -193,6 +209,38 @@ WorldViewSelectTool::on_mouse_move (int x, int y, int of_x, int of_y)
                 }
             }
         }
+      break;
+    case ROTATING_SELECTION_MODE:
+      {
+        std::cout << "Roatating" << std::endl;
+        Vector2d new_pos(worldview_component->get_gc()->screen_to_world_x (screen_x),
+                         worldview_component->get_gc()->screen_to_world_y (screen_y));
+
+        float new_angle = atan2(new_pos.y - rotate_center.y,
+                                new_pos.x - rotate_center.x);
+        float old_angle = atan2(click_pos.y - rotate_center.y,
+                                click_pos.x - rotate_center.x);
+        float rot_angle = new_angle - old_angle;
+
+        for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+          {
+            Vector2d& pos = (*i)->pos;
+      
+            pos.x -= rotate_center.x;
+            pos.y -= rotate_center.y;
+      
+            float angle  = atan2(pos.y, pos.x) + rot_angle;
+            float length = pos.norm ();
+
+            pos.x = (cos (angle)*length) + rotate_center.x;
+            pos.y = (sin (angle)*length) + rotate_center.y;
+          }
+
+        click_pos = new_pos;
+      }
+      break;
+    default:
+      break;
     }
 }
 

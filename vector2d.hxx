@@ -44,6 +44,12 @@ public:
   }
 
   inline 
+  void operator-= (const Vector2d& vec) {
+    x -= vec.x;
+    y -= vec.y;
+  }
+
+  inline 
   void operator*= (float f) {
     x *= f;
     y *= f;

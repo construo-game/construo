@@ -40,7 +40,12 @@ private:
                  ROTATING_SELECTION_MODE,
                  IDLE_MODE } Mode;
   Mode mode;
-  Vector2d selection_start;
+
+  /** The start position of a click & drap operation (aka move or rotate) */
+  Vector2d click_pos;
+
+  /** The center of a rotation */
+  Vector2d rotate_center;
 public:
   WorldViewSelectTool (WorldViewComponent*);
   ~WorldViewSelectTool ();
