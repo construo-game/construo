@@ -24,7 +24,13 @@
 #include "rect_collider.hxx"
 #include "construo_error.hxx"
 
-RectCollider::RectCollider (World* world, lisp_object_t* cursor)
+Collider*
+RectCollider::duplicate() const
+{
+  return new RectCollider(x1, y1, x2, y2);
+}
+
+RectCollider::RectCollider (lisp_object_t* cursor)
 {
   Vector2d pos1, pos2;
   

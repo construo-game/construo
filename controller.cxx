@@ -129,6 +129,14 @@ Controller::start_simulation ()
 {
   if (!running)
     undo_world_stack.push_back(world->duplicate());
+
+  if (undo_world_stack.size() > 100)
+    {
+      // FIXME: shrink stack here
+      //delete *undo_world_stack.front();
+      //std::cout << "Stak
+    }
+
   running = !running;
 }
 
@@ -150,7 +158,9 @@ Controller::clear_world ()
 void
 Controller::undo ()
 {
-  std::cout << "Controller::undo ()" << std::endl;
+  std::cout << "Controller::undo (): undostack: " << undo_world_stack.size() 
+            << " redostack: " << redo_world_stack.size() << std::endl;
+
   if (!undo_world_stack.empty())
     {
       //delete world; // fixme: memory hole

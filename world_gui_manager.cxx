@@ -182,6 +182,12 @@ WorldGUIManager::~WorldGUIManager ()
 }
 
 void
+WorldGUIManager::update()
+{
+  Controller::instance()->update ();
+}
+
+void
 WorldGUIManager::draw_overlay ()
 {
   graphic_context->draw_string (10, 20, "      [1-9] - quick save");

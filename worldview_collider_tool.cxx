@@ -84,9 +84,11 @@ WorldViewColliderTool::on_primary_button_press (int x, int y)
       // click_pos Offset, not position
       click_pos = click_pos - move_collider->get_pos();
       creating_rect = false;
+      Controller::instance()->push_undo();
     }
   else
     {
+      Controller::instance()->push_undo();
       creating_rect = true;
     }
 }
@@ -141,6 +143,7 @@ WorldViewColliderTool::on_secondary_button_release (int x, int y)
   if (to_delete_collider
       == get_collider(WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y))))
     {
+      Controller::instance()->push_undo();
       world.remove_collider(to_delete_collider);
     }
   to_delete_collider = 0;

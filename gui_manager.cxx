@@ -67,9 +67,9 @@ GUIManager::run_once ()
 
   process_events ();
 
-  Controller::instance()->update ();
+  update();
+  
   graphic_context->clear ();
-
   draw ();
   draw_overlay ();
   graphic_context->flip ();

@@ -59,6 +59,7 @@ public:
 
   /** Draw all the GUI components */
   void draw ();
+  virtual void update() {}
 
   virtual void draw_overlay () {}
 

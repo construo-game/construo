@@ -157,7 +157,7 @@ World::parse_colliders (lisp_object_t* cursor)
       lisp_object_t* cur = lisp_car(cursor);
       if (strcmp(lisp_symbol(lisp_car(cur)), "rect") == 0)
         {
-          colliders.push_back(new RectCollider(this, lisp_cdr(cur)));
+          colliders.push_back(new RectCollider(lisp_cdr(cur)));
         }
       else
         {
@@ -178,7 +178,13 @@ World::parse_particles (lisp_object_t* cursor)
 World::World (const World& old_world)
 {
   file_version = 0;
-  colliders = old_world.colliders;
+
+  for (Colliders::const_iterator i = old_world.colliders.begin(); 
+       i != old_world.colliders.end();
+       ++i)
+    {
+      colliders.push_back((*i)->duplicate());
+    }
 
   // FIXME: Could need optimizations
   particle_mgr = new ParticleFactory (this, *old_world.particle_mgr);

@@ -33,6 +33,7 @@ public:
   WorldGUIManager ();
   virtual ~WorldGUIManager ();
 
+  void update();
   void draw_overlay (); 
 };
 

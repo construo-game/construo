@@ -30,6 +30,8 @@ class Collider
 private:
   
 public:
+  virtual Collider* duplicate() const =0;
+
   virtual void draw (GraphicContext*) =0;
   virtual void draw_highlight (GraphicContext*) =0;
 

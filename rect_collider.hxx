@@ -33,8 +33,10 @@ private:
   float y2;
 
 public:
-  RectCollider (World* world, lisp_object_t* cursor);
+  RectCollider (lisp_object_t* cursor);
   RectCollider (float x1_, float y1_, float x2_, float y2_);
+
+  Collider* duplicate() const;
 
   Vector2d get_pos();
   void     set_pos(const Vector2d&);

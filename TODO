@@ -1,7 +1,6 @@
 Release 0.1.1:
-* fix speed bug
-* make it non-deterministic again
-* add max particle count
+* fix speed bug (unknown)
+* make it non-deterministic again (
 * fix broken demos (complex*, explode, ...)
 * fix assertion on broken files
 * author field (gcos filtering missing)
