@@ -39,6 +39,18 @@ WorldViewComponent::draw (GraphicContext* gc)
 }
 
 void
+WorldViewComponent::wheel_up ()
+{
+  std::cout << "Wheel UP" << std::endl;
+}
+
+void
+WorldViewComponent::wheel_down ()
+{
+  std::cout << "Wheel down" << std::endl;
+}
+
+void
 WorldViewComponent::on_primary_button_click (int x, int y)
 {
   World& world = *controller->get_world ();

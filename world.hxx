@@ -36,6 +36,7 @@ private:
   ParticleFactory* particle_mgr;
 
   std::list<Spring*> springs;
+  // FIXME: replace this with a good old std::vector
   typedef std::list<Spring*>::iterator SpringIter;
   typedef std::list<Spring*>::const_iterator CSpringIter;
 

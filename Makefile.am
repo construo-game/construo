@@ -34,7 +34,8 @@ lisp_writer.hxx lisp_writer.cxx \
 gui_manager.hxx gui_manager.cxx \
 gui_component.hxx \
 worldview_component.hxx worldview_component.cxx \
-controller.hxx controller.cxx
+controller.hxx controller.cxx \
+gui_buttons.hxx gui_buttons.cxx
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

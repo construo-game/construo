@@ -71,9 +71,11 @@ public:
   void keep_alive ();
 
   /** Waits for events to come in, blocks until new events are available */
-  void wait_for_events ();
+  void wait_for_events_blocking ();
 
+  void wait_for_events ();
 private:
+  bool read_event ();
   void send_button_press (int i);
   void send_load_or_save(int n);
 

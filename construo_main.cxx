@@ -31,7 +31,8 @@
 #include "construo_main.hxx"
 
 ConstruoMain* construo_main;
-Controller* controller;
+Controller*   controller;
+GUIManager*   gui_manager;
 
 ConstruoMain::ConstruoMain ()
 {
@@ -62,7 +63,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
   //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
 
   controller  = new Controller ();
-  GUIManager* gui_manager = new GUIManager ();
+  gui_manager = new GUIManager ();
 
   if (argc == 2)
     {

@@ -48,6 +48,9 @@ public:
 
   // Event handling
 
+  virtual void wait_for_events () =0;
+  virtual void wait_for_events_blocking () =0;
+
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */
   bool get_event(Event* event);

@@ -28,6 +28,7 @@
 #include "gui_component.hxx"
 #include "gui_manager.hxx"
 #include "worldview_component.hxx"
+#include "gui_buttons.hxx"
 
 extern Controller* controller;
 
@@ -35,7 +36,10 @@ GUIManager::GUIManager ()
 {
   do_quit = false;
 
+  last_component = 0;
+
   components.push_back (new WorldViewComponent ());
+  components.push_back (new GUIRunButton ());
 }
   
 void
@@ -59,8 +63,16 @@ GUIManager::run ()
         }
 
       graphic_context->flip ();
-      KeepAliveMgr::keep_alive ();
-      system_context->sleep (1000);
+      //KeepAliveMgr::keep_alive ();
+      if (controller->is_running())
+        {
+          system_context->sleep (100); // limit CPU usage via brute force
+          input_context->wait_for_events();
+        }
+      else
+        {
+          input_context->wait_for_events_blocking();
+        }
     }
 }
 
@@ -126,6 +138,18 @@ GUIManager::process_events ()
 
   GUIComponent* current_component = find_component_at (x, y);
   assert (current_component);
+
+  if (last_component != current_component)
+    {
+      current_component->on_mouse_enter ();
+      if (last_component)
+        last_component->on_mouse_leave ();
+
+      last_component = current_component;
+    }
+ 
+
+  if (current_component )
   
   while (input_context->get_event (&event))
     {
@@ -143,11 +167,20 @@ GUIManager::process_events ()
                 case BUTTON_PRIMARY:
                   current_component->on_primary_button_click(x, y);
                   break;
+
                 case BUTTON_FIX:
                   current_component->on_fix_press (x, y);
                   break;
                 case BUTTON_DELETE:
                   current_component->on_delete_press (x, y);
+                  break;
+
+                case BUTTON_ZOOM_OUT:
+                  current_component->wheel_up ();
+                  break;
+
+                case BUTTON_ZOOM_IN:
+                  current_component->wheel_down ();
                   break;
 
                 case BUTTON_CLEAR:

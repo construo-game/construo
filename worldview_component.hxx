@@ -41,6 +41,9 @@ public:
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 
+  void wheel_up ();
+  void wheel_down ();
+
   /** */
   bool is_at (int x, int y) { return true; }
 };

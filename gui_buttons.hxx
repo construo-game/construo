@@ -17,38 +17,48 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_GUI_MANAGER_HXX
-#define HEADER_CONSTRUO_GUI_MANAGER_HXX
+#ifndef HEADER_CONSTRUO_GUI_BUTTONS_HXX
+#define HEADER_CONSTRUO_GUI_BUTTONS_HXX
 
-#include <vector>
+#include "gui_component.hxx"
 
-class GUIComponent;
-
-/** The GUIManager is basically the place where the main loop runs */
-class GUIManager
+/** */
+class GUIButton : public GUIComponent
 {
-private:
-  bool do_quit;
-  
-  /** component where the mouse is currently over */
-  GUIComponent* last_component;
+protected:
+  int x_pos;
+  int y_pos;
+  int width;
+  int height;
 
-  /** A collection of GUI components aka widgets */
-  typedef std::vector<GUIComponent*> ComponentLst;
-  ComponentLst components;
+  bool mouse_over;
+  bool pressed;
 
-  void process_events ();
-  void draw_status ();
-  GUIComponent* find_component_at (int, int);
 public:
-  GUIManager ();
-  
-  /** Launches the main-loop of the GUIManager, doesn't return until
-      quit() is called. */
-  void run ();
+  GUIButton (int x_pos_, int y_pos_, int width_, int height_);
 
-  /** Stops the GUIManager */
-  void quit();
+  bool is_at (int x, int y);
+
+  virtual void draw_hover(GraphicContext*) =0;
+  virtual void draw_pressed(GraphicContext*) =0;
+  virtual void draw_normal(GraphicContext*) =0;
+  
+  void on_mouse_enter ();
+  void on_mouse_leave ();
+
+  void draw (GraphicContext*);
+};
+
+class GUIRunButton : public GUIButton
+{
+public:
+  GUIRunButton ();
+  
+  void draw_hover(GraphicContext*);
+  void draw_pressed(GraphicContext*);
+  void draw_normal(GraphicContext*);
+
+  void on_primary_button_click (int x, int y);
 };
 
 #endif

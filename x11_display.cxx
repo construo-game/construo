@@ -126,7 +126,10 @@ X11Display::draw_line(int x1, int y1, int x2, int y2, Color color, int wide)
 void
 X11Display::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
 {
-  // not impl
+  XSetForeground(display, gc, color.get_rgb());
+  XFillRectangle (display, drawable, gc, 
+                  x1, y1, 
+                  x2 - x1, y2 - y1);
 }
 
 void
@@ -148,6 +151,10 @@ X11Display::draw_circle(int x, int y, int r, Color color)
 void
 X11Display::draw_rect(int x1, int y1, int x2, int y2, Color color)
 {
+  XSetForeground(display, gc, color.get_rgb());
+  XDrawRectangle (display, drawable, gc, 
+                  x1, y1, 
+                  x2 - x1, y2 - y1);
 }
 
 void
@@ -176,7 +183,24 @@ X11Display::get_key (int key)
 }
 
 void
+X11Display::wait_for_events_blocking ()
+{
+  do {
+    while (read_event () == false); 
+  } while (XPending (display) > 0);
+}
+
+void
 X11Display::wait_for_events ()
+{
+  while (XPending (display) > 0)
+    {
+      read_event ();
+    }
+}
+
+bool
+X11Display::read_event ()
 {
   XEvent event;
 
@@ -195,6 +219,8 @@ X11Display::wait_for_events ()
       break;
 
     case NoExpose:
+      //std::cout << "NoExpose" << std::endl;
+      return false; // FIXME: Hack, no idea how to handle NoExpose
       break;
 
     case ButtonPress:
@@ -203,10 +229,14 @@ X11Display::wait_for_events ()
         ev.button.type = BUTTON_EVENT;
         if (event.xbutton.button == 1)
           ev.button.id = BUTTON_PRIMARY;
+        else if (event.xbutton.button == 2)
+          ev.button.id = BUTTON_START;
         else if (event.xbutton.button == 3)
           ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
-        else
-          ev.button.id = BUTTON_START;
+        else if (event.xbutton.button == 4)
+          ev.button.id = BUTTON_ZOOM_OUT;
+        else if (event.xbutton.button == 5)
+          ev.button.id = BUTTON_ZOOM_IN;
 
         ev.button.pressed = true;
 
@@ -223,6 +253,22 @@ X11Display::wait_for_events ()
             
         switch (sym)
           {
+          case XK_Left:
+            send_button_press(BUTTON_SCROLL_LEFT);
+            break;
+
+          case XK_Right:
+            send_button_press(BUTTON_SCROLL_RIGHT);
+            break;
+
+          case XK_Up:
+            send_button_press(BUTTON_SCROLL_UP);
+            break;
+
+          case XK_Down:
+            send_button_press(BUTTON_SCROLL_DOWN);
+            break;
+
           case XK_Shift_L:
           case XK_Shift_R:
             shift_pressed = true;
@@ -326,6 +372,7 @@ X11Display::wait_for_events ()
       std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
       break;
     }
+  return true;
 }
 
 void
