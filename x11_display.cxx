@@ -50,6 +50,8 @@ X11Display::X11Display(int w, int h)
                          CopyFromParent, InputOutput, CopyFromParent, 
                          CWBackPixel|CWBorderPixel|CWEventMask,
                          &attributes);
+
+  drawable = window;
   
   XMapRaised(display, window);
 
@@ -129,6 +131,19 @@ X11Display::keep_alive ()
           break;
         }
     }
+}
+
+void
+X11Display::clear ()
+{
+  XSetForeground (display, gc, 0x000000);
+  XFillRectangle (display, drawable, gc, 0, 0, width, height);
+}
+
+void
+X11Display::flip ()
+{
+  XFlush(display);
 }
 
 /* EOF */

@@ -15,11 +15,8 @@
 ##  along with this program; if not, write to the Free Software
 ##  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-PACKAGE="construo"
-VERSION="0.1.0"
-
 # init automake/conf
-AC_INIT(PACKAGE, VERSION)
+AC_INIT(construo, 0.1.0)
 AC_CONFIG_SRCDIR(construo.hxx)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)

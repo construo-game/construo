@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,24 +17,30 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
-#define HEADER_CONSTRUO_GRAPHIC_CONTEXT_HXX
+#ifndef HEADER_CONSTRUO_EVENTS_HXX
+#define HEADER_CONSTRUO_EVENTS_HXX
 
-#include <string>
-#include "color.hxx"
-
-/** Graphic abstraction interface */
-class GraphicContext
+struct ButtonEvent
 {
-private:
-public:
-  virtual void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0) =0;
-  virtual void draw_rect(int x1, int y1, int x2, int y2, Color color) =0;
-  virtual void draw_fill_rect(int x1, int y1, int x2, int y2, Color color) =0;
-  virtual void draw_string(int x, int y, const std::string& str) =0;
-  virtual void clear () =0;
-  virtual void flip () =0;
+  int type;
+  int x, y;
+  bool pressed;
 };
+
+struct KeyEvent
+{
+  int type;
+  int key;
+  bool pressed;
+};
+
+/** */
+union Event
+{
+  int type;
+  ButtonEvent button;
+  KeyEvent    key;
+}
 
 #endif
 

@@ -409,30 +409,42 @@ bool stick_destroyed (Stick* stick)
 int 
 ConstruoMain::main (int argc, char* argv[])
 {
-
   DeltaManager delta_manager;
+
+  slow_down = false;
 
   //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
   //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
-  
+
+  // FIXME: testing stuff
+  for (int i = 0; i < 10; ++i)
+    {
+      Particle* particle = new Particle (CL_Vector (rand()%800, rand()%600), 
+                                         CL_Vector ());
+      Particle* last_particle = new Particle (CL_Vector (rand()%800, rand()%600), CL_Vector ());
+    
+      sticks.push_back (new Stick (last_particle, particle));
+
+      particles.push_back (last_particle);
+      particles.push_back (particle);
+    }
+
   while (!input_context->get_keycode (KEY_ESCAPE))
     {
-#if 0
       double delta;
       
       if (slow_down)
 	delta = delta_manager.getset ()/50.0;
       else
 	{
-	  if (CL_Keyboard::get_keycode (CL_KEY_ENTER))
+	  if (input_context->get_keycode (KEY_ENTER))
 	    delta = delta_manager.getset ();
 	  else
 	    delta = delta_manager.getset ()/5.0;
 	}
+      graphic_context->clear ();
 
-      CL_Display::clear_display ();
-
-      if (running)
+      if (1 || running)
 	{
 	  for (int k = 0;  k < 20; ++k)
 	    {
@@ -499,6 +511,7 @@ ConstruoMain::main (int argc, char* argv[])
           sticks.remove_if (stick_destroyed);
         }
 
+#if 0
       {
         Particle* p = current_particle ();
         if (p)
@@ -509,33 +522,16 @@ ConstruoMain::main (int argc, char* argv[])
                                    1.0f, 0.0f, 0.0f);
           }
       }
+#endif
+      for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+        (*i)->draw ();
 
-
-      if (!CL_Keyboard::get_keycode (CL_KEY_ENTER))
+      for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
         {
-          for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-            (*i)->draw ();
-
-          /*
-            if (CL_Vector () != click_pos)
-            {
-            CL_Display::draw_line (click_pos.x, click_pos.y, CL_Mouse::get_x (), CL_Mouse::get_y (),
-            0.0, 0.0, 1.0);
-            }*/
-
-          for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-            {
-              (*i)->draw ();
-            }
-
-          CL_Display::flip_display ();
-          CL_System::sleep (20);
-
-
+          (*i)->draw ();
         }
 
-      CL_System::keep_alive ();
-#endif
+      graphic_context->flip ();
       KeepAliveMgr::keep_alive ();
       system_context->sleep (1000);
     }
@@ -546,7 +542,7 @@ int main (int argc, char** argv)
 {
   std::cout << "Construo " << VERSION << std::endl;
 
-  X11Display display (640, 480);
+  X11Display display (800, 600);
   UnixSystem system;
   
   // Init the display, input systems

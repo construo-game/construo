@@ -20,6 +20,7 @@ bin_PROGRAMS = construo
 construo_SOURCES = \
  construo.hxx \
  construo_main.hxx construo_main.cxx \
+ delta_manager.hxx \
  graphic_context.hxx \
  input_context.hxx \
  system_context.hxx \
@@ -28,6 +29,10 @@ construo_SOURCES = \
  unix_system.hxx unix_system.cxx \
  keep_alive.hxx  \
  keep_alive_mgr.hxx keep_alive_mgr.cxx \
- keys.hxx
+ keys.hxx events.hxx \
+ particle.hxx stick.hxx \
+ color.hxx \
+ config.hxx \
+ construo_error.hxx
 
 # EOF #

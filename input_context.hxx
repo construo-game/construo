@@ -27,9 +27,13 @@ class InputContext
 {
 private:
 public:
+  // Polling functions
   virtual bool get_keycode (int key) =0;
-  virtual int get_mouse_x () =0;
-  virtual int get_mouse_y () =0;
+  virtual int  get_mouse_x () =0;
+  virtual int  get_mouse_y () =0;
+
+  // Event handling
+  //virtual get_event ();
 };
 
 #endif
