@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <float.h>
 #include <algorithm>
 #include "lisp_reader.hxx"
 #include "zoom_graphic_context.hxx"
@@ -128,7 +129,9 @@ struct particle_obsolete
 {
   inline bool operator()(Particle* p)
   {
-    return (p->spring_links == 0 && p->velocity.x == 0);
+    return (p->spring_links == 0
+            && p->velocity.x == 0
+            && fabsf(p->velocity.y) < 0.1f);
   }
 };
 

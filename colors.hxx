@@ -22,8 +22,8 @@
 
 #include "color.hxx"
 
-namespace Colors
-{
+namespace Colors {
+
 extern Color button_fg_pressed;
 extern Color button_fg_hover;
 extern Color button_fg_passive;
@@ -51,7 +51,7 @@ extern Color highlight;
 /** Color of the background grid */
 extern Color grid_color;
 
-} // namespace
+} // namespace Colors
 
 #endif
 

@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <float.h>
 #include "colors.hxx"
 #include "particle_factory.hxx"
 #include "input_context.hxx"
@@ -129,6 +130,11 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
                                                                             particle_mass);
               world.add_spring (current_particle, new_current_particle);
             }
+          // Lower the spring links count, since we have increased it
+          // at insertion and now connected it to a real spring, so
+          // its no longer needed
+          current_particle->spring_links -= 1;
+
           current_particle = 0;
         }
       WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
@@ -153,11 +159,13 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
                                         Math::round_to(y, 10));
           else
             new_particle_pos = Vector2d(x, y);
-          
+
           Particle* p = world.get_particle_mgr()->add_particle(new_particle_pos,
-                                                               Vector2d(), 
+                                                               Vector2d(),
                                                                particle_mass);
           current_particle = p;
+          // Increase the spring count so that the particle isn't cleaned up
+          current_particle->spring_links += 1;
           WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
         }
     }
@@ -189,6 +197,7 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 
   if (current_particle) 
     { // We are currently creating a new spring, abort that
+      current_particle->spring_links -= 1;
       current_particle = 0;
       WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
     }
