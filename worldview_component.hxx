@@ -68,6 +68,9 @@ private:
 
   /** Draw the background grid to which new dots align */
   void draw_grid();
+  
+  /** Draw ground, aka the all overspanning collider at the bottem */
+  void draw_ground();
 public:
   void set_mode (Mode m); 
   Mode get_mode () { return mode; }

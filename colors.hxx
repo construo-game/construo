@@ -43,6 +43,7 @@ extern Color selection_resizer;
 extern Color rect_collider_fg;
 extern Color rect_collider_bg;
 extern Color ground_color;
+extern Color ground_grid_color;
 
 /** Color for highlighted particles or springs */
 extern Color highlight;

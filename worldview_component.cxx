@@ -119,6 +119,49 @@ WorldViewComponent::draw_grid()
 }
 
 void
+WorldViewComponent::draw_ground()
+{
+  GraphicContext* parent_gc = gc.get_parent_gc();
+
+  if (gc.screen_to_world_y(parent_gc->get_height()) >= 599)
+    {
+      gc.draw_fill_rect(gc.screen_to_world_x(0), 
+                        599,
+                        gc.screen_to_world_x(parent_gc->get_width()),
+                        gc.screen_to_world_y(parent_gc->get_height()),
+                        Colors::ground_color);
+
+      Color color = Colors::ground_grid_color;
+
+      int step_size = 100;
+      
+      int start_x = Math::round_to(gc.screen_to_world_x(0), step_size) - step_size;
+      int end_x   = Math::round_to(gc.screen_to_world_x(gc.get_width()), step_size) + step_size;
+
+      int start_y = 599;
+      int end_y   = Math::round_to(gc.screen_to_world_y(gc.get_height()), step_size) + step_size;
+
+      gc.push_quick_draw();
+      for(int y = start_y; y < end_y; y += step_size)
+        gc.draw_line(start_x, y, 
+                     end_x, y,
+                     color, 1);
+
+      for(int x = start_x; x < end_x; x += step_size)
+        gc.draw_line(x, start_y,
+                     x, end_y,
+                     color, 1);
+      gc.pop_quick_draw();
+        
+      gc.draw_rect(gc.screen_to_world_x(0), 
+                   599,
+                   gc.screen_to_world_x(parent_gc->get_width()),
+                   gc.screen_to_world_y(parent_gc->get_height()),
+                   Colors::rect_collider_bg);
+    }
+}
+
+void
 WorldViewComponent::draw (GraphicContext* parent_gc)
 {
   //int x = gc.screen_to_world_x (input_context->get_mouse_x ());
@@ -129,13 +172,7 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   if (use_grid)
     draw_grid();
 
-  // Draw the buttom border line
-  if (gc.screen_to_world_y(parent_gc->get_height()) >= 599)
-    gc.draw_fill_rect(gc.screen_to_world_x(0), 
-                      599,
-                      gc.screen_to_world_x(parent_gc->get_width()),
-                      gc.screen_to_world_y(parent_gc->get_height()),
-                      Colors::ground_color);
+  draw_ground();
 
   World& world = *Controller::instance()->get_world();
 

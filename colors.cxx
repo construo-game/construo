@@ -40,6 +40,7 @@ Color highlight         (0xEEEEEEFF);
 
 Color grid_color        (0x444444FF);
 Color ground_color      (0x000066FF);
+Color ground_grid_color (0x000073FF);
 
 } // namespace
 
