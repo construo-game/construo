@@ -30,7 +30,24 @@ class GlutDisplay : public RootGraphicContext,
 private:
   static GlutDisplay* instance_;
 
+  /** X-Position of the glut window, used in fullscreen to allow a
+      restore */
+  int window_x_pos; 
+
+  /** Y-Position of the glut window, used in fullscreen to allow a
+      restore */
+  int window_y_pos;
+
+  /** Width of the window, used to restore after fullscreen */
+  int window_width;
+
+  /** height of the window, used to restore after fullscreen */
+  int window_height;
+
+  /** The actual size of the current screen/window */
   int width;
+
+  /** The actual size of the current screen/window */
   int height;
 
   int mouse_x;
@@ -78,6 +95,7 @@ public:
   void mouse_func (int button, int button_state, int x, int y);
   void idle_func ();
   void keyboard_func (unsigned char key, int x, int y);
+  void special_func (int key, int x, int y);
   void mouse_motion_func (int x, int y);
 
   void set_clip_rect (int x1, int y1, int x2, int y2);
@@ -85,6 +103,9 @@ public:
   void push_quick_draw();
   void pop_quick_draw();
 private:
+  void enter_fullscreen();
+  void leave_fullscreen();
+
   GlutDisplay (const GlutDisplay&);
   GlutDisplay& operator= (const GlutDisplay&);
 };

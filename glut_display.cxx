@@ -62,6 +62,11 @@ void keyboard_func (unsigned char key, int x, int y)
   GlutDisplay::instance()->keyboard_func(key, x, y);
 }
 
+void special_func (int key, int x, int y)
+{
+  GlutDisplay::instance()->special_func(key, x, y);
+}
+
 void mouse_motion_func (int x, int y)
 {
   GlutDisplay::instance()->mouse_motion_func(x, y);
@@ -93,9 +98,8 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
 
   glutIdleFunc (::idle_func);
   glutKeyboardFunc(::keyboard_func);
+  glutSpecialFunc(::special_func);
 
-  is_fullscreen = false;
-  
   glClearColor (0.0, 0.0, 0.0, 0.1);
   if (settings.alphablending)
     {
@@ -112,7 +116,14 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
   //glEnable(GL_SCISSOR_TEST);
   //glScissor(0, 0, settings.screen_width, settings.screen_height);
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
-  set_fullscreen(fullscreen);
+
+  window_x_pos = 0;
+  window_y_pos = 0;
+  window_width  = w;
+  window_height = h;
+
+  if (fullscreen)
+    enter_fullscreen();
 }
 
 void
@@ -368,6 +379,20 @@ GlutDisplay::idle_func ()
 }
 
 void
+GlutDisplay::special_func (int key, int x, int y)
+{
+  switch (key)
+    {
+    case GLUT_KEY_F11:
+      if (is_fullscreen)
+        leave_fullscreen();
+      else
+        enter_fullscreen();
+      break;
+    }
+}
+
+void
 GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 {
   //std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
@@ -390,6 +415,9 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
     case 27: // Escape
     case 'q':
       event.button.id = BUTTON_ESCAPE;
+      break;
+    case 'h':
+      event.button.id = BUTTON_FLIP;
       break;
     case 'f':
       event.button.id = BUTTON_FIX;
@@ -535,26 +563,43 @@ GlutDisplay::mouse_motion_func (int x, int y)
 }
 
 void
-GlutDisplay::set_fullscreen (bool fullscreen)
+GlutDisplay::leave_fullscreen()
 {
-  if (fullscreen)
-    {        
+  std::cout << "GlutDisplay: leaving fullscreen: restoring to: pos: " 
+            << window_x_pos << ", " << window_y_pos << " - WxH: "
+            << window_width << ", " << window_height << std::endl;
+
+  glutReshapeWindow(window_width, window_height);
+  glutPositionWindow(window_x_pos, window_y_pos);
+
+  is_fullscreen = false;
+}
+
+void
+GlutDisplay::enter_fullscreen()
+{
 #if 0
-      char mode[64];
-      snprintf (mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
-      std::cout << "GlutDisplay: switching to: " << mode << std::endl;
-      glutGameModeString(mode);
-      glutEnterGameMode();
-      is_fullscreen = true;
+  char mode[64];
+  snprintf (mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
+  std::cout << "GlutDisplay: switching to: " << mode << std::endl;
+  glutGameModeString(mode);
+  glutEnterGameMode();
+  is_fullscreen = true;
 #else
-      std::cout << "Starting fullscreen" << std::endl;
-      glutFullScreen();
+  std::cout << "GlutDisplay: Entering fullscreen" << std::endl;
+
+  window_x_pos  = glutGet((GLenum)GLUT_WINDOW_X);
+  window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
+  window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
+  window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
+  
+  std::cout << "Saving window: " << window_x_pos << ", " << window_y_pos << " - WxH: "
+            << window_width << ", " << window_height << std::endl;
+
+  glutFullScreen();
+
+  is_fullscreen = true;
 #endif
-    }
-  else
-    {
-      is_fullscreen = false;
-    }
 }
 
 void

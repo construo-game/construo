@@ -11,7 +11,7 @@ Construo 0.2.1
 
  * fixes crash-bug in with user/ directory
 
- * added missing set-velocity and clear key event for glut
+ * fixed some missing keybindings
 
  * fixed missing #ifdef/#endif for XVidMode, caused compile failure if
    Xvidmode is not present
