@@ -57,15 +57,22 @@ public:
   int get_height () { return height; }
 
   void clear ();
+  
+  /** Flip the double buffered display */
   void flip ();
 
   // Input Context stuff
   int get_mouse_x ();
   int get_mouse_y ();
 
-  bool get_keycode (int key);
+  bool get_key (int key);
 
+  /** Pools for events (FIXME: should be unused) */
   void keep_alive ();
+
+  /** Waits for events to come in, blocks until new events are available */
+  void wait_for_events ();
+
 private:
   void send_button_press (int i);
   void send_load_or_save(int n);

@@ -30,7 +30,11 @@ construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_d
 construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     x11_display.hxx \
 lispreader.c  lispreader.h       lisp_reader.hxx lisp_reader.cxx \
 particle.cxx  spring.cxx  particle_factory.hxx particle_factory.cxx \
-lisp_writer.hxx lisp_writer.cxx
+lisp_writer.hxx lisp_writer.cxx \
+gui_manager.hxx gui_manager.cxx \
+gui_component.hxx \
+worldview_component.hxx worldview_component.cxx \
+controller.hxx controller.cxx
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

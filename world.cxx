@@ -21,6 +21,7 @@
 #include "construo_error.hxx"
 #include "world.hxx"
 #include "particle_factory.hxx"
+#include "system_context.hxx"
 
 bool spring_destroyed (Spring* spring)
 {
@@ -97,10 +98,10 @@ World::parse_scene (lisp_object_t* cursor)
             }
           else
             {
-              throw ConstruoError ("World: Read error in parse_scene" 
-                                   ". Unhandled " + std::string(lisp_symbol(lisp_car(cur))));
+              std::cout << "World: Read error in parse_scene. Unhandled tag '" 
+                        << lisp_symbol(lisp_car(cur)) << "' skipping and continuing" << std::endl;
             }
-        }      
+        }
       cursor = lisp_cdr (cursor);
     }
 }
@@ -237,6 +238,17 @@ World::get_particle (int x, int y)
   return particle;
 }
 
+void 
+World::zero_out_velocity ()
+{
+  std::cout << "Setting velocity to zero" << std::endl;
+  for (ParticleFactory::ParticleIter i = get_particle_mgr()->begin(); 
+       i != get_particle_mgr()->end (); ++i)
+    {
+      (*i)->velocity = CL_Vector ();
+    }
+}
+
 void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
@@ -297,7 +309,12 @@ World::write_lisp (const std::string& filename)
 
   fputs(";; Written by " PACKAGE_STRING "\n", out);
   fputs("(construo-scene\n", out);
-  //fputs("  (version 1)\n", out);
+  fputs("  (version 2)\n", out);
+  // FIXME: insert creation date here
+  // FIXME: Filter '()"' here
+  fprintf(out, "  (author \"%s\" \"%s\")\n", 
+          system_context->get_user_realname().c_str(),
+          system_context->get_user_email().c_str());
   particle_mgr->write_lisp(out);
   fputs("  (springs\n", out);
   for (CSpringIter i = springs.begin (); i != springs.end (); ++i)

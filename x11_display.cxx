@@ -170,165 +170,170 @@ X11Display::get_mouse_y ()
 }
 
 bool
-X11Display::get_keycode (int key)
+X11Display::get_key (int key)
 {
   return false;
 }
 
 void
-X11Display::keep_alive ()
+X11Display::wait_for_events ()
 {
-  //std::cout << "Keep alive" << std::endl;
   XEvent event;
 
+  XNextEvent (display, &event);
+     
+  switch (event.type)
+    {
+    case MotionNotify:
+      mouse_x = event.xmotion.x;
+      mouse_y = event.xmotion.y;
+      break;
+
+    case Expose:
+      if (event.xexpose.count == 0)
+        flip ();
+      break;
+
+    case NoExpose:
+      break;
+
+    case ButtonPress:
+      {
+        Event ev;
+        ev.button.type = BUTTON_EVENT;
+        if (event.xbutton.button == 1)
+          ev.button.id = BUTTON_PRIMARY;
+        else if (event.xbutton.button == 3)
+          ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
+        else
+          ev.button.id = BUTTON_START;
+
+        ev.button.pressed = true;
+
+        events.push(Event(ev));
+      }
+      break;
+
+    case ButtonRelease:
+      break;
+
+    case KeyPress:
+      {
+        KeySym sym = XLookupKeysym(&event.xkey,0);
+            
+        switch (sym)
+          {
+          case XK_Shift_L:
+          case XK_Shift_R:
+            shift_pressed = true;
+            break;
+          case XK_f:
+            send_button_press(BUTTON_FIX);
+            break;
+          case XK_c:
+            send_button_press(BUTTON_CLEAR);
+            break;
+          case XK_Delete:
+            send_button_press(BUTTON_DELETE);
+            break;
+          case XK_Escape:
+            send_button_press(BUTTON_ESCAPE);
+            break;
+          case XK_u:
+            send_button_press(BUTTON_UNDO);
+            break;
+          case XK_r:
+            send_button_press(BUTTON_REDO);
+            break;
+          case XK_space:
+            send_button_press(BUTTON_TOGGLESLOWMO);
+            break;
+
+          case XK_0:
+            send_load_or_save(0);
+            break;
+          case XK_1:
+            send_load_or_save(1);
+            break;
+          case XK_2:
+            send_load_or_save(2);
+            break;
+          case XK_3:
+            send_load_or_save(3);
+            break;
+          case XK_4:
+            send_load_or_save(4);
+            break;
+          case XK_5:
+            send_load_or_save(5);
+            break;
+          case XK_6:
+            send_load_or_save(6);
+            break;
+          case XK_7:
+            send_load_or_save(7);
+            break;
+          case XK_8:
+            send_load_or_save(8);
+            break;
+          case XK_9:
+            send_load_or_save(9);
+            break;
+              
+          default:
+            std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_f << std::endl;
+            break;
+          }
+      }
+      break;
+
+    case KeyRelease:
+      {
+        KeySym sym = XLookupKeysym(&event.xkey,0);
+            
+        switch (sym)
+          {
+          case XK_Shift_L:
+          case XK_Shift_R:
+            shift_pressed = false;
+            break;
+          default:
+            //std::cout << "X11Display: unhandled keyrelease: " << sym << " " << XK_f << std::endl;
+            break;
+          }
+      }
+      break;
+
+    case ConfigureNotify:
+      //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height 
+      //<< "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+      break;
+
+    case DestroyNotify:
+      std::cout << "Window got destroyed" << std::endl;
+      break;
+
+    case ClientMessage:
+      std::cout << "X11Display: got client message" << std::endl;
+      // Window close request
+      if ((int) event.xclient.data.l[0] == (int) wm_delete_window) {
+        std::cout << "Window is destroyed" << std::endl;
+        //construo_main->quit();
+      }
+      break;
+
+    default: 
+      std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+      break;
+    }
+}
+
+void
+X11Display::keep_alive ()
+{
   while (XPending (display) > 0)
     {
-      XNextEvent (display, &event);
-     
-      switch (event.type)
-        {
-        case MotionNotify:
-          mouse_x = event.xmotion.x;
-          mouse_y = event.xmotion.y;
-          break;
-
-        case Expose:
-          if (event.xexpose.count == 0)
-            flip ();
-          break;
-
-        case NoExpose:
-          break;
-
-        case ButtonPress:
-          {
-            Event ev;
-            ev.button.type = BUTTON_EVENT;
-            if (event.xbutton.button == 1)
-              ev.button.id = BUTTON_PRIMARY;
-            else if (event.xbutton.button == 3)
-              ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
-            else
-              ev.button.id = BUTTON_START;
-
-            ev.button.pressed = true;
-
-            events.push(Event(ev));
-          }
-          break;
-
-        case ButtonRelease:
-          break;
-
-        case KeyPress:
-          {
-            KeySym sym = XLookupKeysym(&event.xkey,0);
-            
-            switch (sym)
-              {
-              case XK_Shift_L:
-              case XK_Shift_R:
-                shift_pressed = true;
-                break;
-              case XK_f:
-                send_button_press(BUTTON_FIX);
-                break;
-              case XK_c:
-                send_button_press(BUTTON_CLEAR);
-                break;
-              case XK_Delete:
-                send_button_press(BUTTON_DELETE);
-                break;
-              case XK_Escape:
-                send_button_press(BUTTON_ESCAPE);
-                break;
-              case XK_u:
-                send_button_press(BUTTON_UNDO);
-                break;
-              case XK_r:
-                send_button_press(BUTTON_REDO);
-                break;
-              case XK_space:
-                send_button_press(BUTTON_TOGGLESLOWMO);
-                break;
-
-              case XK_0:
-                 send_load_or_save(0);
-                 break;
-              case XK_1:
-                 send_load_or_save(1);
-                break;
-              case XK_2:
-                 send_load_or_save(2);
-                 break;
-              case XK_3:
-                 send_load_or_save(3);
-                 break;
-              case XK_4:
-                 send_load_or_save(4);
-                 break;
-              case XK_5:
-                 send_load_or_save(5);
-                 break;
-              case XK_6:
-                 send_load_or_save(6);
-                 break;
-              case XK_7:
-                 send_load_or_save(7);
-                 break;
-              case XK_8:
-                 send_load_or_save(8);
-                 break;
-              case XK_9:
-                 send_load_or_save(9);
-                 break;
-              
-              default:
-                std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_f << std::endl;
-                break;
-              }
-          }
-          break;
-
-        case KeyRelease:
-          {
-            KeySym sym = XLookupKeysym(&event.xkey,0);
-            
-            switch (sym)
-              {
-              case XK_Shift_L:
-              case XK_Shift_R:
-                shift_pressed = false;
-                break;
-              default:
-                //std::cout << "X11Display: unhandled keyrelease: " << sym << " " << XK_f << std::endl;
-                break;
-              }
-          }
-          break;
-
-        case ConfigureNotify:
-          //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height 
-          //<< "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
-          break;
-
-        case DestroyNotify:
-          std::cout << "Window got destroyed" << std::endl;
-          break;
-
-        case ClientMessage:
-          std::cout << "X11Display: got client message" << std::endl;
-          // Window close request
-          if ((int) event.xclient.data.l[0] == (int) wm_delete_window) {
-            std::cout << "Window is destroyed" << std::endl;
-            construo_main->quit();
-          }
-          break;
-
-        default: 
-          std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
-          break;
-        }
+      wait_for_events ();
     }
 }
 

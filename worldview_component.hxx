@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,40 +17,32 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_INPUT_CONTEXT_HXX
-#define HEADER_CONSTRUO_INPUT_CONTEXT_HXX
+#ifndef HEADER_WORLDVIEW_COMPONENT_HXX
+#define HEADER_WORLDVIEW_COMPONENT_HXX
 
-#include <queue>
-#include "keys.hxx"
-#include "buttons.hxx"
-#include "events.hxx"
+#include "gui_component.hxx"
 
-/** */
-class InputContext
+class Particle;
+
+/** GUI Component that manages the view and the editing of the
+    world */
+class WorldViewComponent : public GUIComponent
 {
-protected:
-  std::queue<Event> events;
+private:
+  /** The currently selected particle or NULL in case none is selected */
+  Particle* current_particle;
 public:
-  InputContext () {}
-  virtual ~InputContext () {}
+  WorldViewComponent ();
+  ~WorldViewComponent ();
 
-  // Polling functions
+  void draw (GraphicContext* gc);
 
-  /** @return true if the button with the given keycode is currently
-      pressed, false otherwise */
-  virtual bool get_key (int key) =0;
-  
-  /** @return mouse x coordinate */
-  virtual int  get_mouse_x () =0;
-  
-  /** @return mouse y coordinate */
-  virtual int  get_mouse_y () =0;
+  void on_primary_button_click (int x, int y);
+  void on_delete_press (int x, int y);
+  void on_fix_press (int x, int y);
 
-  // Event handling
-
-  /** If an event is in the queue, copy it to \a event and return
-      true, else return false and leave \a event untouched */
-  bool get_event(Event* event);
+  /** */
+  bool is_at (int x, int y) { return true; }
 };
 
 #endif

@@ -34,11 +34,14 @@ public:
   virtual void draw_fill_circle(int x, int y, int r, Color color) =0;
   virtual void draw_fill_rect(int x1, int y1, int x2, int y2, Color color) =0;
   virtual void draw_string(int x, int y, const std::string& str, Color color = Color (0xFFFFFF)) =0;
-  virtual void clear () =0;
-  virtual void flip () =0;
 
   virtual int get_width ()  =0;
   virtual int get_height () =0;
+
+  virtual void clear () =0;
+
+  /** FIXME: flip should be handled outsite of GraphicContext */
+  virtual void flip () =0;
 };
 
 #endif

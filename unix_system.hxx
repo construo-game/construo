@@ -36,6 +36,9 @@ public:
   unsigned int get_time ();
   void sleep (unsigned long);
   std::string get_construo_rc_path();
+  std::string get_user_realname();
+  std::string get_user_email();
+
 };
 
 #endif

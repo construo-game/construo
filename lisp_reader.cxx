@@ -56,7 +56,7 @@ LispReader::search_for(const char* name)
   return 0;
 }
 
-void
+bool
 LispReader::read_vector (const char* name, CL_Vector* vec)
 {
   lisp_object_t* obj = search_for (name);
@@ -65,37 +65,45 @@ LispReader::read_vector (const char* name, CL_Vector* vec)
       vec->x = lisp_real(lisp_car(obj));
       vec->y = lisp_real(lisp_car(lisp_cdr(obj)));
       vec->z = lisp_real(lisp_car(lisp_cdr(lisp_cdr(obj))));
+      return true;
     }
+  return false;
 }
 
-void
+bool
 LispReader::read_int (const char* name, int* i)
 {
   lisp_object_t* obj = search_for (name);
   if (obj)
     {
       *i = lisp_integer(lisp_car(obj));
+      return true;
     }
+  return false;
 }
 
-void
+bool
 LispReader::read_float (const char* name, float* f)
 {
   lisp_object_t* obj = search_for (name);
   if (obj)
     {
       *f = lisp_real(lisp_car(obj));
+      return true;
     }
+  return false;
 }
 
-void
+bool
 LispReader::read_bool (const char* name, bool* b)
 {
   lisp_object_t* obj = search_for (name);
   if (obj)
     {
       *b = lisp_boolean(lisp_car(obj));
+      return true;
     }
+  return false;
 }
 
 /* EOF */

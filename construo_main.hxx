@@ -23,8 +23,6 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#include "spring.hxx"
-#include "particle.hxx"
 #include "config.hxx"
 
 class World;
@@ -32,19 +30,9 @@ class World;
 class ConstruoMain
 {
 private:
-  std::vector<World*> undo_world_stack;
-  std::vector<World*> redo_world_stack;
-  CL_Vector click_pos;
-
-  Particle* last_particle;
-
-  Particle* c_particle;
-  bool running;
-  bool slow_down;
   bool do_quit;
   Config config;
 
-  World* world;
 public:
   ConstruoMain ();
   virtual ~ConstruoMain ();
@@ -52,22 +40,11 @@ public:
   char* get_title ();
   int main (int argc, char* argv[]);
 
-  void zero_out_velocity ();
-
-  Particle* id_to_particle (unsigned int i);
-  Particle* current_particle ();
-
-  void quit() { do_quit = true; }
+  /** Called once the game is going to end, used to do the lastsave
+      and similar things */
   void on_exit();
 private:
   void process_events ();
-
-  std::string get_slot_filename(int n);
-  void save_to_slot (int n);
-  void load_from_slot (int n);
-
-  void load_world (const std::string& filename);
-  void save_world (const std::string& filename);
 };
 
 #endif

@@ -37,10 +37,10 @@ public:
   /** cur == ((pos 1 2 3) (id 12 3 4)...) */
   LispReader (lisp_object_t* l);
 
-  void read_vector (const char* name, CL_Vector* vec);
-  void read_int (const char* name, int* i);
-  void read_float (const char* name, float* f);
-  void read_bool (const char* name, bool* b);
+  bool read_vector (const char* name, CL_Vector* vec);
+  bool read_int (const char* name, int* i);
+  bool read_float (const char* name, float* f);
+  bool read_bool (const char* name, bool* b);
 };
 
 #endif

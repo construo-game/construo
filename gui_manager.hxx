@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,40 +17,35 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_INPUT_CONTEXT_HXX
-#define HEADER_CONSTRUO_INPUT_CONTEXT_HXX
+#ifndef HEADER_CONSTRUO_GUI_MANAGER_HXX
+#define HEADER_CONSTRUO_GUI_MANAGER_HXX
 
-#include <queue>
-#include "keys.hxx"
-#include "buttons.hxx"
-#include "events.hxx"
+#include <vector>
 
-/** */
-class InputContext
+class GUIComponent;
+
+/** The GUIManager is basically the place where the main loop runs */
+class GUIManager
 {
-protected:
-  std::queue<Event> events;
+private:
+  bool do_quit;
+  
+  /** A collection of GUI components aka widgets */
+  typedef std::vector<GUIComponent*> ComponentLst;
+  ComponentLst components;
+
+  void process_events ();
+  void draw_status ();
+  GUIComponent* find_component_at (int, int);
 public:
-  InputContext () {}
-  virtual ~InputContext () {}
-
-  // Polling functions
-
-  /** @return true if the button with the given keycode is currently
-      pressed, false otherwise */
-  virtual bool get_key (int key) =0;
+  GUIManager ();
   
-  /** @return mouse x coordinate */
-  virtual int  get_mouse_x () =0;
-  
-  /** @return mouse y coordinate */
-  virtual int  get_mouse_y () =0;
+  /** Launches the main-loop of the GUIManager, doesn't return until
+      quit() is called. */
+  void run ();
 
-  // Event handling
-
-  /** If an event is in the queue, copy it to \a event and return
-      true, else return false and leave \a event untouched */
-  bool get_event(Event* event);
+  /** Stops the GUIManager */
+  void quit();
 };
 
 #endif

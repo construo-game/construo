@@ -23,6 +23,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <pwd.h>
 #include <errno.h>
 #include "construo_error.hxx"
 #include "unix_system.hxx"
@@ -93,6 +94,34 @@ std::string
 UnixSystem::get_construo_rc_path()
 {
   return construo_rc_path;
+}
+
+std::string
+UnixSystem::get_user_realname()
+{
+  struct passwd* pw;
+
+  pw = getpwuid(getuid());
+  if (pw)
+    {
+      return pw->pw_gecos;
+    }
+  else
+    {
+      return "";
+    }
+}
+
+std::string 
+UnixSystem::get_user_email()
+{
+  const char* s_email = getenv("EMAIL");
+  if (s_email)
+    {
+      return s_email;
+    }
+  else
+    return "";
 }
 
 /* EOF */

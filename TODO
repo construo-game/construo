@@ -5,10 +5,12 @@ Release 0.1.1:
 * fix broken demos (complex*, explode, ...)
 * fix assertion on broken files
 * limit screen updates
-* author field
+* author field (gcos filtering missing)
 * date field
 * make springs removable
-* remove obsolete xml code
+* update Changelog
+* addd gettext support
+* invisible springs 
 
 probally FIXED:
 * if I load-file, run, stop, connect, run, stop, undo I get a
@@ -17,6 +19,9 @@ probally FIXED:
 
 
 Release 0.2.0:
+* config file support and an option menu to switch off stress-color,
+   change the coloring scheme and things like that
+* update Changelog
 * Create GUI (simple buttons)
 * make every key bound function accessible via the GUI
 * make the window resizable
@@ -29,6 +34,7 @@ Release 0.3.0:
 * port to windows
 
 --- in the future ---
+ - screensaver mode
  - add different types of sticks
  - make stick properties editable
  - add a better load/save interface
@@ -40,5 +46,50 @@ Release 0.3.0:
 
  - add constrained, scenarios with a limited number of
    particles/sticks and things like that, add mission goals
+
+--- User contributed ---
+ - Capability to connect springs into the middle of another spring
+   [grumbel: don't think this is a good idea]
+
+ - Objects that cannot be penetrated with wire.
+   [grumbel: doesn't mix with physic engine, objects that can't be
+   penetrated by particles will come]
+ 
+ - Capability to adjust individual parameters of springs. 
+   [grumbel: might come, but will be limited]
+
+ - A macro language (yes, lisp is fine, there seems to be some code
+   for it). [grumbel: won't come, overkill, use scripting language to
+   create the construo file instead]
+
+ - Concept of object (grouping of lines / other objects). [grumbel:
+   might come with the prefabs, but most likly only 'passive' so that
+   you can mark and move groups, permanent groups are unlikly]
+
+ - Capability to store and load objects. [grumbel: prefabs will come]
+
+ - Colors, texture mapping for new object types. [grumbel: might come,
+   but not very soon]
+
+ - Sounds (I want to hear the constructions crashing..). [grumbel:
+   would require extra library, not good]
+
+ - Backdrop graphics [grumbel: if they come not very soon].
+
+ - Active elements.[grumbel: earthquake particles will come]
+
+
+Modes for Construo - The Game
+-----------------------------
+ * remove a spring and hope that the tower doesn't fall, multiplayer
+   game, played in a round, player that crashes the tower is out,
+   multiple rounds will be played, several stable objects must be
+   provided.
+ * hot-fixing, the player has to stablelize a falling structure in
+   slow-motion mode, if he fixes it he wins, else he loses
+ * task-force, player as to complete some task, like build a bridge or
+   something else with limited resources
+ * demo mode, let a bunch of machines do things automatically, insert
+   some text here and there
 
 # EOF #

@@ -32,6 +32,12 @@ public:
 
   /** @return '$HOME/.construo/' */
   virtual std::string get_construo_rc_path () =0;
+
+  /** @return the realname of the current user */
+  virtual std::string get_user_realname() =0;
+
+  /** @return the email of the current user or an empty string if not available */
+  virtual std::string get_user_email() =0;
 };
 
 #endif

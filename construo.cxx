@@ -19,6 +19,8 @@
 
 #include "construo.hxx"
 
+/* Global variables, mainly the different system components */
+
 SystemContext*  system_context  =0;
 InputContext*   input_context   =0;
 GraphicContext* graphic_context =0;

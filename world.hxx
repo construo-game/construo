@@ -71,6 +71,11 @@ public:
   
   bool get_has_been_run () { return has_been_run; }
 
+  /** Sets the velocity of all particles to zero, usefull if the
+      particles are getting out of order (aka. explode). Also usefull
+      to fix broken model files */
+  void zero_out_velocity ();
+
   void write_lisp (const std::string& filename);
 private:
   World& operator= (const World&);
