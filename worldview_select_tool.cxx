@@ -121,6 +121,7 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
 void
 WorldViewSelectTool::on_secondary_button_press (int x, int y)
 {
+  mode = ROTATING_SELECTION_MODE;
 }
 
 void
@@ -136,6 +137,8 @@ WorldViewSelectTool::on_delete_press (int x, int y)
     {
       world.remove_particle(*i);
     }
+
+  selection.clear ();
 }
 
 void

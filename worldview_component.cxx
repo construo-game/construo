@@ -83,6 +83,19 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   world.draw (&gc);
   current_tool->draw_foreground (&gc);
 
+  switch (mode)
+    {
+    case ZOOM_MODE:
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Zoom Mode ]");
+      break;
+    case INSERT_MODE:
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Insert Mode]");
+      break;
+    case SELECT_MODE:
+      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Select Mode]");
+      break;
+    }
+
   //const WorldBoundingBox& box = world.calc_bounding_box();
   //gc.flip (int(box.x1), int(box.y1), int(box.x2), int(box.y2));
 }

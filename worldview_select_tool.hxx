@@ -37,6 +37,7 @@ private:
 
   typedef enum { GETTING_SELECTION_MODE, 
                  MOVING_SELECTION_MODE, 
+                 ROTATING_SELECTION_MODE,
                  IDLE_MODE } Mode;
   Mode mode;
   Vector2d selection_start;
