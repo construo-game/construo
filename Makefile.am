@@ -77,7 +77,8 @@ gui_new_file_button.hxx gui_new_file_button.cxx \
 cursor_collider.xbm       cursor_scroll.xbm         cursor_zoom.xbm \
 cursor_collider_mask.xbm  cursor_scroll_mask.xbm    cursor_zoom_mask.xbm \
 cursor_insert.xbm         cursor_select.xbm \
-cursor_insert_mask.xbm    cursor_select_mask.xbm
+cursor_insert_mask.xbm    cursor_select_mask.xbm \
+cursors.hxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a

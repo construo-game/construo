@@ -1,6 +1,8 @@
 Construo 0.2.1
 ==============
 
+ * different cursors for different tools
+
  * added a blender like 'remove doubles', press 'j'
 
  * fixed 'make install'
