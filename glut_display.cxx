@@ -111,6 +111,7 @@ GlutDisplay::GlutDisplay (int w, int h)
   
   //glEnable(GL_SCISSOR_TEST);
   //glScissor(0, 0, settings.screen_width, settings.screen_height);
+  glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 }
 
 void
@@ -578,6 +579,36 @@ GlutDisplay::pop_quick_draw()
     {
       glEnable(GL_LINE_SMOOTH);
     }
+}
+
+void
+GlutDisplay::set_cursor_real(CursorType cursor)
+{
+  switch(cursor)
+    {
+    case CURSOR_INSERT:
+      glutSetCursor(GLUT_CURSOR_CROSSHAIR);
+      break;
+    case CURSOR_SCROLL:
+      glutSetCursor(GLUT_CURSOR_INFO);
+      break;
+    case CURSOR_ZOOM:
+      glutSetCursor(GLUT_CURSOR_HELP);
+      break;
+    case CURSOR_COLLIDER:
+      glutSetCursor(GLUT_CURSOR_CROSSHAIR);
+      break;
+    case CURSOR_SELECT:
+      glutSetCursor(GLUT_CURSOR_INHERIT);
+      break;
+    case CURSOR_ROTATE:
+      glutSetCursor(GLUT_CURSOR_CYCLE);
+      break;
+    default:
+      std::cout << "GlutDisplay: Unhandled cursor type: " << cursor << std::endl;
+      break;
+    }
+
 }
 
 /* EOF */

@@ -26,6 +26,7 @@
 #include "particle.hxx"
 #include "world_gui_manager.hxx"
 #include "rect.hxx"
+#include "root_graphic_context.hxx"
 #include "worldview_select_tool.hxx"
 
 WorldViewSelectTool::WorldViewSelectTool ()
@@ -170,6 +171,8 @@ void
 WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
   Controller::instance()->push_undo();
+  graphic_context->push_cursor();
+  graphic_context->set_cursor(CURSOR_ROTATE);
 
   mode = ROTATING_SELECTION_MODE;
   WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
@@ -188,6 +191,7 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_secondary_button_release (int x, int y)
 {
+  graphic_context->pop_cursor();
   WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   mode = IDLE_MODE;
 }

@@ -72,7 +72,7 @@ public:
   int  get_mouse_y ();
 
   void run();
-  void set_cursor_real(CursorType) {}
+  void set_cursor_real(CursorType);
   void reshape_func(int w, int h);
   void display_func ();
   void mouse_func (int button, int button_state, int x, int y);
