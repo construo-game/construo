@@ -524,6 +524,7 @@ X11Display::flip ()
 void
 X11Display::set_fullscreen (bool fullscreen)
 {
+#ifdef HAVE_LIBXXF86VM
   int event_base;
   int error_base;
   if (XF86VidModeQueryExtension(display, &event_base, &error_base) != True)
@@ -617,6 +618,7 @@ X11Display::set_fullscreen (bool fullscreen)
     {
       std::cout << "X11Display: Couldn't get available video modes" << std::endl;
     }
+#endif
 }
 
 void
@@ -640,6 +642,7 @@ X11Display::run()
 void
 X11Display::restore_mode ()
 {
+#ifdef HAVE_LIBXXF86VM
   XF86VidModeModeInfo modeinfo;
   
   modeinfo.dotclock   = orig_dotclock;
@@ -664,6 +667,7 @@ X11Display::restore_mode ()
                          orig_viewport_x, orig_viewport_y);
 
   fullscreen = false;
+#endif
 }
 
 /* EOF */

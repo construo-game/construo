@@ -56,6 +56,8 @@ public:
   void flip ();
   void flip (int x1, int y1, int x2, int y2);
 
+  void set_fullscreen (bool fullscreen);
+
   int get_width()  { return width; }
   int get_height() { return height; }
 

@@ -41,6 +41,10 @@ struct WorldBoundingBox
 class World
 {
 private:
+  /** Version number of the file, used to ensure backward compability */
+  unsigned int file_version;
+
+  friend class ParticleFactory;
   bool has_been_run;
   ParticleFactory* particle_mgr;
 

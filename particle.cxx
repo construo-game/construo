@@ -20,6 +20,7 @@
 #include "colors.hxx"
 #include "math.hxx"
 #include "lisp_reader.hxx"
+#include "string_converter.hxx"
 #include "particle.hxx"
 
 Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
@@ -58,14 +59,26 @@ void
 Particle::draw_highlight (ZoomGraphicContext* gc)
 {
   gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
-                                         6,
+                                         Math::round(Math::max(6.0f, get_mass() + 3)),
                                          Colors::highlight);
+}
+
+void
+Particle::draw_infos (ZoomGraphicContext* gc)
+{
+  Vector2d p = gc->world_to_screen(pos);
+  draw_velocity_vector (gc);
+  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 5.0f),
+                                    "Particle: " + to_string (pos));
+  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 25.0f),
+                                    "Fixed:    " + to_string (fixed));
+  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 45.0f),
+                                    "Mass :    " + to_string (get_mass()));
 }
 
 void
 Particle::draw (ZoomGraphicContext* gc)
 {
-  //int size = int(10.0f/(mass*mass)) + 1;
   if (pos.y < 598.5f)
     {
       if (fixed)
@@ -77,17 +90,19 @@ Particle::draw (ZoomGraphicContext* gc)
       else
         {
           gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
-                                                 Math::round(Math::max(3.0f, 2.0f*get_mass())),
+                                                 Math::round(Math::max(3.0f, get_mass())),
                                                  Color(1.0f, 0.0f, 0.0f));
         }
     }
-
-  if (0) // draw velocity vectors
-    gc->draw_line (int (pos.x), int (pos.y),
-                   int (pos.x + velocity.x), int (pos.y + velocity.y),
-                   Color (0.0f, 0.0f, 1.0f));
 }
 
+void
+Particle::draw_velocity_vector (ZoomGraphicContext* gc)
+{
+  gc->draw_line (int (pos.x), int (pos.y),
+                 int (pos.x + velocity.x), int (pos.y + velocity.y),
+                 Color (0.0f, 0.0f, 1.0f));
+}
 
 void
 Particle::update (float delta)
@@ -96,7 +111,7 @@ Particle::update (float delta)
 
   if (fixed) return;
 
-  velocity += totale_force * delta * mass;
+  velocity += totale_force * delta * (1.0f/mass);
 
   //velocity *= .999999f ;
 

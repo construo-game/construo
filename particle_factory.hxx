@@ -28,6 +28,7 @@ extern "C" {
 
 class ZoomGraphicContext;
 class Particle;
+class World;
 
 /** id of a particle, uniq only for a single ParticleFactory */
 typedef int ParticleId;
@@ -36,19 +37,22 @@ typedef int ParticleId;
 class ParticleFactory
 {
 private:
+  /** Pointer to the world holding this ParticleManager */
+  World* world;
+
   std::vector<Particle*> particles;
 
   /** the id of next particle that will get created */
   int particle_id_count;
 public:
   /** Create an empty particle manager */
-  ParticleFactory ();
+  ParticleFactory (World*);
 
   /** Create a particle manager from the data in a .construo file */
-  ParticleFactory (lisp_object_t* cursor);
+  ParticleFactory (World*, lisp_object_t* cursor);
 
   /** Copy a particle manager, the id's will be keep */
-  ParticleFactory (const ParticleFactory&);
+  ParticleFactory (World*, const ParticleFactory&);
 
   Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity,
                           float m, bool f = false);
@@ -78,6 +82,7 @@ public:
   void write_lisp(FILE* out);
 
 private:
+  ParticleFactory (const ParticleFactory&);
   ParticleFactory& operator= (const ParticleFactory&);
 };
 

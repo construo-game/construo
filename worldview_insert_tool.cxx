@@ -29,7 +29,7 @@
 WorldViewInsertTool::WorldViewInsertTool ()
 {
   current_particle = 0;
-  particle_mass = 10.0f;
+  particle_mass = 0.1f;
 }
 
 WorldViewInsertTool::~WorldViewInsertTool () 
@@ -68,6 +68,15 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
     {
       gc->GraphicContext::draw_line (current_particle->pos, click_pos,
                                      Colors::new_spring, 2);
+    }
+
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+
+  Particle* selected_particle = world.get_particle (x, y);
+  if (selected_particle)
+    {
+      selected_particle->draw_infos (gc);
     }
 }
 

@@ -25,13 +25,15 @@
 #include "world.hxx"
 #include "particle_factory.hxx"
 #include "system_context.hxx"
+#include "controller.hxx"
 #include "rect_collider.hxx"
 
 World* World::current_world = 0; 
 
 World::World ()
-  : particle_mgr (new ParticleFactory())
+  : particle_mgr (new ParticleFactory(this))
 {
+  file_version = 0;
   has_been_run = false;
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
@@ -41,6 +43,7 @@ World::World ()
 World::World (const std::string& filename)
   : particle_mgr (0)
 {
+  file_version = 0;
   colliders.push_back (new RectCollider (100, 100, 300, 300)); // FIXME
   colliders.push_back (new RectCollider (500, 100, 800, 300)); // FIXME
   colliders.push_back (new RectCollider (-300, -600, -100, -550)); // FIXME
@@ -105,6 +108,10 @@ World::parse_scene (lisp_object_t* cursor)
             {
               parse_springs(lisp_cdr(cur));
             }
+          else if (strcmp(lisp_symbol(lisp_car(cur)), "version") == 0)
+            {
+              file_version = lisp_integer(lisp_car(lisp_cdr(cur)));
+            }
           else
             {
               std::cout << "World: Read error in parse_scene. Unhandled tag '" 
@@ -129,16 +136,17 @@ World::parse_springs (lisp_object_t* cursor)
 void
 World::parse_particles (lisp_object_t* cursor)
 {
-  particle_mgr = new ParticleFactory(cursor);
+  particle_mgr = new ParticleFactory(this, cursor);
 }
 
 // Copy Constructor
 World::World (const World& old_world)
 {
+  file_version = 0;
   colliders = old_world.colliders;
 
   // FIXME: Could need optimizations
-  particle_mgr = new ParticleFactory (*old_world.particle_mgr);
+  particle_mgr = new ParticleFactory (this, *old_world.particle_mgr);
   
   for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)
     {
@@ -174,6 +182,7 @@ World::draw (ZoomGraphicContext* gc)
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     (*i)->draw (gc);
 
+  //if (!Controller::instance()->is_running ())
   particle_mgr->draw(gc);
 
   //const WorldBoundingBox& box = calc_bounding_box();
@@ -192,7 +201,7 @@ World::update (float delta)
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
       // Gravity
-      (*i)->add_force (Vector2d (0.0, 15.0f) * (1/(*i)->mass));
+      (*i)->add_force (Vector2d (0.0, 15.0f) * (*i)->get_mass ());
 		    
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
@@ -231,8 +240,8 @@ World::update (float delta)
                                + (*i)->particles.second->pos) * 0.5f;
 
               // FIXME: particle mass needs to be recalculated
-              Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f, 10.0f);
-              Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f, 10.0f);
+              Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f, .1f);
+              Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f, .1f);
 
               // FIXME: Insert a more sofistikated string splitter here
               new_springs.push_back (new Spring ((*i)->particles.first, p1, (*i)->length/2));
@@ -411,7 +420,7 @@ World::write_lisp (const std::string& filename)
 
   fputs(";; Written by " PACKAGE_STRING "\n", out);
   fputs("(construo-scene\n", out);
-  fputs("  (version 2)\n", out);
+  fputs("  (version 3)\n", out);
   // FIXME: insert creation date here
   // FIXME: Filter '()"' here
   fprintf(out, "  (author \"%s\" \"%s\")\n", 

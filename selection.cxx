@@ -75,6 +75,13 @@ Selection::scale (float factor)
 }
 
 void
+Selection::set_velocity (const Vector2d vel)
+{
+  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+    (*i)->velocity = vel;
+}
+
+void
 Selection::flip ()
 {
   if (!selection.empty())

@@ -38,12 +38,12 @@ GUIManager* GUIManager::instance_;
 
 void increase_particle_mass() {
   WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() / 5.0f);
+  wc.set_particle_mass(wc.get_particle_mass() + 1.0f);
 }
 
 void decrease_particle_mass() {
   WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() * 5.0f);
+  wc.set_particle_mass(wc.get_particle_mass() - 1.0f);
 }
 
 void switch_to_insert_mode() {
@@ -159,7 +159,7 @@ GUIManager::draw_status ()
 
   graphic_context->draw_string (600,  430, "Particles Mass: ");
   graphic_context->draw_string (700,  430, 
-                                to_string(1/WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
+                                to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
 
   graphic_context->draw_string (700,  530, "Particles: ");
   graphic_context->draw_string (770,  530, to_string(world.get_num_particles()));

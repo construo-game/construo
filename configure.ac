@@ -17,8 +17,8 @@
 
 # init automake/conf
 AC_INIT(construo, 0.2.0)
-AC_CONFIG_SRCDIR(construo.hxx)
 AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR(construo.hxx)
 AM_CONFIG_HEADER(config.h)
 
 # check for some programs
@@ -30,24 +30,45 @@ AC_PATH_XTRA
 
 ConstruoTargets=""
 
-
-if test ! -n X_DISPLAY_MISSING; then
+if test -n "$X_DISPLAY_MISSING"; then
    echo ""
    echo "### Error: Couldn't find X11 header files, probally x11-devel packages"
    echo "###        not installed?"
    echo ""
-   exit 1
 else
     ConstruoTargets="$ConstruoTargets construo.x11"
     LIBS="$LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11"
     CXXFLAGS="$CXXFLAGS $X_CFLAGS"
 fi
 
+AC_CHECK_LIB(Xext, XMissingExtension)
+AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode)
+
 AC_CHECK_LIB(glut, glutMainLoop,
 [
 ConstruoTargets="$ConstruoTargets construo.glut"
-LIBS="$LIBS -lglut"
-])
+AC_SUBST(glut_LIBS,"-lglut")
+],
+[])
+
+AC_CHECK_LIB(freeglut-1.3, glutMainLoop,
+[
+ConstruoTargets="$ConstruoTargets construo.freeglut"
+AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3")
+echo "Freeglut: " $freeglut_LIBS
+],
+[], "-lXxf86vm")
+
+if test -z "$ConstruoTargets"; then
+   echo ""
+   echo "ERROR: Neither X11 nor Glut could be detected, so Construo is not"
+   echo "ERROR: buildable. You might need to install the -devel packages for"
+   echo "ERROR: the libraries or check what else could have gone wrong."
+   echo "ERROR: The file 'config.log' contains more details on the runed libary"
+   echo "ERROR: checks and might help you to figure out what went wrong."
+   echo ""
+   exit 1
+fi
 
 AC_SUBST(ConstruoTargets)
 

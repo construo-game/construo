@@ -88,6 +88,7 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {
+      (*i)->draw_velocity_vector (gc);
       (*i)->draw_highlight (gc);
     }
 }

@@ -39,9 +39,10 @@ public:
   /** velocity of the particle */
   Vector2d  velocity;
 
+private:
   /** the mass of the particle as 1/mass */
   float mass;
-
+public:
   bool fixed;
 
   /** totale force acting on particle (used as temp-var in update() to
@@ -73,13 +74,18 @@ public:
     return fixed;
   }  
 
-  inline float get_mass () const { return 1.0f/mass; }
+  inline float get_mass () const { return mass; }
 
   void update (float delta); 
   void draw (ZoomGraphicContext* gc);
 
   /** draws the particle in highlight mode (aka if mouse is over it) */
   void draw_highlight (ZoomGraphicContext* gc);
+  
+  /** draws additional infos to this stop */
+  void draw_infos (ZoomGraphicContext* gc);
+
+  void draw_velocity_vector (ZoomGraphicContext* gc);
 
   lisp_object_t* serialize();
 

@@ -1,5 +1,11 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define to 1 if you have the `Xext' library (-lXext). */
+#undef HAVE_LIBXEXT
+
+/* Define to 1 if you have the `Xxf86vm' library (-lXxf86vm). */
+#undef HAVE_LIBXXF86VM
+
 /* Name of package */
 #undef PACKAGE
 

@@ -21,22 +21,23 @@
 #include "zoom_graphic_context.hxx"
 #include "particle.hxx"
 #include "construo_error.hxx"
+#include "world.hxx"
 #include "particle_factory.hxx"
 
-ParticleFactory::ParticleFactory ()
-  : particle_id_count(0)
+ParticleFactory::ParticleFactory (World* w)
+  : world (w), particle_id_count(0)
 {
 }
 
-ParticleFactory::ParticleFactory (lisp_object_t* cursor)
-  : particle_id_count (0)
+ParticleFactory::ParticleFactory (World* w, lisp_object_t* cursor)
+  : world (w),particle_id_count (0)
 {
   while(!lisp_nil_p(cursor))
     {
       lisp_object_t* obj = lisp_car(cursor);
       Vector2d pos;
       Vector2d velocity;
-      float mass = 15.0f;
+      float mass = 1.0f/10.0f;
       bool fixed = false;
       int id = -1;
             
@@ -49,6 +50,15 @@ ParticleFactory::ParticleFactory (lisp_object_t* cursor)
       reader.read_bool ("fixed", &fixed);
       reader.read_int ("id", &id);
 
+      switch (world->file_version)
+        {
+        case 0:
+        case 1:
+        case 2:
+          mass = 1.0f/mass;
+          break;
+        }
+
       if (id >= particle_id_count)
         particle_id_count = id + 1;
 
@@ -58,7 +68,8 @@ ParticleFactory::ParticleFactory (lisp_object_t* cursor)
     }
 }
 
-ParticleFactory::ParticleFactory (const ParticleFactory& pmgr)
+ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr)
+  : world (w)
 {
   particle_id_count = pmgr.particle_id_count;
   for (CParticleIter i = pmgr.particles.begin (); i != pmgr.particles.end (); ++i)

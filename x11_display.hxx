@@ -21,7 +21,10 @@
 #define HEADER_X11_DISPLAY_HXX
 
 #include <X11/Xlib.h>
-#include <X11/extensions/xf86vmode.h>
+
+#ifdef HAVE_LIBXXF86VM
+#  include <X11/extensions/xf86vmode.h>
+#endif
 
 #include "math.hxx"
 #include "graphic_context.hxx"

@@ -56,6 +56,9 @@ public:
 
   void flip();
 
+  /** sets the velocity of all particles to the given one */
+  void set_velocity (const Vector2d vel);
+
   /** duplicates all selected objects */
   void duplicate ();
 

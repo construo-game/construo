@@ -21,7 +21,7 @@ bindir=$(prefix)/games
 
 bin_PROGRAMS = @ConstruoTargets@
 
-EXTRA_PROGRAMS = construo.x11 construo.glut
+EXTRA_PROGRAMS = construo.x11 construo.glut construo.freeglut
 
 noinst_LIBRARIES = libconstruo.a
 
@@ -61,12 +61,16 @@ construo_main.hxx \
 selection.hxx selection.cxx 
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
-construo_x11_LDADD    = libconstruo.a -L/usr/X11R6/lib/ -lXext -lXxf86vm
+construo_x11_LDADD    = libconstruo.a
 construo_x11_CXXFLAGS = -DUSE_X11_DISPLAY
 
 construo_glut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
-construo_glut_LDADD   = libconstruo.a -L/usr/X11R6/lib/ -lglut 
-construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY
+construo_glut_LDADD   = libconstruo.a @glut_LIBS@
+construo_glut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_GLUT
+
+construo_freeglut_SOURCES = construo_main.cxx glut_display.hxx glut_display.cxx
+construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
+construo_freeglut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_FREEGLUT
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

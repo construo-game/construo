@@ -17,7 +17,12 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include <GL/glut.h>
+#ifdef HAVE_FREEGLUT
+#  include <GL/freeglut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
 #include <iostream>
 #include "buttons.hxx"
 #include "events.hxx"
@@ -189,10 +194,15 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
   glPushMatrix();
   glTranslatef (x , y, 0);
   glScalef (.07f, -.07, 0);
+
   for (std::string::const_iterator i = str.begin (); i != str.end (); ++i)
     {
+#ifdef HAVE_FREEGLUT
+      glutBitmapCharacter  (GLUT_BITMAP_8_BY_13, *i);
+#else
       glutStrokeCharacter  (GLUT_STROKE_MONO_ROMAN, *i);
       //glutStrokeWidth (GLUT_STROKE_MONO_ROMAN, *i);
+#endif
     }
   glPopMatrix();
 }
@@ -318,6 +328,9 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
     case 'q':
       event.button.id = BUTTON_ESCAPE;
       break;
+    case 'f':
+      set_fullscreen(settings.fullscreen);
+      break;
     case '0':
       event.button.id = BUTTON_QUICKSAVE0;
       break;
@@ -341,6 +354,22 @@ GlutDisplay::mouse_motion_func (int x, int y)
   //std::cout << "Motion: " << x << " " << y << std::endl;
   mouse_x = x;
   mouse_y = y;
+}
+
+void
+GlutDisplay::set_fullscreen (bool fullscreen)
+{
+  if (fullscreen)
+    {        
+      char mode[64];
+      snprintf (mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
+      std::cout << "GlutDisplay: switching to: " << mode << std::endl;
+      glutGameModeString(mode);
+      glutEnterGameMode();
+    }
+  else
+    {
+    }
 }
 
 /* EOF */
