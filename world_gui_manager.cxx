@@ -237,6 +237,7 @@ WorldGUIManager::draw_overlay ()
       graphic_context->draw_string (400,  44, "     [h] - flip selection");
       graphic_context->draw_string (400,  56, "     [f] - fix selection");
       graphic_context->draw_string (400,  68, "     [j] - join dots");
+      graphic_context->draw_string (400,  80, "     [s] - scale selection");
       break;
       
     case WorldViewComponent::ZOOM_MODE:
