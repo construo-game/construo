@@ -1,4 +1,4 @@
-Construo V0.2.0
+Construo V0.2.1
 ===============
 
 Construo is a programm for constructing wire-frame objects and let
@@ -16,5 +16,10 @@ For questions, comments, constructions, bugs reports and other things
 write a mail to:
 
   Ingo Ruhnke <grumbel@gmx.de>
+
+or send it directly to the Construo-Development mailing list at:
+ 
+  construo-devel@nongnu.org
+
 
 # EOF #

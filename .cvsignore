@@ -1,7 +1,14 @@
 .deps
+stamp-h1
 ChangeLog
 aclocal.m4
+missing
 autom4te.cache
+install-sh
+depcomp
+construo.x11
+construo.glut
+mkinstalldirs
 config.h
 config.log
 config.status
