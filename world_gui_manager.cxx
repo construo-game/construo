@@ -133,7 +133,7 @@ void undo_callback ()
   return Controller::instance()->undo();
 }
 
-#define BUTTON_POS(n) (75 + n * 30)
+#define BUTTON_POS(n) (80 + n * 30)
 #define BUTTON_RPOS(n) (50 + n * 30)
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25

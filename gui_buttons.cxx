@@ -26,7 +26,7 @@
 #include "screen_manager.hxx"
 #include "worldview_component.hxx"
 
-#define BUTTON_POS(n) (75 + n * 30)
+#define BUTTON_POS(n) (80 + n * 30)
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
 
