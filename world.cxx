@@ -17,11 +17,14 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <algorithm>
 #include "config.h"
 #include "construo_error.hxx"
 #include "world.hxx"
 #include "particle_factory.hxx"
 #include "system_context.hxx"
+
+World* World::current_world = 0; 
 
 World::World ()
   : particle_mgr (new ParticleFactory())
@@ -139,13 +142,15 @@ World::World (const World& w)
 }
 
 World::~World ()
-{
+{ 
   clear ();
 }
 
 void
 World::draw (GraphicContext* gc)
 {
+  current_world = this;
+
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     (*i)->draw (gc);
 
@@ -155,6 +160,8 @@ World::draw (GraphicContext* gc)
 void
 World::update (float delta)
 {
+  current_world = this;
+
   has_been_run = true;
 
   // Main Movement and Forces
@@ -165,10 +172,10 @@ World::update (float delta)
         for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
           {
             // Gravity
-            (*i)->add_force (CL_Vector (0.0, 1.0));
+            (*i)->add_force (Vector2d (0.0, 1.0));
 		    
             // Central Gravity force:
-            /*CL_Vector direction = ((*i)->pos - CL_Vector (400, 300));
+            /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
               if (direction.norm () != 0.0f)
               (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
             */
@@ -176,7 +183,7 @@ World::update (float delta)
             /*
               for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
               {
-              CL_Vector diff = (*j)->pos - (*i)->pos;
+              Vector2d diff = (*j)->pos - (*i)->pos;
               if (diff.norm () != 0.0f)
               (*i)->add_force (diff * ((10.0f - (*j)->mass)/(diff.norm () * diff.norm ())));
               }	    */
@@ -190,6 +197,7 @@ World::update (float delta)
     }
 
   // Spring splitting
+  std::vector<Spring*> new_springs;
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     {
       if ((*i)->destroyed)
@@ -198,17 +206,18 @@ World::update (float delta)
                 - (*i)->particles.second->pos)).norm () > 10.0f)
             {
               // Calc midpoint
-              CL_Vector pos = ((*i)->particles.first->pos
+              Vector2d pos = ((*i)->particles.first->pos
                                + (*i)->particles.second->pos) * 0.5f;
 
               Particle* p1 = particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f);
               Particle* p2 = particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f);
 
-              springs.push_back (new Spring ((*i)->particles.first, p1));
-              springs.push_back (new Spring ((*i)->particles.second, p2));
+              new_springs.push_back (new Spring ((*i)->particles.first, p1));
+              new_springs.push_back (new Spring ((*i)->particles.second, p2));
             }
         }
     }
+  springs.insert(springs.end(), new_springs.begin(), new_springs.end ());
 
   // Remove any springs that are marked as destroyed
   // FIXME: Could be faster
@@ -267,11 +276,11 @@ World::get_particle (int x, int y)
 {
   Particle* particle = 0;
   float min_dist = 15;
-  CL_Vector mouse_pos (x, y);
+  Vector2d mouse_pos (x, y);
 
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
-      CL_Vector diff = mouse_pos - (*i)->pos;
+      Vector2d diff = mouse_pos - (*i)->pos;
       if (diff.norm () < min_dist)
 	{
 	  min_dist = diff.norm ();
@@ -289,7 +298,7 @@ World::zero_out_velocity ()
   for (ParticleFactory::ParticleIter i = get_particle_mgr()->begin(); 
        i != get_particle_mgr()->end (); ++i)
     {
-      (*i)->velocity = CL_Vector ();
+      (*i)->velocity = Vector2d ();
     }
 }
 
@@ -324,7 +333,10 @@ World::remove_particle (Particle* p)
 void
 World::remove_spring (Spring* s)
 {
-  // FIXME: Memory leak
+  std::cout << "particles: " << particle_mgr->size () << std::endl;
+  std::cout << "springs:   " << springs.size () << std::endl;
+
+  delete s;
   springs.erase(std::remove(springs.begin (), springs.end (), s), 
                 springs.end ());
 }

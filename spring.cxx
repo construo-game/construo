@@ -40,6 +40,7 @@ Spring::Spring (Particle* f, Particle* s)
 }
 
 Spring::Spring (World* world, lisp_object_t* cursor)
+  : destroyed (false)
 {
   cursor = lisp_cdr(cursor); // Skip the identifer
   
@@ -70,7 +71,7 @@ Spring::Spring (World* world, lisp_object_t* cursor)
 void
 Spring::update (float delta)
 {
-  CL_Vector dist = particles.first->pos - particles.second->pos;
+  Vector2d dist = particles.first->pos - particles.second->pos;
   float stretch = dist.norm ()/length - 1.0f;
   stretch *= 2.0f; // Materialkoeffizent
   //std::cout << "stretch: " << stretch << std::endl;
@@ -83,7 +84,7 @@ Spring::update (float delta)
   else
     {
       dist.normalize ();
-      CL_Vector force = dist * stretch * back_force;
+      Vector2d force = dist * stretch * back_force;
       //std::cout << "Force: " << force << std::endl;
       particles.first->add_force (-force);
       particles.second->add_force (force);
@@ -93,7 +94,7 @@ Spring::update (float delta)
 void
 Spring::draw (GraphicContext* gc)
 {
-  CL_Vector dist = particles.first->pos - particles.second->pos;
+  Vector2d dist = particles.first->pos - particles.second->pos;
   float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
   
   float color = fabs((stretch/max_stretch));

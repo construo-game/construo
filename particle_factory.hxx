@@ -21,7 +21,7 @@
 #define HEADER_CONSTRUO_PARTICLE_FACTORY_HXX
 
 #include <vector>
-#include "vector.hxx"
+#include "vector2d.hxx"
 extern "C" {
 #include "lispreader.h"
 }
@@ -49,7 +49,7 @@ public:
   /** Copy a particle manager, the id's will be keep */
   ParticleFactory (const ParticleFactory&);
 
-  Particle* add_particle (const CL_Vector& arg_pos, const CL_Vector& arg_velocity = CL_Vector(),
+  Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity = Vector2d(),
                           float m = 10.0f, bool f = false);
 
   /** Remove a particle by pointer */

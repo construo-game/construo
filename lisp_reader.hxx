@@ -24,7 +24,7 @@ extern "C" {
 #include "lispreader.h"
 }
 
-#include "vector.hxx"
+#include "vector2d.hxx"
 
 /** */
 class LispReader
@@ -37,7 +37,7 @@ public:
   /** cur == ((pos 1 2 3) (id 12 3 4)...) */
   LispReader (lisp_object_t* l);
 
-  bool read_vector (const char* name, CL_Vector* vec);
+  bool read_vector (const char* name, Vector2d* vec);
   bool read_int (const char* name, int* i);
   bool read_float (const char* name, float* f);
   bool read_bool (const char* name, bool* b);

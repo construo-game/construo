@@ -43,12 +43,11 @@ LispWriter::make_list2 (lisp_object_t* a, lisp_object_t* b)
 }
 
 void
-LispWriter::write_vector (const char* name, const CL_Vector& pos)
+LispWriter::write_vector (const char* name, const Vector2d& pos)
 {
   append(lisp_make_cons (lisp_make_symbol (name),
-                         make_list3(lisp_make_real(pos.x),
-                                    lisp_make_real(pos.y),
-                                    lisp_make_real(pos.z))));
+                         make_list2(lisp_make_real(pos.x),
+                                    lisp_make_real(pos.y))));
 }
 
 void

@@ -57,14 +57,13 @@ LispReader::search_for(const char* name)
 }
 
 bool
-LispReader::read_vector (const char* name, CL_Vector* vec)
+LispReader::read_vector (const char* name, Vector2d* vec)
 {
   lisp_object_t* obj = search_for (name);
   if (obj)
     {
       vec->x = lisp_real(lisp_car(obj));
       vec->y = lisp_real(lisp_car(lisp_cdr(obj)));
-      vec->z = lisp_real(lisp_car(lisp_cdr(lisp_cdr(obj))));
       return true;
     }
   return false;

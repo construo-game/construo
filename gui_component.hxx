@@ -33,8 +33,6 @@ protected:
   int height;
   
 public:
-  GUIComponent() {}
-
   GUIComponent (int x_, int y_, int width_, int height_)
     : x_pos (x_), y_pos (y_), width (width_), height (height_)
   {}

@@ -20,13 +20,13 @@
 #include "lisp_reader.hxx"
 #include "particle.hxx"
 
-Particle::Particle (int i, const CL_Vector& arg_pos, const CL_Vector& arg_velocity, float m, bool f)
+Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
   : id (i), 
     pos (arg_pos),
     velocity (arg_velocity), 
     mass (m), 
     fixed (f),
-    totale_force (0,0,0)
+    totale_force (0,0)
 {
 }
 
@@ -36,7 +36,7 @@ Particle::Particle (const Particle& p)
     velocity (p.velocity),
     mass (p.mass),
     fixed (p.fixed),
-    totale_force (0,0,0)
+    totale_force (0,0)
 {
 }
 
@@ -77,6 +77,10 @@ Particle::draw (GraphicContext* gc)
                             2,
                             Color(1.0f, 0.0f, 0.0f));
     }
+
+  gc->draw_line (int (pos.x), int (pos.y),
+                 int (pos.x + velocity.x), int (pos.y + velocity.y),
+                 Color (0.0f, 0.0f, 1.0f));
 }
 
 
@@ -118,7 +122,7 @@ Particle::update (float delta)
     }
 
   /*
-    CL_Vector dist = pos - CL_Vector (400, 300);
+    Vector2d dist = pos - Vector2d (400, 300);
     if (dist.norm () < 50.0f)
     {
     velocity = -velocity;

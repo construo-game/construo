@@ -29,12 +29,13 @@ ParticleFactory::ParticleFactory ()
 }
 
 ParticleFactory::ParticleFactory (lisp_object_t* cursor)
+  : particle_id_count (0)
 {
   while(!lisp_nil_p(cursor))
     {
       lisp_object_t* obj = lisp_car(cursor);
-      CL_Vector pos;
-      CL_Vector velocity;
+      Vector2d pos;
+      Vector2d velocity;
       float mass = 10.0;
       bool fixed = false;
       int id = -1;
@@ -78,7 +79,7 @@ ParticleFactory::operator= (const ParticleFactory& pmgr)
 }
 
 Particle*
-ParticleFactory::add_particle (const CL_Vector& arg_pos, const CL_Vector& arg_velocity, float m, bool f)
+ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
 {
   //std::cout << "particle_id_count: " << particle_id_count << std::endl;
   Particle* p = new Particle(particle_id_count++,

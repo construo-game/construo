@@ -107,7 +107,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   XGCValues gcv;
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
-  gcv.line_width = 0;
+  gcv.line_width = 2;
   gc = XCreateGC(display, window, 
                  GCLineWidth | GCForeground | GCBackground,
                  &gcv);

@@ -22,8 +22,8 @@ bindir=$(prefix)/games
 bin_PROGRAMS = construo
 
 construo_SOURCES = \
-buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            vector.cxx      \
-color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        vector.hxx      \
+buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            \
+color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        \
 config.cxx    construo_main.hxx   input_context.hxx    spring.hxx           world.cxx       \
 config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
 construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_display.cxx \
@@ -41,7 +41,8 @@ colors.hxx colors.cxx \
 gui_window.hxx gui_window.cxx \
 gui_component.cxx \
 command_line.hxx command_line.cxx \
-settings.hxx  settings.cxx 
+settings.hxx  settings.cxx \
+vector2d.hxx
 
 LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 

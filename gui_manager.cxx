@@ -40,6 +40,7 @@ GUIManager::GUIManager ()
   do_quit = false;
 
   last_component = 0;
+  grabbing_component = 0;
 
   worldview_component = new WorldViewComponent ();
   components.push_back (worldview_component);

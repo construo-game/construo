@@ -26,7 +26,7 @@ extern "C" {
 #include "lispreader.h"
 }
 
-#include "vector.hxx"
+#include "vector2d.hxx"
 
 /** */
 class LispWriter
@@ -39,7 +39,7 @@ private:
   lisp_object_t* make_list2 (lisp_object_t*, lisp_object_t*);
 public:
   LispWriter (const char* name);
-  void write_vector (const char* name, const CL_Vector& pos);
+  void write_vector (const char* name, const Vector2d& pos);
   void write_float (const char* name, float f);
   void write_int (const char* name, int i);
   void write_boolean (const char* name, bool b);

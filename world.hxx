@@ -79,6 +79,12 @@ public:
   void zero_out_velocity ();
 
   void write_lisp (const std::string& filename);
+
+private:
+  static World* current_world;
+public:
+  /** @return pointer to the current world */
+  static World* current() { return current_world; }
 private:
   World& operator= (const World&);
 };

@@ -24,7 +24,7 @@
 #include "lisp_writer.hxx"
 #include "construo.hxx"
 #include "graphic_context.hxx"
-#include "vector.hxx"
+#include "vector2d.hxx"
 
 class Particle
 {
@@ -34,10 +34,10 @@ private:
 
 public:
   /** position of the particle */
-  CL_Vector pos;
+  Vector2d pos;
 
   /** velocity of the particle */
-  CL_Vector  velocity;
+  Vector2d  velocity;
 
   /** the mass of the particle as 1/mass */
   float mass;
@@ -46,7 +46,7 @@ public:
 
   /** totale force acting on particle (used as temp-var in update() to
       collect the forces)*/
-  CL_Vector totale_force;
+  Vector2d totale_force;
 
   /** The id of the particle, used for de/serialisation and copying of
       the World. The id is uniq only for a single world. */
@@ -54,16 +54,15 @@ public:
     return id;
   }
 
-  void add_force (CL_Vector force)
+  void add_force (const Vector2d& force)
   {
     if (fixed) return;
-
     totale_force += force;
   }
 
   void clear_force ()
   {
-    totale_force = CL_Vector ();
+    totale_force = Vector2d ();
   }
 
   void set_fixed (bool f) {
@@ -86,7 +85,7 @@ public:
 
 private:
   Particle (lisp_object_t*);
-  Particle (int i, const CL_Vector& arg_pos, const CL_Vector& arg_velocity, float m, bool f);
+  Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f);
   Particle (const Particle&);
 };
 

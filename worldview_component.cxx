@@ -27,8 +27,10 @@ extern GUIManager* gui_manager;
 extern Controller* controller;
 
 WorldViewComponent::WorldViewComponent ()
+  : GUIComponent(0, 0, graphic_context->get_width (), graphic_context->get_height ())
 {
   scrolling = true;
+  current_particle = 0;
 }
 
 WorldViewComponent::~WorldViewComponent ()
@@ -103,7 +105,7 @@ WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
             }
           else // add a new particle and connect it with the current one
             {
-              new_current_particle = world.get_particle_mgr()->add_particle (CL_Vector(x, y), CL_Vector());
+              new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
               world.add_spring (current_particle, new_current_particle);
             }
           current_particle = 0;
@@ -114,7 +116,7 @@ WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
       current_particle = world.get_particle (x, y);
       if (!current_particle)
         {
-          Particle* p = world.get_particle_mgr()->add_particle (CL_Vector(x, y), CL_Vector());
+          Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
           current_particle = p;
         }
     }
