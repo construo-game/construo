@@ -255,8 +255,8 @@ ZoomGraphicContext::set_zoom (const float& z)
 void
 ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
 {
-  std::cout << "Zooming to: " << x1 << " " << y1 << " " << x2 << " " << y2
-            << std::endl;
+  //std::cout << "Zooming to: " << x1 << " " << y1 << " " << x2 << " " << y2
+  //<< std::endl;
   
   float center_x = (x1 + x2) / 2.0f;
   float center_y = (y1 + y2) / 2.0f;

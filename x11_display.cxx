@@ -28,7 +28,7 @@
 #include "construo_main.hxx"
 
 #include "controller.hxx"
-#include "gui_manager.hxx"
+#include "screen_manager.hxx"
 
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
@@ -631,7 +631,7 @@ X11Display::set_fullscreen (bool fullscreen)
 void
 X11Display::run()
 {
-  while (!GUIManager::instance ()->finished ())
+  while (!ScreenManager::instance ()->is_finished ())
     {
       if (Controller::instance()->is_running())
         {
@@ -642,7 +642,7 @@ X11Display::run()
         {
           wait_for_events_blocking();
         }
-      GUIManager::instance ()->run_once();
+      ScreenManager::instance ()->run_once();
     }
 }
 

@@ -24,7 +24,7 @@
 #include "gui_directory.hxx"
 
 GUIDirectory::GUIDirectory (const std::string& pathname)
-  : GUIComponent (0, 0, 800, 600)
+  : GUIChildManager (0, 0, 800, 600)
 {
   std::vector<std::string> dir = system_context->read_directory(pathname);
   
@@ -50,6 +50,11 @@ GUIDirectory::GUIDirectory (const std::string& pathname)
           std::cout << "GUIFileManager: ignoring '" << filename
                     << "' since it has unknown filetype" << std::endl;
         }
+    }
+
+  for (std::vector<GUIFileButton*>::iterator i = files.begin(); i != files.end(); ++i)
+    {
+      add(*i);
     }
 }
 

@@ -21,7 +21,7 @@
 #include "graphic_context.hxx"
 #include "controller.hxx"
 #include "colors.hxx"
-#include "gui_manager.hxx"
+#include "world_gui_manager.hxx"
 #include "gui_buttons.hxx"
 #include "worldview_component.hxx"
 
@@ -54,14 +54,14 @@ void
 GUIButton::on_primary_button_press (int x, int y)
 {
   std::cout << "PRess" << std::endl;
-  GUIManager::instance()->grab_mouse (this);
+  WorldGUIManager::instance()->grab_mouse (this);
   pressed = true;
 }
 
 void
 GUIButton::on_primary_button_release (int x, int y)
 {
-  GUIManager::instance()->ungrab_mouse (this);
+  WorldGUIManager::instance()->ungrab_mouse (this);
   if (is_at (x, y))
     on_click ();
   std::cout << "Release" << std::endl;
@@ -233,7 +233,7 @@ GUIQuitButton::GUIQuitButton ()
 void
 GUIQuitButton::on_click()
 {
-  GUIManager::instance()->quit();
+  WorldGUIManager::instance()->quit();
 }
 
 /* EOF */

@@ -22,10 +22,11 @@
 
 #include <map>
 #include <string>
+#include "gui_child_manager.hxx"
 #include "gui_directory.hxx"
 
 /** */
-class GUIFileManager
+class GUIFileManager : public GUIChildManager
 {
 private:
   /** Cache for directories */
@@ -42,7 +43,7 @@ public:
       pathname */
   void open_directory (const std::string& pathname);
 
-  void draw ();
+  void draw (GraphicContext*);
 };
 
 #endif

@@ -42,7 +42,7 @@ controller.hxx controller.cxx \
 gui_buttons.hxx gui_buttons.cxx \
 zoom_graphic_context.cxx zoom_graphic_context.hxx \
 colors.hxx colors.cxx \
-gui_window.hxx gui_window.cxx \
+gui_child_manager.hxx gui_child_manager.cxx \
 gui_component.cxx \
 command_line.hxx command_line.cxx \
 settings.hxx  settings.cxx \
@@ -63,7 +63,10 @@ world_button.hxx world_button.cxx \
 gui_directory_button.hxx gui_directory_button.cxx \
 gui_file_button.hxx gui_file_button.cxx \
 gui_file_manager.hxx gui_file_manager.cxx \
-gui_directory.hxx gui_directory.cxx
+gui_directory.hxx gui_directory.cxx \
+world_gui_manager.hxx world_gui_manager.cxx \
+load_gui_manager.hxx load_gui_manager.cxx \
+screen_manager.hxx screen_manager.cxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a

@@ -24,7 +24,7 @@
 #include "controller.hxx"
 #include "worldview_component.hxx"
 #include "particle.hxx"
-#include "gui_manager.hxx"
+#include "world_gui_manager.hxx"
 #include "rect.hxx"
 #include "worldview_select_tool.hxx"
 
@@ -120,7 +120,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
   
   World& world = *Controller::instance()->get_world ();
 
-  GUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+  WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
   mode = GETTING_SELECTION_MODE;
 
@@ -144,7 +144,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_primary_button_release (int x, int y)
 {
-  GUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+  WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   
   if (mode == GETTING_SELECTION_MODE)
     { 
@@ -158,7 +158,7 @@ void
 WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
   mode = ROTATING_SELECTION_MODE;
-  GUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
+  WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
 
   click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
 
@@ -174,7 +174,7 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 void
 WorldViewSelectTool::on_secondary_button_release (int x, int y)
 {
-  GUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+  WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
   mode = IDLE_MODE;
 }
 

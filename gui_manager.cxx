@@ -31,39 +31,11 @@
 #include "gui_window.hxx"
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
-#include "gui_buttons.hxx"
-#include "gui_label.hxx"
 
 using namespace StringUtils;
 
-GUIManager* GUIManager::instance_;
-
-void increase_particle_mass() {
-  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() + 1.0f);
-}
-
-void decrease_particle_mass() {
-  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() - 1.0f);
-}
-
-void switch_to_insert_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE);
-}
-
-void switch_to_zoom_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE);
-}
-
-void switch_to_select_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE);
-}
-
-
 GUIManager::GUIManager ()
 {
-  instance_ = this;
   do_quit = false;
 
   frame_count = 0;
@@ -73,39 +45,10 @@ GUIManager::GUIManager ()
   grabbing_component = 0;
   current_component  = 0;
 
-  components.push_back (new WorldViewComponent ());
-  components.push_back (new GUIRunButton ());
-  components.push_back (new GUISlowMoButton  ());
-  components.push_back (new GUIUndoButton ());
-  components.push_back (new GUIZoomInButton ());
-  components.push_back (new GUIZoomOutButton ());
-  components.push_back (new GUIQuitButton ());
-
-  components.push_back (new GUIGenericButton ("InsertMode", 700, 130, 90, 25, switch_to_insert_mode));
-  components.push_back (new GUIGenericButton ("SelectMode", 700, 160, 90, 25, switch_to_select_mode));
-  components.push_back (new GUIGenericButton ("ZoomMode",   700, 190, 90, 25, switch_to_zoom_mode));
-
-  components.push_back (new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
-  components.push_back (new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
-
-  components.push_back (new GUILabel ("Stiffness",   550, 280, 75, 25));
-
-  components.push_back (new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
-  components.push_back (new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
-
-  components.push_back (new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
-  components.push_back (new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
- 
-  /*
-    GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
-    window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
-    components.push_back (window);
-  */
 }
 
 GUIManager::~GUIManager ()
 {
-  instance_ = 0;
 }
   
 void
@@ -127,58 +70,18 @@ GUIManager::run_once ()
 
   Controller::instance()->update ();
   graphic_context->clear ();
-      
-  draw_status();
 
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      (*i)->draw (graphic_context);
-    }
-
-  file_manager.draw ();
-          
+  draw ();
+  draw_overlay ();
   graphic_context->flip ();
 }
 
 void
-GUIManager::draw_status ()
+GUIManager::draw ()
 {
-  graphic_context->draw_string (10, 20, "..:: Construo V"VERSION" ::..");
-  graphic_context->draw_string (10, 32, "=========================");
-   
-  graphic_context->draw_string (400, 20, "      [1-9] - quick save");
-  graphic_context->draw_string (400, 32, "[shift 1-9] - quick load");
-  graphic_context->draw_string (400, 44, "   [escape] - quit");
-  graphic_context->draw_string (400, 56, "    [space] - toggle slow motion");
-
-  graphic_context->draw_string (600,  20, "  [left] - insert/connect spots");
-  graphic_context->draw_string (600,  32, "[middle] - start/stop simulation");
-  graphic_context->draw_string (600,  44, " [right] - remove spot");
-  graphic_context->draw_string (600,  56, "     [c] - clear screen");
-  graphic_context->draw_string (600,  68, "     [f] - fix current spot");
-  graphic_context->draw_string (600,  80, "     [u] - undo to last state");
-  graphic_context->draw_string (600,  92, "     [r] - redo (undo an undo)");
-
-  World& world = *Controller::instance()->get_world ();
-
-  graphic_context->draw_string (600,  430, "Particles Mass: ");
-  graphic_context->draw_string (700,  430, 
-                                to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
-
-  graphic_context->draw_string (700,  530, "Particles: ");
-  graphic_context->draw_string (770,  530, to_string(world.get_num_particles()));
-
-  graphic_context->draw_string (700,  545, "Springs: ");
-  graphic_context->draw_string (770,  545, to_string(world.get_num_springs()));
-
-  graphic_context->draw_string (700,  560, "Zoom: ");
-  graphic_context->draw_string (770,  560, to_string(WorldViewComponent::instance()->get_zoom()));
-
-  if (Controller::instance()->slow_down_active ())
+  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      graphic_context->draw_string (10,
-                                    graphic_context->get_height () - 10,
-                                    "[SLOW-MOTION]", Color(0x00FFFFFF));
+      (*i)->draw (graphic_context);
     }
 }
 
@@ -360,18 +263,18 @@ GUIManager::process_events ()
     {
       grabbing_component->on_mouse_move (x, y, x - last_x, y - last_y);
     }
-      
-  last_x = x;
-  last_y = y;
+  if (current_component != grabbing_component)
+    {
+      current_component->on_mouse_move (x, y, x - last_x, y - last_y);
+    }
 
   if (!grabbing_component)
     {
       current_component = find_component_at (x, y);
-      assert (current_component);
-
+      
       if (last_component != current_component)
         {
-          current_component->on_mouse_enter ();
+          if (current_component) current_component->on_mouse_enter ();
           if (last_component)
             last_component->on_mouse_leave ();
 
@@ -409,6 +312,9 @@ GUIManager::process_events ()
             }
         }
     }
+
+  last_x = x;
+  last_y = y;
 }
 
 void
@@ -422,6 +328,13 @@ void
 GUIManager::ungrab_mouse (GUIComponent* comp)
 {
   grabbing_component = 0;
+}
+
+void
+GUIManager::add (GUIComponent* c)
+{
+  assert(c);
+  components.push_back(c);
 }
 
 /* EOF */

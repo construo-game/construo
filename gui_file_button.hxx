@@ -39,6 +39,9 @@ public:
 
   void on_mouse_enter () { mouse_over = true; }
   void on_mouse_leave () { mouse_over = false; }
+
+  void on_primary_button_press (int x, int y);
+  void on_primary_button_release (int x, int y);
 };
 
 #endif

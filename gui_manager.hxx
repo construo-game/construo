@@ -21,7 +21,6 @@
 #define HEADER_CONSTRUO_GUI_MANAGER_HXX
 
 #include <vector>
-#include "gui_file_manager.hxx"
 
 class GUIComponent;
 class ButtonEvent;
@@ -50,23 +49,25 @@ private:
 
   void process_events ();
   void process_button_events (ButtonEvent&);
-  void draw_status ();
   GUIComponent* find_component_at (int, int);
-
-  GUIFileManager file_manager;
-
-  static GUIManager* instance_;
 public:
   GUIManager ();
   ~GUIManager ();
-
-  static inline GUIManager* instance() { return instance_; }
   
   /** Launches a single run from the games main loop */
   void run_once ();
 
+  /** Draw all the GUI components */
+  void draw ();
+
+  virtual void draw_overlay () {}
+
   /** Stops the GUIManager */
   void quit();
+
+  /** add a GUIComponent, the component will get deleted after in the
+      destruction of the guimanager */
+  void add (GUIComponent*);
 
   /** @return true if somebody has quit the GUIManager */
   bool finished () { return do_quit; }

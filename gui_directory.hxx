@@ -21,13 +21,13 @@
 #define HEADER_CONSTRUO_GUI_DIRECTORY_HXX
 
 #include <vector>
-#include "gui_component.hxx"
+#include "gui_child_manager.hxx"
 
 class ZoomGraphicContext;
 class GUIFileButton;
 
 /** Widget which shows a complete directory */
-class GUIDirectory : public GUIComponent
+class GUIDirectory : public GUIChildManager
 {
 private:
   std::vector<GUIFileButton*> files;

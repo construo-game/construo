@@ -32,4 +32,18 @@ GUIFileButton::~GUIFileButton ()
   
 }
 
+
+void
+GUIFileButton::on_primary_button_press (int x, int y)
+{
+  std::cout << "GUIFileButton::on_primary_button_press (int x, int y)" << std::endl;
+  on_click ();
+}
+
+void
+GUIFileButton::on_primary_button_release (int x, int y)
+{
+  std::cout << "GUIFileButton::on_primary_button_release (int x, int y)" << std::endl;
+}
+
 /* EOF */

@@ -28,7 +28,7 @@
 #include "buttons.hxx"
 #include "events.hxx"
 #include "settings.hxx"
-#include "gui_manager.hxx"
+#include "screen_manager.hxx"
 #include "glut_display.hxx"
 
 GlutDisplay* GlutDisplay::instance_ = 0;
@@ -259,7 +259,7 @@ GlutDisplay::reshape_func(int w, int h)
 void
 GlutDisplay::display_func ()
 {
-  GUIManager::instance()->run_once();
+  ScreenManager::instance()->run_once();
 }
 
 void
@@ -310,7 +310,7 @@ GlutDisplay::idle_func ()
       //system_context->sleep (0); // limit CPU usage via brute force
       update_display = 0;
     }*/
-  GUIManager::instance ()->run_once();
+  ScreenManager::instance ()->run_once();
 }
 
 void

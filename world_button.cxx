@@ -18,6 +18,8 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "world.hxx"
+#include "controller.hxx"
+#include "screen_manager.hxx"
 #include "world_button.hxx"
 #include "construo_error.hxx"
 
@@ -84,6 +86,8 @@ void
 WorldButton::on_click ()
 {
   std::cout << "WorldButton: detected click on: " << filename << std::endl;
+  Controller::instance()->load_world(filename);
+  ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
 }
 
 /* EOF */

@@ -19,7 +19,7 @@
 
 #include "colors.hxx"
 #include "controller.hxx"
-#include "gui_manager.hxx"
+#include "world_gui_manager.hxx"
 #include "worldview_tool.hxx"
 #include "worldview_insert_tool.hxx"
 #include "worldview_select_tool.hxx"
@@ -212,7 +212,7 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
   scrolling = true;
   x_offset = gc.get_x_offset ();
   y_offset = gc.get_y_offset (); 
-  GUIManager::instance()->grab_mouse (this);
+  WorldGUIManager::instance()->grab_mouse (this);
 
   scroll_pos_x = gc.screen_to_world_x(x);
   scroll_pos_y = gc.screen_to_world_y(y);
@@ -222,7 +222,7 @@ void
 WorldViewComponent::on_tertiary_button_release (int x, int y)
 {
   scrolling = false;
-  GUIManager::instance()->ungrab_mouse (this);
+  WorldGUIManager::instance()->ungrab_mouse (this);
 }
 
 void

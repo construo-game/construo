@@ -22,9 +22,11 @@
 #include "gui_file_manager.hxx"
 
 GUIFileManager::GUIFileManager ()
+  : GUIChildManager (0, 0, 800, 600)
 {
   current_directory = new GUIDirectory ("/examples/");
   directories["/"] = current_directory;
+  add(current_directory);
 }
 
 GUIFileManager::~GUIFileManager ()
@@ -33,9 +35,9 @@ GUIFileManager::~GUIFileManager ()
 }
 
 void
-GUIFileManager::draw ()
+GUIFileManager::draw (GraphicContext* gc)
 {
-  current_directory->draw (graphic_context);
+  current_directory->draw (gc);
 }
 
 /* EOF */
