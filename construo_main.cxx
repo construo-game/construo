@@ -655,7 +655,7 @@ ConstruoMain::main (int argc, char* argv[])
       }
 
       graphic_context->draw_string (10, 20, "..:: Construo V"VERSION" ::..");
-      graphic_context->draw_string (10, 32, "=============================");
+      graphic_context->draw_string (10, 32, "=========================");
    
       graphic_context->draw_string (400, 20, "      [1-9] - quick save");
       graphic_context->draw_string (400, 32, "[shift 1-9] - quick load");
