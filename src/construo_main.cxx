@@ -90,7 +90,8 @@ ConstruoMain::on_exit()
 void
 ConstruoMain::init_system()
 {
-  std::cout << "ConstruoMain::init_system()" << std::endl;
+  //std::cout << "ConstruoMain::init_system()" << std::endl;
+
   system = new UnixSystem();
 #ifdef USE_X11_DISPLAY
   display = new X11Display(settings.screen_width, settings.screen_height, 
@@ -110,7 +111,7 @@ ConstruoMain::init_system()
 void
 ConstruoMain::deinit_system()
 {
-  std::cout << "ConstruoMain::deinit_system()" << std::endl;
+  //std::cout << "ConstruoMain::deinit_system()" << std::endl;
   delete display;
   delete system;
 }

@@ -557,10 +557,8 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       event.button.id = BUTTON_ZOOM_OUT;
       break;
     default:
-#ifdef DEBUG
-      std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: " 
-                << x << ", " << y << std::endl;
-#endif
+      //std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: " 
+      //        << x << ", " << y << std::endl;
       return;
     }
 

@@ -46,7 +46,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
             << "            available, please recompile." << std::endl;
 #endif
 
-  std::cout << "Opening X11 display" << std::endl;
+  std::cout << "Using X11 display" << std::endl;
   display = XOpenDisplay(NULL);
 
   if (!display)
@@ -595,7 +595,7 @@ X11Display::read_event ()
       break;
 
     default: 
-      std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+      //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
       break;
     }
   return true;

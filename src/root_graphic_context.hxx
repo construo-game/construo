@@ -22,7 +22,7 @@
 
 #include <stack>
 #include "graphic_context.hxx"
-#include "cursors.hxx"
+#include "cursor_type.hxx"
 
 /** RootGraphicContext represetens the window in which Construo runs,
  * it provides ways to set the title the cursor, etc. in addition to

@@ -27,7 +27,7 @@
 #  include <X11/extensions/xf86vmode.h>
 #endif
 
-#include "cursors.hxx"
+#include "cursors/cursors.hxx"
 #include "math.hxx"
 #include "root_graphic_context.hxx"
 #include "input_context.hxx"

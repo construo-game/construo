@@ -104,7 +104,6 @@ UnixSystem::sleep (unsigned long t)
 std::string 
 UnixSystem::get_construo_rc_path()
 {
-  std::cout << "Returning: \n" << construo_rc_path << std::endl;
   return construo_rc_path;
 }
 
@@ -219,7 +218,7 @@ UnixSystem::open_input_file(const std::string& filename)
 FILE*
 UnixSystem::open_output_file(const std::string& filename)
 {
-  std::cout << "UnixSystem: open_output_file: " << translate_filename (filename) << std::endl;
+  //std::cout << "UnixSystem: open_output_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "w");
 }
 

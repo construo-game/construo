@@ -17,6 +17,6 @@
 
 pkgdatadir = $(datadir)/games/@PACKAGE@/examples
 
-nobase_dist_pkgdata_DATA = *.construo choh/*.construo choh2/*.construo
+nobase_dist_pkgdata_DATA = $(wildcard *.construo choh/*.construo choh2/*.construo)
 
 # EOF #

@@ -381,7 +381,6 @@ WorldViewComponent::get_zoom ()
 void
 WorldViewComponent::on_world_change()
 {
-  std::cout << "Fitting world into view" << std::endl;
   World& world = *Controller::instance()->get_world();
 
   const BoundingBox& box = world.calc_bounding_box();

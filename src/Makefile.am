@@ -40,17 +40,18 @@ construo.hxx \
 construo_error.hxx \
 controller.cxx \
 controller.hxx \
-cursor_collider.xbm \
-cursor_collider_mask.xbm \
-cursor_insert.xbm \
-cursor_insert_mask.xbm \
-cursor_scroll.xbm \
-cursor_scroll_mask.xbm \
-cursor_select.xbm \
-cursor_select_mask.xbm \
-cursor_zoom.xbm \
-cursor_zoom_mask.xbm \
-cursors.hxx \
+cursors/cursor_collider.xbm \
+cursors/cursor_collider_mask.xbm \
+cursors/cursor_insert.xbm \
+cursors/cursor_insert_mask.xbm \
+cursors/cursor_scroll.xbm \
+cursors/cursor_scroll_mask.xbm \
+cursors/cursor_select.xbm \
+cursors/cursor_select_mask.xbm \
+cursors/cursor_zoom.xbm \
+cursors/cursor_zoom_mask.xbm \
+cursors/cursors.hxx \
+cursor_type.hxx \
 delta_manager.hxx \
 events.hxx \
 force_emitter.hxx \
@@ -156,10 +157,5 @@ construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
 construo_freeglut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_FREEGLUT
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
-EXTRA_DIST = \
- cursors/cursor_collider.xbm	  cursors/cursor_scroll.xbm	  cursors/cursor_zoom.xbm \
- cursors/cursor_collider_mask.xbm  cursors/cursor_scroll_mask.xbm  cursors/cursor_zoom_mask.xbm \
- cursors/cursor_insert.xbm	  cursors/cursor_select.xbm \
- cursors/cursor_insert_mask.xbm	  cursors/cursor_select_mask.xbm
 
 # EOF #
