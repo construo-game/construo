@@ -1,9 +1,23 @@
-* slow motion
+Release 0.1.1:
+* fix speed bug
+* make it non-deterministic again
+* add max particle count
+* fix broken demos (complex*, explode, ...)
+* fix assertion on broken files
+* limit screen updates
+* if I load-file, run, stop, connect, run, stop, undo I get a
+  corrupt scene with connections where they don't belong (undo-bug)
+* author field
+* date field
+* make springs removable
+* remove obsolete xml code
 
 Release 0.2.0:
 * Create GUI (simple buttons)
 * make every key bound function accessible via the GUI
 * make the window resizable
+* zooming
+* thumbnail loading
 
 Release 0.3.0:
 * make OpenGL display implementation, add alpha support (can be faked
@@ -19,5 +33,8 @@ Release 0.3.0:
  - add wind/earthquake or other things
  - make use of non-flad ground
  - add zoom
+
+ - add constrained, scenarios with a limited number of
+   particles/sticks and things like that, add mission goals
 
 # EOF #
