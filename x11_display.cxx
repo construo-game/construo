@@ -248,9 +248,9 @@ X11Display::read_event ()
         if (event.xbutton.button == 1)
           ev.button.id = BUTTON_PRIMARY;
         else if (event.xbutton.button == 2)
-          ev.button.id = BUTTON_SECONDARY;
+          ev.button.id = BUTTON_TERTIARY;
         else if (event.xbutton.button == 3)
-          ev.button.id = BUTTON_DELETE; // FIXME: SECONDARY/Delete mapping should happen elsewhere
+          ev.button.id = BUTTON_SECONDARY;
         else if (event.xbutton.button == 4)
           ev.button.id = BUTTON_ZOOM_OUT;
         else if (event.xbutton.button == 5)
@@ -270,6 +270,8 @@ X11Display::read_event ()
         if (event.xbutton.button == 1)
           ev.button.id = BUTTON_PRIMARY;
         else if (event.xbutton.button == 2)
+          ev.button.id = BUTTON_TERTIARY;
+        else if (event.xbutton.button == 3)
           ev.button.id = BUTTON_SECONDARY;
 
         ev.button.pressed = false;
@@ -303,6 +305,9 @@ X11Display::read_event ()
           case XK_Shift_L:
           case XK_Shift_R:
             shift_pressed = true;
+            break;
+          case XK_m:
+            send_button_press(BUTTON_MODE_CHANGE);
             break;
           case XK_f:
             send_button_press(BUTTON_FIX);

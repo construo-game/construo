@@ -22,7 +22,8 @@
 
 enum {
   BUTTON_PRIMARY,   // primary mouse button (inserts particles)
-  BUTTON_SECONDARY, // secondary mouse button (unused)
+  BUTTON_SECONDARY, // secondary mouse button (delete particles, rotate selection)
+  BUTTON_TERTIARY,  // scroll around
   BUTTON_FIX,       // fix a particle at the current position
   BUTTON_ESCAPE,    // escape key
   BUTTON_START,     // space key or third mouse button
@@ -32,6 +33,7 @@ enum {
   BUTTON_REDO,      // bring the world back to its state before the last undo
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_TOGGLESLOWMO, 
+  BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)
 
   BUTTON_ZOOM_OUT,
   BUTTON_ZOOM_IN,

@@ -18,9 +18,10 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "controller.hxx"
-#include "particle_factory.hxx"
-#include "input_context.hxx"
 #include "gui_manager.hxx"
+#include "worldview_tool.hxx"
+#include "worldview_insert_tool.hxx"
+#include "worldview_select_tool.hxx"
 #include "worldview_component.hxx"
 
 extern GUIManager* gui_manager;
@@ -29,11 +30,34 @@ extern Controller* controller;
 WorldViewComponent::WorldViewComponent ()
   : GUIComponent(0, 0, graphic_context->get_width (), graphic_context->get_height ())
 {
-  scrolling = true;
-  current_particle = 0;
-  //tool = INSERT_TOOL;
-  tool = GROUP_MARK_TOOL;
-  group_mark_mode = GROUP_MARK_NONE;
+  scrolling = false;
+
+  select_tool  = new WorldViewSelectTool (this);;
+  insert_tool  = new WorldViewInsertTool (this);
+
+  current_tool = insert_tool;
+  mode = INSERT_MODE;
+}
+
+void
+WorldViewComponent::set_mode (Mode m)
+{
+  current_tool->deactivate ();
+
+  if (m == INSERT_MODE)
+    {
+      current_tool = insert_tool;
+      mode = INSERT_MODE;
+    }
+  else
+    {
+      current_tool = select_tool;
+      mode = SELECT_MODE;
+    }
+
+  current_tool->activate ();
+
+  std::cout << "Setting Mode: " << m << " " << current_tool << std::endl;
 }
 
 WorldViewComponent::~WorldViewComponent ()
@@ -44,8 +68,8 @@ WorldViewComponent::~WorldViewComponent ()
 void
 WorldViewComponent::draw (GraphicContext* parent_gc)
 {
-  int x = gc.screen_to_world_x (input_context->get_mouse_x ());
-  int y = gc.screen_to_world_y (input_context->get_mouse_y ());
+  //int x = gc.screen_to_world_x (input_context->get_mouse_x ());
+  //int y = gc.screen_to_world_y (input_context->get_mouse_y ());
 
   gc.set_parent_gc (parent_gc);
 
@@ -53,49 +77,9 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   World& world = *controller->get_world();
 
-  if (tool == INSERT_TOOL)
-    {
-      Particle* selected_particle = world.get_particle (x, y);
-      if (selected_particle)
-        {
-          selected_particle->draw_highlight (&gc);
-        }
-    }
-
+  current_tool->draw_background (&gc);
   world.draw (&gc);
-  if (tool == GROUP_MARK_TOOL)
-    {
-      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-        {
-          (*i)->draw_highlight (&gc);
-        }
-    }
-
-  if (tool == INSERT_TOOL)
-    {
-      Spring* selected_spring = world.get_spring (x, y);
-      if (selected_spring)
-        {
-          selected_spring->draw_highlight (&gc);
-        }
-      
-      if (current_particle)
-        {
-          gc.draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
-                        x, y,
-                        Color(0xAAAAAA));
-        }
-    }
-  else if (tool == GROUP_MARK_TOOL)
-    {
-      if (group_mark_mode == GETTING_SELECTION)
-        {
-          gc.draw_rect (int(selection_start.x),
-                        int(selection_start.y),
-                        x, y,
-                        Color (0xDDDDDD));
-        }
-    }
+  current_tool->draw_foreground (&gc);
 
   //const WorldBoundingBox& box = world.calc_bounding_box();
   //gc.flip (int(box.x1), int(box.y1), int(box.x2), int(box.y2));
@@ -116,118 +100,37 @@ WorldViewComponent::wheel_down (int x, int y)
 void
 WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
 {
-  World& world = *controller->get_world ();
-  int x = gc.screen_to_world_x (screen_x);
-  int y = gc.screen_to_world_y (screen_y);
-
-  if (tool == INSERT_TOOL)
-    {
-      if (current_particle)
-        {
-          Particle* new_current_particle = world.get_particle (x, y);
-          if (new_current_particle != current_particle)
-            {
-              if (new_current_particle) // connect to particles
-                {
-                  world.add_spring (current_particle, new_current_particle);
-                }
-              else // add a new particle and connect it with the current one
-                {
-                  new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
-                  world.add_spring (current_particle, new_current_particle);
-                }
-              current_particle = 0;
-            }
-        }
-      else
-        {
-          current_particle = world.get_particle (x, y);
-          if (!current_particle)
-            {
-              Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
-              current_particle = p;
-            }
-        }
-    }
-  else if (tool == GROUP_MARK_TOOL)
-    {
-      gui_manager->grab_mouse (this);
-      group_mark_mode = GETTING_SELECTION;
-      Particle* new_current_particle = world.get_particle (x, y);
-      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-        {
-          if (new_current_particle == *i)
-            group_mark_mode = MOVING_SELECTION;
-        }
-      
-      if (group_mark_mode == GETTING_SELECTION)
-        {
-          selection.clear ();
-          selection_start.x = x;
-          selection_start.y = y;
-        }
-    }
+  current_tool->on_primary_button_press (screen_x, screen_y);
 }
 
 void
 WorldViewComponent::on_primary_button_release (int screen_x, int screen_y)
 {
-  World& world = *controller->get_world ();
-      
-  if (tool == GROUP_MARK_TOOL)
-    {
-      gui_manager->ungrab_mouse (this);
-      if (group_mark_mode == GETTING_SELECTION)
-        { 
-          selection = world.get_particles (int(selection_start.x), int(selection_start.y),
-                                           gc.screen_to_world_x (screen_x),
-                                           gc.screen_to_world_y (screen_y));
-          group_mark_mode = GROUP_MARK_NONE;
-        }
-    }
+  current_tool->on_primary_button_release (screen_x, screen_y);
+}
+
+void
+WorldViewComponent::on_secondary_button_press (int screen_x, int screen_y)
+{
+  current_tool->on_secondary_button_press (screen_x, screen_y);
+}
+
+void
+WorldViewComponent::on_secondary_button_release (int screen_x, int screen_y)
+{
+  current_tool->on_secondary_button_release (screen_x, screen_y);
 }
 
 void
 WorldViewComponent::on_delete_press (int screen_x, int screen_y)
 {
-  if (tool == INSERT_TOOL)
-    {
-      World& world = *controller->get_world ();
-
-      int x = gc.screen_to_world_x (screen_x);
-      int y = gc.screen_to_world_y (screen_y);
-
-      if (current_particle) 
-        { // We are currently creating a new spring, abort that
-          current_particle = 0;
-        }
-      else
-        {
-          Spring*   spring   = world.get_spring (x, y);
-          Particle* particle = world.get_particle (x, y);
-
-          if (particle)
-            world.remove_particle (particle);
-          else if (spring)
-            world.remove_spring(spring);
-        }
-    }
+  current_tool->on_delete_press (screen_x, screen_y);
 }
 
 void
 WorldViewComponent::on_fix_press (int screen_x, int screen_y)
 {
-  if (tool == INSERT_TOOL)
-    {
-      int x = gc.screen_to_world_x (screen_x);
-      int y = gc.screen_to_world_y (screen_y);
-
-      Particle* particle = controller->get_world ()->get_particle (x, y);
-      if (particle)
-        {
-          particle->set_fixed (!particle->get_fixed ());
-        }
-    }
+  current_tool->on_fix_press (screen_x, screen_y);
 }
 
 void
@@ -255,7 +158,7 @@ WorldViewComponent::scroll_down ()
 }
 
 void
-WorldViewComponent::on_secondary_button_press (int x, int y)
+WorldViewComponent::on_tertiary_button_press (int x, int y)
 {
   scrolling = true;
   x_offset = gc.get_x_offset ();
@@ -267,7 +170,7 @@ WorldViewComponent::on_secondary_button_press (int x, int y)
 }
 
 void
-WorldViewComponent::on_secondary_button_release (int x, int y)
+WorldViewComponent::on_tertiary_button_release (int x, int y)
 {
   scrolling = false;
   gui_manager->ungrab_mouse (this);
@@ -276,8 +179,6 @@ WorldViewComponent::on_secondary_button_release (int x, int y)
 void
 WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
 {
-  World& world = *controller->get_world ();
-
   if (scrolling)
     {
       int new_scroll_pos_x = int(x/gc.get_zoom() - x_offset);
@@ -287,25 +188,9 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
                      y_offset + (new_scroll_pos_y - scroll_pos_y));
 
     }
-  else if (tool == GROUP_MARK_TOOL && group_mark_mode == MOVING_SELECTION)
+  else
     {
-      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-        {
-          // Will lead to round errors 
-          (*i)->pos.x += of_x / gc.get_zoom();
-          (*i)->pos.y += of_y / gc.get_zoom();
-
-          std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
-          for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
-               j != spring_mgr.end (); ++j)
-            {
-              if ((*j)->particles.first == *i
-                  || (*j)->particles.second == *i)
-                {
-                  (*j)->recalc_length ();
-                }
-            }
-        }
+      current_tool->on_mouse_move (x, y, of_x, of_y);
     }
 }
 

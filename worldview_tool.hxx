@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,57 +17,44 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_GUI_COMPONENT_HXX
-#define HEADER_CONSTRUO_GUI_COMPONENT_HXX
+#ifndef HEADER_CONSTRUO_WORLDVIEW_TOOL_HXX
+#define HEADER_CONSTRUO_WORLDVIEW_TOOL_HXX
 
 class GraphicContext;
-class GUIManager;
+class WorldViewComponent;
 
-/** A thing that is under the controll of the GUIManager */
-class GUIComponent
+/** */
+class WorldViewTool
 {
 protected:
-  int x_pos;
-  int y_pos;
-  int width;
-  int height;
-  
+  WorldViewComponent* worldview_component;
+
 public:
-  GUIComponent (int x_, int y_, int width_, int height_)
-    : x_pos (x_), y_pos (y_), width (width_), height (height_)
+  WorldViewTool (WorldViewComponent* c) 
+    : worldview_component(c) 
   {}
 
-  virtual ~GUIComponent () {}
+  virtual ~WorldViewTool () {}
 
-  virtual void draw (GraphicContext* gc) =0;
+  /** Let the Tool to some initialisation */
+  virtual void activate () {}
 
-  /** @return true if the component is present at the given location */
-  virtual bool is_at (int x, int y);
+  /** Let the Tool to some deinitialisation */
+  virtual void deactivate () {}
+
+  virtual void draw_background (GraphicContext* gc) {}
+  virtual void draw_foreground (GraphicContext* gc) {}
 
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}
 
   virtual void on_secondary_button_press (int x, int y) {}
   virtual void on_secondary_button_release (int x, int y) {}
-
-  virtual void on_tertiary_button_press (int x, int y) {}
-  virtual void on_tertiary_button_release (int x, int y) {}
   
   virtual void on_delete_press (int x, int y) {}
   virtual void on_fix_press (int x, int y) {}
-
-  virtual void on_mouse_enter () {}
-  virtual void on_mouse_leave () {}
-
-  virtual void wheel_up (int x, int y) {}
-  virtual void wheel_down (int x, int y) {}
-
-  virtual void scroll_left () {}
-  virtual void scroll_right () {}
-  virtual void scroll_up () {}
-  virtual void scroll_down () {}
-
-  virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
+  
+  virtual void on_mouse_move (int x, int y, int of_x, int of_y) {} 
 };
 
 #endif

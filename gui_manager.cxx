@@ -167,6 +167,10 @@ GUIManager::process_button_events (ButtonEvent& button)
           current_component->on_secondary_button_press(x, y);
           break;
 
+        case BUTTON_TERTIARY:
+          current_component->on_tertiary_button_press(x, y);
+          break;
+
         case BUTTON_FIX:
           current_component->on_fix_press (x, y);
           break;
@@ -204,6 +208,17 @@ GUIManager::process_button_events (ButtonEvent& button)
 
         case BUTTON_ESCAPE:
           do_quit = true;
+          break;
+
+        case BUTTON_MODE_CHANGE:
+          if (worldview_component->get_mode () == WorldViewComponent::INSERT_MODE)
+            {
+              worldview_component->set_mode(WorldViewComponent::SELECT_MODE);
+            }
+          else
+            {
+              worldview_component->set_mode(WorldViewComponent::INSERT_MODE);
+            }
           break;
 
         case BUTTON_TOGGLESLOWMO:
@@ -251,6 +266,10 @@ GUIManager::process_button_events (ButtonEvent& button)
 
         case BUTTON_SECONDARY:
           current_component->on_secondary_button_release(x, y);
+          break;
+
+        case BUTTON_TERTIARY:
+          current_component->on_tertiary_button_release(x, y);
           break;
 
         case BUTTON_ZOOM_OUT:

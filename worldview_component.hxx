@@ -20,24 +20,25 @@
 #ifndef HEADER_WORLDVIEW_COMPONENT_HXX
 #define HEADER_WORLDVIEW_COMPONENT_HXX
 
+#include "input_context.hxx"
 #include "zoom_graphic_context.hxx"
 #include "gui_component.hxx"
 
 class Particle;
+class WorldViewTool;
+class WorldViewInsertTool;
+class WorldViewSelectTool;
 
 /** GUI Component that manages the view and the editing of the
     world */
 class WorldViewComponent : public GUIComponent
 {
+public:
+  enum Mode { INSERT_MODE, SELECT_MODE };
 private:
-  typedef enum { INSERT_TOOL, // Default Tool to insert and mark single particles/springs
-                 GROUP_MARK_TOOL } Tool; // Mark and move larger groups of particles/springs };
-  Tool tool;
+  Mode mode;
 
   ZoomGraphicContext gc;
-
-  /** The currently selected particle or NULL in case none is selected */
-  Particle* current_particle;
 
   bool scrolling;
   
@@ -47,15 +48,24 @@ private:
   float x_offset;
   float y_offset;
 
-  // Current selection from the GROUP_MARK_TOOL
-  std::vector<Particle*> selection;
-  typedef std::vector<Particle*> Selection;
-  enum { GETTING_SELECTION, MOVING_SELECTION, GROUP_MARK_NONE } group_mark_mode;
-  Vector2d selection_start;
+  /** If the user clicks in this component, the tool decides what to
+      do */
+  WorldViewTool*       current_tool;
+  WorldViewSelectTool* select_tool;
+  WorldViewInsertTool* insert_tool;
+
+  static WorldViewComponent* instance_;
 public:
+  void set_mode (Mode m); 
+  Mode get_mode () { return mode; }
+
   WorldViewComponent ();
   ~WorldViewComponent ();
 
+  static WorldViewComponent* instance() { return instance_; }
+
+
+  ZoomGraphicContext* get_gc () { return &gc; }
   void draw (GraphicContext* parent_gc);
 
   void on_primary_button_press (int x, int y);
@@ -63,6 +73,9 @@ public:
 
   void on_secondary_button_press (int x, int y);
   void on_secondary_button_release (int x, int y);
+
+  void on_tertiary_button_press (int x, int y);
+  void on_tertiary_button_release (int x, int y);
 
   void on_mouse_move (int x, int y, int of_x, int of_y);
 

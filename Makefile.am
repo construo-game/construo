@@ -43,7 +43,10 @@ gui_component.cxx \
 command_line.hxx command_line.cxx \
 settings.hxx  settings.cxx \
 vector2d.hxx \
-math.hxx
+math.hxx  \
+worldview_tool.hxx worldview_tool.cxx \
+worldview_select_tool.hxx worldview_select_tool.cxx \
+worldview_insert_tool.hxx worldview_insert_tool.cxx
 
 LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 

@@ -295,8 +295,13 @@ World::get_particle (int x, int y)
 }
 
 std::vector<Particle*> 
-World::get_particles (int x1, int y1, int x2, int y2)
+World::get_particles (int x1_, int y1_, int x2_, int y2_)
 {
+  int x1 = Math::min(x1_, x2_);
+  int x2 = Math::max(x1_, x2_);
+  int y1 = Math::min(y1_, y2_);
+  int y2 = Math::max(y1_, y2_);
+
   std::vector<Particle*> caputred_particles;
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
