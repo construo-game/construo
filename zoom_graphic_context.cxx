@@ -47,6 +47,12 @@ ZoomGraphicContext::ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_)
 }
 
 void
+ZoomGraphicContext::set_clip_rect (int x1_, int y1_, int x2_, int y2_)
+{
+  parent_gc->set_clip_rect (x1_, y1_, x2_, y2_);
+}
+
+void
 ZoomGraphicContext::lock ()
 {
   parent_gc->set_clip_rect (x1, y1, x2, y2);

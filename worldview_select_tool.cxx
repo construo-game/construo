@@ -152,6 +152,10 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
                                  WorldViewComponent::instance()->get_gc()->screen_to_world (Vector2d(x,y)));
       mode = IDLE_MODE;
     }
+  else if (mode == MOVING_SELECTION_MODE)
+    {
+      mode = IDLE_MODE;
+    }
 }
 
 void

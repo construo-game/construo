@@ -74,7 +74,7 @@ GUIDirectory::place_components ()
   int column = 0;
   int count = 0;
 
-  std::cout << "OFFSET: " << offset << std::endl;
+  //std::cout << "OFFSET: " << offset << std::endl;
 
   for(std::vector<GUIFileButton*>::size_type i = 0 + offset;
       i < files.size() && count < 9;
@@ -118,14 +118,12 @@ GUIDirectory::move_down ()
 void
 GUIDirectory::wheel_up (int x, int y)
 {
-  std::cout << "GUIDirectory got wheel_up" << std::endl;
   move_up(); 
 }
 
 void
 GUIDirectory::wheel_down (int x, int y) 
 {
-  std::cout << "GUIDirectory got wheel_down" << std::endl;
   move_down();  
 }
 

@@ -290,7 +290,6 @@ X11Display::read_event ()
     case ButtonRelease:
       {
         //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
-
         if (event.xbutton.button == 1)
           send_button_release(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)

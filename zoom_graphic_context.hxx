@@ -45,6 +45,8 @@ public:
   ZoomGraphicContext ();
   ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_);
 
+  void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
+
   /** Sets the clipping rectangles needed for the GC */
   void lock ();
 

@@ -34,6 +34,8 @@ Selection::Selection ()
 Vector2d
 Selection::get_center ()
 {
+  validate();
+
   Rect<float> rot_box ((*selection.begin ())->pos.x,
                        (*selection.begin ())->pos.y,
                        (*selection.begin ())->pos.x,
@@ -54,6 +56,8 @@ Selection::get_center ()
 void
 Selection::scale (float factor)
 {
+  validate();
+
   if (!selection.empty())
     {
       Particle& p = **selection.begin();
@@ -86,6 +90,8 @@ Selection::set_velocity (const Vector2d vel)
 void
 Selection::flip ()
 {
+  validate();
+
   if (!selection.empty())
     {
       float midpoint = 0.0f;
@@ -114,6 +120,8 @@ Selection::select_particles (Vector2d p1, Vector2d p2)
 void
 Selection::duplicate ()
 {
+  validate();
+  
   // particle translation table
   std::map<Particle*, Particle*> p_trans_table;
 
@@ -163,6 +171,8 @@ Selection::clear()
 void
 Selection::rotate (float rot_angle, Vector2d rotate_center)
 {
+  validate();
+
   for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
     {
       Vector2d& pos = (*i)->pos;
@@ -175,6 +185,16 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
 
       pos.x = (cos (angle)*length) + rotate_center.x;
       pos.y = (sin (angle)*length) + rotate_center.y;
+    }
+}
+
+void
+Selection::validate()
+{
+  if (world != Controller::instance()->get_world ())
+    {
+      std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
+      clear();
     }
 }
 

@@ -52,7 +52,7 @@ void
 GUIChildManager::draw (GraphicContext* parent_gc)
 {
   gc.set_parent_gc (parent_gc);
-  gc.set_offset (x_pos, y_pos + 25);
+  gc.set_offset (x_pos, y_pos);
   
   parent_gc->draw_fill_rect (x_pos, y_pos,
                              x_pos + width, y_pos + height, 

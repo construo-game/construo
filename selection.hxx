@@ -68,6 +68,9 @@ public:
   /** @return true if no particle is in the selection */
   bool empty() const;
 
+  /** Check if the world has changed, if so clear selecetion */
+  void validate();
+
   void rotate(float rot_angle, Vector2d rotate_center);
 
   SelectionLst::size_type size() { return selection.size(); }
