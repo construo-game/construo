@@ -65,17 +65,20 @@ void
 Particle::draw (GraphicContext* gc)
 {
   //int size = int(10.0f/(mass*mass)) + 1;
-  if (fixed)
+  if (pos.y < 598.5f)
     {
-      gc->draw_fill_circle (int(pos.x), int (pos.y),
-                            4,
-                            Color(0.6f, 0.6f, 0.6f));
-    }
-  else
-    {
-      gc->draw_fill_circle (int(pos.x), int (pos.y),
-                            2,
-                            Color(1.0f, 0.0f, 0.0f));
+      if (fixed)
+        {
+          gc->draw_fill_circle (int(pos.x), int (pos.y),
+                                4,
+                                Color(0.6f, 0.6f, 0.6f));
+        }
+      else
+        {
+          gc->draw_fill_circle (int(pos.x), int (pos.y),
+                                2,
+                                Color(1.0f, 0.0f, 0.0f));
+        }
     }
 
   if (0) // draw normals

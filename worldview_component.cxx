@@ -31,6 +31,9 @@ WorldViewComponent::WorldViewComponent ()
 {
   scrolling = true;
   current_particle = 0;
+  //tool = INSERT_TOOL;
+  tool = GROUP_MARK_TOOL;
+  group_mark_mode = GROUP_MARK_NONE;
 }
 
 WorldViewComponent::~WorldViewComponent ()
@@ -50,26 +53,48 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   World& world = *controller->get_world();
 
-  Particle* selected_particle = world.get_particle (x, y);
-  if (selected_particle)
+  if (tool == INSERT_TOOL)
     {
-      selected_particle->draw_highlight (&gc);
+      Particle* selected_particle = world.get_particle (x, y);
+      if (selected_particle)
+        {
+          selected_particle->draw_highlight (&gc);
+        }
     }
 
   world.draw (&gc);
-
-  Spring* selected_spring = world.get_spring (x, y);
-  if (selected_spring)
+  if (tool == GROUP_MARK_TOOL)
     {
-      selected_spring->draw_highlight (&gc);
+      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+        {
+          (*i)->draw_highlight (&gc);
+        }
     }
 
-
-  if (current_particle)
+  if (tool == INSERT_TOOL)
     {
-      gc.draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
-                    x, y,
-                    Color(0xAAAAAA));
+      Spring* selected_spring = world.get_spring (x, y);
+      if (selected_spring)
+        {
+          selected_spring->draw_highlight (&gc);
+        }
+      
+      if (current_particle)
+        {
+          gc.draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
+                        x, y,
+                        Color(0xAAAAAA));
+        }
+    }
+  else if (tool == GROUP_MARK_TOOL)
+    {
+      if (group_mark_mode == GETTING_SELECTION)
+        {
+          gc.draw_rect (int(selection_start.x),
+                        int(selection_start.y),
+                        x, y,
+                        Color (0xDDDDDD));
+        }
     }
 
   //const WorldBoundingBox& box = world.calc_bounding_box();
@@ -91,35 +116,73 @@ WorldViewComponent::wheel_down (int x, int y)
 void
 WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
 {
+  World& world = *controller->get_world ();
   int x = gc.screen_to_world_x (screen_x);
   int y = gc.screen_to_world_y (screen_y);
 
-  World& world = *controller->get_world ();
-
-  if (current_particle)
+  if (tool == INSERT_TOOL)
     {
-      Particle* new_current_particle = world.get_particle (x, y);
-      if (new_current_particle != current_particle)
+      if (current_particle)
         {
-          if (new_current_particle) // connect to particles
+          Particle* new_current_particle = world.get_particle (x, y);
+          if (new_current_particle != current_particle)
             {
-              world.add_spring (current_particle, new_current_particle);
+              if (new_current_particle) // connect to particles
+                {
+                  world.add_spring (current_particle, new_current_particle);
+                }
+              else // add a new particle and connect it with the current one
+                {
+                  new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
+                  world.add_spring (current_particle, new_current_particle);
+                }
+              current_particle = 0;
             }
-          else // add a new particle and connect it with the current one
+        }
+      else
+        {
+          current_particle = world.get_particle (x, y);
+          if (!current_particle)
             {
-              new_current_particle = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
-              world.add_spring (current_particle, new_current_particle);
+              Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
+              current_particle = p;
             }
-          current_particle = 0;
         }
     }
-  else
+  else if (tool == GROUP_MARK_TOOL)
     {
-      current_particle = world.get_particle (x, y);
-      if (!current_particle)
+      gui_manager->grab_mouse (this);
+      group_mark_mode = GETTING_SELECTION;
+      Particle* new_current_particle = world.get_particle (x, y);
+      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
         {
-          Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d());
-          current_particle = p;
+          if (new_current_particle == *i)
+            group_mark_mode = MOVING_SELECTION;
+        }
+      
+      if (group_mark_mode == GETTING_SELECTION)
+        {
+          selection.clear ();
+          selection_start.x = x;
+          selection_start.y = y;
+        }
+    }
+}
+
+void
+WorldViewComponent::on_primary_button_release (int screen_x, int screen_y)
+{
+  World& world = *controller->get_world ();
+      
+  if (tool == GROUP_MARK_TOOL)
+    {
+      gui_manager->ungrab_mouse (this);
+      if (group_mark_mode == GETTING_SELECTION)
+        { 
+          selection = world.get_particles (int(selection_start.x), int(selection_start.y),
+                                           gc.screen_to_world_x (screen_x),
+                                           gc.screen_to_world_y (screen_y));
+          group_mark_mode = GROUP_MARK_NONE;
         }
     }
 }
@@ -127,39 +190,43 @@ WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
 void
 WorldViewComponent::on_delete_press (int screen_x, int screen_y)
 {
-  World& world = *controller->get_world ();
-
-  int x = gc.screen_to_world_x (screen_x);
-  int y = gc.screen_to_world_y (screen_y);
-
-  if (current_particle) 
-    { // We are currently creating a new spring, abort that
-      current_particle = 0;
-    }
-  else
+  if (tool == INSERT_TOOL)
     {
-      Spring*   spring   = world.get_spring (x, y);
-      Particle* particle = world.get_particle (x, y);
+      World& world = *controller->get_world ();
 
-      if (particle)
-        world.remove_particle (particle);
-      else if (spring)
-        world.remove_spring(spring);
+      int x = gc.screen_to_world_x (screen_x);
+      int y = gc.screen_to_world_y (screen_y);
+
+      if (current_particle) 
+        { // We are currently creating a new spring, abort that
+          current_particle = 0;
+        }
+      else
+        {
+          Spring*   spring   = world.get_spring (x, y);
+          Particle* particle = world.get_particle (x, y);
+
+          if (particle)
+            world.remove_particle (particle);
+          else if (spring)
+            world.remove_spring(spring);
+        }
     }
 }
 
 void
 WorldViewComponent::on_fix_press (int screen_x, int screen_y)
 {
-  int x = gc.screen_to_world_x (screen_x);
-  int y = gc.screen_to_world_y (screen_y);
-
-  Particle* particle = controller->get_world ()->get_particle (x, y);
-  std::cout << "Fixing particle: " << particle << std::endl;
-  if (particle)
+  if (tool == INSERT_TOOL)
     {
-      std::cout << "particle: " << particle->get_fixed () << std::endl;
-      particle->set_fixed (!particle->get_fixed ());
+      int x = gc.screen_to_world_x (screen_x);
+      int y = gc.screen_to_world_y (screen_y);
+
+      Particle* particle = controller->get_world ()->get_particle (x, y);
+      if (particle)
+        {
+          particle->set_fixed (!particle->get_fixed ());
+        }
     }
 }
 
@@ -209,6 +276,8 @@ WorldViewComponent::on_secondary_button_release (int x, int y)
 void
 WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
 {
+  World& world = *controller->get_world ();
+
   if (scrolling)
     {
       int new_scroll_pos_x = int(x/gc.get_zoom() - x_offset);
@@ -217,6 +286,26 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
       gc.set_offset (x_offset + (new_scroll_pos_x - scroll_pos_x),
                      y_offset + (new_scroll_pos_y - scroll_pos_y));
 
+    }
+  else if (tool == GROUP_MARK_TOOL && group_mark_mode == MOVING_SELECTION)
+    {
+      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+        {
+          // Will lead to round errors 
+          (*i)->pos.x += of_x / gc.get_zoom();
+          (*i)->pos.y += of_y / gc.get_zoom();
+
+          std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
+          for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
+               j != spring_mgr.end (); ++j)
+            {
+              if ((*j)->particles.first == *i
+                  || (*j)->particles.second == *i)
+                {
+                  (*j)->recalc_length ();
+                }
+            }
+        }
     }
 }
 

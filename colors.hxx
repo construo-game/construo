@@ -17,39 +17,22 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_SPRING_HXX
-#define HEADER_CONSTRUO_SPRING_HXX
+#ifndef HEADER_CONSTRUO_COLORS_HXX
+#define HEADER_CONSTRUO_COLORS_HXX
 
-#include <iostream>
-#include <assert.h>
-#include "particle.hxx"
-#include "world.hxx"
-#include "lisp_reader.hxx"
+#include "color.hxx"
 
-class World;
-
-class Spring
+namespace Colors
 {
-public:
-  std::pair<Particle*, Particle*> particles;
-  
-  float length;
-  bool destroyed;
+  extern Color button_fg_pressed;
+  extern Color button_fg_hover;
+  extern Color button_fg_passive;
 
-  Spring (Particle* f, Particle* s, float l);
-  Spring (Particle* f, Particle* s);
-
-  Spring (World* world, lisp_object_t* cursor);
-
-  void update (float delta);
-  void draw (GraphicContext* gc);
-  void draw_highlight (GraphicContext* gc);
-
-  /** Forces the recalculation of the springs length */
-  void recalc_length ();
-
-  lisp_object_t* serialize();
-};
+  extern Color button_bg_pressed;
+  extern Color button_bg_hover;
+  extern Color button_bg_passive;
+  extern Color button_bg_active;
+}
 
 #endif
 

@@ -17,57 +17,42 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_WORLDVIEW_COMPONENT_HXX
-#define HEADER_WORLDVIEW_COMPONENT_HXX
+#ifndef HEADER_CONSTRUO_GUI_WINDOW_HXX
+#define HEADER_CONSTRUO_GUI_WINDOW_HXX
 
+#include <vector>
+#include <string>
 #include "zoom_graphic_context.hxx"
 #include "gui_component.hxx"
 
-class Particle;
-
-/** GUI Component that manages the view and the editing of the
-    world */
-class WorldViewComponent : public GUIComponent
+/** */
+class GUIWindow : public GUIComponent
 {
 private:
-  typedef enum { INSERT_TOOL, // Default Tool to insert and mark single particles/springs
-                 GROUP_MARK_TOOL } Tool; // Mark and move larger groups of particles/springs };
-  Tool tool;
-
   ZoomGraphicContext gc;
+  std::string title;
+  typedef std::vector<GUIComponent*> ComponentLst;
+  ComponentLst components;
 
-  /** The currently selected particle or NULL in case none is selected */
-  Particle* current_particle;
-
-  bool scrolling;
-  
-  int scroll_pos_x;
-  int scroll_pos_y;
-
-  float x_offset;
-  float y_offset;
-
-  // Current selection from the GROUP_MARK_TOOL
-  std::vector<Particle*> selection;
-  typedef std::vector<Particle*> Selection;
-  enum { GETTING_SELECTION, MOVING_SELECTION, GROUP_MARK_NONE } group_mark_mode;
-  Vector2d selection_start;
 public:
-  WorldViewComponent ();
-  ~WorldViewComponent ();
+  GUIWindow (const std::string&, int x, int y, int width, int height);
+  ~GUIWindow ();
 
-  void draw (GraphicContext* parent_gc);
+  void add (GUIComponent*);
+  void draw (GraphicContext* gc);
 
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);
 
+  void on_secondary_button_click (int x, int y);
   void on_secondary_button_press (int x, int y);
   void on_secondary_button_release (int x, int y);
-
-  void on_mouse_move (int x, int y, int of_x, int of_y);
-
+  
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
+
+  void on_mouse_enter ();
+  void on_mouse_leave ();
 
   void wheel_up (int x, int y);
   void wheel_down (int x, int y);
@@ -77,8 +62,7 @@ public:
   void scroll_up ();
   void scroll_down ();
 
-  /** */
-  bool is_at (int x, int y) { return true; }
+  void on_mouse_move (int x, int y, int of_x, int of_y);
 };
 
 #endif

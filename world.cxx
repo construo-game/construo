@@ -206,8 +206,7 @@ World::update (float delta)
     {
       if ((*i)->destroyed)
         {
-          if ((((*i)->particles.first->pos 
-                - (*i)->particles.second->pos)).norm () > 10.0f)
+          if ((*i)->length > 20.0f)
             {
               // Calc midpoint
               Vector2d pos = ((*i)->particles.first->pos
@@ -293,6 +292,19 @@ World::get_particle (int x, int y)
     }
 
   return particle;
+}
+
+std::vector<Particle*> 
+World::get_particles (int x1, int y1, int x2, int y2)
+{
+  std::vector<Particle*> caputred_particles;
+  for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
+    {
+      if ((*i)->pos.x >= x1 && (*i)->pos.x < x2
+          && (*i)->pos.y >= y1 && (*i)->pos.y < y2)
+        caputred_particles.push_back(*i);
+    }  
+  return caputred_particles;
 }
 
 void 

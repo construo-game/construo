@@ -1,6 +1,6 @@
 //  $Id$
-// 
-//  Construo - A wire-frame construction game
+//
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -12,45 +12,20 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_SPRING_HXX
-#define HEADER_CONSTRUO_SPRING_HXX
+#include "gui_component.hxx"
 
-#include <iostream>
-#include <assert.h>
-#include "particle.hxx"
-#include "world.hxx"
-#include "lisp_reader.hxx"
-
-class World;
-
-class Spring
+bool
+GUIComponent::is_at (int x, int y)
 {
-public:
-  std::pair<Particle*, Particle*> particles;
-  
-  float length;
-  bool destroyed;
-
-  Spring (Particle* f, Particle* s, float l);
-  Spring (Particle* f, Particle* s);
-
-  Spring (World* world, lisp_object_t* cursor);
-
-  void update (float delta);
-  void draw (GraphicContext* gc);
-  void draw_highlight (GraphicContext* gc);
-
-  /** Forces the recalculation of the springs length */
-  void recalc_length ();
-
-  lisp_object_t* serialize();
-};
-
-#endif
+  return (x    >= x_pos
+          && y >= y_pos
+          && x < x_pos + width
+          && y < y_pos + height);
+}
 
 /* EOF */

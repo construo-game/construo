@@ -64,6 +64,8 @@ public:
 
   /** @return the particles closed to the given coordinates */
   Particle* get_particle (int x, int y);
+  /** All particles inside the given rectangle */
+  std::vector<Particle*> get_particles (int x1, int y1, int x2, int y2);
   Spring*   get_spring (int x, int y);
 
   void add_spring (Particle*, Particle*);
@@ -75,6 +77,7 @@ public:
   void remove_spring (Spring*);
 
   ParticleFactory* get_particle_mgr() { return particle_mgr; }
+  std::vector<Spring*>& get_spring_mgr () { return springs; }
 
   /** removes everything from the world */
   void clear ();

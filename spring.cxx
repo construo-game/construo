@@ -99,9 +99,14 @@ Spring::draw (GraphicContext* gc)
   
   float color = fabs((stretch/max_stretch));
   
-  gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
-                 int(particles.second->pos.x), int(particles.second->pos.y),
-                 Color(color, 1.0f - color, 0.0f));
+  if (particles.first->pos.y  < 598.5f
+      || 
+      particles.second->pos.y < 598.5f)
+    {
+      gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
+                     int(particles.second->pos.x), int(particles.second->pos.y),
+                     Color(color, 1.0f - color, 0.0f));
+    }
 }
 
 void
@@ -122,6 +127,12 @@ Spring::serialize()
   obj.write_int ("second", particles.second->get_id());
   obj.write_float ("length", length);
   return obj.get_lisp ();
+}
+
+void
+Spring::recalc_length ()
+{
+  length = fabs((particles.first->pos - particles.second->pos).norm ());
 }
 
 /* EOF */
