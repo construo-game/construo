@@ -211,6 +211,15 @@ X11Display::draw_string(float x, float y, const std::string& str, Color color)
   XDrawString (display, drawable, gc, int(x), int(y), str.c_str (), str.length ());
 }
 
+void
+X11Display::draw_string_centered(float x, float y, const std::string& str, Color color)
+{
+  XSetForeground(display, gc, color.get_rgb());
+  XDrawString (display, drawable, gc, 
+               int(x) - ((str.length() * 6) / 2), int(y), 
+               str.c_str (), str.length ());
+}
+
 int
 X11Display::get_mouse_x ()
 {
@@ -281,9 +290,9 @@ X11Display::read_event ()
         else if (event.xbutton.button == 3)
           send_button_press(BUTTON_SECONDARY);
         else if (event.xbutton.button == 4)
-          send_button_press(BUTTON_ZOOM_OUT);
-        else if (event.xbutton.button == 5)
           send_button_press(BUTTON_ZOOM_IN);
+        else if (event.xbutton.button == 5)
+          send_button_press(BUTTON_ZOOM_OUT);
       }
       break;
 
@@ -297,9 +306,9 @@ X11Display::read_event ()
         else if (event.xbutton.button == 3)
           send_button_release(BUTTON_SECONDARY);
         else if (event.xbutton.button == 4)
-          send_button_release(BUTTON_ZOOM_OUT);
-        else if (event.xbutton.button == 5)
           send_button_release(BUTTON_ZOOM_IN);
+        else if (event.xbutton.button == 5)
+          send_button_release(BUTTON_ZOOM_OUT);
       }
       break;
 
@@ -365,6 +374,12 @@ X11Display::read_event ()
             break;
           case XK_Tab:
             send_button_press(BUTTON_TOGGLESLOWMO);
+            break;
+          case XK_plus:
+            send_button_press(BUTTON_ZOOM_IN);
+            break;
+          case XK_minus:
+            send_button_press(BUTTON_ZOOM_OUT);
             break;
           case XK_0:
             send_load_or_save(0);
@@ -688,8 +703,8 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
 
   rect[0].x = x1;
   rect[0].y = y1;
-  rect[0].width  = x2 - x1;
-  rect[0].height = y2 - y1;
+  rect[0].width  = x2 - x1 + 1;
+  rect[0].height = y2 - y1 + 1;
 
   XSetClipRectangles (display, gc, 
                       0, 0, // clip origin

@@ -104,6 +104,9 @@ GlutDisplay::GlutDisplay (int w, int h)
     {
       glEnable(GL_LINE_SMOOTH);
     }
+  
+  glEnable(GL_SCISSOR_TEST);
+  glScissor(0, 0, settings.screen_width, settings.screen_height);
 }
 
 void
@@ -161,6 +164,7 @@ GlutDisplay::draw_circle(float x, float y, float r, Color color)
 {
   glColor4f (color.r, color.g, color.b, color.a);
   GLUquadricObj* qobj = gluNewQuadric ();
+  gluQuadricDrawStyle(qobj, GLU_SILHOUETTE);
   //gluQuadricNormals (qobj, GLU_FLAT);
   glPushMatrix();
   glTranslatef (x, y, 0);
@@ -179,6 +183,7 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
   //              color);
   
   GLUquadricObj* qobj = gluNewQuadric ();
+  gluQuadricDrawStyle(qobj, GLU_FILL);
   //gluQuadricNormals (qobj, GLU_FLAT);
   glPushMatrix();
   glTranslatef (x, y, 0);
@@ -210,6 +215,13 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
   glPopMatrix();
 }
 
+
+void
+GlutDisplay::draw_string_centered(float x, float y, const std::string& str, Color color)
+{
+  draw_string(x - (7.5 * str.length())/2,
+              y, str, color);
+}
 
 bool
 GlutDisplay::get_key (int key)
@@ -290,10 +302,10 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
       event.button.id = BUTTON_SECONDARY;
       break;
     case 3:
-      event.button.id = BUTTON_ZOOM_OUT;
+      event.button.id = BUTTON_ZOOM_IN;
       break;
     case 4:
-      event.button.id = BUTTON_ZOOM_IN;
+      event.button.id = BUTTON_ZOOM_OUT;
       break;
     default:
       std::cout << "GlutDisplay: Unhandle mouse button press: " << button << " " << button_state << std::endl;
@@ -310,13 +322,21 @@ GlutDisplay::idle_func ()
       //system_context->sleep (0); // limit CPU usage via brute force
       update_display = 0;
     }*/
-  ScreenManager::instance ()->run_once();
+  if (!ScreenManager::instance ()->is_finished())
+    {
+      ScreenManager::instance ()->run_once();
+    }
+  else
+    {
+      // FIXME: is there a more gracefull way to end this?
+      exit(EXIT_SUCCESS);
+    }
 }
 
 void
 GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 {
-  std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
+  //std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
 
   Event event;
   event.type = BUTTON_EVENT;
@@ -327,12 +347,21 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
     case 127: // Delete
       event.button.id = BUTTON_DELETE;
       break;
+    case 32: // Space
+      event.button.id = BUTTON_RUN;
+      break;
+    case 9: // Tab
+      event.button.id = BUTTON_TOGGLESLOWMO;
+      break;
     case 27: // Escape
     case 'q':
       event.button.id = BUTTON_ESCAPE;
       break;
     case 'f':
-      set_fullscreen(!get_fullscreen ());
+      event.button.id = BUTTON_FIX;
+      break;
+    case 'd':
+      event.button.id = BUTTON_DUPLICATE;
       break;
     case '0':
       event.button.id = BUTTON_QUICKSAVE0;
@@ -343,8 +372,16 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
     case 'r':
       event.button.id = BUTTON_REDO;
       break;
+    case '+':
+    case '=': // so that people don't have to press shift
+      event.button.id = BUTTON_ZOOM_IN;
+      break;
+    case '-':
+      event.button.id = BUTTON_ZOOM_OUT;
+      break;
     default:
-      std::cout << "GlutDisplay: Unhandled keypress: " << int(key) << " " << x << " " << y << std::endl;
+      std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: " 
+                << x << ", " << y << std::endl;
       return;
     }
 
@@ -375,6 +412,14 @@ GlutDisplay::set_fullscreen (bool fullscreen)
     {
       is_fullscreen = false;
     }
+}
+
+void
+GlutDisplay::set_clip_rect (int x1, int y1, int x2, int y2)
+{
+  //std::cout << "Setting cliprect: " << x1<< " " <<y1<< " " <<x2-x1+1<< " " <<y2-y1+1<<std::endl;
+  // FIXME: doesn't really work for some reason
+  //glScissor(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 /* EOF */

@@ -216,7 +216,11 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_ZOOM_OUT:
+          current_component->wheel_down (x, y);
+          break;
+
         case BUTTON_ZOOM_IN:
+          current_component->wheel_up (x, y);
           break;
 
         default:
@@ -238,14 +242,6 @@ GUIManager::process_button_events (ButtonEvent& button)
 
         case BUTTON_TERTIARY:
           current_component->on_tertiary_button_release(x, y);
-          break;
-
-        case BUTTON_ZOOM_OUT:
-          current_component->wheel_up (x, y);
-          break;
-
-        case BUTTON_ZOOM_IN:
-          current_component->wheel_down (x, y);
           break;
 
         default:

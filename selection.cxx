@@ -121,6 +121,8 @@ void
 Selection::duplicate ()
 {
   validate();
+
+  Controller::instance()->push_undo();
   
   // particle translation table
   std::map<Particle*, Particle*> p_trans_table;

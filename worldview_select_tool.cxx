@@ -40,6 +40,11 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 void
 WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 {
+  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+    {
+      (*i)->draw_velocity_vector (gc);
+      (*i)->draw_highlight (gc);
+    }
 }
 
 void
@@ -76,28 +81,27 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
                      selection_box.x2 + border, selection_box.y2 + border, 
                      Colors::new_spring);
 
-      float rsize = 5.0f / gc->get_zoom();
-      gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize, 
-                          selection_box.x1 - border + rsize, selection_box.y1 - border + rsize, 
-                          Colors::selection_resizer);
-      gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize, 
-                          selection_box.x2 + border + rsize, selection_box.y1 - border + rsize, 
-                          Colors::selection_resizer);
-      gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize, 
-                          selection_box.x1 - border + rsize, selection_box.y2 + border + rsize, 
-                          Colors::selection_resizer);
-      gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
-                          selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
-                          Colors::selection_resizer);
-
-      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+      if (0) // draw selection rect
         {
-          (*i)->draw_velocity_vector (gc);
-          (*i)->draw_highlight (gc);
+          float rsize = 5.0f / gc->get_zoom();
+          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize, 
+                              selection_box.x1 - border + rsize, selection_box.y1 - border + rsize, 
+                              Colors::selection_resizer);
+          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize, 
+                              selection_box.x2 + border + rsize, selection_box.y1 - border + rsize, 
+                              Colors::selection_resizer);
+          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize, 
+                              selection_box.x1 - border + rsize, selection_box.y2 + border + rsize, 
+                              Colors::selection_resizer);
+          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
+                              selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
+                              Colors::selection_resizer);
         }
 
       gc->get_parent_gc()->draw_circle(gc->world_to_screen(selection.get_center ()),
                                        8.0f, Colors::selection_rect);
+      gc->get_parent_gc()->draw_circle(gc->world_to_screen(selection.get_center ()),
+                                       16.0f, Colors::selection_rect);
     }
 }
 
@@ -129,7 +133,11 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {
       if (new_current_particle == *i)
-        mode = MOVING_SELECTION_MODE;
+        {
+          Controller::instance()->push_undo();
+          mode = MOVING_SELECTION_MODE;
+          break;
+        }
     }
       
   // If mouse clicks into empty space, we make a new selection 
@@ -161,6 +169,8 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
 void
 WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 {
+  Controller::instance()->push_undo();
+
   mode = ROTATING_SELECTION_MODE;
   WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
 
@@ -185,6 +195,8 @@ WorldViewSelectTool::on_secondary_button_release (int x, int y)
 void
 WorldViewSelectTool::on_delete_press (int x, int y)
 {
+  Controller::instance()->push_undo();
+
   World& world = *Controller::instance()->get_world ();
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {

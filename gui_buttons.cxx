@@ -104,7 +104,7 @@ GUIButton::draw (GraphicContext* gc)
 void
 GUIButton::draw_content (GraphicContext* gc)
 {
-  gc->draw_string (x_pos + 10, y_pos + 16, title);
+  gc->draw_string_centered (x_pos + width/2, y_pos + 16, title);
 }
 
 void

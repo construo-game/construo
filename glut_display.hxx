@@ -53,6 +53,7 @@ public:
   void draw_circle(float x, float y, float r, Color color);
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_string(float x, float y, const std::string& str, Color color);
+  void draw_string_centered(float x, float y, const std::string& str, Color color);
 
   void clear ();
   void flip ();
@@ -76,6 +77,8 @@ public:
   void idle_func ();
   void keyboard_func (unsigned char key, int x, int y);
   void mouse_motion_func (int x, int y);
+
+  void set_clip_rect (int x1, int y1, int x2, int y2);
 
 private:
   GlutDisplay (const GlutDisplay&);

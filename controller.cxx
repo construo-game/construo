@@ -129,6 +129,12 @@ Controller::start_simulation ()
 }
 
 void
+Controller::push_undo()
+{
+  undo_world_stack.push_back(world->duplicate());
+}
+
+void
 Controller::clear_world ()
 {
   std::cout << "Controller: Clear" << std::endl;

@@ -95,7 +95,7 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   gc.set_parent_gc (parent_gc);
 
   //Draw the buttom border line
-  gc.draw_line (-1000, 599, 1000, 599, Colors::rect_collider_fg);
+  gc.draw_line (-10000, 599, 10000, 599, Colors::rect_collider_fg);
 
   World& world = *Controller::instance()->get_world();
 

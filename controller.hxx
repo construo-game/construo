@@ -74,6 +74,9 @@ public:
   void undo ();
   void redo ();
 
+  /** Push the current world to the undo stack */
+  void push_undo();
+
   /** start or stops the simulation */
   void start_simulation ();
 };

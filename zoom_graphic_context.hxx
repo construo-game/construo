@@ -59,6 +59,7 @@ public:
   void draw_fill_circle(float x, float y, float r, Color color);
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
   void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
+  void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
 
   int get_width ();
   int get_height ();

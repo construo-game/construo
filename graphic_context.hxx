@@ -71,7 +71,9 @@ public:
   virtual void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) =0;
   virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
 
-  virtual void set_clip_rect (int x1_, int y1_, int x2_, int y2_) {}
+  virtual void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
+
+  virtual void set_clip_rect (int x1_, int y1_, int x2_, int y2_) =0;
 
   virtual int get_width ()  =0;
   virtual int get_height () =0;

@@ -61,7 +61,7 @@ ZoomGraphicContext::lock ()
 void
 ZoomGraphicContext::unlock ()
 {
-  parent_gc->set_clip_rect (0, 0, parent_gc->get_width (), parent_gc->get_height());
+  parent_gc->set_clip_rect (0, 0, parent_gc->get_width ()-1, parent_gc->get_height()-1);
 }
 
 Vector2d
@@ -151,6 +151,15 @@ ZoomGraphicContext::draw_fill_rect(float x1, float y1, float x2, float y2, Color
 }
 
 void
+ZoomGraphicContext::draw_string_centered(float x, float y, const std::string& str, Color color)
+{
+  parent_gc->draw_string_centered(world_to_screen_x(x),
+                                  world_to_screen_y(y),
+                                  str,
+                                  color);  
+}
+
+void
 ZoomGraphicContext::draw_string(float x, float y, const std::string& str, Color color)
 {
   parent_gc->draw_string(world_to_screen_x(x),
@@ -174,15 +183,20 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
   //std::cout << "Zoom: " << screen_x << " " << screen_y
   //<< " " << x << " " << y << std::endl;
 
-  //set_zoom(zoom * 1.2);
-  //move_to (x, y);
+  if (1)
+    {
+      float old_zoom = zoom;
+      set_zoom(zoom * 1.2);
+      x_offset = screen_x/zoom - screen_x/old_zoom + x_offset;
+      y_offset = screen_y/zoom - screen_y/old_zoom + y_offset;
 
-  x_offset = (x + x_offset)/1.2f - x;
-  y_offset = (y + y_offset)/1.2f - y;
-  
-  zoom *= 1.2;
-
-  // FIXME: add max/min zoom handling here
+    }
+  else
+    {
+      x_offset = (x + x_offset)/1.2f - x;
+      y_offset = (y + y_offset)/1.2f - y;
+      zoom *= 1.2;
+    }
 
   return true;
 }
@@ -192,14 +206,20 @@ ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
   float x = screen_to_world_x (screen_x);
   float y = screen_to_world_y (screen_y);
 
-  x_offset = (x + x_offset)*1.2f - x;
-  y_offset = (y + y_offset)*1.2f - y;
+  if (1)
+    {
+      float old_zoom = zoom;
+      set_zoom(zoom / 1.2f);
+      x_offset = screen_x/zoom - screen_x/old_zoom + x_offset;
+      y_offset = screen_y/zoom - screen_y/old_zoom + y_offset;
+    }
+  else
+    {
+      x_offset = (x + x_offset)*1.2f - x;
+      y_offset = (y + y_offset)*1.2f - y;
 
-  //set_zoom(zoom / 1.2f);
-  //move_to (x, y);
-  zoom *= (1.0f/1.2f);
-
-  // FIXME: add max/min zoom handling here
+      zoom *= (1.0f/1.2f);
+    }
 
   return true;
 }
@@ -269,15 +289,15 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
 
   float width  = x2 - x1;
   float height = y2 - y1;
-  float screen_relation = get_width ()/get_height();
-  float rect_relation   = width/height; 
+  float screen_relation = float(get_height())/float(get_width ());
+  float rect_relation   = height/width; 
   
-  
-  if (rect_relation > screen_relation)
+  //std::cout << "Screen: " << screen_relation << " Zoom: " << rect_relation << std::endl;
+  if (rect_relation < screen_relation) // take width, ignore height
     {
-      set_zoom(get_width()/width);
+      set_zoom(get_width()/width); 
     }
-  else
+  else // take height, ignore width
     {
       set_zoom(get_height()/height);
     }
