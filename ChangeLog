@@ -1,3 +1,42 @@
+2003-07-29 17:10  grumbel
+
+	* world_gui_manager.cxx: - added docu for scaling
+
+2003-07-29 01:10  grumbel
+
+	* examples/dancing.construo: - new construoction
+
+2003-07-29 00:46  grumbel
+
+	* INSTALL, NEWS, README, buttons.hxx, configure.ac, cursors.hxx,
+	glut_display.cxx, gui_component.hxx, gui_manager.cxx,
+	root_graphic_context.hxx, selection.cxx, selection.hxx,
+	system_context.hxx, vector2d.hxx, worldview_component.cxx,
+	worldview_component.hxx, worldview_select_tool.cxx,
+	worldview_select_tool.hxx, worldview_tool.hxx, x11_display.cxx: -
+	added scaling support
+
+2003-07-28 23:03  grumbel
+
+	* glut_display.hxx, root_graphic_context.hxx, x11_display.cxx,
+	x11_display.hxx: - fixed libXxf86vm detection - renamed some
+	fullscreen switching functions
+
+2003-07-28 22:57  grumbel
+
+	* Makefile.am, config.h.in, configure.ac, world.cxx,
+	x11_display.cxx, x11_display.hxx: - fixed libXxf86vm detection -
+	renamed some fullscreen switching functions
+
+2003-07-28 12:44  grumbel
+
+	* examples/: tetherball.construo, bridge5.construo,
+	needle.construo: - more constructions
+
+2003-07-28 12:28  grumbel
+
+	* ChangeLog, TODO: - updated changelog
+
 2003-07-28 12:24  grumbel
 
 	* Makefile.am, config.h.in, configure.ac, construo_main.cxx,
