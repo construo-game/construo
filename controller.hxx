@@ -32,6 +32,8 @@ private:
 
   bool running;
   bool slow_down;
+  bool action_cam;
+  bool hide_dots;
 
   /** The current active world, don't delete this, delet is handled in
       the undo stacks */
@@ -53,6 +55,12 @@ public:
   bool is_running () { return running; }
   bool slow_down_active () { return slow_down; }
   void set_slow_down (bool s) { slow_down = s; }
+
+  void set_action_cam(bool);
+  bool get_action_cam();
+
+  void set_hide_dots (bool);
+  bool get_hide_dots ();
 
   World* get_world () { assert(world); return world; }
 

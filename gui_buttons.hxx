@@ -20,6 +20,7 @@
 #ifndef HEADER_CONSTRUO_GUI_BUTTONS_HXX
 #define HEADER_CONSTRUO_GUI_BUTTONS_HXX
 
+#include "colors.hxx"
 #include "gui_component.hxx"
 
 /** */
@@ -66,14 +67,6 @@ public:
   void on_click();
 };
 
-class GUIUndoButton : public GUIButton
-{
-public:
-  GUIUndoButton ();
-  void draw_content (GraphicContext*);
-  void on_click();
-};
-
 class GUIZoomInButton : public GUIButton
 {
 public:
@@ -103,21 +96,39 @@ public:
   void on_click();
 };
 
+inline bool always_false()
+{
+  return false;
+}
+
 class GUIGenericButton : public GUIButton
 {
 private:
   typedef void (*Func)();
+  typedef bool (*HighlightFunc)();
   Func func;
+  HighlightFunc hfunc;
 public:
-  GUIGenericButton (const std::string& title, int x, int y, int width, int height, Func f)
+  GUIGenericButton (const std::string& title, int x, int y, int width, int height, 
+                    Func f, HighlightFunc h = always_false)
     : GUIButton (title, x, y, width, height),
-      func (f)
+      func (f),
+      hfunc(h)
   {
   }
 
   void on_click () 
   {
     func ();
+  }
+
+  void draw_content (GraphicContext* gc)
+  {
+    if (hfunc())
+      gc->draw_fill_rect (x_pos, y_pos,
+                          x_pos + width, y_pos + height, Colors::button_bg_active);
+
+    GUIButton::draw_content (gc);
   }
 };
 

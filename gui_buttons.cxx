@@ -26,7 +26,7 @@
 #include "screen_manager.hxx"
 #include "worldview_component.hxx"
 
-#define BUTTON_POS(n) (50 + n * 30)
+#define BUTTON_POS(n) (75 + n * 30)
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
 
@@ -186,23 +186,6 @@ GUISlowMoButton::draw_content (GraphicContext* gc)
   GUIButton::draw_content (gc);
 }
 
-GUIUndoButton::GUIUndoButton ()
-  : GUIButton ("Undo", 10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT)
-{  
-}
-
-void
-GUIUndoButton::draw_content (GraphicContext* gc)
-{
-  GUIButton::draw_content (gc);
-}
-
-void
-GUIUndoButton::on_click()
-{
-  Controller::instance()->undo ();
-}
-
 GUIZoomInButton::GUIZoomInButton ()
   : GUIButton ("Zoom In", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT)
 {  
@@ -227,7 +210,7 @@ GUIZoomOutButton::on_click()
 }
 
 GUIQuitButton::GUIQuitButton ()
-  : GUIButton ("Quit", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Quit", 10, BUTTON_POS(11), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
 }
 
@@ -239,7 +222,7 @@ GUIQuitButton::on_click()
 
 
 GUILoadButton::GUILoadButton ()
-  : GUIButton ("Load", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Load", 10, BUTTON_POS(8), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
 }
 
@@ -248,6 +231,5 @@ GUILoadButton::on_click()
 {
   ScreenManager::instance()->set_gui(ScreenManager::LOAD_GUI);
 }
-
 
 /* EOF */

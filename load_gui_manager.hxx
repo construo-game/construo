@@ -34,6 +34,7 @@ public:
   LoadGUIManager ();
 
   void draw_overlay ();
+  void run_once ();
 };
 
 #endif

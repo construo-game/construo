@@ -4,13 +4,14 @@ Construo
 Construo is a programm for constructing wire-frame objects and let
 them react on physical forces, its neither a real simulation nor a
 real game, its just a little toy app which can be a nice way to waste
-time. Some game-like elements might follow later.
+time. Some game-like elements might follow later, see the file 'TODO'.
 
 The newest version can be found at:
 
   http://www.nongnu.org/construo/
 
-For questions write a mail to:
+For questions, comments, constructions, bugs reports and other things
+write a mail to:
 
   Ingo Ruhnke <grumbel@gmx.de>
 

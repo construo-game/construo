@@ -24,17 +24,21 @@ Controller* Controller::instance_ = 0;
 
 Controller::Controller ()
 {
-  instance_ = this;
-  running   = false;
-  slow_down = false;
-  world     = new World ();
+  instance_  = this;
+  running    = false;
+  slow_down  = false;
+  action_cam = false;
+  hide_dots  = false;
+  world      = new World ();
 }
 
 Controller::Controller (const std::string& filename)
 {
-  instance_ = this;
-  running   = false;
-  slow_down = false;
+  instance_  = this;
+  running    = false;
+  slow_down  = false;
+  action_cam = false;
+  hide_dots  = false;
   world     = new World (filename);
 }
 
@@ -175,6 +179,30 @@ Controller::redo ()
     {
       std::cout << "Redo stack empty" << std::endl;
     }
+}
+
+void
+Controller::set_action_cam(bool a)
+{
+  action_cam = a;
+}
+
+bool
+Controller::get_action_cam()
+{
+  return action_cam;
+}
+
+void
+Controller::set_hide_dots (bool d)
+{
+  hide_dots = d;
+}
+
+bool
+Controller::get_hide_dots ()
+{
+  return hide_dots;
 }
 
 /* EOF */

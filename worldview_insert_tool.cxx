@@ -150,9 +150,15 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
       Particle* particle = world.get_particle (x, y);
 
       if (particle)
-        world.remove_particle (particle);
+        {
+          Controller::instance()->push_undo();
+          world.remove_particle (particle);
+        }
       else if (spring)
-        world.remove_spring(spring);
+        {
+          Controller::instance()->push_undo();
+          world.remove_spring(spring);
+        }
     }
 }
 

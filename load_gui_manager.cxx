@@ -18,6 +18,8 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "gui_file_manager.hxx"
+#include "construo.hxx"
+#include "system_context.hxx"
 #include "load_gui_manager.hxx"
 
 LoadGUIManager::LoadGUIManager ()
@@ -29,6 +31,13 @@ LoadGUIManager::LoadGUIManager ()
 void
 LoadGUIManager::draw_overlay ()
 {
+}
+
+void
+LoadGUIManager::run_once ()
+{
+  GUIManager::run_once();
+  system_context->sleep (1000);
 }
 
 /* EOF */

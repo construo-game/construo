@@ -99,33 +99,43 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   World& world = *Controller::instance()->get_world();
 
-  if (0)
-    if (Controller::instance()->is_running())
-      {
-        // Live Action Cam
-        const WorldBoundingBox& box = world.calc_bounding_box();
-        gc.zoom_to((int) box.x1, (int)box.y1,
-                   (int)box.x2, (int)box.y2);
-      }
+  if (Controller::instance()->get_action_cam()
+      && Controller::instance()->is_running())
+    {
+      // Live Action Cam
+      const WorldBoundingBox& box = world.calc_bounding_box();
+      gc.zoom_to((int) box.x1, (int)box.y1,
+                 (int)box.x2, (int)box.y2);
+      gc.zoom_out (get_width()/2, get_height()/2);
+      gc.zoom_out (get_width()/2, get_height()/2);
+    }
 
   current_tool->draw_background (&gc);
-  world.draw (&gc);
+
+  world.draw_colliders (&gc);
+  world.draw_springs (&gc);
+  if (!Controller::instance()->get_hide_dots())
+    world.draw_particles (&gc);
+
   current_tool->draw_foreground (&gc);
 
-  switch (mode)
+  if (0)
     {
-    case ZOOM_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[  Zoom Mode  ]");
-      break;
-    case INSERT_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Insert Mode ]");
-      break;
-    case SELECT_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Select Mode ]");
-      break;
-    case COLLIDER_MODE:
-      parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Collider Mode]");
-      break;
+      switch (mode)
+        {
+        case ZOOM_MODE:
+          parent_gc->draw_string (10, parent_gc->get_height () - 15, "[  Zoom Mode  ]");
+          break;
+        case INSERT_MODE:
+          parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Insert Mode ]");
+          break;
+        case SELECT_MODE:
+          parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Select Mode ]");
+          break;
+        case COLLIDER_MODE:
+          parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Collider Mode]");
+          break;
+        }
     }
 
   //const WorldBoundingBox& box = world.calc_bounding_box();

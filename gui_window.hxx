@@ -23,46 +23,22 @@
 #include <vector>
 #include <string>
 #include "zoom_graphic_context.hxx"
-#include "gui_component.hxx"
+#include "gui_child_manager.hxx"
 
 /** */
-class GUIWindow : public GUIComponent
+class GUIWindow : public GUIChildManager
 {
 private:
-  ZoomGraphicContext gc;
   std::string title;
-  typedef std::vector<GUIComponent*> ComponentLst;
-  ComponentLst components;
-
+  bool mouse_over;
 public:
   GUIWindow (const std::string&, int x, int y, int width, int height);
   ~GUIWindow ();
 
-  void add (GUIComponent*);
-  void draw (GraphicContext* gc);
+  void draw(GraphicContext*);
+  void on_mouse_enter () { mouse_over = true; }
+  void on_mouse_leave () { mouse_over = false; }
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
-
-  void on_secondary_button_click (int x, int y);
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
-  
-  void on_delete_press (int x, int y);
-  void on_fix_press (int x, int y);
-
-  void on_mouse_enter ();
-  void on_mouse_leave ();
-
-  void wheel_up (int x, int y);
-  void wheel_down (int x, int y);
-
-  void scroll_left ();
-  void scroll_right ();
-  void scroll_up ();
-  void scroll_down ();
-
-  void on_mouse_move (int x, int y, int of_x, int of_y);
 };
 
 #endif

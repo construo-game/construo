@@ -209,19 +209,31 @@ World::draw (ZoomGraphicContext* gc)
 {
   current_world = this;
 
+  draw_colliders(gc);
+  draw_springs(gc);
+  draw_particles(gc);
+}
+
+void 
+World::draw_springs(ZoomGraphicContext* gc)
+{
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
+    (*i)->draw (gc);
+}
+
+void 
+World::draw_particles(ZoomGraphicContext* gc)
+{
+  particle_mgr->draw(gc);
+}
+
+void
+World::draw_colliders(ZoomGraphicContext* gc)
+{
   for (Colliders::iterator i = colliders.begin (); i != colliders.end (); ++i)
     {
       (*i)->draw(gc);
     }
-
-  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
-    (*i)->draw (gc);
-
-  //if (!Controller::instance()->is_running ())
-  particle_mgr->draw(gc);
-
-  //const WorldBoundingBox& box = calc_bounding_box();
-  //gc->draw_rect((int) box.x1, (int) box.y1, (int) box.x2, (int) box.y2, Color (0x0000FFFF));
 }
 
 void
@@ -483,7 +495,7 @@ World::write_lisp (const std::string& filename)
       lisp_free(obj);
       fputc('\n', out);
     }
-  fputs("  )", out);
+  fputs("  )\n", out);
 
 
   fputs ("  (colliders\n", out);

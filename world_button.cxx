@@ -70,7 +70,8 @@ WorldButton::draw (GraphicContext* parent_gc)
       const WorldBoundingBox& box = world->calc_bounding_box();
       gc.zoom_to((int) box.x1, (int)box.y1,
                  (int)box.x2,  (int)box.y2);
-      world->draw (&gc);
+      world->draw_colliders (&gc);
+      world->draw_springs (&gc);
     }
   else
     {

@@ -375,6 +375,7 @@ X11Display::read_event ()
           case XK_Tab:
             send_button_press(BUTTON_TOGGLESLOWMO);
             break;
+          case XK_equal:
           case XK_plus:
             send_button_press(BUTTON_ZOOM_IN);
             break;

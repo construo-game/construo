@@ -40,7 +40,10 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname)
 
       if (type == FT_DIRECTORY)
         {
-          files.push_back (new GUIDirectoryButton (filename));
+          if (*(filename.end()-1) == '/') // FIXME: Hack
+            files.push_back (new GUIDirectoryButton (filename));
+          else
+            files.push_back (new GUIDirectoryButton (filename + "/"));
         }
       else if (type == FT_CONSTRUO_FILE)
         {
@@ -108,7 +111,7 @@ GUIDirectory::draw_overlay (GraphicContext* gc)
 void
 GUIDirectory::move_up ()
 {
-  if (offset > 3)
+  if (offset >= 3)
     offset -= 3;
 
   place_components ();

@@ -10,7 +10,8 @@ Construo 0.2.0
 
  * added simple GUI
 
- * House of Horror Part1 and Part2 added
+ * House of Horror Part1 and Part2 added and fixed them for the new
+   physics
  
  * fullscreen support added
 
@@ -27,6 +28,12 @@ Construo 0.2.0
  * particle velocity editing is possible
 
  * added file-manager with thumbnail preview
+
+ * added custom collider objects (aka boxes)
+
+ * moving of colliders in a running simulation is possible
+
+ * some bit more actions are undoable
 
 
 Construo 0.1.0

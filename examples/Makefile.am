@@ -17,7 +17,6 @@
 
 pkgdatadir = $(datadir)/games/@PACKAGE@/examples/
 
-pkgdata_DATA = *.construo
-EXTRA_DIST=$(pkgdata_DATA)
+nobase_dist_pkgdata_DATA = *.construo choh/*.construo choh2/*.construo
 
 # EOF #

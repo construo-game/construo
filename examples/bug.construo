@@ -78,7 +78,6 @@
     (spring (first 43) (second 38) (length 55.901699))
     (spring (first 44) (second 46) (length 129.340637))
     (spring (first 46) (second 47) (length 32.062439))
-    (spring (first 47) (second 47) (length 0.000000))
     (spring (first 45) (second 47) (length 84.599052))
     (spring (first 46) (second 45) (length 60.108234))
     (spring (first 43) (second 48) (length 119.419426))

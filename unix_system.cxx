@@ -30,6 +30,7 @@
 #include <iostream>
 #include "construo_error.hxx"
 #include "string_utils.hxx"
+#include "construo.hxx"
 #include "unix_system.hxx"
 
 using namespace StringUtils;
@@ -137,11 +138,33 @@ UnixSystem::get_file_type(const std::string& filename)
       || filename == "/user/")
     return FT_DIRECTORY;
 
-  if (is_suffix(filename, ".construo"))
-    return FT_CONSTRUO_FILE;
+  std::string sys_name = translate_filename(filename);
+  
+  struct stat buf;
+  if (stat(sys_name.c_str(), &buf) != 0)
+    {
+      std::cout << "UnixSystem: ERROR: Couldn't stat: '" << sys_name << "'" << std::endl;
+      return FT_UNKNOWN_FILE;
+    }
   else
     {
-      return FT_UNKNOWN_FILE;
+      if (S_ISDIR(buf.st_mode))
+        {
+          return FT_DIRECTORY;
+        }
+      else if (S_ISREG(buf.st_mode))
+        {
+          if (is_suffix(filename, ".construo"))
+            return FT_CONSTRUO_FILE;
+          else
+            {
+              return FT_UNKNOWN_FILE;
+            }
+        }
+      else
+        {
+          return FT_UNKNOWN_FILE;
+        }
     }
 }
 
@@ -172,6 +195,37 @@ UnixSystem::open_input_file(const std::string& filename)
   return fopen(translate_filename (filename).c_str(), "r");
 }
 
+struct DirectorySorter
+{
+  std::string pathname;
+
+  DirectorySorter(const std::string& p)
+    : pathname(p)
+  {
+  }
+
+  bool operator()(const std::string& lhs, const std::string& rhs)
+  {
+    FileType lhs_type = system_context->get_file_type(pathname + "/" + lhs);
+    FileType rhs_type = system_context->get_file_type(pathname + "/" + rhs);
+    
+    if (lhs_type == rhs_type)
+      return (lhs < rhs);
+    else if (lhs_type == FT_DIRECTORY)
+      {
+        return true;
+      }
+    else if (rhs_type == FT_DIRECTORY)
+      {
+        return false;
+      }
+    else 
+      {
+        return (lhs < rhs);
+      }
+  }
+};
+
 std::vector<std::string>
 UnixSystem::read_directory(const std::string& arg_pathname)
 {
@@ -193,10 +247,17 @@ UnixSystem::read_directory(const std::string& arg_pathname)
 
       while ((entry = readdir(dir)) != 0)
         {
-          dir_lst.push_back(entry->d_name);
+          if (strcmp(entry->d_name, ".") != 0
+              && strcmp(entry->d_name, "..") != 0
+              && strcmp(entry->d_name, "CVS") != 0)
+            { // We ignore unusefull directories
+              dir_lst.push_back(entry->d_name);
+            }
         }
   
       closedir (dir);
+
+      std::sort(dir_lst.begin(), dir_lst.end(), DirectorySorter(pathname));
 
       return dir_lst;
     }

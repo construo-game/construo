@@ -20,227 +20,49 @@
 #include "graphic_context.hxx"
 #include "colors.hxx"
 #include "gui_window.hxx"
+#include "gui_label.hxx"
+#include "gui_buttons.hxx"
+
+void yes_press()
+{
+}
+
+void no_press()
+{
+}
 
 GUIWindow::GUIWindow (const std::string& t, int x, int y, int width, int height)
-  : GUIComponent (x, y, width, height),
+  : GUIChildManager (x, y, width, height),
     title (t)
 {
+  mouse_over = true;
+  add (new GUILabel ("Do you really want to quit?", 10, 10, 100, 30));
+  add (new GUIGenericButton("Yes", 10, 50, 80, 25, yes_press));
+  add (new GUIGenericButton("No", 110, 50, 80, 25, no_press));
 }
 
 GUIWindow::~GUIWindow ()
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+}
+
+void
+GUIWindow::draw(GraphicContext* gc)
+{
+  std::cout << "Window draw.." << mouse_over << std::endl;
+  /*if (mouse_over)
     {
-      delete *i;
+      std::cout << "MOUSEOVER" << std::endl;
+      gc->draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_bg_hover);
+      gc->draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_fg_hover);
     }
-}
-
-void
-GUIWindow::add (GUIComponent* comp)
-{
-  components.push_back(comp);
-}
-
-void
-GUIWindow::draw (GraphicContext* parent_gc)
-{
-  gc.set_parent_gc (parent_gc);
-  gc.set_offset (x_pos, y_pos + 25);
-  
-  parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos + height, 
-                             Colors::button_bg_passive);
-  parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos + height, 
-                        Colors::button_fg_passive);
-
-  parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos + 25, 
-                             Colors::button_bg_hover);
-
-  parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos + 25, 
-                        Colors::button_fg_passive);
-
-  parent_gc->draw_string (x_pos + 10, y_pos + 16, title);
-
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  else
     {
-      (*i)->draw (&gc);
-    }
-}
-
-void
-GUIWindow::on_primary_button_press (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_primary_button_press (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::on_primary_button_release (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_primary_button_release (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::on_secondary_button_press (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_secondary_button_press (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::on_secondary_button_release (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_secondary_button_release (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-  
-void
-GUIWindow::on_delete_press (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_delete_press (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::on_fix_press (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->on_fix_press (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::on_mouse_enter ()
-{
-}
-
-void
-GUIWindow::on_mouse_leave ()
-{
-}
-
-void
-GUIWindow::wheel_up (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->wheel_up (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::wheel_down (int x, int y)
-{
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-        {
-          (*i)->wheel_down (x - x_pos, y - y_pos - 25);
-          return;
-        }
-    }
-}
-
-void
-GUIWindow::scroll_left ()
-{
-  /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-      {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-      {
-      (*i)->scroll_left (x - x_pos, y - y_pos - 25);
-      return;
-      }
-      }*/
-}
-
-void
-GUIWindow::scroll_right ()
-{
-  /*
-    for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-    if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-    {
-    (*i)->scroll_right (x - x_pos, y - y_pos - 25);
-    return;
-    }
+      std::cout << "MOUSEOVER NOT OVER" << std::endl;
+      gc->draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_bg_passive);
+      gc->draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_fg_passive);
     }*/
-}
 
-void
-GUIWindow::scroll_up ()
-{
-  /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-      {
-      if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-      {
-      (*i)->scroll_down (x - x_pos, y - y_pos - 25);
-      return;
-      }
-      }*/
-}
-
-void
-GUIWindow::scroll_down ()
-{
-  /*
-    for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-    if ((*i)->is_at (x - x_pos, y - y_pos - 25))
-    {
-    (*i)->scroll_down (x - x_pos, y - y_pos - 25);
-    return;
-    }
-    }*/
-}
-
-void
-GUIWindow::on_mouse_move (int x, int y, int of_x, int of_y)
-{
+  GUIChildManager::draw(gc);
 }
 
 /* EOF */

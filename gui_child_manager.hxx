@@ -17,8 +17,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_GUI_WINDOW_HXX
-#define HEADER_CONSTRUO_GUI_WINDOW_HXX
+#ifndef HEADER_CONSTRUO_GUI_CHILDMANAGER_HXX
+#define HEADER_CONSTRUO_GUI_CHILDMANAGER_HXX
 
 #include <vector>
 #include <string>
@@ -56,8 +56,8 @@ public:
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 
-  void on_mouse_enter ();
-  void on_mouse_leave ();
+  virtual void on_mouse_enter ();
+  virtual void on_mouse_leave ();
 
   void wheel_up (int x, int y);
   void wheel_down (int x, int y);

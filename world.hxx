@@ -73,6 +73,10 @@ public:
   ~World ();
 
   void draw (ZoomGraphicContext* gc);
+  void draw_springs (ZoomGraphicContext* gc);
+  void draw_colliders (ZoomGraphicContext* gc);
+  void draw_particles (ZoomGraphicContext* gc);
+
   void update (float delta);
 
   World* duplicate () { return new World (*this); }
