@@ -29,6 +29,7 @@
 #include "gui_label.hxx"
 #include "globals.hxx"
 #include "screen_manager.hxx"
+#include "root_graphic_context.hxx"
 #include "world_gui_manager.hxx"
 
 using namespace StringUtils;

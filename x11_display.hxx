@@ -27,8 +27,9 @@
 #  include <X11/extensions/xf86vmode.h>
 #endif
 
+#include "cursors.hxx"
 #include "math.hxx"
-#include "graphic_context.hxx"
+#include "root_graphic_context.hxx"
 #include "input_context.hxx"
 
 #define X11_FULLSCREEN_MODE true
@@ -43,10 +44,30 @@ struct FlipRect
 };
 
 /** X11Display driver */
-class X11Display : public GraphicContext,
+class X11Display : public RootGraphicContext,
                    public InputContext
 {
 private:
+  Cursor cursor_scroll;
+  Pixmap cursor_scroll_pix;
+  Pixmap cursor_scroll_mask;
+
+  Cursor cursor_zoom;
+  Pixmap cursor_zoom_pix;
+  Pixmap cursor_zoom_mask;
+
+  Cursor cursor_insert;
+  Pixmap cursor_insert_pix;
+  Pixmap cursor_insert_mask;
+
+  Cursor cursor_select;
+  Pixmap cursor_select_pix;
+  Pixmap cursor_select_mask;
+
+  Cursor cursor_collider;
+  Pixmap cursor_collider_pix;
+  Pixmap cursor_collider_mask;
+
   bool doublebuffer;
 #ifdef HAVE_LIBXXF86VM
   XF86VidModeModeLine orig_modeline;
@@ -122,7 +143,10 @@ public:
 
   void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
 
-  unsigned int get_color_value(Color& color);
+  unsigned int get_color_value(const Color& color);
+  XColor get_xcolor(const Color& color);
+
+  void set_cursor_real(CursorType cursor);
 private:
   bool read_event ();
   void send_button_press (int i);

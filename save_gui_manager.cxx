@@ -20,6 +20,7 @@
 #include "gui_file_manager.hxx"
 #include "construo.hxx"
 #include "system_context.hxx"
+#include "root_graphic_context.hxx"
 #include "save_gui_manager.hxx"
 
 SaveGUIManager::SaveGUIManager ()

@@ -19,6 +19,7 @@
 
 #include "colors.hxx"
 #include "controller.hxx"
+#include "root_graphic_context.hxx"
 #include "world_gui_manager.hxx"
 #include "worldview_tool.hxx"
 #include "worldview_insert_tool.hxx"
@@ -55,21 +56,25 @@ WorldViewComponent::set_mode (Mode m)
     {
       current_tool = insert_tool;
       mode = INSERT_MODE;
+      graphic_context->set_cursor(CURSOR_INSERT);
     }
   else if (m == SELECT_MODE)
     {
       current_tool = select_tool;
       mode = SELECT_MODE;
+      graphic_context->set_cursor(CURSOR_SELECT);
     }
   else if (m == ZOOM_MODE)
     {
       current_tool = zoom_tool;
       mode = ZOOM_MODE;
+      graphic_context->set_cursor(CURSOR_ZOOM);
     }
   else if (m == COLLIDER_MODE)
     {
       current_tool = collider_tool;
       mode = COLLIDER_MODE;
+      graphic_context->set_cursor(CURSOR_COLLIDER);
     }
   else
     {
@@ -269,6 +274,9 @@ void
 WorldViewComponent::on_tertiary_button_press (int x, int y)
 {
   scrolling = true;
+  graphic_context->push_cursor();
+  graphic_context->set_cursor(CURSOR_SCROLL);
+
   x_offset = gc.get_x_offset ();
   y_offset = gc.get_y_offset (); 
   WorldGUIManager::instance()->grab_mouse (this);
@@ -280,6 +288,7 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
 void
 WorldViewComponent::on_tertiary_button_release (int x, int y)
 {
+  graphic_context->pop_cursor();
   scrolling = false;
   WorldGUIManager::instance()->ungrab_mouse (this);
 }

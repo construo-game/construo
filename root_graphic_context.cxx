@@ -17,26 +17,33 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_CONSTRUO_HXX
-#define HEADER_CONSTRUO_CONSTRUO_HXX
+#include "root_graphic_context.hxx"
 
-#include <config.h>
+void
+RootGraphicContext::set_cursor(CursorType cursor)
+{
+  current_cursor = cursor;
+  set_cursor_real(cursor);
+}
 
-#define CONSTRUO_DATADIR DATADIR"/games/"PACKAGE
+void
+RootGraphicContext::push_cursor()
+{
+  cursor_stack.push(current_cursor);
+}
 
-class SystemContext;
-class InputContext;
-class RootGraphicContext;
-
-/** Global accessor to the system functions */
-extern SystemContext*  system_context;
-
-/** Global accessor to the input functions */
-extern InputContext*   input_context;
-
-/** Global accessor to the graphic device */
-extern RootGraphicContext* graphic_context;
-
-#endif
+void
+RootGraphicContext::pop_cursor()
+{
+  if (!cursor_stack.empty())
+    {
+      set_cursor(cursor_stack.top());
+      cursor_stack.pop();
+    }
+  else
+    {
+      std::cout << "RootGraphicContext::pop_cursor(): Stack empty!" << std::endl;
+    }
+}
 
 /* EOF */

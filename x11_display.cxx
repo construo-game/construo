@@ -22,6 +22,21 @@
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 
+#include "cursor_insert.xbm"
+#include "cursor_insert_mask.xbm"
+
+#include "cursor_select.xbm"
+#include "cursor_select_mask.xbm"
+
+#include "cursor_zoom.xbm"
+#include "cursor_zoom_mask.xbm"
+
+#include "cursor_scroll.xbm"
+#include "cursor_scroll_mask.xbm"
+
+#include "cursor_collider.xbm"
+#include "cursor_collider_mask.xbm"
+
 #include "construo_error.hxx"
 #include "config.h"
 #include "x11_display.hxx"
@@ -35,6 +50,14 @@ extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
 static char zoom_tool_cursor[] = {
+  /* -------- -------- */  0x00,
+  /* -------- -------- */  0x00,
+  /* ------xx xx------ */  0x18,                         
+  /* ----xxxx xxxx---- */  0x3c,
+  /* ----xxxx xxxx---- */  0x3c,
+  /* ------xx xx------ */  0x18,
+  /* -------- -------- */  0x00,
+  /* -------- -------- */  0x00,
   /* -------- -------- */  0x00,
   /* -------- -------- */  0x00,
   /* ------xx xx------ */  0x18,                         
@@ -138,19 +161,48 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   if (fullscreen)
     set_fullscreen();
 
-  if (1) // custom cursor code
-    {
-      XColor cursor_fg;
-      XColor cursor_bg;
-      Cursor cursor = XCreateFontCursor(display, XC_crosshair); 
-      // XC_arrow, XC_crosshair
-      //set colors here
+  {
+    // Black&White
+    XColor cursor_fg = get_xcolor(Color(1.0f, 1.0f, 1.0f));
+    XColor cursor_bg = get_xcolor(Color(0, 0, 0));
+      
+    cursor_scroll_pix = XCreateBitmapFromData (display, window, (char*)cursor_scroll_bits, 
+                                           cursor_scroll_width, cursor_scroll_height);
+    cursor_scroll_mask = XCreateBitmapFromData (display, window, (char*)cursor_scroll_mask_bits, 
+                                                cursor_scroll_width, cursor_scroll_height);
+    cursor_scroll = XCreatePixmapCursor(display, cursor_scroll_pix, cursor_scroll_mask, &cursor_bg, &cursor_fg, 
+                                        cursor_scroll_x_hot, cursor_scroll_y_hot);
 
-      //Pixmap cursor_pm = XCreateBitmapFromData (display, window, zoom_tool_cursor, 8, 8);
-      //Cursor cursor = XCreatePixmapCursor(display, cursor_pm, None, &cursor_bg, &cursor_fg, 4, 4);
-      //XDefineCursor (display, window, cursor);
-      XDefineCursor (display, window, cursor);
-    }
+    cursor_zoom_pix =  XCreateBitmapFromData (display, window, (char*)cursor_zoom_bits, 
+                                              cursor_zoom_width, cursor_zoom_height);
+    cursor_zoom_mask = XCreateBitmapFromData (display, window, (char*)cursor_zoom_mask_bits, 
+                                              cursor_zoom_width, cursor_zoom_height);
+    cursor_zoom = XCreatePixmapCursor(display, cursor_zoom_pix, cursor_zoom_mask, &cursor_bg, &cursor_fg, 
+                                      cursor_zoom_x_hot, cursor_zoom_y_hot);
+
+    cursor_insert_pix =  XCreateBitmapFromData (display, window, (char*)cursor_insert_bits, 
+                                                cursor_insert_width, cursor_insert_height);
+    cursor_insert_mask = XCreateBitmapFromData (display, window, (char*)cursor_insert_mask_bits, 
+                                                cursor_insert_width, cursor_insert_height);
+    cursor_insert = XCreatePixmapCursor(display, cursor_insert_pix, cursor_insert_mask, &cursor_bg, &cursor_fg, 
+                                        cursor_insert_x_hot, cursor_insert_y_hot);
+
+    cursor_select_pix =  XCreateBitmapFromData (display, window, (char*)cursor_select_bits, 
+                                                cursor_select_width, cursor_select_height);
+    cursor_select_mask = XCreateBitmapFromData (display, window, (char*)cursor_select_mask_bits, 
+                                                cursor_select_width, cursor_select_height);
+    cursor_select = XCreatePixmapCursor(display, cursor_select_pix, cursor_select_mask, &cursor_bg, &cursor_fg, 
+                                        cursor_select_x_hot, cursor_select_y_hot);
+
+    cursor_collider_pix =  XCreateBitmapFromData (display, window, (char*)cursor_collider_bits, 
+                                                  cursor_collider_width, cursor_collider_height);
+    cursor_collider_mask = XCreateBitmapFromData (display, window, (char*)cursor_collider_mask_bits, 
+                                                  cursor_collider_width, cursor_collider_height);
+    cursor_collider = XCreatePixmapCursor(display, cursor_collider_pix, cursor_collider_mask, &cursor_bg, &cursor_fg, 
+                                          cursor_collider_x_hot, cursor_collider_y_hot);
+  }
+
+  set_cursor(CURSOR_INSERT);
 }
 
 X11Display::~X11Display ()
@@ -168,6 +220,32 @@ X11Display::~X11Display ()
   
   XDestroyWindow (display, window);
   XCloseDisplay(display); 
+}
+
+void
+X11Display::set_cursor_real(CursorType cursor)
+{
+  switch(cursor)
+    {
+    case CURSOR_INSERT:
+      XDefineCursor (display, window, cursor_insert);
+      break;
+    case CURSOR_SCROLL:
+      XDefineCursor (display, window, cursor_scroll);
+      break;
+    case CURSOR_ZOOM:
+      XDefineCursor (display, window, cursor_zoom);
+      break;
+    case CURSOR_COLLIDER:
+      XDefineCursor (display, window, cursor_collider);
+      break;
+    case CURSOR_SELECT:
+      XDefineCursor (display, window, cursor_select);
+      break;
+    default:
+      std::cout << "X11Display: Unhandled cursor type: " << cursor << std::endl;
+      break;
+    }
 }
 
 void
@@ -826,7 +904,7 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
 }
 
 unsigned int
-X11Display::get_color_value(Color& color)
+X11Display::get_color_value(const Color& color)
 {
   XColor x_color;
 
@@ -837,6 +915,21 @@ X11Display::get_color_value(Color& color)
   XAllocColor(display, colormap, &x_color);
 
   return x_color.pixel;
+}
+
+XColor
+X11Display::get_xcolor(const Color& color)
+{
+  XColor x_color;
+
+  x_color.red   = int(color.r * 65535);
+  x_color.green = int(color.g * 65535);
+  x_color.blue  = int(color.b * 65535);
+
+  XAllocColor(display, colormap, &x_color);
+
+  return x_color;
+ 
 }
 
 /* EOF */

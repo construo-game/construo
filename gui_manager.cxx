@@ -31,6 +31,7 @@
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
 #include "globals.hxx"
+#include "root_graphic_context.hxx"
 #include "screen_manager.hxx"
 
 using namespace StringUtils;

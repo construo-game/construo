@@ -17,25 +17,34 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_CONSTRUO_HXX
-#define HEADER_CONSTRUO_CONSTRUO_HXX
+#ifndef HEADER_ROOT_GRAPHIC_CONTEXT_HXX
+#define HEADER_ROOT_GRAPHIC_CONTEXT_HXX
 
-#include <config.h>
+#include <stack>
+#include "graphic_context.hxx"
+#include "cursors.hxx"
 
-#define CONSTRUO_DATADIR DATADIR"/games/"PACKAGE
-
-class SystemContext;
-class InputContext;
-class RootGraphicContext;
-
-/** Global accessor to the system functions */
-extern SystemContext*  system_context;
-
-/** Global accessor to the input functions */
-extern InputContext*   input_context;
-
-/** Global accessor to the graphic device */
-extern RootGraphicContext* graphic_context;
+/** RootGraphicContext represetens the window in which Construo runs,
+ * it provides ways to set the title the cursor, etc. in addition to
+ * the stuff that a normal GraphicContext provides.
+ */
+class RootGraphicContext : public GraphicContext
+{
+private:
+  std::stack<CursorType> cursor_stack;
+  CursorType current_cursor;
+public:
+  RootGraphicContext() {}
+  virtual ~RootGraphicContext() {}
+  void set_cursor(CursorType);
+  virtual void set_cursor_real(CursorType) =0;
+  
+  void push_cursor();
+  void pop_cursor();
+private:
+  RootGraphicContext (const RootGraphicContext&);
+  RootGraphicContext& operator= (const RootGraphicContext&);
+};
 
 #endif
 

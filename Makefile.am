@@ -42,6 +42,7 @@ worldview_component.hxx worldview_component.cxx \
 controller.hxx controller.cxx \
 gui_buttons.hxx gui_buttons.cxx \
 zoom_graphic_context.cxx zoom_graphic_context.hxx \
+root_graphic_context.cxx root_graphic_context.hxx \
 colors.hxx colors.cxx \
 gui_child_manager.hxx gui_child_manager.cxx \
 gui_component.cxx \
@@ -72,7 +73,11 @@ save_gui_manager.hxx save_gui_manager.cxx \
 screen_manager.hxx screen_manager.cxx \
 gui_window.hxx gui_window.cxx \
 globals.hxx globals.cxx \
-gui_new_file_button.hxx gui_new_file_button.cxx
+gui_new_file_button.hxx gui_new_file_button.cxx \
+cursor_collider.xbm       cursor_scroll.xbm         cursor_zoom.xbm \
+cursor_collider_mask.xbm  cursor_scroll_mask.xbm    cursor_zoom_mask.xbm \
+cursor_insert.xbm         cursor_select.xbm \
+cursor_insert_mask.xbm    cursor_select_mask.xbm
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a

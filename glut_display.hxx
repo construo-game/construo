@@ -20,11 +20,11 @@
 #ifndef HEADER_CONSTRUO_GLUT_DISPLAY_HXX
 #define HEADER_CONSTRUO_GLUT_DISPLAY_HXX
 
-#include "graphic_context.hxx"
+#include "root_graphic_context.hxx"
 #include "input_context.hxx"
 
 /** */
-class GlutDisplay : public GraphicContext,
+class GlutDisplay : public RootGraphicContext,
                     public InputContext
 {
 private:
@@ -72,7 +72,7 @@ public:
   int  get_mouse_y ();
 
   void run();
-
+  void set_cursor_real(CursorType) {}
   void reshape_func(int w, int h);
   void display_func ();
   void mouse_func (int button, int button_state, int x, int y);

@@ -21,6 +21,7 @@
 #include <assert.h>
 #include "construo.hxx"
 #include "math.hxx"
+#include "root_graphic_context.hxx"
 #include "zoom_graphic_context.hxx"
 
 ZoomGraphicContext::ZoomGraphicContext ()

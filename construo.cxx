@@ -21,9 +21,9 @@
 
 /* Global variables, mainly the different system components */
 
-SystemContext*  system_context  =0;
-InputContext*   input_context   =0;
-GraphicContext* graphic_context =0;
+SystemContext*  system_context      = 0;
+InputContext*   input_context       = 0;
+RootGraphicContext* graphic_context = 0;
 
 #ifdef CONSTRUO_0_1_0
 const double back_force = 500.0;
