@@ -122,8 +122,10 @@ World::parse_particles (lisp_object_t* cursor)
   particle_mgr = new ParticleFactory(cursor);
 }
 
+// Copy Constructor
 World::World (const World& old_world)
 {
+  // FIXME: Could need optimizations
   particle_mgr = new ParticleFactory (*old_world.particle_mgr);
   
   for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)

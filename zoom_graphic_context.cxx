@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <iostream>
 #include "zoom_graphic_context.hxx"
 
 ZoomGraphicContext::ZoomGraphicContext ()
@@ -163,6 +164,33 @@ ZoomGraphicContext::flip (int x1, int y1, int x2, int y2)
                    world_to_screen_y (y1),
                    world_to_screen_x (x2),
                    world_to_screen_y (y2));
+}
+
+void
+ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
+{
+  std::cout << "Zooming to: " << x1 << " " << y1 << " " << x2 << " " << y2
+            << std::endl;
+  
+  float center_x = (x1 + x2) / 2.0f;
+  float center_y = (y1 + y2) / 2.0f;
+
+  float width  = x2 - x1;
+  float height = y2 - y1;
+  float screen_relation = get_width ()/get_height();
+  float rect_relation   = width/height; 
+  
+  if (rect_relation > screen_relation)
+    {
+      zoom = 800/width;
+    }
+  else
+    {
+      zoom = 600/height;
+    }
+
+  x_offset = (get_width()  / (2*zoom)) - center_x;
+  y_offset = (get_height() / (2*zoom)) - center_y;
 }
 
 /* EOF */

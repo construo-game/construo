@@ -28,13 +28,15 @@ class Particle;
 class WorldViewTool;
 class WorldViewInsertTool;
 class WorldViewSelectTool;
+class WorldViewZoomTool;
 
 /** GUI Component that manages the view and the editing of the
     world */
 class WorldViewComponent : public GUIComponent
 {
 public:
-  enum Mode { INSERT_MODE, SELECT_MODE };
+  enum Mode { INSERT_MODE, SELECT_MODE, ZOOM_MODE };
+
 private:
   Mode mode;
 
@@ -53,6 +55,7 @@ private:
   WorldViewTool*       current_tool;
   WorldViewSelectTool* select_tool;
   WorldViewInsertTool* insert_tool;
+  WorldViewZoomTool*   zoom_tool;
 
   static WorldViewComponent* instance_;
 public:

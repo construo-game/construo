@@ -47,7 +47,7 @@ public:
   void draw_string(int x, int y, const std::string& str, Color color = Color (0xFFFFFF));
 
   int get_width ()  { return parent_gc->get_width (); }
-  int get_height () { return parent_gc->get_width (); }
+  int get_height () { return parent_gc->get_height (); }
 
   void clear ()  { parent_gc->clear (); }
 
@@ -58,6 +58,7 @@ public:
 
   bool zoom_in (int x, int y);
   bool zoom_out (int x, int y);
+  void zoom_to (int x1, int y1, int x2, int y2);
   void translate_offset (int x, int y);
   void set_offset (float x, float y);
 

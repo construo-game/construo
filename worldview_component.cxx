@@ -22,6 +22,7 @@
 #include "worldview_tool.hxx"
 #include "worldview_insert_tool.hxx"
 #include "worldview_select_tool.hxx"
+#include "worldview_zoom_tool.hxx"
 #include "worldview_component.hxx"
 
 extern GUIManager* gui_manager;
@@ -34,9 +35,10 @@ WorldViewComponent::WorldViewComponent ()
 
   select_tool  = new WorldViewSelectTool (this);;
   insert_tool  = new WorldViewInsertTool (this);
+  zoom_tool    = new WorldViewZoomTool (this);
 
-  current_tool = insert_tool;
-  mode = INSERT_MODE;
+  current_tool = zoom_tool;
+  mode = ZOOM_MODE;
 }
 
 void
