@@ -19,8 +19,10 @@
 
 #include <config.h>
 
-#ifdef HAVE_FREEGLUT
+#if defined(HAVE_FREEGLUT)
 #  include <GL/freeglut.h>
+#elif defined(__apple__)
+#  include <glut.h>
 #else
 #  include <GL/glut.h>
 #endif
