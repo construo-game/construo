@@ -27,6 +27,7 @@
 #include "events.hxx"
 #include "gui_component.hxx"
 #include "gui_manager.hxx"
+#include "gui_window.hxx"
 #include "worldview_component.hxx"
 #include "gui_buttons.hxx"
 
@@ -49,6 +50,12 @@ GUIManager::GUIManager ()
   components.push_back (new GUIZoomInButton ());
   components.push_back (new GUIZoomOutButton ());
   components.push_back (new GUIQuitButton ());
+
+  /*
+  GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
+  window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
+  components.push_back (window);
+  */
 }
   
 void
@@ -72,7 +79,7 @@ GUIManager::run ()
       //KeepAliveMgr::keep_alive ();
       if (controller->is_running())
         {
-          system_context->sleep (100); // limit CPU usage via brute force
+          system_context->sleep (0); // limit CPU usage via brute force
           input_context->wait_for_events();
         }
       else
@@ -151,7 +158,7 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_PRIMARY:
-          current_component->on_primary_button_click(x, y);
+          current_component->on_primary_button_press(x, y);
           break;
 
         case BUTTON_SECONDARY:

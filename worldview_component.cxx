@@ -85,7 +85,7 @@ WorldViewComponent::wheel_down (int x, int y)
 }
 
 void
-WorldViewComponent::on_primary_button_click (int screen_x, int screen_y)
+WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
 {
   int x = gc.screen_to_world_x (screen_x);
   int y = gc.screen_to_world_y (screen_y);
@@ -186,7 +186,6 @@ WorldViewComponent::scroll_down ()
 void
 WorldViewComponent::on_secondary_button_press (int x, int y)
 {
-  std::cout << "Secondary PRESS: " << std::endl;
   scrolling = true;
   x_offset = gc.get_x_offset ();
   y_offset = gc.get_y_offset (); 
@@ -199,7 +198,6 @@ WorldViewComponent::on_secondary_button_press (int x, int y)
 void
 WorldViewComponent::on_secondary_button_release (int x, int y)
 {
-  std::cout << "Secondary RELEASE: " << std::endl;
   scrolling = false;
   gui_manager->ungrab_mouse (this);
 }
@@ -207,8 +205,6 @@ WorldViewComponent::on_secondary_button_release (int x, int y)
 void
 WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
 {
-  std::cout << "Move: " << x << " " << y << std::endl;
-
   if (scrolling)
     {
       int new_scroll_pos_x = int(x/gc.get_zoom() - x_offset);
@@ -217,7 +213,6 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
       gc.set_offset (x_offset + (new_scroll_pos_x - scroll_pos_x),
                      y_offset + (new_scroll_pos_y - scroll_pos_y));
 
-      std::cout << "X_offset: " << x << " " << y << std::endl;
     }
 }
 

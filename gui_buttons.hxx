@@ -27,18 +27,12 @@ class GUIButton : public GUIComponent
 {
 protected:
   std::string title;
-  int x_pos;
-  int y_pos;
-  int width;
-  int height;
 
   bool mouse_over;
   bool pressed;
 
 public:
   GUIButton (const std::string& title, int x_pos_, int y_pos_, int width_, int height_);
-
-  bool is_at (int x, int y);
 
   void draw_border_hover(GraphicContext*);
   void draw_border_pressed(GraphicContext*);
@@ -47,9 +41,13 @@ public:
   void on_mouse_enter ();
   void on_mouse_leave ();
 
+  void on_primary_button_press (int x, int y);
+  void on_primary_button_release (int x, int y);
+
   void draw (GraphicContext*);
 
   virtual void draw_content (GraphicContext*);
+  virtual void on_click ();
 };
 
 class GUIRunButton : public GUIButton
@@ -57,7 +55,7 @@ class GUIRunButton : public GUIButton
 public:
   GUIRunButton ();
   void draw_content (GraphicContext*);
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 class GUISlowMoButton : public GUIButton
@@ -65,7 +63,7 @@ class GUISlowMoButton : public GUIButton
 public:
   GUISlowMoButton ();
   void draw_content (GraphicContext*);
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 class GUIUndoButton : public GUIButton
@@ -73,21 +71,21 @@ class GUIUndoButton : public GUIButton
 public:
   GUIUndoButton ();
   void draw_content (GraphicContext*);
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 class GUIZoomInButton : public GUIButton
 {
 public:
   GUIZoomInButton ();
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 class GUIZoomOutButton : public GUIButton
 {
 public:
   GUIZoomOutButton ();
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 
@@ -95,7 +93,7 @@ class GUIQuitButton : public GUIButton
 {
 public:
   GUIQuitButton ();
-  void on_primary_button_click (int x, int y);
+  void on_click();
 };
 
 #endif

@@ -21,6 +21,8 @@
 #define HEADER_X11_DISPLAY_HXX
 
 #include <X11/Xlib.h>
+#include <X11/extensions/xf86vmode.h>
+
 #include "graphic_context.hxx"
 #include "input_context.hxx"
 #include "keep_alive.hxx"
@@ -31,6 +33,11 @@ class X11Display : public GraphicContext,
                    public KeepAlive
 {
 private:
+  XF86VidModeModeLine orig_modeline;
+  int orig_viewport_x;
+  int orig_viewport_y;
+  int orig_dotclock;
+
   int       width;
   int       height;
   Display*  display;
@@ -39,8 +46,8 @@ private:
   GC        gc;
 
   bool shift_pressed;
-  int mouse_x;
-  int mouse_y;
+  int  mouse_x;
+  int  mouse_y;
 public:
   X11Display (int w, int h);
   virtual ~X11Display ();
@@ -52,6 +59,9 @@ public:
   void draw_circle(int x, int y, int r, Color color);
   void draw_fill_circle(int x, int y, int r, Color color);
   void draw_string(int x, int y, const std::string& str, Color color);
+
+  void set_fullscreen (bool fullscreen);
+  void restore_mode ();
 
   int get_width () { return width; }
   int get_height () { return height; }
@@ -74,6 +84,7 @@ public:
   void wait_for_events_blocking ();
 
   void wait_for_events ();
+
 private:
   bool read_event ();
   void send_button_press (int i);

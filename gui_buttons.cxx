@@ -35,20 +35,11 @@ extern WorldViewComponent* worldview_component;
 
 GUIButton::GUIButton (const std::string& title_,
                       int x_pos_, int y_pos_, int width_, int height_)
-  : title (title_), 
-    x_pos (x_pos_), y_pos (y_pos_), width (width_), height (height_)
+  : GUIComponent (x_pos_, y_pos_, width_, height_),
+    title (title_)
 {
   mouse_over = false;
   pressed    = false;
-}
-
-bool
-GUIButton::is_at (int x, int y)
-{
-  return (x    >= x_pos
-          && y >= y_pos
-          && x < x_pos + width
-          && y < y_pos + height);
 }
 
 void
@@ -61,6 +52,19 @@ void
 GUIButton::on_mouse_leave ()
 {
   mouse_over = false;
+}
+
+void
+GUIButton::on_primary_button_press (int x, int y)
+{
+  std::cout << "PRess" << std::endl;
+  on_click ();
+}
+
+void
+GUIButton::on_primary_button_release (int x, int y)
+{
+    std::cout << "Release" << std::endl;
 }
 
 void
@@ -128,6 +132,12 @@ GUIRunButton::GUIRunButton ()
 }
 
 void
+GUIButton::on_click()
+{
+  std::cout << "GUIButton: cliked (implement me)" << std::endl;
+}
+
+void
 GUIRunButton::draw_content (GraphicContext* gc)
 {
   if (controller->is_running ())
@@ -146,7 +156,7 @@ GUIRunButton::draw_content (GraphicContext* gc)
 }
 
 void
-GUIRunButton::on_primary_button_click (int x, int y)
+GUIRunButton::on_click()
 {
   std::cout << "Button pressed" << std::endl;
   controller->start_simulation ();
@@ -159,7 +169,7 @@ GUISlowMoButton::GUISlowMoButton ()
 }
 
 void
-GUISlowMoButton::on_primary_button_click (int x, int y)
+GUISlowMoButton::on_click()
 {
   controller->set_slow_down (!controller->slow_down_active ());
 }
@@ -186,7 +196,7 @@ GUIUndoButton::draw_content (GraphicContext* gc)
 }
 
 void
-GUIUndoButton::on_primary_button_click (int x, int y)
+GUIUndoButton::on_click()
 {
   controller->undo ();
 }
@@ -197,7 +207,7 @@ GUIZoomInButton::GUIZoomInButton ()
 }
 
 void
-GUIZoomInButton::on_primary_button_click (int x, int y)
+GUIZoomInButton::on_click()
 {
   worldview_component->wheel_up (400,300);
 }
@@ -209,7 +219,7 @@ GUIZoomOutButton::GUIZoomOutButton ()
 }
 
 void
-GUIZoomOutButton::on_primary_button_click (int x, int y)
+GUIZoomOutButton::on_click()
 {
   worldview_component->wheel_down (400,300); 
 }
@@ -220,7 +230,7 @@ GUIQuitButton::GUIQuitButton ()
 }
 
 void
-GUIQuitButton::on_primary_button_click (int x, int y)
+GUIQuitButton::on_click()
 {
   gui_manager->quit();
 }

@@ -37,7 +37,11 @@ worldview_component.hxx worldview_component.cxx \
 controller.hxx controller.cxx \
 gui_buttons.hxx gui_buttons.cxx \
 zoom_graphic_context.cxx zoom_graphic_context.hxx \
-colors.hxx colors.cxx
+colors.hxx colors.cxx \
+gui_window.hxx gui_window.cxx \
+gui_component.cxx
+
+LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
 EXTRA_DIST= TODO xml2sexpr.sh

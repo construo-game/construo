@@ -4,11 +4,8 @@ Release 0.1.1:
 * add max particle count
 * fix broken demos (complex*, explode, ...)
 * fix assertion on broken files
-* limit screen updates
 * author field (gcos filtering missing)
 * date field
-* make springs removable
-* update Changelog
 * addd gettext support
 * invisible springs 
 
@@ -19,6 +16,7 @@ probally FIXED:
 
 
 Release 0.2.0:
+* update Changelog
 * config file support and an option menu to switch off stress-color,
    change the coloring scheme and things like that
 * update Changelog
@@ -27,6 +25,7 @@ Release 0.2.0:
 * make the window resizable
 * zooming
 * thumbnail loading
+* 
 
 Release 0.3.0:
 * make OpenGL display implementation, add alpha support (can be faked

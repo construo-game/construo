@@ -26,18 +26,17 @@ class GUIManager;
 /** A thing that is under the controll of the GUIManager */
 class GUIComponent
 {
-private:
-  GUIManager* parent;
-  int x;
-  int y;
+protected:
+  int x_pos;
+  int y_pos;
   int width;
   int height;
   
 public:
   GUIComponent() {}
 
-  GUIComponent (GUIManager* p, int x_, int y_, int width_, int height_)
-    : parent (p), x (x_), y (y_), width (width_), height (height_)
+  GUIComponent (int x_, int y_, int width_, int height_)
+    : x_pos (x_), y_pos (y_), width (width_), height (height_)
   {}
 
   virtual ~GUIComponent () {}
@@ -45,13 +44,11 @@ public:
   virtual void draw (GraphicContext* gc) =0;
 
   /** @return true if the component is present at the given location */
-  virtual bool is_at (int x, int y) { return false; }
+  virtual bool is_at (int x, int y);
 
-  virtual void on_primary_button_click (int x, int y) {}
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}
 
-  virtual void on_secondary_button_click (int x, int y) {}
   virtual void on_secondary_button_press (int x, int y) {}
   virtual void on_secondary_button_release (int x, int y) {}
   

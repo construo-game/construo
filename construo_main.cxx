@@ -103,6 +103,7 @@ int main (int argc, char** argv)
   try {
     X11Display display (800, 600);
     UnixSystem system;
+    display.set_fullscreen (true);
   
     // Init the display, input systems
     graphic_context = &display;
@@ -115,8 +116,12 @@ int main (int argc, char** argv)
 
     ConstruoMain app;
     construo_main = &app;
+    
+    int ret_val = app.main (argc, argv);
 
-    return app.main (argc, argv);
+    display.restore_mode ();
+
+    return ret_val;
   } catch (ConstruoError& err) {
     std::cout << "Error ocurred: " << err.msg << std::endl;
     return EXIT_FAILURE;
