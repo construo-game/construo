@@ -128,6 +128,9 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
   WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
   mode = GETTING_SELECTION_MODE;
+  
+  click_pos.x = x;
+  click_pos.y = y;
 
   // If the mouse clicks on a particle from the selection, we move the selection
   Particle* new_current_particle = world.get_particle (x, y);
@@ -137,6 +140,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
         {
           Controller::instance()->push_undo();
           mode = MOVING_SELECTION_MODE;
+          move_diff = Vector2d();
           break;
         }
     }
@@ -145,8 +149,6 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
   if (mode == GETTING_SELECTION_MODE)
     {
       selection.clear ();
-      click_pos.x = x;
-      click_pos.y = y;
     }
 }
 
@@ -246,31 +248,44 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
   switch (mode)
     {
     case MOVING_SELECTION_MODE:
-      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-        {
-          if (WorldViewComponent::instance()->uses_grid())
-            {
-              (*i)->pos.x += Math::round_to(of_x / WorldViewComponent::instance()->get_gc()->get_zoom(), 10);
-              (*i)->pos.y += Math::round_to(of_y / WorldViewComponent::instance()->get_gc()->get_zoom(), 10);
-            }
-          else
-            {
-              // Will lead to round errors 
-              (*i)->pos.x += of_x / WorldViewComponent::instance()->get_gc ()->get_zoom();
-              (*i)->pos.y += of_y / WorldViewComponent::instance()->get_gc ()->get_zoom();
-            }
+      {
+        Vector2d new_pos(WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x),
+                         WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y));      
 
-          std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
-          for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
-               j != spring_mgr.end (); ++j)
-            {
-              if ((*j)->particles.first == *i
-                  || (*j)->particles.second == *i)
-                {
-                  (*j)->recalc_length ();
-                }
-            }
-        }
+        Vector2d diff = new_pos - click_pos;
+
+        // Undo the last move (FIXME: Potential round errors)
+        for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+          {
+            (*i)->pos -= move_diff;
+          }
+
+        if (WorldViewComponent::instance()->uses_grid())
+          {
+            diff.x = Math::round_to(diff.x, 10);
+            diff.y = Math::round_to(diff.y, 10);
+          }
+
+        move_diff = diff;
+
+        for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+          {
+            (*i)->pos += diff;
+
+            // Recalculate all springs that are attached to the
+            // selection, but not fully in it.
+            std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
+            for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
+                 j != spring_mgr.end (); ++j)
+              {
+                if ((*j)->particles.first == *i
+                    || (*j)->particles.second == *i)
+                  {
+                    (*j)->recalc_length ();
+                  }
+              }
+          }
+      }
       break;
     case ROTATING_SELECTION_MODE:
       {
