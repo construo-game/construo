@@ -1,3 +1,92 @@
+2003-01-11 20:07  grumbel
+
+	* Makefile.am, NEWS, configure.ac, construo_main.cxx,
+	controller.cxx, gui_child_manager.cxx, gui_directory.cxx,
+	gui_directory.hxx, gui_file_manager.cxx, gui_file_manager.hxx,
+	gui_manager.cxx, gui_manager.hxx, load_gui_manager.cxx,
+	screen_manager.cxx, screen_manager.hxx, spring.cxx,
+	system_context.hxx, unix_system.cxx, unix_system.hxx, world.cxx,
+	world_button.cxx, world_button.hxx, world_gui_manager.cxx,
+	worldview_select_tool.cxx, examples/castle.construo,
+	examples/dodge.construo, examples/pendel.construo,
+	examples/swing.construo, examples/broken/castle.construo,
+	examples/broken/pendel.construo, examples/broken/swing.construo,
+	examples/choh/quicksave1.construo,
+	examples/choh2/quicksave1.construo: - fixed save dialog a bit -
+	misc release preparations
+
+2003-01-11 17:11  grumbel
+
+	* INSTALL, INSTALL.configure, Makefile.am, README, TODO,
+	buttons.hxx, command_line.cxx, construo_main.cxx, gui_buttons.cxx,
+	gui_file_manager.cxx, gui_file_manager.hxx, gui_manager.cxx,
+	unix_system.cxx, world_gui_manager.cxx,
+	worldview_collider_tool.cxx, worldview_collider_tool.hxx,
+	worldview_insert_tool.cxx, x11_display.cxx, xml2sexpr.sh: - misc
+	release preparations
+
+2003-01-11 02:35  grumbel
+
+	* TODO, collider.hxx, controller.cxx, gui_manager.cxx,
+	gui_manager.hxx, rect_collider.cxx, rect_collider.hxx, world.cxx,
+	world_gui_manager.cxx, world_gui_manager.hxx,
+	worldview_collider_tool.cxx, examples/planelanding.construo: - some
+	more undo points added - fixed collider copying
+
+2003-01-10 21:44  grumbel
+
+	* Makefile.am, NEWS, README, controller.cxx, controller.hxx,
+	gui_buttons.cxx, gui_buttons.hxx, gui_child_manager.hxx,
+	gui_directory.cxx, gui_window.cxx, gui_window.hxx,
+	load_gui_manager.cxx, load_gui_manager.hxx, particle.cxx,
+	unix_system.cxx, world.cxx, world.hxx, world_button.cxx,
+	world_gui_manager.cxx, worldview_component.cxx,
+	worldview_insert_tool.cxx, x11_display.cxx, examples/Makefile.am,
+	examples/bug.construo: interface cleanup, runtime-docu updates,
+	release preperations
+
+2003-01-09 23:53  grumbel
+
+	* examples/choh2/: README, quicksave1.construo,
+	quicksave2.construo, quicksave3.construo, quicksave4.construo,
+	quicksave5.construo, quicksave6.construo, quicksave7.construo,
+	quicksave8.construo, quicksave9.construo: added choh2
+
+2003-01-09 23:10  grumbel
+
+	* configure.ac, controller.cxx, controller.hxx, glut_display.cxx,
+	glut_display.hxx, graphic_context.hxx, gui_buttons.cxx,
+	gui_manager.cxx, selection.cxx, worldview_component.cxx,
+	worldview_select_tool.cxx, x11_display.cxx, x11_display.hxx,
+	zoom_graphic_context.cxx, zoom_graphic_context.hxx: - fixed bug in
+	the zoom_to() function - added draw_string_centered - some more
+	keybindings for glut - non-working cliprects for glut - undo for
+	delete/rotate operations
+
+2003-01-09 18:44  grumbel
+
+	* Makefile.am, config.h.in, configure.ac, system_context.hxx,
+	compatlib/sstream: - added sstream test to configure.ac
+
+2003-01-09 18:27  grumbel
+
+	* gui_manager.cxx: added possibilty to remove and move colliders
+
+2003-01-09 18:18  grumbel
+
+	* collider.hxx, gui_file_manager.cxx, rect_collider.cxx,
+	rect_collider.hxx, world.cxx, world.hxx,
+	worldview_collider_tool.cxx, worldview_collider_tool.hxx: - added
+	serialisation of colliders - added move and delete of colliders
+
+2003-01-09 00:30  grumbel
+
+	* lispreader.cxx, unix_system.cxx: - changelog update
+
+2003-01-09 00:18  grumbel
+
+	* ChangeLog: - changelog update
+
 2003-01-09 00:14  grumbel
 
 	* Makefile.am, NEWS, collider.hxx, construo_error.hxx,

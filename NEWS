@@ -1,3 +1,9 @@
+Construo 0.2.1
+==============
+
+ * added missing set-velocity and clear key event for glut
+
+
 Construo 0.2.0
 ==============
 
@@ -35,7 +41,8 @@ Construo 0.2.0
 
  * some bit more actions are undoable
 
- * lots of new bugs, see file BUGS for the known issues
+ * lots of new bugs and missing features, see file BUGS for the known
+   issues (no file overwrite warning, so be carefull!)
 
 
 Construo 0.1.0

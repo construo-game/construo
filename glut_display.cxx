@@ -363,9 +363,95 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
     case 'd':
       event.button.id = BUTTON_DUPLICATE;
       break;
+
+    case 'v':
+      event.button.id = BUTTON_SETVELOCITY;
+      break;
+
+    case 'c':
+      event.button.id = BUTTON_CLEAR;
+      break;
+
+    case '!':
+      event.button.id = BUTTON_QUICKLOAD1;
+      break;
+
+    case '@':
+      event.button.id = BUTTON_QUICKLOAD2;
+      break;
+
+    case '#':
+      event.button.id = BUTTON_QUICKLOAD3;
+      break;
+
+    case '$':
+      event.button.id = BUTTON_QUICKLOAD4;
+      break;
+
+    case '%':
+      event.button.id = BUTTON_QUICKLOAD5;
+      break;
+
+    case '^':
+      event.button.id = BUTTON_QUICKLOAD6;
+      break;
+
+    case '&':
+      event.button.id = BUTTON_QUICKLOAD7;
+      break;
+
+    case '*':
+      event.button.id = BUTTON_QUICKLOAD8;
+      break;
+
+    case '(':
+      event.button.id = BUTTON_QUICKLOAD9;
+      break;
+
+    case ')':
+      event.button.id = BUTTON_QUICKLOAD0;
+      break;
+
     case '0':
       event.button.id = BUTTON_QUICKSAVE0;
       break;
+
+    case '1':
+      event.button.id = BUTTON_QUICKSAVE1;
+      break;
+
+    case '2':
+      event.button.id = BUTTON_QUICKSAVE2;
+      break;
+
+    case '3':
+      event.button.id = BUTTON_QUICKSAVE3;
+      break;
+
+    case '4':
+      event.button.id = BUTTON_QUICKSAVE4;
+      break;
+
+    case '5':
+      event.button.id = BUTTON_QUICKSAVE5;
+      break;
+
+    case '6':
+      event.button.id = BUTTON_QUICKSAVE6;
+      break;
+
+    case '7':
+      event.button.id = BUTTON_QUICKSAVE7;
+      break;
+
+    case '8':
+      event.button.id = BUTTON_QUICKSAVE8;
+      break;
+
+    case '9':
+      event.button.id = BUTTON_QUICKSAVE9;
+      break;
+
     case 'u':
       event.button.id = BUTTON_UNDO;
       break;

@@ -28,6 +28,7 @@
 #include <pwd.h>
 #include <errno.h>
 #include <iostream>
+#include <algorithm>
 #include "construo_error.hxx"
 #include "string_utils.hxx"
 #include "construo.hxx"

@@ -137,7 +137,7 @@ Selection::duplicate ()
       new_selection.push_back(p);
       p_trans_table[*i] = p;
 
-      std::cout << "P: " << (*i)->get_id () << " New: " << p->get_id () << std::endl;
+      //std::cout << "P: " << (*i)->get_id () << " New: " << p->get_id () << std::endl;
     }
 
   // FIXME: Warning, make sure that iterators stays intact while modifing the container

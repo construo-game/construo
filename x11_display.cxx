@@ -383,10 +383,12 @@ X11Display::read_event ()
           case XK_Tab:
             send_button_press(BUTTON_TOGGLESLOWMO);
             break;
+          case 65451: // FIXME: insert symbol here
           case XK_equal:
           case XK_plus:
             send_button_press(BUTTON_ZOOM_IN);
             break;
+          case 65453: // FIXME: insert symbol here
           case XK_minus:
             send_button_press(BUTTON_ZOOM_OUT);
             break;
