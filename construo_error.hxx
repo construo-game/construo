@@ -24,12 +24,11 @@
 
 class ConstruoError
 {
-private:
-  std::string msg;
 public:
-  ConstruoError(const std::string str)
+  std::string msg;
+
+  ConstruoError(const std::string& str)
     : msg(str) {}
-private:
 };
 
 #endif

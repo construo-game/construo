@@ -7,6 +7,8 @@ Construo 0.1.0
 
  * removal of particles is possible
 
+ * rewind to the state before the 'run' is possible
+
  * load/save now with thumbnails and without filenames
 
  * rewritten to use only plain Xlib, no additional libraries required

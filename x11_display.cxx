@@ -112,7 +112,7 @@ void
 X11Display::draw_string(int x, int y, const std::string& str, Color color)
 {
   XSetForeground(display, gc, color.get_rgb());
-  XDrawImageString (display, drawable, gc, x, y, str.c_str (), str.length ());
+  XDrawString (display, drawable, gc, x, y, str.c_str (), str.length ());
 }
 
 int
@@ -205,6 +205,30 @@ X11Display::keep_alive ()
                 Event ev;
                 ev.button.type = BUTTON_EVENT;
                 ev.button.id = BUTTON_ESCAPE;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_u)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_UNDO;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_1)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_QUICKSAVE1;
+                ev.button.pressed = true;
+                events.push(Event(ev));
+              }
+            else if (sym == XK_2)
+              {
+                Event ev;
+                ev.button.type = BUTTON_EVENT;
+                ev.button.id = BUTTON_QUICKLOAD1;
                 ev.button.pressed = true;
                 events.push(Event(ev));
               }

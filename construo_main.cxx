@@ -24,11 +24,12 @@
 #include "construo_main.hxx"
 #include "config.h"
 #include "world.hxx"
+#include "construo_error.hxx"
 
 #include "x11_display.hxx"
 #include "unix_system.hxx"
 
-unsigned int Particle::id_counter;
+int Particle::id_counter;
 
 ConstruoMain::ConstruoMain ()
 {
@@ -405,7 +406,13 @@ ConstruoMain::process_events ()
               switch (event.button.id)
                 {
                 case BUTTON_START:
-                  running = !running;
+                  {
+                    if (!running)
+                      {
+                        world_stack.push_back(world->duplicate());
+                      }
+                    running = !running;
+                  }
                   break;
                 case BUTTON_PRIMARY:
                   if (c_particle)
@@ -462,10 +469,40 @@ ConstruoMain::process_events ()
                 case BUTTON_CLEAR:
                   std::cout << "Clear" << std::endl;
                   world->clear ();
+                  c_particle = 0;
+                  running = false;
+                  break;
+                  
+                case BUTTON_UNDO:
+                  if (!world_stack.empty())
+                    {
+                      delete world; // fixme: memory hole
+                      world = world_stack.back();
+                      world_stack.pop_back();
+                      running = false;
+                    }
+                  else
+                    {
+                      std::cout << "Undo stack empty" << std::endl;
+                    }
                   break;
 
                 case BUTTON_ESCAPE:
                   do_quit = true;
+                  break;
+
+                case BUTTON_QUICKSAVE1:
+                  std::cout << "Saving World..." << std::endl;
+                  world->write_lisp ("/tmp/bla.lisp");
+                  std::cout << "Saving World... DONE" << std::endl;
+                  break;
+
+                case BUTTON_QUICKLOAD1:
+                  world_stack.push_back(world);
+                  std::cout << "Loading World..." << std::endl;
+                  world = new World ("/tmp/bla.lisp");
+                  running = false;
+                  std::cout << "Loading World... DONE" << std::endl;
                   break;
 
                 default:
@@ -538,15 +575,17 @@ ConstruoMain::main (int argc, char* argv[])
           }
       }
 
-      graphic_context->draw_string (10, 20, "..:: Construo V0.1.0 ::..");
-      graphic_context->draw_string (10, 32, "=========================");
+      graphic_context->draw_string (10, 20, "..:: Construo V0.1.0pre1 ::..");
+      graphic_context->draw_string (10, 32, "=============================");
 
       
       graphic_context->draw_string (600, 20, "[ left ] - insert/connect spots");
       graphic_context->draw_string (600, 32, "[middle] - start/stop simulation");
       graphic_context->draw_string (600, 44, "[right ] - remove spot");
       graphic_context->draw_string (600, 58, "[  c   ] - clear screen");
-      graphic_context->draw_string (600, 70, "[escape] - quit");
+      graphic_context->draw_string (600, 70, "[  f   ] - fix current spot");
+      graphic_context->draw_string (600, 82, "[  u   ] - rewind to last state");
+      graphic_context->draw_string (600, 94, "[escape] - quit");
 
       if (running)
         graphic_context->draw_string (graphic_context->get_width () - 60,
@@ -571,6 +610,8 @@ int main (int argc, char** argv)
 {
   std::cout << "Construo " << VERSION << std::endl;
 
+  try 
+    {
   X11Display display (800, 600);
   UnixSystem system;
   
@@ -581,6 +622,12 @@ int main (int argc, char** argv)
   
   ConstruoMain app;
   return app.main (argc, argv);
+    }
+  catch (ConstruoError& err)
+    {
+      std::cout << "Error ocurred: " << err.msg << std::endl;
+      return EXIT_FAILURE;
+    }
 }
 
 /* EOF */

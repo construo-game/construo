@@ -38,7 +38,6 @@ const double max_stretch = 0.1;
 
 #include <string>
 #include <iostream>
-#include <strstream>
 #include "vector.hxx"
 
 std::string to_xml (const CL_Vector& vec);

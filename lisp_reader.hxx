@@ -17,20 +17,30 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_BUTTONS_HXX
-#define HEADER_CONSTRUO_BUTTONS_HXX
+#ifndef HEADER_LISP_READER_HXX
+#define HEADER_LISP_READER_HXX
 
-enum {
-  BUTTON_PRIMARY,   // primary mouse button (inserts particles)
-  BUTTON_SECONDARY, // secondary mouse button (unused)
-  BUTTON_FIX,       // fix a particle at the current position
-  BUTTON_ESCAPE,    // escape key
-  BUTTON_START,     // space key or third mouse button
-  BUTTON_CLEAR,     // clear the current scene
-  BUTTON_DELETE,    // delete the current object
-  BUTTON_UNDO,      // bring the world back to its state before the simulation start
-  BUTTON_QUICKSAVE1,
-  BUTTON_QUICKLOAD1
+extern "C" {
+#include "lispreader.h"
+}
+
+#include "vector.hxx"
+
+/** */
+class LispReader
+{
+private:
+  lisp_object_t* lst;
+
+  lisp_object_t* search_for(const char* name);
+public:
+  /** cur == ((pos 1 2 3) (id 12 3 4)...) */
+  LispReader (lisp_object_t* l);
+
+  void read_vector (const char* name, CL_Vector* vec);
+  void read_int (const char* name, int* i);
+  void read_float (const char* name, float* f);
+  void read_bool (const char* name, bool* b);
 };
 
 #endif

@@ -22,6 +22,10 @@
 
 #include <iostream>
 #include "particle.hxx"
+#include "world.hxx"
+#include "lisp_reader.hxx"
+
+class World;
 
 class Stick
 {
@@ -31,12 +35,21 @@ public:
   float length;
   bool destroyed;
 
+  Stick (Particle* f, Particle* s, float l) {
+    particles.first = f;
+    particles.second = s;
+    destroyed = false;
+    length = l;
+  }
+
   Stick (Particle* f, Particle* s) {
     particles.first = f;
     particles.second = s;
     destroyed = false;
     length = fabs((f->pos - s->pos).norm ());
   }
+
+  Stick (World* world, lisp_object_t* cursor);
 
   void write_xml (std::ostream& out)
   {
@@ -77,6 +90,15 @@ public:
     graphic_context->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
                                 int(particles.second->pos.x), int(particles.second->pos.y),
                                 Color(color, 1.0f - color, 0.0f));
+  }
+
+  lisp_object_t* serialize()
+  {
+    Lispifier obj ("spring");
+    obj.write_int ("first", particles.first->get_id());
+    obj.write_int ("second", particles.second->get_id());
+    obj.write_float ("length", length);
+    return obj.get_lisp ();
   }
 };
 

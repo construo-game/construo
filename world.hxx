@@ -24,22 +24,34 @@
 #include "stick.hxx"
 #include "particle.hxx"
 
+class Particle;
+class Stick;
+
 /** This class holds all particles and springs */
 class World
 {
 private:
   std::list<Particle*> particles;
   typedef std::list<Particle*>::iterator ParticleIter;
+  typedef std::list<Particle*>::const_iterator CParticleIter;
 
   std::list<Stick*> sticks;
   typedef std::list<Stick*>::iterator StickIter;
+  typedef std::list<Stick*>::const_iterator CStickIter;
 
+  void parse_scene (lisp_object_t* lst);
+  void parse_springs (lisp_object_t* lst);
+  void parse_particles (lisp_object_t* lst);
 public:
   World ();
+  World (const World& w);
+  World (const std::string& filename);
   ~World ();
 
   void draw (GraphicContext* gc);
   void update (float delta);
+
+  World* duplicate () { return new World (*this); }
 
   /** @return the particles closed to the given coordinates */
   Particle* get_particle (int x, int y);
@@ -53,10 +65,14 @@ public:
   /** remove the given stick */
   void remove_stick (Stick*);
 
+  /** return the particle with the given id */
+  Particle* lookup_particle (int id);
+
   /** removes everything from the world */
   void clear ();
+  
+  void write_lisp (const std::string& filename);
 private:
-  World (const World&);
   World& operator= (const World&);
 };
 

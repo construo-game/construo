@@ -18,24 +18,13 @@
 bin_PROGRAMS = construo
 
 construo_SOURCES = \
- construo.hxx \
- construo_main.hxx construo_main.cxx \
- delta_manager.hxx \
- graphic_context.hxx \
- input_context.hxx input_context.cxx \
- system_context.hxx \
- x11_display.hxx x11_display.cxx \
- vector.hxx  vector.cxx \
- unix_system.hxx unix_system.cxx \
- keep_alive.hxx  \
- keep_alive_mgr.hxx keep_alive_mgr.cxx \
- keys.hxx events.hxx \
- particle.hxx stick.hxx \
- color.hxx \
- config.hxx \
- construo_error.hxx \
- world.hxx world.cxx \
- construo.cxx \
- buttons.hxx
+buttons.hxx   construo_error.hxx  graphic_context.hxx  keys.hxx            vector.cxx      \
+color.hxx     construo_main.cxx   input_context.cxx    particle.hxx        vector.hxx      \
+config.cxx    construo_main.hxx   input_context.hxx    stick.hxx           world.cxx       \
+config.hxx    delta_manager.hxx   keep_alive.hxx       system_context.hxx  world.hxx       \
+construo.cxx  events.hxx          keep_alive_mgr.cxx   unix_system.cxx     x11_display.cxx \
+construo.hxx  force_emitter.hxx   keep_alive_mgr.hxx   unix_system.hxx     x11_display.hxx \
+lispreader.c  lispreader.h   lispifier.hxx lispifier.cxx lisp_reader.hxx lisp_reader.cxx \
+particle.cxx  stick.cxx
 
 # EOF #

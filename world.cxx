@@ -17,6 +17,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "config.h"
+#include "construo_error.hxx"
 #include "world.hxx"
 
 bool stick_destroyed (Stick* stick)
@@ -28,9 +30,137 @@ World::World ()
 {
 }
 
+World::World (const std::string& filename)
+{
+  FILE* in;
+  lisp_stream_t stream;
+
+  in = fopen(filename.c_str(), "r");
+  if (!in)
+    {
+      throw ConstruoError ("World: Couldn't open " + filename);
+      return;
+    }
+
+  lisp_stream_init_file (&stream, in);
+  
+  lisp_object_t* root_obj = lisp_read (&stream);
+  lisp_object_t* cur = lisp_car(root_obj);
+  
+  if (!lisp_symbol_p (cur))
+    {
+      throw ConstruoError ("World: Read error in " + filename);
+    }
+  
+  if (strcmp(lisp_symbol(cur), "construo-scene") == 0)
+    {
+      parse_scene (lisp_cdr(root_obj));
+    }
+  else
+    {
+      throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
+    }
+  
+  lisp_free (root_obj);
+
+  std::cout << "particles: " << particles.size () << std::endl;
+  std::cout << "springs:   " << sticks.size () << std::endl;
+}
+
+void
+World::parse_scene (lisp_object_t* cursor)
+{
+  while(!lisp_nil_p(cursor))
+    {
+      lisp_object_t* cur = lisp_car(cursor);
+
+      if (!lisp_cons_p(cur) || !lisp_symbol_p (lisp_car(cur)))
+        {
+          throw ConstruoError ("World: Read error in parse_scene");
+        }
+      else
+        {
+          if (strcmp(lisp_symbol(lisp_car(cur)), "particles") == 0)
+            {
+              parse_particles(lisp_cdr(cur));
+            }
+          else if (strcmp(lisp_symbol(lisp_car(cur)), "springs") == 0)
+            {
+              parse_springs(lisp_cdr(cur));
+            }
+          else
+            {
+              throw ConstruoError ("World: Read error in parse_scene" 
+                                   ". Unhandled " + std::string(lisp_symbol(lisp_car(cur))));
+            }
+        }      
+      cursor = lisp_cdr (cursor);
+    }
+}
+
+void
+World::parse_springs (lisp_object_t* cursor)
+{
+  while(!lisp_nil_p(cursor))
+    {
+      lisp_object_t* cur = lisp_car(cursor);
+      sticks.push_back(new Stick (this, cur));
+      cursor = lisp_cdr (cursor);
+    }  
+}
+
+void
+World::parse_particles (lisp_object_t* cursor)
+{
+  while(!lisp_nil_p(cursor))
+    {
+      lisp_object_t* cur = lisp_car(cursor);
+      particles.push_back(new Particle (cur));
+      cursor = lisp_cdr (cursor);
+    }
+}
+
+World::World (const World& w)
+{
+  for (CParticleIter i = w.particles.begin (); 
+       i != w.particles.end (); 
+       ++i)
+    {
+      particles.push_back (new Particle (*(*i)));
+    }
+
+  for (CStickIter i = w.sticks.begin (); i != w.sticks.end (); ++i)
+    {
+      Particle* first  = lookup_particle((*i)->particles.first->get_id());
+      Particle* second = lookup_particle((*i)->particles.second->get_id());
+
+      if (first && second)
+        {
+          sticks.push_back (new Stick (first, second, (*i)->length));
+        }
+      else
+        {
+          std::cout << "World: Error couldn't resolve particles" << std::endl;
+        }
+    }
+}
+
 World::~World ()
 {
   clear ();
+}
+
+Particle*
+World::lookup_particle (int id)
+{
+  for (ParticleIter i = particles.begin (); 
+       i != particles.end (); 
+       ++i)
+    {
+      if ((*i)->get_id () == id)
+        return *i;
+    }
+  return 0;
 }
 
 void
@@ -184,6 +314,50 @@ World::clear ()
 
   particles.clear ();
   sticks.clear ();
+}
+
+void
+World::write_lisp (const std::string& filename)
+{
+  FILE* out;
+
+  out = fopen(filename.c_str(), "w");
+
+  if (!out)
+    {
+      std::cout << "World: Couldn't open '" << filename << "' for writing" << std::endl;
+      return; 
+    }
+
+  std::cout << "Writing to: " << filename << std::endl;
+
+  fputs(";; Written by " PACKAGE_STRING "\n", out);
+  fputs("(construo-scene\n", out);
+  //fputs("  (version 1)\n", out);
+  fputs("  (particles\n", out);
+  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
+    {
+      lisp_object_t* obj = (*i)->serialize ();
+      fputs("    ", out);
+      lisp_dump (obj, out);
+      lisp_free(obj);
+      fputc('\n', out);
+    }
+  fputs("  )\n", out);
+
+  fputs("  (springs\n", out);
+  for (CStickIter i = sticks.begin (); i != sticks.end (); ++i)
+    {
+      lisp_object_t* obj = (*i)->serialize ();
+      fputs("    ", out);
+      lisp_dump (obj, out);
+      lisp_free(obj);
+      fputc('\n', out);
+    }
+  fputs("  )", out);
+  fputs(")\n\n;; EOF ;;\n", out);
+
+  fclose(out);
 }
 
 /* EOF */

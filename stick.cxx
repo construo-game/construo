@@ -1,5 +1,5 @@
 //  $Id$
-// 
+//
 //  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
@@ -12,27 +12,32 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_BUTTONS_HXX
-#define HEADER_CONSTRUO_BUTTONS_HXX
+#include "construo_error.hxx"
+#include "stick.hxx"
 
-enum {
-  BUTTON_PRIMARY,   // primary mouse button (inserts particles)
-  BUTTON_SECONDARY, // secondary mouse button (unused)
-  BUTTON_FIX,       // fix a particle at the current position
-  BUTTON_ESCAPE,    // escape key
-  BUTTON_START,     // space key or third mouse button
-  BUTTON_CLEAR,     // clear the current scene
-  BUTTON_DELETE,    // delete the current object
-  BUTTON_UNDO,      // bring the world back to its state before the simulation start
-  BUTTON_QUICKSAVE1,
-  BUTTON_QUICKLOAD1
-};
+Stick::Stick (World* world, lisp_object_t* cursor)
+{
+  cursor = lisp_cdr(cursor); // Skip the identifer
+  
+  int first_id = -1;
+  int second_id = -1;
+  LispReader reader(cursor);
+  reader.read_int ("first", &first_id);
+  reader.read_int ("second", &second_id);
+  reader.read_float ("length", &length);
 
-#endif
+  particles.first = world->lookup_particle (first_id);
+  particles.second = world->lookup_particle (second_id);
+
+  if (particles.first == 0 || particles.second == 0)
+    {
+      throw ConstruoError ("Spring: Pair lookup failed");
+    }
+}
 
 /* EOF */

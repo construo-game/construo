@@ -1,5 +1,5 @@
 //  $Id$
-// 
+//
 //  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
@@ -12,27 +12,27 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_BUTTONS_HXX
-#define HEADER_CONSTRUO_BUTTONS_HXX
+#include "lisp_reader.hxx"
+#include "particle.hxx"
 
-enum {
-  BUTTON_PRIMARY,   // primary mouse button (inserts particles)
-  BUTTON_SECONDARY, // secondary mouse button (unused)
-  BUTTON_FIX,       // fix a particle at the current position
-  BUTTON_ESCAPE,    // escape key
-  BUTTON_START,     // space key or third mouse button
-  BUTTON_CLEAR,     // clear the current scene
-  BUTTON_DELETE,    // delete the current object
-  BUTTON_UNDO,      // bring the world back to its state before the simulation start
-  BUTTON_QUICKSAVE1,
-  BUTTON_QUICKLOAD1
-};
+Particle::Particle (lisp_object_t* obj)
+{
+  obj = lisp_cdr(obj);
+  std::cout << "Loading particle: " << std::endl;
+  lisp_dump(obj, stdout);
+  std::cout << std::endl;
 
-#endif
+  LispReader reader(obj);
+  reader.read_vector ("pos", &pos);
+  reader.read_vector ("velocity", &velocity);
+  reader.read_float ("mass", &mass);
+  reader.read_bool ("fixed", &fixed);
+  reader.read_int ("id", &id);
+}
 
 /* EOF */

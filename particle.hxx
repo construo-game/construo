@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_PARTICLE_HXX
 
 #include <iostream>
+#include "lispifier.hxx"
 #include "construo.hxx"
 #include "graphic_context.hxx"
 #include "vector.hxx"
@@ -29,10 +30,10 @@ class Particle
 {
 public:
   // FIXME: Place this in a factory
-  static unsigned id_counter;
+  static int id_counter;
 
   /** Id of the particle */
-  unsigned int id;
+   int id;
 
   /** position of the particle */
   CL_Vector pos;
@@ -49,6 +50,8 @@ public:
       collect the forces)*/
   CL_Vector totale_force;
 
+  Particle (lisp_object_t*);
+
   Particle (CL_Vector arg_pos, CL_Vector arg_velocity)
     : id (++id_counter), pos (arg_pos),
       velocity (arg_velocity)
@@ -57,14 +60,14 @@ public:
     mass = 10.0;
   }
 
-  void set_id (unsigned int arg_id)
+  void set_id (int arg_id)
   {
     if (arg_id > id_counter)
       id_counter = arg_id;
     id = arg_id;
   }
 
-  unsigned int get_id ()
+  int get_id ()
   {
     return id;
   }
@@ -162,6 +165,17 @@ public:
     graphic_context->draw_fill_circle (int(pos.x), int (pos.y),
                                        6,
                                        Color(1.0f, 1.0f, 1.0f));
+  }
+
+  lisp_object_t* serialize()
+  {
+    Lispifier obj ("particle");
+    obj.write_int ("id", id);
+    obj.write_vector ("pos", pos);
+    obj.write_vector ("velocity", velocity);
+    obj.write_boolean ("fixed", fixed);
+    obj.write_float ("mass", mass);
+    return obj.get_lisp ();
   }
 };
 

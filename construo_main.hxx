@@ -20,8 +20,8 @@
 #ifndef CONSTRUO_HH
 #define CONSTRUO_HH
 
+#include <vector>
 #include <iostream>
-#include <strstream>
 #include <list>
 #include "stick.hxx"
 #include "particle.hxx"
@@ -32,6 +32,7 @@ class World;
 class ConstruoMain
 {
 private:
+  std::vector<World*> world_stack;
   CL_Vector click_pos;
 
   void load_particles (xmlDocPtr doc, xmlNodePtr arg_cur);

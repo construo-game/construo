@@ -25,6 +25,7 @@ GraphicContext* graphic_context =0;
 
 std::string to_xml (const CL_Vector& vec)
 {
+#if 0
   std::ostrstream out;
   out << "<cl-vector>"
       << "<x>" << vec.x << "</x>"
@@ -34,6 +35,8 @@ std::string to_xml (const CL_Vector& vec)
   std::string str (out.str ());
   out.freeze (false);
   return str;
+#endif
+  return "";
 }
 
 /* EOF */
