@@ -32,19 +32,18 @@ private:
   float x_offset;
   float y_offset;
   float zoom;
-  int   zoom_stage;
 
   int translate_x (int);
   int translate_y (int);
 public:
   ZoomGraphicContext ();
 
-  void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0);
-  void draw_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_circle(int x, int y, int r, Color color);
-  void draw_fill_circle(int x, int y, int r, Color color);
-  void draw_fill_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_string(int x, int y, const std::string& str, Color color = Color (0xFFFFFF));
+  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
+  void draw_rect(float x1, float y1, float x2, float y2, Color color);
+  void draw_circle(float x, float y, float r, Color color);
+  void draw_fill_circle(float x, float y, float r, Color color);
+  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
+  void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFF));
 
   int get_width ()  { return parent_gc->get_width (); }
   int get_height () { return parent_gc->get_height (); }
@@ -59,19 +58,30 @@ public:
   bool zoom_in (int x, int y);
   bool zoom_out (int x, int y);
   void zoom_to (int x1, int y1, int x2, int y2);
+
+  /** Move the current position relativly x/y width */
   void translate_offset (int x, int y);
+
   void set_offset (float x, float y);
+
+  /** Move to the given x and y world coordinates */
+  void move_to (float x, float y);
 
   float get_x_offset () { return x_offset; }
   float get_y_offset () { return y_offset; }
 
-  float get_zoom () { return zoom; }
+  float get_zoom () const { return zoom; }
 
-  int screen_to_world_x (int);
-  int screen_to_world_y (int);
+  /** Set the zoom factor, if zoom is to large/small false will
+      returned and zoom will be set to lowest/highest possible
+      value */
+  bool  set_zoom (const float& z);
 
-  int world_to_screen_x (int);
-  int world_to_screen_y (int);
+  float screen_to_world_x (float);
+  float screen_to_world_y (float);
+
+  float world_to_screen_x (float);
+  float world_to_screen_y (float);
 
   void flip (int x1, int y1, int x2, int y2);
 };

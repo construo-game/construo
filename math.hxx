@@ -54,6 +54,11 @@ T mid (const T& a, const T& b, const T& c)
   return max((a), min((b), (c)));
 }
 
+inline int round(float a)
+{
+  return int((a > 0) ? (a + .5f) : (a - .5));
+}
+
 } // namespace Math
 
 #endif

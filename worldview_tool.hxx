@@ -20,7 +20,7 @@
 #ifndef HEADER_CONSTRUO_WORLDVIEW_TOOL_HXX
 #define HEADER_CONSTRUO_WORLDVIEW_TOOL_HXX
 
-class GraphicContext;
+class ZoomGraphicContext;
 
 /** */
 class WorldViewTool
@@ -36,8 +36,8 @@ public:
   /** Let the Tool to some deinitialisation */
   virtual void deactivate () {}
 
-  virtual void draw_background (GraphicContext* gc) {}
-  virtual void draw_foreground (GraphicContext* gc) {}
+  virtual void draw_background (ZoomGraphicContext* gc) =0;
+  virtual void draw_foreground (ZoomGraphicContext* gc) =0;
 
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}

@@ -23,7 +23,7 @@
 #include <iostream>
 #include "lisp_writer.hxx"
 #include "construo.hxx"
-#include "graphic_context.hxx"
+#include "zoom_graphic_context.hxx"
 #include "vector2d.hxx"
 
 class Particle
@@ -73,11 +73,13 @@ public:
     return fixed;
   }  
 
+  inline float get_mass () const { return 1.0f/mass; }
+
   void update (float delta); 
-  void draw (GraphicContext* gc);
+  void draw (ZoomGraphicContext* gc);
 
   /** draws the particle in highlight mode (aka if mouse is over it) */
-  void draw_highlight (GraphicContext* gc);
+  void draw_highlight (ZoomGraphicContext* gc);
 
   lisp_object_t* serialize();
 

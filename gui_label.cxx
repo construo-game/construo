@@ -21,7 +21,7 @@
 #include "colors.hxx"
 #include "gui_label.hxx"
 
-GUILabel::GUILabel (int x_, int y_, int width_, int height_, const std::string& title_)
+GUILabel::GUILabel (const std::string& title_, int x_, int y_, int width_, int height_)
   : GUIComponent (x_, y_, width_, height_),
     title (title_)
 {
@@ -30,9 +30,7 @@ GUILabel::GUILabel (int x_, int y_, int width_, int height_, const std::string& 
 void
 GUILabel::draw (GraphicContext* gc)
 {
-  gc->draw_fill_rect (x, y, x + width, y + height, 
-                      Colors::button_bg_passive);
-  gc->draw_string (x + 10, y + 15, title);
+  gc->draw_string (x_pos + 10, y_pos + 15, title);
 }
 
 /* EOF */

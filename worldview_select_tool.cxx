@@ -36,17 +36,16 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 }
 
 void
-WorldViewSelectTool::draw_background (GraphicContext* gc)
+WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 {
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
-
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
   if (mode == GETTING_SELECTION_MODE)
     {
-      gc->draw_rect (Math::min(x, int(click_pos.x)),
-                     Math::min(y, int(click_pos.y)),
-                     Math::max(x, int(click_pos.x)),
-                     Math::max(y, int(click_pos.y)),
+      gc->draw_rect (Math::min(x, click_pos.x),
+                     Math::min(y, click_pos.y),
+                     Math::max(x, click_pos.x),
+                     Math::max(y, click_pos.y),
                      Color(0xFFFFFF));
     }
 
@@ -57,7 +56,7 @@ WorldViewSelectTool::draw_background (GraphicContext* gc)
 }
 
 void
-WorldViewSelectTool::draw_foreground (GraphicContext* gc)
+WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
 {
 }
 
@@ -75,8 +74,8 @@ WorldViewSelectTool::deactivate ()
 void
 WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 {
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
   
   World& world = *Controller::instance()->get_world ();
 

@@ -29,8 +29,6 @@ GraphicContext* graphic_context =0;
 const double back_force = 500.0;
 const double max_stretch = 0.1f;
 #else
-const double back_force = 1500.0;
-const double max_stretch = 0.15f;
 #endif
 
 /* EOF */

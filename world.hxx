@@ -61,16 +61,16 @@ public:
   World (const std::string& filename);
   ~World ();
 
-  void draw (GraphicContext* gc);
+  void draw (ZoomGraphicContext* gc);
   void update (float delta);
 
   World* duplicate () { return new World (*this); }
 
   /** @return the particles closed to the given coordinates */
-  Particle* get_particle (int x, int y);
+  Particle* get_particle (float x, float y);
   /** All particles inside the given rectangle */
-  std::vector<Particle*> get_particles (int x1, int y1, int x2, int y2);
-  Spring*   get_spring (int x, int y);
+  std::vector<Particle*> get_particles (float x1, float y1, float x2, float y2);
+  Spring*   get_spring (float x, float y);
 
   void add_spring (Particle*, Particle*);
 

@@ -33,9 +33,6 @@ extern InputContext*   input_context;
 /** Global accessor to the graphic device */
 extern GraphicContext* graphic_context;
 
-extern const double back_force;
-extern const double max_stretch;
-
 #endif
 
 /* EOF */

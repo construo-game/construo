@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "math.hxx"
 #include "lisp_reader.hxx"
 #include "particle.hxx"
 
@@ -53,16 +54,15 @@ Particle::serialize()
 }
 
 void
-Particle::draw_highlight (GraphicContext* gc)
+Particle::draw_highlight (ZoomGraphicContext* gc)
 {
-  //int size = int(10.0f/(mass*mass)) + 1;
   gc->draw_fill_circle (int(pos.x), int (pos.y),
-                        6,
+                        6 / gc->get_zoom() + Math::max(1.0f, 2.0f*get_mass()),
                         Color(1.0f, 1.0f, 1.0f));
 }
 
 void
-Particle::draw (GraphicContext* gc)
+Particle::draw (ZoomGraphicContext* gc)
 {
   //int size = int(10.0f/(mass*mass)) + 1;
   if (pos.y < 598.5f)
@@ -70,13 +70,13 @@ Particle::draw (GraphicContext* gc)
       if (fixed)
         {
           gc->draw_fill_circle (int(pos.x), int (pos.y),
-                                4,
+                                Math::round(4 / gc->get_zoom()),
                                 Color(0.6f, 0.6f, 0.6f));
         }
       else
         {
           gc->draw_fill_circle (int(pos.x), int (pos.y),
-                                2,
+                                Math::round(Math::max(1.0f, 2.0f*get_mass())),
                                 Color(1.0f, 0.0f, 0.0f));
         }
     }

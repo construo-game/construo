@@ -158,51 +158,54 @@ X11Display::~X11Display ()
 }
 
 void
-X11Display::draw_line(int x1, int y1, int x2, int y2, Color color, int wide)
+X11Display::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   XSetForeground(display, gc, color.get_rgb());
-  XDrawLine (display, drawable, gc, x1, y1, x2, y2);
+  XDrawLine (display, drawable, gc, (int) x1, (int) y1, (int) x2, (int) y2);
 }
 
 void
-X11Display::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
+X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, color.get_rgb());
   XFillRectangle (display, drawable, gc, 
-                  x1, y1, 
-                  x2 - x1, y2 - y1);
+                  int(x1), int(y1), 
+                  int(x2 - x1), int(y2 - y1));
 }
 
 void
-X11Display::draw_fill_circle(int x, int y, int r, Color color)
+X11Display::draw_fill_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(display, gc, color.get_rgb());
-  XFillArc(display, drawable, gc, x-r, y-r, r*2, r*2, 0, 360*64);
+  XFillArc(display, drawable, gc, 
+           int(x-r), int(y-r),
+           int(r*2), int(r*2), 0, 
+           360*64);
 }
 
 void
-X11Display::draw_circle(int x, int y, int r, Color color)
+X11Display::draw_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(display, gc, color.get_rgb());
-  XDrawArc(display, drawable, gc, x-r, y-r, r*2, r*2, 0, 360*64);
+  XDrawArc(display, drawable, gc, int(x-r), int(y-r), int(r*2.0f), int(r*2.0f), 0, 360*64);
 }
 
 void
-X11Display::draw_rect(int x1, int y1, int x2, int y2, Color color)
+X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, color.get_rgb());
   XDrawRectangle (display, drawable, gc, 
-                  x1, y1, 
-                  x2 - x1, y2 - y1);
+                  int(x1), int(y1), 
+                  int(x2 - x1), int(y2 - y1));
 }
 
 void
-X11Display::draw_string(int x, int y, const std::string& str, Color color)
+X11Display::draw_string(float x, float y, const std::string& str, Color color)
 {
   XSetForeground(display, gc, color.get_rgb());
-  XDrawString (display, drawable, gc, x, y, str.c_str (), str.length ());
+  XDrawString (display, drawable, gc, int(x), int(y), str.c_str (), str.length ());
 }
 
 int

@@ -18,7 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "lisp_reader.hxx"
-#include "graphic_context.hxx"
+#include "zoom_graphic_context.hxx"
 #include "particle.hxx"
 #include "construo_error.hxx"
 #include "particle_factory.hxx"
@@ -111,7 +111,7 @@ ParticleFactory::update (float delta)
 }
 
 void
-ParticleFactory::draw (GraphicContext* gc)
+ParticleFactory::draw (ZoomGraphicContext* gc)
 {
   for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
     (*i)->draw(gc);

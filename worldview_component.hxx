@@ -44,8 +44,8 @@ private:
 
   bool scrolling;
   
-  int scroll_pos_x;
-  int scroll_pos_y;
+  float scroll_pos_x;
+  float scroll_pos_y;
 
   float x_offset;
   float y_offset;

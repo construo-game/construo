@@ -32,6 +32,7 @@
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
 #include "gui_buttons.hxx"
+#include "gui_label.hxx"
 
 GUIManager* GUIManager::instance_;
 
@@ -81,7 +82,15 @@ GUIManager::GUIManager ()
 
   components.push_back (new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
   components.push_back (new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
-  
+
+  components.push_back (new GUILabel ("Stiffness",   550, 280, 75, 25));
+
+  components.push_back (new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
+  components.push_back (new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+
+  components.push_back (new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
+  components.push_back (new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+ 
   /*
     GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
@@ -152,7 +161,7 @@ GUIManager::draw_status ()
 
   graphic_context->draw_string (600,  430, "Particles Mass: ");
   graphic_context->draw_string (700,  430, 
-                                to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
+                                to_string(1/WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
 
   graphic_context->draw_string (700,  530, "Particles: ");
   graphic_context->draw_string (770,  530, to_string(world.get_num_particles()));

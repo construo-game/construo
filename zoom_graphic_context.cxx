@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <iostream>
+#include "math.hxx"
 #include "zoom_graphic_context.hxx"
 
 ZoomGraphicContext::ZoomGraphicContext ()
@@ -25,36 +26,35 @@ ZoomGraphicContext::ZoomGraphicContext ()
   x_offset   = 0;
   y_offset   = 0;
   zoom       = 1.0f;
-  zoom_stage = 10;
   parent_gc  = NULL;
 }
 
-int
-ZoomGraphicContext::screen_to_world_x (int x)
+float
+ZoomGraphicContext::screen_to_world_x (float x)
 {
-  return int((x / zoom) - x_offset);
+  return (x / zoom) - x_offset;
 }
 
-int
-ZoomGraphicContext::screen_to_world_y (int y)
+float
+ZoomGraphicContext::screen_to_world_y (float y)
 {
-  return int((y / zoom) - y_offset);
+  return (y / zoom) - y_offset;
 }
 
-int
-ZoomGraphicContext::world_to_screen_x (int x)
+float
+ZoomGraphicContext::world_to_screen_x (float x)
 {
-  return int((x + x_offset) * zoom);
+  return (x + x_offset) * zoom;
 }
 
-int
-ZoomGraphicContext::world_to_screen_y (int y) 
+float
+ZoomGraphicContext::world_to_screen_y (float y) 
 {
-  return int((y + y_offset) * zoom);
+  return (y + y_offset) * zoom;
 }
 
 void
-ZoomGraphicContext::draw_line(int x1, int y1, int x2, int y2, Color color, int wide)
+ZoomGraphicContext::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   parent_gc->draw_line(world_to_screen_x(x1),
                        world_to_screen_y(y1),
@@ -64,7 +64,7 @@ ZoomGraphicContext::draw_line(int x1, int y1, int x2, int y2, Color color, int w
 }
 
 void
-ZoomGraphicContext::draw_rect(int x1, int y1, int x2, int y2, Color color)
+ZoomGraphicContext::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   parent_gc->draw_rect(world_to_screen_x(x1),
                        world_to_screen_y(y1),
@@ -74,25 +74,25 @@ ZoomGraphicContext::draw_rect(int x1, int y1, int x2, int y2, Color color)
 }
 
 void
-ZoomGraphicContext::draw_circle(int x, int y, int r, Color color)
+ZoomGraphicContext::draw_circle(float x, float y, float r, Color color)
 {
   parent_gc->draw_circle(world_to_screen_x(x),
                          world_to_screen_y(y),
-                         r,
+                         Math::max(2.0f, r * zoom),
                          color);
 }
 
 void
-ZoomGraphicContext::draw_fill_circle(int x, int y, int r, Color color)
+ZoomGraphicContext::draw_fill_circle(float x, float y, float r, Color color)
 {
   parent_gc->draw_fill_circle(world_to_screen_x(x),
                               world_to_screen_y(y),
-                              r,
+                              Math::max(2.0f, r * zoom),
                               color);
 }
   
 void
-ZoomGraphicContext::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
+ZoomGraphicContext::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   parent_gc->draw_fill_rect(world_to_screen_x(x1),
                             world_to_screen_y(y1),
@@ -102,7 +102,7 @@ ZoomGraphicContext::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
 }
 
 void
-ZoomGraphicContext::draw_string(int x, int y, const std::string& str, Color color)
+ZoomGraphicContext::draw_string(float x, float y, const std::string& str, Color color)
 {
   parent_gc->draw_string(world_to_screen_x(x),
                          world_to_screen_y(y),
@@ -119,8 +119,14 @@ ZoomGraphicContext::set_parent_gc (GraphicContext* gc)
 bool
 ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
 {
-  int x = screen_to_world_x (screen_x);
-  int y = screen_to_world_y (screen_y);
+  float x = screen_to_world_x (screen_x);
+  float y = screen_to_world_y (screen_y);
+
+  //std::cout << "Zoom: " << screen_x << " " << screen_y
+  //<< " " << x << " " << y << std::endl;
+
+  //set_zoom(zoom * 1.2);
+  //move_to (x, y);
 
   x_offset = (x + x_offset)/1.2f - x;
   y_offset = (y + y_offset)/1.2f - y;
@@ -132,18 +138,25 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
 bool
 ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
 {
-  int x = screen_to_world_x (screen_x);
-  int y = screen_to_world_y (screen_y);
+  float x = screen_to_world_x (screen_x);
+  float y = screen_to_world_y (screen_y);
 
   x_offset = (x + x_offset)*1.2f - x;
   y_offset = (y + y_offset)*1.2f - y;
-  
+
+  //set_zoom(zoom / 1.2f);
+  //move_to (x, y);
   zoom *= (1.0f/1.2f);
 
-  //if (zoom > 20)
-  //zoom = 20;
 
   return true;
+}
+
+void
+ZoomGraphicContext::move_to (float x, float y)
+{
+  x_offset = (get_width()  / (2*zoom)) + x;
+  y_offset = (get_height() / (2*zoom)) + y;
 }
 
 void
@@ -163,10 +176,34 @@ ZoomGraphicContext::set_offset (float x, float y)
 void
 ZoomGraphicContext::flip (int x1, int y1, int x2, int y2)
 {
-  parent_gc->flip (world_to_screen_x (x1),
+  assert (false);
+  /*  parent_gc->flip (world_to_screen_x (x1),
                    world_to_screen_y (y1),
                    world_to_screen_x (x2),
-                   world_to_screen_y (y2));
+                   world_to_screen_y (y2));*/
+}
+
+bool
+ZoomGraphicContext::set_zoom (const float& z)
+{
+  const float max_zoom = 20.0f;
+  const float min_zoom = 0.05f;
+  
+  if (z > max_zoom)
+    {
+      zoom = max_zoom;
+      return false;
+    }
+  else if (z < min_zoom)
+    {
+      zoom = min_zoom;
+      return false;
+    }
+  else
+    {
+      zoom = z;
+      return true;
+    }
 }
 
 void
@@ -186,15 +223,12 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
   
   if (rect_relation > screen_relation)
     {
-      zoom = 800/width;
+      set_zoom(800/width);
     }
   else
     {
-      zoom = 600/height;
+      set_zoom(600/height);
     }
-
-  if (zoom > 20)
-    zoom = 20;
 
   x_offset = (get_width()  / (2*zoom)) - center_x;
   y_offset = (get_height() / (2*zoom)) - center_y;

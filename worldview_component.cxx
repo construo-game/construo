@@ -90,6 +90,15 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   World& world = *Controller::instance()->get_world();
 
+  if (0)
+    if (Controller::instance()->is_running())
+      {
+        // Live Action Cam
+        const WorldBoundingBox& box = world.calc_bounding_box();
+        gc.zoom_to((int) box.x1, (int)box.y1,
+                   (int)box.x2, (int)box.y2);
+      }
+
   current_tool->draw_background (&gc);
   world.draw (&gc);
   current_tool->draw_foreground (&gc);

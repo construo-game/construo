@@ -36,10 +36,10 @@ WorldViewInsertTool::~WorldViewInsertTool ()
 }
 
 void
-WorldViewInsertTool::draw_background (GraphicContext* gc) 
+WorldViewInsertTool::draw_background (ZoomGraphicContext* gc) 
 {
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
 
   World& world = *Controller::instance()->get_world();
 
@@ -51,12 +51,12 @@ WorldViewInsertTool::draw_background (GraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::draw_foreground (GraphicContext* gc) 
+WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc) 
 {
   World& world = *Controller::instance()->get_world();
 
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
 
   Spring* selected_spring = world.get_spring (x, y);
   if (selected_spring)
@@ -76,8 +76,8 @@ void
 WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y) 
 {
   World& world = *Controller::instance()->get_world ();
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
   if (current_particle)
     {
@@ -129,8 +129,8 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 {
   World& world = *Controller::instance()->get_world ();
 
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
   if (current_particle) 
     { // We are currently creating a new spring, abort that
@@ -151,8 +151,8 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 void
 WorldViewInsertTool::on_fix_press (int screen_x, int screen_y) 
 {
-  int x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  int y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
   Particle* particle = Controller::instance()->get_world ()->get_particle (x, y);
   if (particle)

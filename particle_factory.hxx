@@ -26,7 +26,7 @@ extern "C" {
 #include "lispreader.h"
 }
 
-class GraphicContext;
+class ZoomGraphicContext;
 class Particle;
 
 /** id of a particle, uniq only for a single ParticleFactory */
@@ -63,7 +63,7 @@ public:
   Particle* lookup_particle (int id);
 
   void update (float delta);
-  void draw (GraphicContext* gc);
+  void draw (ZoomGraphicContext* gc);
 
   typedef std::vector<Particle*>::const_iterator CParticleIter;
   typedef std::vector<Particle*>::iterator ParticleIter;

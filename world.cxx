@@ -161,7 +161,7 @@ World::~World ()
 }
 
 void
-World::draw (GraphicContext* gc)
+World::draw (ZoomGraphicContext* gc)
 {
   current_world = this;
 
@@ -191,7 +191,7 @@ World::update (float delta)
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)
     {
       // Gravity
-      (*i)->add_force (Vector2d (0.0, 10.0f) * (1/(*i)->mass));
+      (*i)->add_force (Vector2d (0.0, 15.0f) * (1/(*i)->mass));
 		    
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
@@ -258,7 +258,7 @@ World::update (float delta)
 }
 
 Spring*
-World::get_spring (int x, int y)
+World::get_spring (float x, float y)
 {
   Spring* spring = 0;
   float min_distance = 0.0f;
@@ -294,7 +294,7 @@ World::get_spring (int x, int y)
 }
 
 Particle* 
-World::get_particle (int x, int y)
+World::get_particle (float x, float y)
 {
   Particle* particle = 0;
   float min_dist = 15;
@@ -314,12 +314,12 @@ World::get_particle (int x, int y)
 }
 
 std::vector<Particle*> 
-World::get_particles (int x1_, int y1_, int x2_, int y2_)
+World::get_particles (float x1_, float y1_, float x2_, float y2_)
 {
-  int x1 = Math::min(x1_, x2_);
-  int x2 = Math::max(x1_, x2_);
-  int y1 = Math::min(y1_, y2_);
-  int y2 = Math::max(y1_, y2_);
+  float x1 = Math::min(x1_, x2_);
+  float x2 = Math::max(x1_, x2_);
+  float y1 = Math::min(y1_, y2_);
+  float y2 = Math::max(y1_, y2_);
 
   std::vector<Particle*> caputred_particles;
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)

@@ -27,6 +27,10 @@ Spring::Spring (Particle* f, Particle* s, float l)
   particles.second = s;
   destroyed        = false;
   length           = l;
+
+  stiffness   = 50.0f;
+  damping     = .1f;
+  max_stretch = 0.15f;
 }
 
 Spring::Spring (Particle* f, Particle* s) 
@@ -35,6 +39,10 @@ Spring::Spring (Particle* f, Particle* s)
   particles.second = s;
   destroyed        = false;
   length           = fabs((f->pos - s->pos).norm ());
+
+  stiffness   = 50.0f;
+  damping     = .1f;
+  max_stretch = 0.15f;
 
   assert (length != 0);
 }
@@ -47,6 +55,10 @@ Spring::Spring (World* world, lisp_object_t* cursor)
   int first_id = -1;
   int second_id = -1;
   length = -1;
+
+  stiffness   = 50.0f;
+  damping     = .1f;
+  max_stretch = 0.15f;
 
   LispReader reader(cursor);
   reader.read_int ("first", &first_id);
@@ -71,9 +83,6 @@ Spring::Spring (World* world, lisp_object_t* cursor)
 void
 Spring::update (float delta)
 {
-  const float stiffness = 50.0f;
-  const float damping = .1f;
-  
   Vector2d dist = particles.first->pos - particles.second->pos;
 
   // Calculate the stretchness of the spring, 0.0 if unstretch, else
@@ -104,7 +113,7 @@ Spring::update (float delta)
 }
 
 void
-Spring::draw (GraphicContext* gc)
+Spring::draw (ZoomGraphicContext* gc)
 {
   Vector2d dist = particles.first->pos - particles.second->pos;
   float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
@@ -122,7 +131,7 @@ Spring::draw (GraphicContext* gc)
 }
 
 void
-Spring::draw_highlight (GraphicContext* gc)
+Spring::draw_highlight (ZoomGraphicContext* gc)
 {
   gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
                  int(particles.second->pos.x), int(particles.second->pos.y),

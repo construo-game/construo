@@ -36,14 +36,18 @@ public:
   float length;
   bool destroyed;
 
+  float stiffness;
+  float damping;
+  float max_stretch;
+
   Spring (Particle* f, Particle* s, float l);
   Spring (Particle* f, Particle* s);
 
   Spring (World* world, lisp_object_t* cursor);
 
   void update (float delta);
-  void draw (GraphicContext* gc);
-  void draw_highlight (GraphicContext* gc);
+  void draw (ZoomGraphicContext* gc);
+  void draw_highlight (ZoomGraphicContext* gc);
 
   /** Forces the recalculation of the springs length */
   void recalc_length ();

@@ -53,8 +53,8 @@ public:
   void activate ();
   void deactivate ();
 
-  void draw_background (GraphicContext* gc);
-  void draw_foreground (GraphicContext* gc);
+  void draw_background (ZoomGraphicContext* gc);
+  void draw_foreground (ZoomGraphicContext* gc);
 
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);

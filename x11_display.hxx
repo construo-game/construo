@@ -72,12 +72,12 @@ public:
   virtual ~X11Display ();
 
   // Graphic Context stuff
-  void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0);
-  void draw_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_fill_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_circle(int x, int y, int r, Color color);
-  void draw_fill_circle(int x, int y, int r, Color color);
-  void draw_string(int x, int y, const std::string& str, Color color);
+  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
+  void draw_rect(float x1, float y1, float x2, float y2, Color color);
+  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
+  void draw_circle(float x, float y, float r, Color color);
+  void draw_fill_circle(float x, float y, float r, Color color);
+  void draw_string(float x, float y, const std::string& str, Color color);
 
   void set_fullscreen (bool fullscreen);
   void restore_mode ();

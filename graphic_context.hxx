@@ -28,12 +28,12 @@ class GraphicContext
 {
 private:
 public:
-  virtual void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0) =0;
-  virtual void draw_rect(int x1, int y1, int x2, int y2, Color color) =0;
-  virtual void draw_circle(int x, int y, int r, Color color) =0;
-  virtual void draw_fill_circle(int x, int y, int r, Color color) =0;
-  virtual void draw_fill_rect(int x1, int y1, int x2, int y2, Color color) =0;
-  virtual void draw_string(int x, int y, const std::string& str, Color color = Color (0xFFFFFF)) =0;
+  virtual void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) =0;
+  virtual void draw_rect(float x1, float y1, float x2, float y2, Color color) =0;
+  virtual void draw_circle(float x, float y, float radius, Color color) =0;
+  virtual void draw_fill_circle(float x, float y, float radius, Color color) =0;
+  virtual void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) =0;
+  virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFF)) =0;
 
   virtual int get_width ()  =0;
   virtual int get_height () =0;

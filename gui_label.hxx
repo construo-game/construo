@@ -27,16 +27,12 @@
 class GUILabel : public GUIComponent
 {
 private:
-  int x;
-  int y;
-  int width;
-  int height;
-
   std::string title;
 public:
-  GUILabel (int x, int y, int width, int height, const std::string& title_);
+  GUILabel (const std::string& title_, int x, int y, int width, int height);
   
   void draw (GraphicContext*);
+  bool is_at (int, int) { return false; }
 };
 
 #endif
