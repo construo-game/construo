@@ -30,6 +30,7 @@
 #include "gui_manager.hxx"
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
+#include "globals.hxx"
 
 using namespace StringUtils;
 
@@ -59,7 +60,9 @@ GUIManager::run_once ()
     {
       float passed_time = (system_context->get_time () - start_time) / 1000.0f;
       
-      std::cout << "FPS: " << frame_count / passed_time << std::endl;
+      //std::cout << "FPS: " << frame_count / passed_time << std::endl;
+
+      current_fps = frame_count / passed_time;
       
       frame_count = 0;
       start_time  = system_context->get_time ();
@@ -164,6 +167,14 @@ GUIManager::process_button_events (ButtonEvent& button)
                   
         case BUTTON_REDO:
           Controller::instance()->redo ();
+          break;
+
+        case BUTTON_ACTIONCAM:
+          Controller::instance()->set_action_cam (!Controller::instance()->get_action_cam ());
+          break;
+
+        case BUTTON_HIDEDOTS:
+          Controller::instance()->set_hide_dots (!Controller::instance()->get_hide_dots ());
           break;
 
         case BUTTON_ESCAPE:

@@ -27,6 +27,7 @@
 #include "gui_buttons.hxx"
 #include "gui_window.hxx"
 #include "gui_label.hxx"
+#include "globals.hxx"
 #include "world_gui_manager.hxx"
 
 using namespace StringUtils;
@@ -240,8 +241,15 @@ WorldGUIManager::draw_overlay ()
                                 to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
   int bottom_line = graphic_context->get_height() - 10;
-  graphic_context->draw_string (10, bottom_line, "Particles: ");
-  graphic_context->draw_string (80, bottom_line, to_string(world.get_num_particles()));
+  graphic_context->draw_string (10, bottom_line-20, "FPS: ");
+  graphic_context->draw_string (80, bottom_line-20, to_string(current_fps));
+
+  graphic_context->draw_string (10, bottom_line, "Pos: ");
+  graphic_context->draw_string (80, bottom_line, 
+                                to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos())));
+
+  graphic_context->draw_string (210, bottom_line-20, "Particles: ");
+  graphic_context->draw_string (280, bottom_line-20, to_string(world.get_num_particles()));
 
   graphic_context->draw_string (210, bottom_line, "Springs: ");
   graphic_context->draw_string (280, bottom_line, to_string(world.get_num_springs()));

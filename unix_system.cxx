@@ -48,6 +48,7 @@ UnixSystem::UnixSystem ()
     }
   else
     {
+      std::cout << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
       throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
     }
 
@@ -100,6 +101,7 @@ UnixSystem::sleep (unsigned long t)
 std::string 
 UnixSystem::get_construo_rc_path()
 {
+  std::cout << "Returning: \n" << construo_rc_path << std::endl;
   return construo_rc_path;
 }
 

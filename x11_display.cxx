@@ -334,6 +334,14 @@ X11Display::read_event ()
             send_button_press(BUTTON_SCROLL_DOWN);
             break;
 
+          case XK_a:
+            send_button_press(BUTTON_ACTIONCAM);
+            break;
+
+          case XK_o:
+            send_button_press(BUTTON_HIDEDOTS);
+            break;
+
           case XK_v:
             send_button_press(BUTTON_SETVELOCITY);
             break;

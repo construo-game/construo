@@ -38,6 +38,8 @@ enum ButtonTypes {
   BUTTON_TOGGLESLOWMO, 
   BUTTON_RUN,         // starts or stops the simulation
   BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)
+  BUTTON_ACTIONCAM,  
+  BUTTON_HIDEDOTS,  
 
   BUTTON_ZOOM_OUT,
   BUTTON_ZOOM_IN,

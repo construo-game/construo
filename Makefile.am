@@ -68,7 +68,8 @@ gui_directory.hxx gui_directory.cxx \
 world_gui_manager.hxx world_gui_manager.cxx \
 load_gui_manager.hxx load_gui_manager.cxx \
 screen_manager.hxx screen_manager.cxx \
-gui_window.hxx gui_window.cxx
+gui_window.hxx gui_window.cxx \
+globals.hxx globals.cxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a
@@ -83,6 +84,6 @@ construo_freeglut_LDADD   = libconstruo.a @freeglut_LIBS@
 construo_freeglut_CXXFLAGS = -DUSE_GLUT_DISPLAY -DHAVE_FREEGLUT
 
 # pkgdatadir = $(datadir)/games/@PACKAGE@
-EXTRA_DIST= TODO xml2sexpr.sh compatlib/sstream
+EXTRA_DIST= BUGS TODO TUTORIAL INSTALL.configure xml2sexpr.sh compatlib/sstream
 
 # EOF #

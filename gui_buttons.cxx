@@ -54,7 +54,6 @@ GUIButton::on_mouse_leave ()
 void
 GUIButton::on_primary_button_press (int x, int y)
 {
-  std::cout << "PRess" << std::endl;
   WorldGUIManager::instance()->grab_mouse (this);
   pressed = true;
 }
@@ -65,7 +64,6 @@ GUIButton::on_primary_button_release (int x, int y)
   WorldGUIManager::instance()->ungrab_mouse (this);
   if (is_at (x, y))
     on_click ();
-  std::cout << "Release" << std::endl;
   pressed = false;
 }
 

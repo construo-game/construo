@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Little script to convert Construo 0.0.x XML files to Construo
+# 0.1.0's sexpr format
+
 sed "s/<?xml version=\"1.0\"?>//" | \
 sed "s/<spring>/(spring /" | \
 sed "s/<\/spring>/)/" | \

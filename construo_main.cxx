@@ -62,8 +62,13 @@ ConstruoMain::get_title ()
 void
 ConstruoMain::on_exit()
 {
+  std::cout << "Calling on_exit()" << std::endl;
+
   if (!controller->has_been_run())
-    controller->save_world(system_context->get_construo_rc_path() + "laststate.construo");
+    {
+      std::string filename = system_context->get_construo_rc_path() + std::string("laststate.construo");
+      controller->save_world(filename);
+    }
 
   std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
             << "  New versions and more information can be found at:\n\n"

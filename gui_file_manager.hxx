@@ -52,6 +52,9 @@ public:
   /** move one directory up, aka cut the last directory from a
       directory pathname */
   void directory_up();
+
+  void scroll_up ();
+  void scroll_down ();
 };
 
 #endif

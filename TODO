@@ -1,34 +1,19 @@
-Release 0.1.1:
-* fix speed bug (unknown)
-* make it non-deterministic again (
-* fix broken demos (complex*, explode, ...)
+Release 0.2.0:
+* update Changelog
 * fix assertion on broken files
+* fix broken demos (complex*, explode, ...)
+* 
+
+Release 0.3.0:
+* config file support and an option menu to switch off stress-color,
+  change the coloring scheme and things like that
+* make the window resizable
 * author field (gcos filtering missing)
 * date field
 * addd gettext support
 * invisible springs 
-
-probally FIXED:
-* if I load-file, run, stop, connect, run, stop, undo I get a
-  corrupt scene with connections where they don't belong (undo-bug)
-  [id bug, ids override each other]
-
-
-Release 0.2.0:
-* update Changelog
-* config file support and an option menu to switch off stress-color,
-   change the coloring scheme and things like that
-* update Changelog
-* Create GUI (simple buttons)
-* make every key bound function accessible via the GUI
-* make the window resizable
-* zooming
-* thumbnail loading
-* 
-
-Release 0.3.0:
-* make OpenGL display implementation, add alpha support (can be faked
-  by fading to black on non-alpha displays)
+* fix speed bug (unknown)
+* make it non-deterministic again (
 * port to windows
 
 --- in the future ---
@@ -36,7 +21,8 @@ Release 0.3.0:
  - add different types of sticks
  - make stick properties editable
  - add a better load/save interface
- - make it 3D
+ - make it 3D (not that doable, since it would require a completly
+   other type of editor, but physics-vise its pretty simply)
  - add some randomness
  - add wind/earthquake or other things
  - make use of non-flad ground
@@ -47,7 +33,8 @@ Release 0.3.0:
 
 --- User contributed ---
  - Capability to connect springs into the middle of another spring
-   [grumbel: don't think this is a good idea]
+   [grumbel: don't think this is a good idea, the physics model
+   doesn't work like this]
 
  - Objects that cannot be penetrated with wire.
    [grumbel: doesn't mix with physic engine, objects that can't be
@@ -70,7 +57,7 @@ Release 0.3.0:
    but not very soon]
 
  - Sounds (I want to hear the constructions crashing..). [grumbel:
-   would require extra library, not good]
+   would require extra library, not good, but might come somewhen]
 
  - Backdrop graphics [grumbel: if they come not very soon].
 
@@ -89,5 +76,6 @@ Modes for Construo - The Game
    something else with limited resources
  * demo mode, let a bunch of machines do things automatically, insert
    some text here and there
+
 
 # EOF #

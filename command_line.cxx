@@ -36,7 +36,7 @@ CommandLine::parse (int argc, char** argv)
 {
   for (int i = 1; i < argc; ++i) // Skip Programm name
     {
-      std::cout << "Arg: " << argv[i] << std::endl;
+      //std::cout << "Arg: " << argv[i] << std::endl;
 
       if (argv[i][0] == '-') // Argument is an option
         {
@@ -112,11 +112,12 @@ CommandLine::print_help ()
   std::cout << "Construo "VERSION"\n\n"
             << "Usage: construo [OPTIONS] [FILENAME]\n\n"
             << "  -h, --help                  display this help text\n"
+            << "  -v,--version                Print version number of the programm\n"
             << "  -f, --fullscreen            switch to fullscreen mode if available\n"
             << "  -d, --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
             << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
             << "  --disable-antialiasing      Switch into non antialiased mode\n"
-            << "  --disable-alphablending     Switch into non alphablended mode (no transparency)\n"
+            << "  --disable-alphablending     Switch into non alphablended mode\n"
             << std::endl;
 }
 

@@ -28,6 +28,16 @@ void DirectoryUp ()
   GUIFileManager::instance()->directory_up();
 }
 
+void ScrollUp ()
+{
+  GUIFileManager::instance()->scroll_up();
+}
+
+void ScrollDown ()
+{
+  GUIFileManager::instance()->scroll_down();
+}
+
 void CloseFileManager ()
 {
   ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
@@ -43,6 +53,10 @@ GUIFileManager::GUIFileManager ()
   
   add (new GUIGenericButton("Up", 0,0, 100, 25, DirectoryUp));
   add (new GUIGenericButton("Close", 700, 0, 100, 25, CloseFileManager));
+
+  add (new GUIGenericButton("^", 770, 200, 25, 50, ScrollUp));
+  add (new GUIGenericButton("V", 770, 300, 25, 50, ScrollDown));
+
   add(current_directory);
  
   instance_ = this;
@@ -103,6 +117,18 @@ void
 GUIFileManager::draw_overlay (GraphicContext* gc)
 {
   gc->draw_string(200, 16, current_directory->get_path());
+}
+
+void
+GUIFileManager::scroll_up ()
+{
+  current_directory->move_up(); 
+}
+
+void
+GUIFileManager::scroll_down ()
+{
+  current_directory->move_down();   
 }
 
 /* EOF */

@@ -25,6 +25,7 @@
 #include "controller.hxx"
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
+#include "world_gui_manager.hxx"
 
 WorldViewInsertTool::WorldViewInsertTool ()
 {
@@ -103,6 +104,7 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
             }
           current_particle = 0;
         }
+      WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
     }
   else
     {
@@ -112,6 +114,7 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
           Particle* p = world.get_particle_mgr()->add_particle (Vector2d(x, y), Vector2d(), 
                                                                 particle_mass);
           current_particle = p;
+          WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
         }
     }
 }
@@ -143,6 +146,7 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
   if (current_particle) 
     { // We are currently creating a new spring, abort that
       current_particle = 0;
+      WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
     }
   else
     {
