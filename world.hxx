@@ -23,6 +23,7 @@
 #include <vector>
 #include "spring.hxx"
 #include "particle.hxx"
+#include "collider.hxx"
 
 class Particle;
 class ParticleFactory;
@@ -46,6 +47,9 @@ private:
   std::vector<Spring*> springs;
   typedef std::vector<Spring*>::iterator SpringIter;
   typedef std::vector<Spring*>::const_iterator CSpringIter;
+
+  typedef std::vector<Collider*> Colliders;
+  Colliders colliders;
 
   void parse_scene (lisp_object_t* lst);
   void parse_springs (lisp_object_t* lst);

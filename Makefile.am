@@ -47,7 +47,9 @@ math.hxx  \
 worldview_tool.hxx worldview_tool.cxx \
 worldview_select_tool.hxx worldview_select_tool.cxx \
 worldview_insert_tool.hxx worldview_insert_tool.cxx \
-worldview_zoom_tool.hxx worldview_zoom_tool.cxx
+worldview_zoom_tool.hxx worldview_zoom_tool.cxx \
+collider.hxx \
+rect_collider.hxx rect_collider.cxx
 
 LDADD=-L/usr/X11R6/lib/ -lXext -lXxf86vm
 

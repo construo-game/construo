@@ -100,6 +100,7 @@ Particle::update (float delta)
   pos += velocity * delta;
 
   float damp = 0.2;
+
 #if 0 // FIXME: Replace this with a generic shape collision handling thing
   // Calc collision with screen x border
   if (pos.x < 0) {
@@ -119,6 +120,7 @@ Particle::update (float delta)
     velocity *= damp;
   } else
 #endif
+
     if (pos.y > 599) {
       velocity.y =  -fabs(velocity.y);
       pos.y = 599;

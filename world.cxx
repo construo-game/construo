@@ -24,6 +24,7 @@
 #include "world.hxx"
 #include "particle_factory.hxx"
 #include "system_context.hxx"
+#include "rect_collider.hxx"
 
 World* World::current_world = 0; 
 
@@ -31,6 +32,7 @@ World::World ()
   : particle_mgr (new ParticleFactory())
 {
   has_been_run = false;
+  colliders.push_back (new RectCollider (100, 100, 300, 300));
 }
 
 World::World (const std::string& filename)

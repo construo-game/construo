@@ -20,7 +20,7 @@
 #ifndef HEADER_VECTOR2D_HXX
 #define HEADER_VECTOR2D_HXX
 
-#include <ostream>
+#include <iostream>
 
 /** */
 class Vector2d
