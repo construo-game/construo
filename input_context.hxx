@@ -20,17 +20,26 @@
 #ifndef HEADER_CONSTRUO_INPUT_CONTEXT_HXX
 #define HEADER_CONSTRUO_INPUT_CONTEXT_HXX
 
+#include <queue>
 #include "keys.hxx"
+#include "buttons.hxx"
+#include "events.hxx"
 
 /** */
 class InputContext
 {
-private:
+protected:
+  std::queue<Event> events;
 public:
+  InputContext () {}
+  virtual ~InputContext () {}
+
   // Polling functions
   virtual bool get_keycode (int key) =0;
   virtual int  get_mouse_x () =0;
   virtual int  get_mouse_y () =0;
+
+  bool get_event(Event* event);
 
   // Event handling
   //virtual get_event ();

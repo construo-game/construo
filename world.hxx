@@ -17,57 +17,36 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef CONSTRUO_HH
-#define CONSTRUO_HH
+#ifndef HEADER_CONSTRUO_WORLD_HXX
+#define HEADER_CONSTRUO_WORLD_HXX
 
-#include <iostream>
-#include <strstream>
 #include <list>
 #include "stick.hxx"
 #include "particle.hxx"
-#include "config.hxx"
 
-class World;
-
-class ConstruoMain
+/** This class holds all particles and springs */
+class World
 {
 private:
-  CL_Vector click_pos;
+  std::list<Particle*> particles;
+  typedef std::list<Particle*>::iterator ParticleIter;
 
-  void load_particles (xmlDocPtr doc, xmlNodePtr arg_cur);
-  void load_springs (xmlDocPtr doc, xmlNodePtr arg_cur);
-  Particle* last_particle;
+  std::list<Stick*> sticks;
+  typedef std::list<Stick*>::iterator StickIter;
 
-  Particle* c_particle;
-  bool running;
-  bool slow_down;
-  Config config;
-
-  World* world;
 public:
-  ConstruoMain ();
-  virtual ~ConstruoMain ();
+  World ();
+  ~World ();
 
-  char* get_title ();
-  int main (int argc, char* argv[]);
+  void draw (GraphicContext* gc);
+  void update (float delta);
 
-  void zero_out_velocity ();
-  void load_or_save_xml (std::string filename);
-  void load_xml (std::string filename);
-  void save_xml (std::string filename);
-
-  Particle* id_to_particle (unsigned int i);
-
-  void on_mouse_press(int button_no);
-  void on_mouse_release(int button_no);
-
-  void on_key_press(int key_id);
-  void on_key_release(int key_id);
-
-  Particle* current_particle ();
-
+  /** @return the particles closed to the given coordinates */
+  Particle* get_particle (int x, int y);
+  void add_spring (Particle*, Particle*);
 private:
-  void process_events ();
+  World (const World&);
+  World& operator= (const World&);
 };
 
 #endif

@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Construo - A wire-frame construction game
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -17,28 +17,14 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_COLOR_HXX
-#define HEADER_CONSTRUO_COLOR_HXX
+#ifndef HEADER_CONSTRUO_BUTTONS_HXX
+#define HEADER_CONSTRUO_BUTTONS_HXX
 
-/** */
-struct Color
-{
-  float r;
-  float g;
-  float b;
-  float a;
-
-  Color (int i) {
-    r = ((i & 0xFF0000) >> 16) / 255.0f;
-    b = ((i & 0x00FF00) >>  8) / 255.0f;
-    g = ((i & 0x0000FF) >>  0) / 255.0f;
-  }
-  
-  Color (float r, float g, float b, float a = 1.0f)
-  : r (r), g (g), b (b), a (a) {}
-
-  /** Convert the color into 0xRRGGBB format */
-  int get_rgb () { return int(255 * r) | (int((255 * g)) << 8) | (int((255 * b)) << 16); }
+enum {
+  BUTTON_PRIMARY,   // primary mouse button
+  BUTTON_SECONDARY, // secondary mouse button
+  BUTTON_ESCAPE,    // escape key
+  BUTTON_START      // space key or third mouse button
 };
 
 #endif

@@ -120,15 +120,25 @@ public:
       {
 	velocity = -velocity;
       }*/
+    clear_force ();
   }
 
-  void draw () 
+  void draw (GraphicContext* gc)
   {
-    int size = int(10.0f/(mass*mass)) + 1;
-        
-    graphic_context->draw_fill_rect (int(pos.x - size), int(pos.y - size),
-                                     int(pos.x + size), int(pos.y + size), 
-                                     Color(1.0f, 0.0f, 0.0f));
+    //int size = int(10.0f/(mass*mass)) + 1;
+    gc->draw_fill_circle (int(pos.x), int (pos.y),
+                          2,
+                          Color(1.0f, 0.0f, 0.0f));
+  }
+
+  /** draws the particle in highlight mode (aka if mouse is over it) */
+  void draw_highlight (GraphicContext* gc)
+  {
+    //int size = int(10.0f/(mass*mass)) + 1;
+    draw (gc);
+    graphic_context->draw_fill_circle (int(pos.x), int (pos.y),
+                                       6,
+                                       Color(1.0f, 1.0f, 1.0f));
   }
 };
 

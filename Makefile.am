@@ -22,7 +22,7 @@ construo_SOURCES = \
  construo_main.hxx construo_main.cxx \
  delta_manager.hxx \
  graphic_context.hxx \
- input_context.hxx \
+ input_context.hxx input_context.cxx \
  system_context.hxx \
  x11_display.hxx x11_display.cxx \
  vector.hxx  vector.cxx \
@@ -33,6 +33,9 @@ construo_SOURCES = \
  particle.hxx stick.hxx \
  color.hxx \
  config.hxx \
- construo_error.hxx
+ construo_error.hxx \
+ world.hxx world.cxx \
+ construo.cxx \
+ buttons.hxx
 
 # EOF #

@@ -23,6 +23,7 @@
 #include "particle.hxx"
 #include "construo_main.hxx"
 #include "config.h"
+#include "world.hxx"
 
 #include "x11_display.hxx"
 #include "unix_system.hxx"
@@ -214,12 +215,14 @@ ConstruoMain::load_particles (xmlDocPtr doc, xmlNodePtr arg_cur)
 Particle* 
 ConstruoMain::id_to_particle (unsigned int n)
 {
+#if 0
   for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
     {
       if ((*i)->get_id () == n)
 	return (*i);
     }
   std::cout << "Couldn't find particle id" << std::endl;
+#endif
   return 0;
 }
 
@@ -260,11 +263,13 @@ ConstruoMain::load_springs (xmlDocPtr doc, xmlNodePtr arg_cur)
 void 
 ConstruoMain::zero_out_velocity ()
 {
+#if 0
   std::cout << "Setting velocity to zero" << std::endl;
   for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
     {
       (*i)->velocity = CL_Vector ();
     }
+#endif
 }
 
 void
@@ -333,6 +338,7 @@ ConstruoMain::load_xml (std::string filename)
 void 
 ConstruoMain::save_xml (std::string filename)
 {
+#if 0
   std::cout << "Quick save to: " << filename << std::endl;
   std::ofstream out (filename.c_str ());
 
@@ -354,6 +360,7 @@ ConstruoMain::save_xml (std::string filename)
   out << "  </spring-list>\n";
   
   out << "</construo-scene>\n";
+#endif
 }
 
 void 
@@ -380,30 +387,50 @@ ConstruoMain::on_key_release(int key_id)
     }*/
 }
 
-Particle* 
-ConstruoMain::current_particle ()
+void
+ConstruoMain::process_events ()
 {
-  CL_Vector mouse_pos (input_context->get_mouse_x (), input_context->get_mouse_y ());
-  
-  Particle* particle = 0;
-  float min_dist = 25;
-  
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-    {
-      CL_Vector diff = mouse_pos - (*i)->pos;
-      if (diff.norm () < min_dist)
-	{
-	  min_dist = diff.norm ();
-	  particle = *i;
-	}
-    }
-  
-  return particle;
-}
+  Event event;
 
-bool stick_destroyed (Stick* stick)
-{
-  return stick->destroyed;
+  while (input_context->get_event (&event))
+    {
+      if (event.button.pressed)
+        {
+          switch (event.type)
+            {
+            case BUTTON_EVENT:
+              switch (event.button.id)
+                {
+                case BUTTON_START:
+                  running = !running;
+                  break;
+                case BUTTON_PRIMARY:
+                  if (c_particle)
+                    {
+                      Particle* nc_particle = world->get_particle (input_context->get_mouse_x(),
+                                                                   input_context->get_mouse_y());
+                      if (nc_particle)
+                        world->add_spring (c_particle, nc_particle);
+                      c_particle = 0;
+                    }
+                  else
+                    {
+                      c_particle = world->get_particle (input_context->get_mouse_x(),
+                                                        input_context->get_mouse_y());
+                      if (!c_particle)
+                        {
+                          // add particle
+                        }
+                    }
+                  break;
+                }
+              std::cout << "GOt Event: " << event.button.id << std::endl;
+              break;
+            default:
+              std::cout << "ConstruoMain: Unhandled event: " << event.type << std::endl;
+            }
+        }
+    }
 }
 
 int 
@@ -416,22 +443,13 @@ ConstruoMain::main (int argc, char* argv[])
   //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
   //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
 
-  // FIXME: testing stuff
-  for (int i = 0; i < 10; ++i)
-    {
-      Particle* particle = new Particle (CL_Vector (rand()%800, rand()%600), 
-                                         CL_Vector ());
-      Particle* last_particle = new Particle (CL_Vector (rand()%800, rand()%600), CL_Vector ());
-    
-      sticks.push_back (new Stick (last_particle, particle));
-
-      particles.push_back (last_particle);
-      particles.push_back (particle);
-    }
+  world = new World ();
 
   while (!input_context->get_keycode (KEY_ESCAPE))
     {
       double delta;
+
+      process_events ();
       
       if (slow_down)
 	delta = delta_manager.getset ()/50.0;
@@ -442,99 +460,34 @@ ConstruoMain::main (int argc, char* argv[])
 	  else
 	    delta = delta_manager.getset ()/5.0;
 	}
-      graphic_context->clear ();
 
-      if (1 || running)
-	{
-	  for (int k = 0;  k < 20; ++k)
-	    {
-	      {
-		for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-		  {
-		    // Gravity
-		    (*i)->add_force (CL_Vector (0.0, 1.0));
-
-		    
-		    // Central Gravity force:
-		    /*CL_Vector direction = ((*i)->pos - CL_Vector (400, 300));
-                      if (direction.norm () != 0.0f)
-		      (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
-		    */
-		    
-		    
-		    /*
-		      for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
-		      {
-		      CL_Vector diff = (*j)->pos - (*i)->pos;
-		      if (diff.norm () != 0.0f)
-		      (*i)->add_force (diff * ((10.0f - (*j)->mass)/(diff.norm () * diff.norm ())));
-		      }	    */
-		  }
-
-
-		for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-		  {
-		    (*i)->update (delta);
-		  }
-
-		for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-		  {
-
-		    (*i)->update (delta);
-		    (*i)->clear_force ();
-
-		  }
-	      }
-	    }
-          // Stick splitting
-          for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-            {
-              if ((*i)->destroyed)
-                {
-                  if ((((*i)->particles.first->pos 
-                        - (*i)->particles.second->pos)).norm () > 10.0f)
-                    {
-                      CL_Vector pos = 
-                        ((*i)->particles.first->pos + (*i)->particles.second->pos)*0.5f;
-                      Particle* p1 = new Particle (pos, CL_Vector ());
-                      Particle* p2 = new Particle (pos, CL_Vector ());
-                      p1->velocity = (*i)->particles.first->velocity * 0.5f;
-                      p2->velocity = (*i)->particles.second->velocity * 0.5f;
-                      particles.push_back (p1);
-                      particles.push_back (p2);
-                      sticks.push_back (new Stick ((*i)->particles.first, p1));
-                      sticks.push_back (new Stick ((*i)->particles.second, p2));
-                    }
-                }
-            }
-
-          sticks.remove_if (stick_destroyed);
+      if (running)
+        {
+          world->update (delta);
         }
 
-#if 0
+      graphic_context->clear ();
+      world->draw (graphic_context);
+          
       {
-        Particle* p = current_particle ();
+        Particle* p = world->get_particle (input_context->get_mouse_x (),
+                                          input_context->get_mouse_y ());
         if (p)
           {
-            int size = 5;
-            CL_Display::fill_rect (int(p->pos.x - size), int(p->pos.y - size),
-                                   int(p->pos.x + size), int(p->pos.y + size), 
-                                   1.0f, 0.0f, 0.0f);
+            p->draw_highlight (graphic_context);
           }
       }
-#endif
-      for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
-        (*i)->draw ();
 
-      for (StickIter i = sticks.begin (); i != sticks.end (); ++i)
-        {
-          (*i)->draw ();
-        }
+      graphic_context->draw_string (10, 20, "Construo V0.1.0");
+      graphic_context->draw_string (10, 32, "===============");
 
       graphic_context->flip ();
       KeepAliveMgr::keep_alive ();
       system_context->sleep (1000);
     }
+
+  delete world;
+
   return 0;
 }
 

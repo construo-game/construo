@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -20,17 +20,12 @@
 #ifndef HEADER_CONSTRUO_EVENTS_HXX
 #define HEADER_CONSTRUO_EVENTS_HXX
 
+enum { BUTTON_EVENT };
+
 struct ButtonEvent
 {
   int type;
-  int x, y;
-  bool pressed;
-};
-
-struct KeyEvent
-{
-  int type;
-  int key;
+  int  id;
   bool pressed;
 };
 
@@ -39,8 +34,7 @@ union Event
 {
   int type;
   ButtonEvent button;
-  KeyEvent    key;
-}
+};
 
 #endif
 

@@ -25,13 +25,13 @@ class InputContext;
 class GraphicContext;
 
 /** Global accessor to the system functions */
-SystemContext*  system_context;
+extern SystemContext*  system_context;
 
 /** Global accessor to the input functions */
-InputContext*   input_context;
+extern InputContext*   input_context;
 
 /** Global accessor to the graphic device */
-GraphicContext* graphic_context;
+extern GraphicContext* graphic_context;
 
 const double back_force = 500.0;
 const double max_stretch = 0.1;
@@ -41,23 +41,13 @@ const double max_stretch = 0.1;
 #include <strstream>
 #include "vector.hxx"
 
-std::string to_xml (const CL_Vector& vec)
-{
-  std::ostrstream out;
-  out << "<cl-vector>"
-      << "<x>" << vec.x << "</x>"
-      << "<y>" << vec.y << "</y>"
-      << "<z>" << vec.z << "</z>"
-      << "</cl-vector>" << std::ends;
-  std::string str (out.str ());
-  out.freeze (false);
-  return str;
-}
+std::string to_xml (const CL_Vector& vec);
 
 // FIXME:
 typedef void* xmlDocPtr;
 typedef void* xmlNodePtr;
 
+inline
 float to_float(xmlDocPtr doc, xmlNodePtr cur)
 {
 #if 0
@@ -80,6 +70,7 @@ float to_float(xmlDocPtr doc, xmlNodePtr cur)
   return 0.0f;
 }
 
+inline
 int to_int(xmlDocPtr doc, xmlNodePtr cur)
 {
 #if 0
@@ -103,6 +94,7 @@ int to_int(xmlDocPtr doc, xmlNodePtr cur)
   return 0;
 }
 
+inline
 CL_Vector cl_vector_from_xml (xmlDocPtr doc, xmlNodePtr cur)
 {
 #if 0

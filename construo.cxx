@@ -1,6 +1,6 @@
 //  $Id$
-// 
-//  Construo - A wire-frame construction game
+//
+//  Pingus - A free Lemmings clone
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -12,35 +12,28 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_CONSTRUO_COLOR_HXX
-#define HEADER_CONSTRUO_COLOR_HXX
+#include "construo.hxx"
 
-/** */
-struct Color
+SystemContext*  system_context  =0;
+InputContext*   input_context   =0;
+GraphicContext* graphic_context =0;
+
+std::string to_xml (const CL_Vector& vec)
 {
-  float r;
-  float g;
-  float b;
-  float a;
-
-  Color (int i) {
-    r = ((i & 0xFF0000) >> 16) / 255.0f;
-    b = ((i & 0x00FF00) >>  8) / 255.0f;
-    g = ((i & 0x0000FF) >>  0) / 255.0f;
-  }
-  
-  Color (float r, float g, float b, float a = 1.0f)
-  : r (r), g (g), b (b), a (a) {}
-
-  /** Convert the color into 0xRRGGBB format */
-  int get_rgb () { return int(255 * r) | (int((255 * g)) << 8) | (int((255 * b)) << 16); }
-};
-
-#endif
+  std::ostrstream out;
+  out << "<cl-vector>"
+      << "<x>" << vec.x << "</x>"
+      << "<y>" << vec.y << "</y>"
+      << "<z>" << vec.z << "</z>"
+      << "</cl-vector>" << std::ends;
+  std::string str (out.str ());
+  out.freeze (false);
+  return str;
+}
 
 /* EOF */

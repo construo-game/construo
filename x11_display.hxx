@@ -35,7 +35,7 @@ private:
   int       height;
   Display*  display;
   Window    window;
-  Window    drawable;
+  Drawable  drawable;
   GC        gc;
 
   int mouse_x;
@@ -48,7 +48,9 @@ public:
   void draw_line(int x1, int y1, int x2, int y2, Color color, int wide = 0);
   void draw_rect(int x1, int y1, int x2, int y2, Color color);
   void draw_fill_rect(int x1, int y1, int x2, int y2, Color color);
-  void draw_string(int x, int y, const std::string& str);
+  void draw_circle(int x, int y, int r, Color color);
+  void draw_fill_circle(int x, int y, int r, Color color);
+  void draw_string(int x, int y, const std::string& str, Color color);
 
   void clear ();
   void flip ();

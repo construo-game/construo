@@ -51,19 +51,24 @@ X11Display::X11Display(int w, int h)
                          CWBackPixel|CWBorderPixel|CWEventMask,
                          &attributes);
 
-  drawable = window;
-  
+  drawable = XCreatePixmap (display, window, width, height, 
+                            DefaultDepth(display, screen));  
+
   XMapRaised(display, window);
 
   XGCValues gcv;
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
-  gc = XCreateGC(display, window, GCForeground, &gcv);
+  gcv.line_width = 2;
+  gc = XCreateGC(display, window, 
+                 GCLineWidth | GCForeground | GCBackground,
+                 &gcv);
 }
 
 X11Display::~X11Display ()
 {
   std::cout << "Closing X11 display" << std::endl;
+  XFreePixmap (display, drawable);
   XCloseDisplay(display);
 }
 
@@ -71,7 +76,7 @@ void
 X11Display::draw_line(int x1, int y1, int x2, int y2, Color color, int wide)
 {
   XSetForeground(display, gc, color.get_rgb());
-  XDrawLine (display, window, gc, x1, y1, x2, y2);
+  XDrawLine (display, drawable, gc, x1, y1, x2, y2);
 }
 
 void
@@ -81,14 +86,31 @@ X11Display::draw_fill_rect(int x1, int y1, int x2, int y2, Color color)
 }
 
 void
+X11Display::draw_fill_circle(int x, int y, int r, Color color)
+{
+  // FIXME: doesn't work
+  XSetForeground(display, gc, color.get_rgb());
+  XFillArc(display, drawable, gc, x-r, y-r, r*2, r*2, 0, 360*64);
+}
+
+void
+X11Display::draw_circle(int x, int y, int r, Color color)
+{
+  // FIXME: doesn't work
+  XSetForeground(display, gc, color.get_rgb());
+  XDrawArc(display, drawable, gc, x-r, y-r, r*2, r*2, 0, 360*64);
+}
+
+void
 X11Display::draw_rect(int x1, int y1, int x2, int y2, Color color)
 {
 }
 
 void
-X11Display::draw_string(int x, int y, const std::string& str)
+X11Display::draw_string(int x, int y, const std::string& str, Color color)
 {
-  
+  XSetForeground(display, gc, color.get_rgb());
+  XDrawImageString (display, drawable, gc, x, y, str.c_str (), str.length ());
 }
 
 int
@@ -126,8 +148,30 @@ X11Display::keep_alive ()
           mouse_y = event.xmotion.y;
           break;
 
+        case Expose:
+          if (event.xexpose.count == 0)
+            flip ();
+          break;
+
+        case ButtonPress:
+          {
+            Event ev;
+            ev.button.type = BUTTON_EVENT;
+            if (event.xbutton.button == 1)
+              ev.button.id = BUTTON_PRIMARY;
+            else if (event.xbutton.button == 3)
+              ev.button.id = BUTTON_SECONDARY;
+            else
+              ev.button.id = BUTTON_START;
+
+            ev.button.pressed = true;
+
+            events.push(Event(ev));
+          }
+          break;
+
         default: 
-          std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+          //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
           break;
         }
     }
@@ -143,7 +187,13 @@ X11Display::clear ()
 void
 X11Display::flip ()
 {
-  XFlush(display);
+  // FIXME: Use another gc here
+  XCopyArea (display, drawable, window, gc,
+             0, 0, // source
+             width, height,
+             0, 0 // destination
+             );
+  //XFlush(display);
 }
 
 /* EOF */
