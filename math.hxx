@@ -62,7 +62,10 @@ inline int round(float a)
 /** Round x to a multilple of n */
 inline int round_to(float x, int n)
 {
-  return static_cast<int>(x + (n/2)) / n * n;
+  if (x > 0)
+    return static_cast<int>(x + (n/2)) / n * n;
+  else
+    return static_cast<int>(x - (n/2)) / n * n;
 }
 
 } // namespace Math
