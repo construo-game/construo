@@ -262,7 +262,6 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
       break;
     case ROTATING_SELECTION_MODE:
       {
-        std::cout << "Roatating" << std::endl;
         Vector2d new_pos(WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x),
                          WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y));
 

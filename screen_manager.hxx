@@ -31,13 +31,14 @@ private:
   GUIManager* current_gui_manager;
 
   GUIManager* load_gui_manager;
+  GUIManager* save_gui_manager;
   GUIManager* world_gui_manager;
   
   static ScreenManager* instance_;
   ScreenManager ();
 
 public:
-  enum { LOAD_GUI, WORLD_GUI };
+  enum { LOAD_GUI, SAVE_GUI, WORLD_GUI };
   static ScreenManager* instance ();
   
   void set_gui (int gui_id);

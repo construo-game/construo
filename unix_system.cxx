@@ -133,6 +133,22 @@ UnixSystem::get_user_email()
     return "";
 }
 
+unsigned int
+UnixSystem::get_mtime (const std::string& filename)
+{
+  std::string sys_name = translate_filename(filename);
+
+  struct stat buf;
+  if (stat(sys_name.c_str(), &buf) != 0)
+    {
+      return 0;
+    }
+  else
+    {
+      return buf.st_mtime;
+    }
+}
+
 FileType
 UnixSystem::get_file_type(const std::string& filename)
 {
@@ -196,6 +212,14 @@ UnixSystem::open_input_file(const std::string& filename)
   std::cout << "UnixSystem: open_input_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "r");
 }
+
+FILE*
+UnixSystem::open_output_file(const std::string& filename)
+{
+  std::cout << "UnixSystem: open_output_file: " << translate_filename (filename) << std::endl;
+  return fopen(translate_filename (filename).c_str(), "w");
+}
+
 
 struct DirectorySorter
 {

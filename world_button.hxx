@@ -30,10 +30,14 @@ class WorldButton : public GUIFileButton
 private:
   World* world;
   bool   file_broken;
+  unsigned int mtime;
 
-  
 public:
-  WorldButton (const std::string& arg_filename);
+  enum Mode { LOAD_BUTTON, SAVE_BUTTON};
+private:
+  Mode mode;
+public:
+  WorldButton (const std::string& arg_filename, Mode m);
   ~WorldButton ();
 
   void draw (GraphicContext* gc);

@@ -65,6 +65,9 @@ Spring::Spring (World* world, lisp_object_t* cursor)
   reader.read_int ("first", &first_id);
   reader.read_int ("second", &second_id);
   reader.read_float ("length", &length);
+  reader.read_float ("stiffness",   &stiffness);
+  reader.read_float ("damping",     &damping);
+  reader.read_float ("maxstretch", &max_stretch);
 
   particles.first  = world->get_particle_mgr()->lookup_particle (first_id);
   particles.second = world->get_particle_mgr()->lookup_particle (second_id);
@@ -147,6 +150,10 @@ Spring::serialize()
   obj.write_int ("first", particles.first->get_id());
   obj.write_int ("second", particles.second->get_id());
   obj.write_float ("length", length);
+  obj.write_float ("stiffness",   stiffness);
+  obj.write_float ("damping",     damping);
+  obj.write_float ("maxstretch", max_stretch);
+
   return obj.get_lisp ();
 }
 

@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "load_gui_manager.hxx"
+#include "save_gui_manager.hxx"
 #include "world_gui_manager.hxx"
 #include "screen_manager.hxx"
 
@@ -27,6 +28,7 @@ ScreenManager::ScreenManager ()
   : do_quit(false)
 {
   load_gui_manager  = new LoadGUIManager();
+  save_gui_manager  = new SaveGUIManager();
   world_gui_manager = new WorldGUIManager();
 
   current_gui_manager = world_gui_manager;
@@ -60,6 +62,9 @@ ScreenManager::set_gui (int gui_id)
       break;
     case LOAD_GUI:
       current_gui_manager = load_gui_manager;
+      break;
+    case SAVE_GUI:
+      current_gui_manager = save_gui_manager;
       break;
     }
 }

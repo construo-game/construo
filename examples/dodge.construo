@@ -353,6 +353,14 @@
     (spring (first 78) (second 73) (length 34.915596))
     (spring (first 101) (second 102) (length 16.056429))
     (spring (first 103) (second 104) (length 17.957445))
-  ))
+  )
+(colliders
+(rect (pos1 100 100) (pos2 300 300))
+(rect (pos1 500 100) (pos2 800 300))
+(rect (pos1 -300 -600) (pos2 -100 -550))
+(rect (pos1 -100 -150) (pos2 50 -50))
+)
+
+)
 
 ;; EOF ;;

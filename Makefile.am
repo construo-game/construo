@@ -67,9 +67,11 @@ gui_file_manager.hxx gui_file_manager.cxx \
 gui_directory.hxx gui_directory.cxx \
 world_gui_manager.hxx world_gui_manager.cxx \
 load_gui_manager.hxx load_gui_manager.cxx \
+save_gui_manager.hxx save_gui_manager.cxx \
 screen_manager.hxx screen_manager.cxx \
 gui_window.hxx gui_window.cxx \
-globals.hxx globals.cxx
+globals.hxx globals.cxx \
+gui_new_file_button.hxx gui_new_file_button.cxx
 
 construo_x11_SOURCES  = construo_main.cxx x11_display.hxx x11_display.cxx 
 construo_x11_LDADD    = libconstruo.a

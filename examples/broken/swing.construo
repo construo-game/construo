@@ -40,7 +40,9 @@
     (particle (id 38) (pos 490.000000 310.000000) (velocity 0.000000 0.000000) (fixed #f) (mass 10.000000))
     (particle (id 41) (pos 175.000000 346.000000) (velocity 0.000000 0.000000) (fixed #t) (mass 10.000000))
     (particle (id 42) (pos 508.000000 355.000000) (velocity 0.000000 0.000000) (fixed #t) (mass 10.000000))
-  )
+   )
+  (colliders
+    (rect )
   (springs
     (spring (first 0) (second 1) (length 26.419693))
     (spring (first 1) (second 2) (length 32.695557))

@@ -42,6 +42,10 @@ public:
   std::string get_user_email();
 
   FILE* open_input_file(const std::string& filename);
+  FILE* open_output_file(const std::string& filename);
+
+  unsigned int get_mtime (const std::string& filename);
+
   FileType get_file_type(const std::string& filename);
   std::vector<std::string> read_directory(const std::string& pathname);
 };

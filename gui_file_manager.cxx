@@ -38,6 +38,12 @@ void ScrollDown ()
   GUIFileManager::instance()->scroll_down();
 }
 
+void ReReadCurrentDir ()
+{
+  GUIFileManager::instance()->update_current_directory();
+}
+
+
 void CloseFileManager ()
 {
   ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
@@ -45,10 +51,15 @@ void CloseFileManager ()
 
 GUIFileManager* GUIFileManager::instance_ = 0;
 
-GUIFileManager::GUIFileManager ()
-  : GUIChildManager (0, 0, 800, 600)
+GUIFileManager::GUIFileManager (Mode m)
+  : GUIChildManager (0, 0, 800, 600),
+    mode (m)
 {
-  current_directory = new GUIDirectory ("/");
+  if (mode == SAVE_MANAGER)
+    current_directory = new GUIDirectory ("/", GUIDirectory::SAVE_DIRECTORY);
+  else
+    current_directory = new GUIDirectory ("/", GUIDirectory::LOAD_DIRECTORY);
+
   directories["/"] = current_directory;
   
   add (new GUIGenericButton("Up", 0,0, 100, 25, DirectoryUp));
@@ -56,6 +67,8 @@ GUIFileManager::GUIFileManager ()
 
   add (new GUIGenericButton("^", 770, 200, 25, 50, ScrollUp));
   add (new GUIGenericButton("V", 770, 300, 25, 50, ScrollDown));
+
+  add (new GUIGenericButton("Update Directory", 650, 575, 150, 25, ReReadCurrentDir));
 
   add(current_directory);
  
@@ -70,17 +83,28 @@ GUIFileManager::~GUIFileManager ()
 void
 GUIFileManager::open_directory (const std::string& pathname)
 {
+  std::cout << "GUIFileManager::open_directory: " << pathname << std::endl;
   GUIDirectory* old_directory = current_directory;
 
   if (directories[pathname] == 0)
     {
-      current_directory = directories[pathname] = new GUIDirectory(pathname);
+      if (mode == SAVE_MANAGER)
+        {
+          current_directory = directories[pathname] = new GUIDirectory(pathname, 
+                                                                       GUIDirectory::SAVE_DIRECTORY);
+        }
+      else
+        {
+          current_directory = directories[pathname] = new GUIDirectory(pathname,
+                                                                       GUIDirectory::LOAD_DIRECTORY);
+        }
     }
   else
     {
       current_directory = directories[pathname];
     }
 
+  std::cout << "Replace: " << old_directory << " " << current_directory << std::endl;
   replace (old_directory, current_directory);
 }
 
@@ -129,6 +153,29 @@ void
 GUIFileManager::scroll_down ()
 {
   current_directory->move_down();   
+}
+
+void
+GUIFileManager::update_current_directory()
+{
+  // Force a reread of the whole directory
+  std::string pathname = current_directory->get_path();
+
+  GUIDirectory* old_directory = current_directory;
+
+  if (mode == SAVE_MANAGER)
+    {
+      current_directory = directories[pathname] = new GUIDirectory(pathname, 
+                                                                   GUIDirectory::SAVE_DIRECTORY);
+    }
+  else
+    {
+      current_directory = directories[pathname] = new GUIDirectory(pathname,
+                                                                   GUIDirectory::LOAD_DIRECTORY);
+    }
+  
+  replace (old_directory, current_directory);
+  delete old_directory;
 }
 
 /* EOF */

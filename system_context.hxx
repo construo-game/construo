@@ -53,6 +53,9 @@ public:
   virtual FileType get_file_type(const std::string& filename) =0;
 
   virtual FILE* open_input_file(const std::string& filename) =0;
+  virtual FILE* open_output_file(const std::string& filename) =0;
+
+  virtual unsigned int get_mtime (const std::string& filename) =0;
 
   /** @return a list of files available in the given directory */
   virtual std::vector<std::string> read_directory(const std::string& pathname) =0;

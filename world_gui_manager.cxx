@@ -28,6 +28,7 @@
 #include "gui_window.hxx"
 #include "gui_label.hxx"
 #include "globals.hxx"
+#include "screen_manager.hxx"
 #include "world_gui_manager.hxx"
 
 using namespace StringUtils;
@@ -78,6 +79,7 @@ void switch_to_select_mode() {
 }
 
 void save_button_callback() {
+  ScreenManager::instance()->set_gui(ScreenManager::SAVE_GUI);
 }
 
 void action_cam_callback() {

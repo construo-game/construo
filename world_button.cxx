@@ -23,24 +23,30 @@
 #include "world_button.hxx"
 #include "construo_error.hxx"
 
-WorldButton::WorldButton (const std::string& arg_filename)
+WorldButton::WorldButton (const std::string& arg_filename, Mode m)
   : GUIFileButton (arg_filename),
     world(0),
-    file_broken(false)
+    file_broken(false),
+    mode (m)
 {
 }
 
 WorldButton::~WorldButton ()
 {
+  delete world;
 }
 
 void
 WorldButton::load_world ()
 {
-  if (world == 0 && !file_broken)
+  if ((world == 0 
+       && !file_broken)
+      || mtime != system_context->get_mtime(filename))
     {
       try {
+        delete world;
         world = new World(filename);
+        mtime = system_context->get_mtime(filename);
       } catch (ConstruoError& err) {
         std::cout << "ERROR: " << err.msg << std::endl;
         std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
@@ -98,8 +104,16 @@ void
 WorldButton::on_click ()
 {
   std::cout << "WorldButton: detected click on: " << filename << std::endl;
-  Controller::instance()->load_world(filename);
-  ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+  if (mode == SAVE_BUTTON)
+    {
+      Controller::instance()->save_world(filename);
+      ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+    }
+  else // LOAD BUTTON
+    {
+      Controller::instance()->load_world(filename);
+      ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+    }
 }
 
 /* EOF */

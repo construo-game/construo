@@ -196,6 +196,7 @@ World::World (const World& old_world)
 
       if (first && second)
         {
+          // FIXME: Use copy c'tor here maxstiffnes and Co. aren't copied correctly
           springs.push_back (new Spring (first, second, (*i)->length));
         }
       else
@@ -469,7 +470,7 @@ World::write_lisp (const std::string& filename)
 {
   FILE* out;
 
-  out = fopen(filename.c_str(), "w");
+  out = system_context->open_output_file(filename);
 
   if (!out)
     {

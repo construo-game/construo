@@ -33,10 +33,15 @@ private:
   std::string pathname;
   std::vector<GUIFileButton*> files;
   int offset;
-  
+  unsigned int mtime;
+
   void place_components ();
 public:
-  GUIDirectory (const std::string& pathname);
+  enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };
+private:
+  Mode mode;
+public:
+  GUIDirectory (const std::string& pathname, Mode m);
   ~GUIDirectory ();
 
   void draw_overlay (GraphicContext* gc);

@@ -29,8 +29,6 @@ class ButtonEvent;
 class GUIManager
 {
 private:
-  bool do_quit;
-
   unsigned int frame_count;
   unsigned int start_time;
 
@@ -55,7 +53,7 @@ public:
   virtual ~GUIManager ();
   
   /** Launches a single run from the games main loop */
-  void run_once ();
+  virtual void run_once ();
 
   /** Draw all the GUI components */
   void draw ();
@@ -69,9 +67,6 @@ public:
   /** add a GUIComponent, the component will get deleted after in the
       destruction of the guimanager */
   void add (GUIComponent*);
-
-  /** @return true if somebody has quit the GUIManager */
-  bool finished () { return do_quit; }
 
   void grab_mouse (GUIComponent*);
   void ungrab_mouse (GUIComponent*);

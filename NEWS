@@ -10,8 +10,8 @@ Construo 0.2.0
 
  * added simple GUI
 
- * House of Horror Part1 and Part2 added and fixed them for the new
-   physics
+ * House of Horror Part1 and Part2 added (currently a bit broken due
+   to changed physics)
  
  * fullscreen support added
 
@@ -34,6 +34,8 @@ Construo 0.2.0
  * moving of colliders in a running simulation is possible
 
  * some bit more actions are undoable
+
+ * lots of new bugs, see file BUGS for the known issues
 
 
 Construo 0.1.0

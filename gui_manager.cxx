@@ -31,13 +31,12 @@
 #include "worldview_component.hxx"
 #include "worldview_insert_tool.hxx"
 #include "globals.hxx"
+#include "screen_manager.hxx"
 
 using namespace StringUtils;
 
 GUIManager::GUIManager ()
 {
-  do_quit = false;
-
   frame_count = 0;
   start_time  = system_context->get_time ();
 
@@ -85,12 +84,6 @@ GUIManager::draw ()
     {
       (*i)->draw (graphic_context);
     }
-}
-
-void
-GUIManager::quit()
-{
-  do_quit = true;
 }
 
 GUIComponent*
@@ -178,7 +171,7 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_ESCAPE:
-          do_quit = true;
+          ScreenManager::instance()->quit();
           break;
 
         case BUTTON_MODE_CHANGE:

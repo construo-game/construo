@@ -64,10 +64,9 @@ ConstruoMain::on_exit()
 {
   std::cout << "Calling on_exit()" << std::endl;
 
-  if (!controller->has_been_run())
+  //if (!controller->has_been_run())
     {
-      std::string filename = system_context->get_construo_rc_path() + std::string("laststate.construo");
-      controller->save_world(filename);
+      controller->save_world("/user/laststate.construo");
     }
 
   std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
@@ -112,7 +111,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
       {
         try 
           {
-            controller = new Controller (system_context->get_construo_rc_path() + "laststate.construo");
+            controller = new Controller ("/user/laststate.construo");
           } 
         catch (ConstruoError& err) 
           {
@@ -122,6 +121,8 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
       }
   
     display.run();
+
+    on_exit();
     
     delete gui_manager;
 
@@ -129,8 +130,6 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     std::cout << "Error ocurred: " << err.msg << std::endl;
     return EXIT_FAILURE;
   }
-
-  on_exit();
 
   return 0;
 }

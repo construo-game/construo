@@ -45,6 +45,7 @@ GUIChildManager::add (GUIComponent* comp)
 void
 GUIChildManager::remove (GUIComponent* comp)
 {
+  // FIXME: Memory leak
   components.erase(std::remove(components.begin(), components.end(), comp), components.end());
 }
 

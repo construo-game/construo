@@ -38,10 +38,15 @@ private:
 
   static GUIFileManager* instance_;
 public:
-  GUIFileManager ();
+  enum Mode { LOAD_MANAGER, SAVE_MANAGER };
+private:
+  Mode mode;
+public:
+  GUIFileManager (Mode m);
   ~GUIFileManager ();
 
   static GUIFileManager* instance() { return instance_; }
+  static void set_instance(GUIFileManager* g) { instance_ = g; }
   
   void draw_overlay (GraphicContext* gc);
 
@@ -52,6 +57,8 @@ public:
   /** move one directory up, aka cut the last directory from a
       directory pathname */
   void directory_up();
+
+  void update_current_directory();
 
   void scroll_up ();
   void scroll_down ();

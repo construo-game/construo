@@ -22,14 +22,20 @@
 #include "world_button.hxx"
 #include "gui_directory_button.hxx"
 #include "gui_file_manager.hxx"
+#include "gui_new_file_button.hxx"
 #include "gui_directory.hxx"
 
-GUIDirectory::GUIDirectory (const std::string& arg_pathname)
+GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
   : GUIChildManager (0, 0, 800, 600),
-    pathname (arg_pathname)
+    pathname (arg_pathname),
+    mode (m)
 {
+  mtime = system_context->get_mtime(pathname);
   std::vector<std::string> dir = system_context->read_directory(pathname);
   
+  if (mode == SAVE_DIRECTORY && pathname != "/")
+    files.push_back(new GUINewFileButton(pathname));
+
   for (std::vector<std::string>::iterator i = dir.begin(); i != dir.end(); ++i)
     {
       std::string filename = pathname + *i;
@@ -47,7 +53,10 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname)
         }
       else if (type == FT_CONSTRUO_FILE)
         {
-          files.push_back (new WorldButton (filename));
+          if (mode == SAVE_DIRECTORY)
+            files.push_back (new WorldButton (filename, WorldButton::SAVE_BUTTON));
+          else
+            files.push_back (new WorldButton (filename, WorldButton::LOAD_BUTTON));
         }
       else // (type == FT_UNKNOWN_FILE)
         {
@@ -63,6 +72,13 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname)
 
 GUIDirectory::~GUIDirectory ()
 {
+  for(std::vector<GUIFileButton*>::iterator i = files.begin();
+      i != files.end(); ++i)
+    {
+      // FIXME: Very ugly, we remove all components from the manager so that he doesn't delete them twice
+      remove(*i);
+      delete *i;
+    }
 }
 
 void
@@ -105,7 +121,6 @@ GUIDirectory::place_components ()
 void
 GUIDirectory::draw_overlay (GraphicContext* gc)
 {
-  
 }
 
 void
