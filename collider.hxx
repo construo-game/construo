@@ -33,12 +33,17 @@ public:
   virtual void draw (GraphicContext*) =0;
   virtual void draw_highlight (GraphicContext*) =0;
 
+  virtual Vector2d get_pos() =0;
+  virtual void     set_pos(const Vector2d&) =0;
+
   /** @return true if the collider is at the given world coordinates,
       used for drag&drop */
   virtual bool is_at (const Vector2d& pos) =0;
 
   /** act on a particle */
   virtual void bounce () =0;
+
+  virtual lisp_object_t* serialize() =0;
 };
 
 #endif

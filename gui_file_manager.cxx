@@ -102,7 +102,7 @@ GUIFileManager::directory_up()
 void
 GUIFileManager::draw_overlay (GraphicContext* gc)
 {
-  gc->draw_string(200, 10, current_directory->get_path());
+  gc->draw_string(200, 16, current_directory->get_path());
 }
 
 /* EOF */

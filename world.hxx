@@ -40,6 +40,10 @@ struct WorldBoundingBox
 /** This class holds all particles and springs */
 class World
 {
+public:
+  typedef std::vector<Collider*> Colliders;
+  typedef std::vector<Spring*>::iterator SpringIter;
+  typedef std::vector<Spring*>::const_iterator CSpringIter;
 private:
   /** Version number of the file, used to ensure backward compability */
   unsigned int file_version;
@@ -49,10 +53,7 @@ private:
   ParticleFactory* particle_mgr;
 
   std::vector<Spring*> springs;
-  typedef std::vector<Spring*>::iterator SpringIter;
-  typedef std::vector<Spring*>::const_iterator CSpringIter;
 
-  typedef std::vector<Collider*> Colliders;
   Colliders colliders;
 
   void parse_scene (lisp_object_t* lst);
@@ -91,8 +92,11 @@ public:
   /** remove the given spring */
   void remove_spring (Spring*);
 
+  void remove_collider (Collider*);
+
   ParticleFactory* get_particle_mgr() { return particle_mgr; }
   std::vector<Spring*>& get_spring_mgr () { return springs; }
+  Colliders& get_colliders() { return colliders; }
 
   /** removes everything from the world */
   void clear ();

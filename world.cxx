@@ -428,6 +428,14 @@ World::remove_spring (Spring* s)
 }
 
 void
+World::remove_collider (Collider* c)
+{
+  delete c;
+  colliders.erase(std::remove(colliders.begin (), colliders.end (), c), 
+                  colliders.end ());  
+}
+
+void
 World::clear ()
 {
   particle_mgr->clear();
@@ -456,12 +464,16 @@ World::write_lisp (const std::string& filename)
   fputs(";; Written by " PACKAGE_STRING "\n", out);
   fputs("(construo-scene\n", out);
   fputs("  (version 3)\n", out);
+
   // FIXME: insert creation date here
   // FIXME: Filter '()"' here
   fprintf(out, "  (author \"%s\" \"%s\")\n", 
           system_context->get_user_realname().c_str(),
           system_context->get_user_email().c_str());
+
   particle_mgr->write_lisp(out);
+
+
   fputs("  (springs\n", out);
   for (CSpringIter i = springs.begin (); i != springs.end (); ++i)
     {
@@ -472,6 +484,20 @@ World::write_lisp (const std::string& filename)
       fputc('\n', out);
     }
   fputs("  )", out);
+
+
+  fputs ("  (colliders\n", out);
+  for (Colliders::iterator i = colliders.begin(); i != colliders.end(); ++i)
+    {
+      lisp_object_t* obj = (*i)->serialize ();
+      fputs("    ", out);
+      lisp_dump (obj, out);
+      lisp_free(obj);
+      fputc('\n', out);
+    }
+  fputs("  )", out);
+
+
   fputs(")\n\n;; EOF ;;\n", out);
 
   fclose(out);

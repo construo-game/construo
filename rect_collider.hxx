@@ -26,6 +26,7 @@
 class RectCollider : public Collider
 {
 private:
+  // FIXME: Use the Rect class here
   float x1;
   float y1;
   float x2;
@@ -35,10 +36,15 @@ public:
   RectCollider (World* world, lisp_object_t* cursor);
   RectCollider (float x1_, float y1_, float x2_, float y2_);
 
+  Vector2d get_pos();
+  void     set_pos(const Vector2d&);
+
   bool is_at (const Vector2d& pos);
   void bounce ();
   void draw (GraphicContext* gc);
   void draw_highlight (GraphicContext* gc);
+
+  lisp_object_t* serialize();
 };
 
 #endif

@@ -49,7 +49,25 @@ RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_)
 bool
 RectCollider::is_at (const Vector2d& pos)
 {
-  return false;
+  return (x1 <= pos.x && x2 > pos.x
+          && y1 <= pos.y && y2 > pos.y);
+}
+
+Vector2d
+RectCollider::get_pos()
+{
+  return Vector2d ((x1 + x2)/2.0f,
+                   (y1 + y2)/2.0f); 
+}
+
+void
+RectCollider::set_pos(const Vector2d& pos)
+{
+  Vector2d center = get_pos();
+  x1 = x1 - center.x + pos.x;
+  x2 = x2 - center.x + pos.x;
+  y1 = y1 - center.y + pos.y;
+  y2 = y2 - center.y + pos.y;
 }
 
 void
@@ -116,6 +134,15 @@ RectCollider::draw_highlight (GraphicContext* gc)
 {
   //gc->draw_fill_rect (x1, y1, x2, y2, Colors::rect_collider_bg);
   gc->draw_rect (x1, y1, x2, y2, Colors::selection_rect);
+}
+
+lisp_object_t*
+RectCollider::serialize()
+{
+  LispWriter obj ("rect");
+  obj.write_vector ("pos1", Vector2d(x1, y1));
+  obj.write_vector ("pos2", Vector2d(x2, y2));
+  return obj.get_lisp ();
 }
 
 /* EOF */
