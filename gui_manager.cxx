@@ -254,8 +254,10 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         default:
+#ifdef DEBUG
           std::cout << "GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: "
                     << button.id << std::endl;
+#endif
           break;
         }
     }

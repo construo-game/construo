@@ -157,8 +157,10 @@ Controller::clear_world ()
 void
 Controller::undo ()
 {
+#ifdef DEBUG
   std::cout << "Controller::undo (): undostack: " << undo_world_stack.size() 
             << " redostack: " << redo_world_stack.size() << std::endl;
+#endif
 
   if (!undo_world_stack.empty())
     {

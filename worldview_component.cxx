@@ -78,8 +78,6 @@ WorldViewComponent::set_mode (Mode m)
     }
 
   current_tool->activate ();
-
-  std::cout << "Setting Mode: " << m << " " << current_tool << std::endl;
 }
 
 WorldViewComponent::~WorldViewComponent ()

@@ -196,7 +196,7 @@ Selection::validate()
 {
   if (world != Controller::instance()->get_world ())
     {
-      std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
+      //std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
       clear();
     }
 }
