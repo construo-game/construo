@@ -170,20 +170,11 @@ GUIManager::draw_status ()
   graphic_context->draw_string (700,  560, "Zoom: ");
   graphic_context->draw_string (770,  560, to_string(WorldViewComponent::instance()->get_zoom()));
 
-  if (Controller::instance()->is_running ())
-    graphic_context->draw_string (graphic_context->get_width () - 60,
-                                  graphic_context->get_height () - 10,
-                                  "[RUNNING]", Color(0xFF0000));
-  else
-    graphic_context->draw_string (graphic_context->get_width () - 60,
-                                  graphic_context->get_height () - 10,
-                                  "[STOPPED]", Color(0x00FF00));
-
   if (Controller::instance()->slow_down_active ())
     {
       graphic_context->draw_string (10,
                                     graphic_context->get_height () - 10,
-                                    "[SLOW-MOTION]", Color(0x00FFFF));
+                                    "[SLOW-MOTION]", Color(0x00FFFFFF));
     }
 }
 

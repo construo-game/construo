@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <math.h>
+#include "colors.hxx"
 #include "particle_factory.hxx"
 #include "controller.hxx"
 #include "rect_collider.hxx"
@@ -88,7 +89,8 @@ void
 RectCollider::draw (GraphicContext* gc)
 {
   //std::cout << "Drawing collider" << std::endl;
-  gc->draw_rect (x1, y1, x2, y2, Color (0x0000FF));
+  gc->draw_fill_rect (x1, y1, x2, y2, Colors::rect_collider_bg);
+  gc->draw_rect (x1, y1, x2, y2, Colors::rect_collider_fg);
 }
 
 /* EOF */

@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "colors.hxx"
 #include "math.hxx"
 #include "lisp_reader.hxx"
 #include "particle.hxx"
@@ -58,7 +59,7 @@ Particle::draw_highlight (ZoomGraphicContext* gc)
 {
   gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
                                          6,
-                                         Color(1.0f, 1.0f, 1.0f));
+                                         Colors::highlight);
 }
 
 void
@@ -81,7 +82,7 @@ Particle::draw (ZoomGraphicContext* gc)
         }
     }
 
-  if (0)
+  if (0) // draw velocity vectors
     gc->draw_line (int (pos.x), int (pos.y),
                    int (pos.x + velocity.x), int (pos.y + velocity.y),
                    Color (0.0f, 0.0f, 1.0f));

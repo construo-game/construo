@@ -32,6 +32,19 @@ namespace Colors
   extern Color button_bg_hover;
   extern Color button_bg_passive;
   extern Color button_bg_active;
+
+  /** Color for new springs and other helper lines */
+  extern Color new_spring;
+
+  extern Color selection_rect;
+  extern Color selection_resizer;
+
+  /** Color for collidables */
+  extern Color rect_collider_fg;
+  extern Color rect_collider_bg;
+
+  /** Color for highlighted particles or springs */
+  extern Color highlight;
 }
 
 #endif

@@ -39,7 +39,7 @@ public:
     draw_fill_circle (pos.x, pos.y, radius, color);
   }
 
-  void draw_string(const Vector2d& pos, const std::string& str, Color color = Color (0xFFFFFF))
+  void draw_string(const Vector2d& pos, const std::string& str, Color color = Color (0xFFFFFFFF))
   {
     draw_string (pos.x, pos.y, str, color);
   }
@@ -64,7 +64,7 @@ public:
   virtual void draw_circle(float x, float y, float radius, Color color) =0;
   virtual void draw_fill_circle(float x, float y, float radius, Color color) =0;
   virtual void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) =0;
-  virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFF)) =0;
+  virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
 
   virtual int get_width ()  =0;
   virtual int get_height () =0;

@@ -21,6 +21,7 @@
 #define HEADER_CONSTRUO_INPUT_CONTEXT_HXX
 
 #include <queue>
+#include "vector2d.hxx"
 #include "keys.hxx"
 #include "buttons.hxx"
 #include "events.hxx"
@@ -45,6 +46,8 @@ public:
   
   /** @return mouse y coordinate */
   virtual int  get_mouse_y () =0;
+
+  Vector2d get_mouse_pos () { return Vector2d(get_mouse_x (), get_mouse_y()); }
 
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */

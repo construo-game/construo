@@ -77,12 +77,6 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 {
   CommandLine::parse(argc, argv);
 
-  if (argc == 2 && argv[1][0] == '-')
-    {
-      std::cout << "Usage: " << argv[0] << " [FILENAME]" << std::endl;
-      return EXIT_FAILURE;
-    }
-
   try {
 #ifdef USE_X11_DISPLAY
     X11Display display (settings.screen_width, settings.screen_height, 
@@ -105,9 +99,9 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     GUIManager* gui_manager = new GUIManager ();
 
-    if (argc == 2)
+    if (!settings.startup_file.empty())
       {
-        controller  = new Controller (argv[1]);
+        controller  = new Controller (settings.startup_file);
       }
     else
       {

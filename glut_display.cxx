@@ -21,6 +21,7 @@
 #include <iostream>
 #include "buttons.hxx"
 #include "events.hxx"
+#include "settings.hxx"
 #include "gui_manager.hxx"
 #include "glut_display.hxx"
 
@@ -84,9 +85,17 @@ GlutDisplay::GlutDisplay (int w, int h)
   glutKeyboardFunc(::keyboard_func);
   
   glClearColor (0.0, 0.0, 0.0, 0.1);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  if (settings.alphablending)
+    {
+      glShadeModel (GL_SMOOTH);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 
-  glShadeModel (GL_SMOOTH);
+  if (settings.antialiasing && settings.alphablending)
+    {
+      glEnable(GL_LINE_SMOOTH);
+    }
 }
 
 void
@@ -104,6 +113,7 @@ GlutDisplay::~GlutDisplay()
 void 
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
+  glLineWidth (wide);
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINES);
   glVertex2f (x1, y1);
@@ -114,6 +124,7 @@ GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int 
 void
 GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
+  glLineWidth (2);
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINE_STRIP);
   glVertex2f (x1, y1);
@@ -127,6 +138,7 @@ GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 void
 GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
+  glLineWidth (.5f);
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_QUADS);
   glVertex2f (x1, y1);
@@ -139,20 +151,40 @@ GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 void
 GlutDisplay::draw_circle(float x, float y, float r, Color color)
 {
-  draw_rect (x - r, y - r, x + r, y + r,
-                  color);
+  glColor4f (color.r, color.g, color.b, color.a);
+  GLUquadricObj* qobj = gluNewQuadric ();
+  //gluQuadricNormals (qobj, GLU_FLAT);
+  glPushMatrix();
+  glTranslatef (x, y, 0);
+  gluDisk (qobj, 0, r, 8, 1);
+  /*draw_rect (x - r, y - r, x + r, y + r,
+    color);*/
+  glPopMatrix ();
+  gluDeleteQuadric (qobj);
 }
 
 void
 GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 {
-  draw_fill_rect (x - r, y - r, x + r, y + r,
-                  color);
+  glColor4f (color.r, color.g, color.b, color.a);
+  //draw_fill_rect (x - r, y - r, x + r, y + r,
+  //              color);
+  
+  GLUquadricObj* qobj = gluNewQuadric ();
+  //gluQuadricNormals (qobj, GLU_FLAT);
+  glPushMatrix();
+  glTranslatef (x, y, 0);
+  gluDisk (qobj, 0, r, 8, 1);
+  /*draw_rect (x - r, y - r, x + r, y + r,
+    color);*/
+  glPopMatrix ();
+  gluDeleteQuadric (qobj);
 }
 
 void
 GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 {
+  glLineWidth (1.0f);
   glColor4f (color.r, color.g, color.b, color.a);
   glPushMatrix();
   glTranslatef (x , y, 0);

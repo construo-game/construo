@@ -28,6 +28,8 @@ class Settings
 public:
   bool fullscreen;
   bool doublebuffer;
+  bool alphablending;
+  bool antialiasing;
   int  screen_width;
   int  screen_height;
   

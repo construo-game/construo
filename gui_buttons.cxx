@@ -147,11 +147,11 @@ GUIRunButton::draw_content (GraphicContext* gc)
   /*
   gc->draw_line (x_pos, y_pos,
                 x_pos + width, y_pos + height,
-                Color (0x0000FF));
+                Color (0x0000FFFF));
 
   gc->draw_line (x_pos + width, y_pos,
                 x_pos, y_pos + height,
-                Color (0x0000FF));
+                Color (0x0000FFFF));
   */
   GUIButton::draw_content (gc);
 }

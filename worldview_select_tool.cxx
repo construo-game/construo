@@ -20,6 +20,7 @@
 #include <math.h>
 #include "math.hxx"
 #include "world.hxx"
+#include "colors.hxx"
 #include "controller.hxx"
 #include "worldview_component.hxx"
 #include "particle.hxx"
@@ -48,10 +49,8 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
                      Math::min(y, click_pos.y),
                      Math::max(x, click_pos.x),
                      Math::max(y, click_pos.y),
-                     Color(0xFFFFFF));
+                     Colors::selection_rect);
     }
-
-
 
   if (!selection.empty())
     {
@@ -70,21 +69,21 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
       float border = 20.0f / gc->get_zoom();
       gc->draw_rect (selection_box.x1 - border, selection_box.y1 - border, 
                      selection_box.x2 + border, selection_box.y2 + border, 
-                     Color(0xAAAAAA));
+                     Colors::new_spring);
 
       float rsize = 5.0f / gc->get_zoom();
       gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize, 
                           selection_box.x1 - border + rsize, selection_box.y1 - border + rsize, 
-                          Color(0xFFFF00));
+                          Colors::selection_resizer);
       gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize, 
                           selection_box.x2 + border + rsize, selection_box.y1 - border + rsize, 
-                          Color(0xFFFF00));
+                          Colors::selection_resizer);
       gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize, 
                           selection_box.x1 - border + rsize, selection_box.y2 + border + rsize, 
-                          Color(0xFFFF00));
+                          Colors::selection_resizer);
       gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
                           selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
-                          Color(0xFFFF00));
+                          Colors::selection_resizer);
     }
 
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)

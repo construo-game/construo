@@ -21,14 +21,22 @@
 
 namespace Colors
 {
-  Color button_fg_pressed (0xFFFFFF);
-  Color button_fg_hover   (0x009f9f);
-  Color button_fg_passive (0x007f7f);
+  Color button_fg_pressed (0xFFFFFFFF);
+  Color button_fg_hover   (0x009f9fFF);
+  Color button_fg_passive (0x007f7fFF);
 
-  Color button_bg_pressed (0x000000);
-  Color button_bg_hover   (0x006060);
-  Color button_bg_passive (0x004f4f);
-  Color button_bg_active  (0x00AAAA);
+  Color button_bg_pressed (0x000000AA);
+  Color button_bg_hover   (0x006060AA);
+  Color button_bg_passive (0x004f4fAA);
+  Color button_bg_active  (0x00AAAAAA);
+
+  Color new_spring        (0xAAAAAAFF);
+  Color selection_rect    (0xFFFFFFFF);
+  Color selection_resizer (0xFFFF00FF);
+
+  Color rect_collider_fg  (0x0000FFFF);
+  Color rect_collider_bg  (0x0000AAFF);
+  Color highlight         (0xEEEEEEFF);
 }
 
 /* EOF */

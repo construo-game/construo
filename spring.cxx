@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "colors.hxx"
 #include "construo_error.hxx"
 #include "particle_factory.hxx"
 #include "spring.hxx"
@@ -126,7 +127,8 @@ Spring::draw (ZoomGraphicContext* gc)
     {
       gc->GraphicContext::draw_line (particles.first->pos,
                                      particles.second->pos,
-                                     Color(color, 1.0f - color, 0.0f));
+                                     Color(color, 1.0f - color, 0.0f),
+                                     2);
     }
 }
 
@@ -134,7 +136,7 @@ void
 Spring::draw_highlight (ZoomGraphicContext* gc)
 {
   gc->GraphicContext::draw_line (particles.first->pos, particles.second->pos,
-                                 Color(0xEEEEEE), 10);
+                                 Colors::highlight, 4);
 }
 
 

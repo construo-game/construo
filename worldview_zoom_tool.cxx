@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "colors.hxx"
 #include "construo.hxx"
 #include "input_context.hxx"
 #include "math.hxx"
@@ -50,7 +51,7 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext* gc)
                      Math::min(y, click_pos.y),
                      Math::max(x, click_pos.x),
                      Math::max(y, click_pos.y),
-                     Color(0xFFFFFF));
+                     Colors::new_spring);
     }
 }
 

@@ -29,6 +29,8 @@ private:
   static void error (const std::string& msg);
 public:
   static void parse (int argc, char** argv);
+  static void print_help ();
+  static void print_version ();
 };
 
 #endif

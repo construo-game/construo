@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "colors.hxx"
 #include "particle_factory.hxx"
 #include "input_context.hxx"
 #include "graphic_context.hxx"
@@ -55,10 +56,9 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
 {
   World& world = *Controller::instance()->get_world();
 
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
-
-  Spring* selected_spring = world.get_spring (x, y);
+  Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world (input_context->get_mouse_pos ());
+  
+  Spring* selected_spring = world.get_spring (click_pos.x, click_pos.y);
   if (selected_spring)
     {
       selected_spring->draw_highlight (gc);
@@ -66,9 +66,8 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
       
   if (current_particle)
     {
-      gc->draw_line (int(current_particle->pos.x), int(current_particle->pos.y),
-                     x, y,
-                     Color(0xAAAAAA));
+      gc->GraphicContext::draw_line (current_particle->pos, click_pos,
+                                     Colors::new_spring, 2);
     }
 }
 

@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "colors.hxx"
 #include "controller.hxx"
 #include "gui_manager.hxx"
 #include "worldview_tool.hxx"
@@ -86,7 +87,8 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   gc.set_parent_gc (parent_gc);
 
-  gc.draw_line (-1000, 599, 1000, 599, Color (0x0000AA));
+  //Draw the buttom border line
+  gc.draw_line (-1000, 599, 1000, 599, Colors::rect_collider_fg);
 
   World& world = *Controller::instance()->get_world();
 

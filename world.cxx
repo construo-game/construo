@@ -177,7 +177,7 @@ World::draw (ZoomGraphicContext* gc)
   particle_mgr->draw(gc);
 
   //const WorldBoundingBox& box = calc_bounding_box();
-  //gc->draw_rect((int) box.x1, (int) box.y1, (int) box.x2, (int) box.y2, Color (0x0000FF));
+  //gc->draw_rect((int) box.x1, (int) box.y1, (int) box.x2, (int) box.y2, Color (0x0000FFFF));
 }
 
 void

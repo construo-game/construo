@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <config.h>
 #include <iostream>
 #include <stdio.h>
 #include "settings.hxx"
@@ -43,6 +44,26 @@ CommandLine::parse (int argc, char** argv)
               || strcmp(argv[i], "-f") == 0)
             {
               settings.fullscreen = true;
+            }
+          else if (strcmp(argv[i], "--version") == 0
+                   || strcmp(argv[i], "-v") == 0)
+            {
+              print_version ();
+              exit (EXIT_SUCCESS);              
+            }
+          else if (strcmp(argv[i], "--help") == 0
+              || strcmp(argv[i], "-h") == 0)
+            {
+              print_help ();
+              exit (EXIT_SUCCESS);
+            }
+          else if (strcmp(argv[i], "--disable-alphablending") == 0)
+            {
+              settings.alphablending = false;
+            }
+          else if (strcmp(argv[i], "--disable-antialiasing") == 0)
+            {
+              settings.antialiasing = false;
             }
           else if (strcmp(argv[i], "--disable-doublebuffer") == 0
               || strcmp(argv[i], "-d") == 0)
@@ -85,4 +106,29 @@ CommandLine::parse (int argc, char** argv)
     }
 }
 
+void
+CommandLine::print_help ()
+{
+  std::cout << "Construo "VERSION"\n\n"
+            << "Usage: construo [OPTIONS] [FILENAME]\n\n"
+            << "  -h, --help                  display this help text\n"
+            << "  -f, --fullscreen            switch to fullscreen mode if available\n"
+            << "  -d, --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
+            << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
+            << "  --disable-antialiasing      Switch into non antialiased mode\n"
+            << "  --disable-alphablending     Switch into non alphablended mode (no transparency)\n"
+            << std::endl;
+}
+
+void
+CommandLine::print_version ()
+{
+  std::cout << "Construo "VERSION"\n"
+            << "Written by Ingo Ruhnke <grumbel@gmx.de>\n\n"
+            << "Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>\n"
+            << "This is free software; see the source for copying conditions.  There is NO\n"
+            << "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\n";
+}
+
 /* EOF */
+  
