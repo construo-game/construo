@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -24,8 +24,14 @@ Controller::Controller ()
 {
   running   = false;
   slow_down = false;
-  world     = 0;
-  has_been_run_ = false;
+  world     = new World ();
+}
+
+Controller::Controller (const std::string& filename)
+{
+  running   = false;
+  slow_down = false;
+  world     = new World (filename);
 }
 
 Controller::~Controller ()
@@ -35,7 +41,9 @@ Controller::~Controller ()
 void
 Controller::load_world (const std::string& filename)
 {
-  undo_world_stack.push_back(world);
+  if (world)
+    undo_world_stack.push_back(world);
+
   std::cout << "Loading World..." << std::endl;
   world = new World (filename);
   running = false;
@@ -127,6 +135,7 @@ Controller::clear_world ()
 void
 Controller::undo ()
 {
+  std::cout << "Controller::undo ()" << std::endl;
   if (!undo_world_stack.empty())
     {
       //delete world; // fixme: memory hole

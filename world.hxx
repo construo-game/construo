@@ -20,7 +20,7 @@
 #ifndef HEADER_CONSTRUO_WORLD_HXX
 #define HEADER_CONSTRUO_WORLD_HXX
 
-#include <list>
+#include <vector>
 #include "spring.hxx"
 #include "particle.hxx"
 
@@ -35,10 +35,9 @@ private:
   bool has_been_run;
   ParticleFactory* particle_mgr;
 
-  std::list<Spring*> springs;
-  // FIXME: replace this with a good old std::vector
-  typedef std::list<Spring*>::iterator SpringIter;
-  typedef std::list<Spring*>::const_iterator CSpringIter;
+  std::vector<Spring*> springs;
+  typedef std::vector<Spring*>::iterator SpringIter;
+  typedef std::vector<Spring*>::const_iterator CSpringIter;
 
   void parse_scene (lisp_object_t* lst);
   void parse_springs (lisp_object_t* lst);
@@ -57,6 +56,8 @@ public:
 
   /** @return the particles closed to the given coordinates */
   Particle* get_particle (int x, int y);
+  Spring*   get_spring (int x, int y);
+
   void add_spring (Particle*, Particle*);
 
   /** removes the given particle and all objects which reference it */

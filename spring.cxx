@@ -21,6 +21,24 @@
 #include "particle_factory.hxx"
 #include "spring.hxx"
 
+Spring::Spring (Particle* f, Particle* s, float l)
+{
+  particles.first  = f;
+  particles.second = s;
+  destroyed        = false;
+  length           = l;
+}
+
+Spring::Spring (Particle* f, Particle* s) 
+{
+  particles.first  = f;
+  particles.second = s;
+  destroyed        = false;
+  length           = fabs((f->pos - s->pos).norm ());
+
+  assert (length != 0);
+}
+
 Spring::Spring (World* world, lisp_object_t* cursor)
 {
   cursor = lisp_cdr(cursor); // Skip the identifer
@@ -83,6 +101,26 @@ Spring::draw (GraphicContext* gc)
   gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
                  int(particles.second->pos.x), int(particles.second->pos.y),
                  Color(color, 1.0f - color, 0.0f));
+}
+
+void
+Spring::draw_highlight (GraphicContext* gc)
+{
+  gc->draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
+                 int(particles.second->pos.x), int(particles.second->pos.y),
+                 Color(0xAAAAAA), 
+                 10);
+}
+
+
+lisp_object_t* 
+Spring::serialize()
+{
+  LispWriter obj ("spring");
+  obj.write_int ("first", particles.first->get_id());
+  obj.write_int ("second", particles.second->get_id());
+  obj.write_float ("length", length);
+  return obj.get_lisp ();
 }
 
 /* EOF */

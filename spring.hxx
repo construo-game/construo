@@ -36,35 +36,16 @@ public:
   float length;
   bool destroyed;
 
-  Spring (Particle* f, Particle* s, float l) {
-    particles.first = f;
-    particles.second = s;
-    destroyed = false;
-    length = l;
-  }
-
-  Spring (Particle* f, Particle* s) {
-    particles.first = f;
-    particles.second = s;
-    destroyed = false;
-    length = fabs((f->pos - s->pos).norm ());
-
-    assert (length != 0);
-  }
+  Spring (Particle* f, Particle* s, float l);
+  Spring (Particle* f, Particle* s);
 
   Spring (World* world, lisp_object_t* cursor);
 
   void update (float delta);
   void draw (GraphicContext* gc);
+  void draw_highlight (GraphicContext* gc);
 
-  lisp_object_t* serialize()
-  {
-    LispWriter obj ("spring");
-    obj.write_int ("first", particles.first->get_id());
-    obj.write_int ("second", particles.second->get_id());
-    obj.write_float ("length", length);
-    return obj.get_lisp ();
-  }
+  lisp_object_t* serialize();
 };
 
 #endif

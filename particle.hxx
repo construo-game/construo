@@ -28,10 +28,11 @@
 
 class Particle
 {
-public:
+private:
   /** Id of the particle */
    int id;
 
+public:
   /** position of the particle */
   CL_Vector pos;
 
@@ -47,8 +48,9 @@ public:
       collect the forces)*/
   CL_Vector totale_force;
 
-  int get_id ()
-  {
+  /** The id of the particle, used for de/serialisation and copying of
+      the World. The id is uniq only for a single world. */
+  int get_id () {
     return id;
   }
 
@@ -72,87 +74,13 @@ public:
     return fixed;
   }  
 
-  void update (float delta) 
-  {
-    if (fixed) return;
-
-    velocity += totale_force * mass * delta;
-
-    //velocity *= .999999f ;
-
-    pos += velocity * delta;
-
-    float damp = 0.2;
-#if 0
-    // Calc collision with screen x border
-    if (pos.x < 0) {
-      velocity.x =  fabs(velocity.x);
-      pos.x = 0;
-      velocity *= damp;
-    } else if (pos.x > 799) {
-      velocity.x =  -fabs(velocity.x);
-      pos.x = 799;
-      velocity *= damp;
-    }
-
-    // Calc collision with screen y border
-    if (pos.y < 0) {
-      velocity.y =  fabs(velocity.y);
-      pos.y = 0;
-      velocity *= damp;
-    } else
-#endif
- if (pos.y > 599) {
-      velocity.y =  -fabs(velocity.y);
-      pos.y = 599;
-      velocity *= damp;
-    }
-
-    /*
-      CL_Vector dist = pos - CL_Vector (400, 300);
-      if (dist.norm () < 50.0f)
-      {
-      velocity = -velocity;
-      }*/
-    clear_force ();
-  }
-
-  void draw (GraphicContext* gc)
-  {
-    //int size = int(10.0f/(mass*mass)) + 1;
-    if (fixed)
-      {
-        gc->draw_fill_circle (int(pos.x), int (pos.y),
-                              4,
-                              Color(0.6f, 0.6f, 0.6f));
-      }
-    else
-      {
-        gc->draw_fill_circle (int(pos.x), int (pos.y),
-                              2,
-                              Color(1.0f, 0.0f, 0.0f));
-      }
-  }
+  void update (float delta); 
+  void draw (GraphicContext* gc);
 
   /** draws the particle in highlight mode (aka if mouse is over it) */
-  void draw_highlight (GraphicContext* gc)
-  {
-    //int size = int(10.0f/(mass*mass)) + 1;
-    gc->draw_fill_circle (int(pos.x), int (pos.y),
-                          6,
-                          Color(1.0f, 1.0f, 1.0f));
-  }
+  void draw_highlight (GraphicContext* gc);
 
-  lisp_object_t* serialize()
-  {
-    LispWriter obj ("particle");
-    obj.write_int ("id", id);
-    obj.write_vector ("pos", pos);
-    obj.write_vector ("velocity", velocity);
-    obj.write_boolean ("fixed", fixed);
-    obj.write_float ("mass", mass);
-    return obj.get_lisp ();
-  }
+  lisp_object_t* serialize();
 
   friend class ParticleFactory;
 

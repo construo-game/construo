@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -120,6 +120,7 @@ ParticleFactory::draw (GraphicContext* gc)
 Particle*
 ParticleFactory::lookup_particle (int id)
 {
+  // FIXME: Could need optimization
   for (ParticleIter i = particles.begin (); 
        i != particles.end (); 
        ++i)

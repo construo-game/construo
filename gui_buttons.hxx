@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -39,27 +39,34 @@ public:
 
   bool is_at (int x, int y);
 
-  virtual void draw_hover(GraphicContext*) =0;
-  virtual void draw_pressed(GraphicContext*) =0;
-  virtual void draw_normal(GraphicContext*) =0;
+  void draw_border_hover(GraphicContext*);
+  void draw_border_pressed(GraphicContext*);
+  void draw_border_normal(GraphicContext*);
   
   void on_mouse_enter ();
   void on_mouse_leave ();
 
   void draw (GraphicContext*);
+
+  virtual void draw_content (GraphicContext*) =0;
 };
 
 class GUIRunButton : public GUIButton
 {
 public:
   GUIRunButton ();
-  
-  void draw_hover(GraphicContext*);
-  void draw_pressed(GraphicContext*);
-  void draw_normal(GraphicContext*);
-
+  void draw_content (GraphicContext*);
   void on_primary_button_click (int x, int y);
 };
+
+class GUIUndoButton : public GUIButton
+{
+public:
+  GUIUndoButton ();
+  void draw_content (GraphicContext*);
+  void on_primary_button_click (int x, int y);
+};
+
 
 #endif
 

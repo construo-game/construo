@@ -62,21 +62,23 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
   //FIXME:slot_press = CL_Input::sig_button_press ().connect (this, &ConstruoMain::on_press);
   //FIXME:slot_release = CL_Input::sig_button_release ().connect (this, &ConstruoMain::on_release);
 
-  controller  = new Controller ();
   gui_manager = new GUIManager ();
 
   if (argc == 2)
     {
-      controller->load_world (argv[1]);
+      controller  = new Controller (argv[1]);
     }
   else
     {
-      try {
-        controller->load_world (system_context->get_construo_rc_path() + "laststate.construo");
-      } catch (ConstruoError& err) {
-        // FIXME: insert GUI MessageBox here
-        std::cout << "ConstruoMain: " << err.msg << std::endl;
-      }
+      try 
+        {
+          controller = new Controller (system_context->get_construo_rc_path() + "laststate.construo");
+        } 
+      catch (ConstruoError& err) 
+        {
+          std::cout << "ConstruoMain: " << err.msg << std::endl;
+          controller = new Controller ();
+        }
     }
 
 

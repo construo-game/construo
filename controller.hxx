@@ -1,6 +1,6 @@
 //  $Id$
 // 
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -30,8 +30,6 @@ private:
   std::vector<World*> undo_world_stack;
   std::vector<World*> redo_world_stack;
 
-  bool has_been_run_;
-
   bool running;
   bool slow_down;
 
@@ -43,15 +41,16 @@ private:
 public:
   /** Create an empty world workspace */
   Controller ();
+  Controller (const std::string& filename);
   ~Controller ();
 
-  bool has_been_run () { return has_been_run_; }
+  bool has_been_run () { return world && world->get_has_been_run (); }
   
   bool is_running () { return running; }
   bool slow_down_active () { return slow_down; }
   void set_slow_down (bool s) { slow_down = s; }
 
-  World* get_world () { return world; }
+  World* get_world () { assert(world); return world; }
 
   /** Load a world by name, name is relative to the construo user directory */
   void load_world (const std::string& name);

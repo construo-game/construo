@@ -23,11 +23,6 @@
 #include "particle_factory.hxx"
 #include "system_context.hxx"
 
-bool spring_destroyed (Spring* spring)
-{
-  return spring->destroyed;
-}
-
 World::World ()
   : particle_mgr (new ParticleFactory())
 {
@@ -215,7 +210,57 @@ World::update (float delta)
         }
     }
 
-  springs.remove_if (spring_destroyed);
+  // Remove any springs that are marked as destroyed
+  // FIXME: Could be faster
+  for (SpringIter i = springs.begin (); i != springs.end ();)
+    {
+      if ((*i)->destroyed)
+        {
+          delete *i;
+          i = springs.erase(i);
+        }
+      else
+        {
+          ++i;
+        }
+    }
+}
+
+Spring*
+World::get_spring (int x, int y)
+{
+  Spring* spring = 0;
+  float min_distance = 0.0f;
+
+  float capture_threshold = 15;
+
+  for (SpringIter i = springs.begin (); i != springs.end (); ++i)
+    {
+      float x0 = x;
+      float y0 = y;
+      float& x1 = (*i)->particles.first->pos.x;
+      float& y1 = (*i)->particles.first->pos.y;
+      float& x2 = (*i)->particles.second->pos.x;
+      float& y2 = (*i)->particles.second->pos.y;
+
+      // FIXME: optimize me
+      float u = (((x0 - x1)*(x2-x1) + (y0 - y1)*(y2 - y1))
+                 / ((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
+      
+      float distance = (fabs((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
+                        / sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
+      
+      if (u >= 0 && u <= 1.0f
+          && ((spring && min_distance > distance)
+              || distance <= capture_threshold)) // FIXME: threashold is dependend on view
+        {
+          spring = *i;
+          min_distance = distance;
+        }
+    }
+  std::cout << "Spring: " << spring << std::endl;
+
+  return spring;
 }
 
 Particle* 
@@ -264,6 +309,8 @@ World::remove_particle (Particle* p)
       if ((*i)->particles.first == p || (*i)->particles.second == p)
         {
           delete *i;
+          // FIXME: this is potentially slow, since we don't care
+          // about order, we could speed this up
           i = springs.erase(i);
         }
       else
@@ -278,7 +325,9 @@ World::remove_particle (Particle* p)
 void
 World::remove_spring (Spring* s)
 {
-  springs.remove(s);
+  // FIXME: Memory leak
+  springs.erase(std::remove(springs.begin (), springs.end (), s), 
+                springs.end ());
 }
 
 void

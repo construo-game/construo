@@ -25,7 +25,8 @@ Particle::Particle (int i, const CL_Vector& arg_pos, const CL_Vector& arg_veloci
     pos (arg_pos),
     velocity (arg_velocity), 
     mass (m), 
-    fixed (f)
+    fixed (f),
+    totale_force (0,0,0)
 {
 }
 
@@ -34,8 +35,96 @@ Particle::Particle (const Particle& p)
     pos (p.pos),
     velocity (p.velocity),
     mass (p.mass),
-    fixed (p.fixed)
+    fixed (p.fixed),
+    totale_force (0,0,0)
 {
 }
+
+lisp_object_t* 
+Particle::serialize()
+{
+  LispWriter obj ("particle");
+  obj.write_int ("id", id);
+  obj.write_vector ("pos", pos);
+  obj.write_vector ("velocity", velocity);
+  obj.write_boolean ("fixed", fixed);
+  obj.write_float ("mass", mass);
+  return obj.get_lisp ();
+}
+
+void
+Particle::draw_highlight (GraphicContext* gc)
+{
+  //int size = int(10.0f/(mass*mass)) + 1;
+  gc->draw_fill_circle (int(pos.x), int (pos.y),
+                        6,
+                        Color(1.0f, 1.0f, 1.0f));
+}
+
+void
+Particle::draw (GraphicContext* gc)
+{
+  //int size = int(10.0f/(mass*mass)) + 1;
+  if (fixed)
+    {
+      gc->draw_fill_circle (int(pos.x), int (pos.y),
+                            4,
+                            Color(0.6f, 0.6f, 0.6f));
+    }
+  else
+    {
+      gc->draw_fill_circle (int(pos.x), int (pos.y),
+                            2,
+                            Color(1.0f, 0.0f, 0.0f));
+    }
+}
+
+
+void
+Particle::update (float delta)
+{
+  if (fixed) return;
+
+  velocity += totale_force * mass * delta;
+
+  //velocity *= .999999f ;
+
+  pos += velocity * delta;
+
+  float damp = 0.2;
+#if 0 // FIXME: Replace this with a generic shape collision handling thing
+  // Calc collision with screen x border
+  if (pos.x < 0) {
+    velocity.x =  fabs(velocity.x);
+    pos.x = 0;
+    velocity *= damp;
+  } else if (pos.x > 799) {
+    velocity.x =  -fabs(velocity.x);
+    pos.x = 799;
+    velocity *= damp;
+  }
+
+  // Calc collision with screen y border
+  if (pos.y < 0) {
+    velocity.y =  fabs(velocity.y);
+    pos.y = 0;
+    velocity *= damp;
+  } else
+#endif
+    if (pos.y > 599) {
+      velocity.y =  -fabs(velocity.y);
+      pos.y = 599;
+      velocity *= damp;
+    }
+
+  /*
+    CL_Vector dist = pos - CL_Vector (400, 300);
+    if (dist.norm () < 50.0f)
+    {
+    velocity = -velocity;
+    }*/
+  clear_force ();
+}
+
 
 /* EOF */

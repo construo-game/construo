@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -56,38 +56,32 @@ void
 GUIButton::draw (GraphicContext* gc)
 {
   if (pressed)
-    draw_pressed (gc);
+    draw_border_pressed (gc);
   else if (mouse_over)
-    draw_hover (gc);
+    draw_border_hover (gc);
   else
-    draw_normal (gc);
+    draw_border_normal (gc);
+
+  draw_content (gc);
 }
 
-GUIRunButton::GUIRunButton ()
-  : GUIButton (100, 100, 50, 50)
-{
-}
 
 void
-GUIRunButton::draw_hover(GraphicContext* gc)
+GUIButton::draw_border_hover(GraphicContext* gc)
 {
-  if (controller->is_running ())
-    gc->draw_fill_rect (x_pos, y_pos,
-                   x_pos + 50, y_pos + 50, Color(0xFF0000));
-
   gc->draw_rect (x_pos, y_pos,
                  x_pos + 50, y_pos + 50, Color(0xFFFFFF));
 }
 
 void
-GUIRunButton::draw_pressed(GraphicContext* gc)
+GUIButton::draw_border_pressed(GraphicContext* gc)
 {
   gc->draw_rect (x_pos, y_pos,
                  x_pos + 50, y_pos + 50, Color(0x999999));
 }
 
 void
-GUIRunButton::draw_normal(GraphicContext* gc)
+GUIButton::draw_border_normal(GraphicContext* gc)
 {
   if (controller->is_running ())
     gc->draw_fill_rect (x_pos, y_pos,
@@ -97,11 +91,50 @@ GUIRunButton::draw_normal(GraphicContext* gc)
                  x_pos + 50, y_pos + 50, Color(0xFF0000));
 }
 
+GUIRunButton::GUIRunButton ()
+  : GUIButton (10, 100, 50, 50)
+{
+}
+
+void
+GUIRunButton::draw_content (GraphicContext* gc)
+{
+  if (controller->is_running ())
+    gc->draw_fill_rect (x_pos, y_pos,
+                   x_pos + 50, y_pos + 50, Color(0xFF0000));
+
+  gc->draw_line (x_pos, y_pos,
+                x_pos + width, y_pos + height,
+                Color (0x0000FF));
+
+  gc->draw_line (x_pos + width, y_pos,
+                x_pos, y_pos + height,
+                Color (0x0000FF));
+}
+
 void
 GUIRunButton::on_primary_button_click (int x, int y)
 {
   std::cout << "Button pressed" << std::endl;
   controller->start_simulation ();
+}
+
+
+GUIUndoButton::GUIUndoButton ()
+  : GUIButton (10, 160, 50, 50)
+{  
+}
+
+void
+GUIUndoButton::draw_content (GraphicContext*)
+{
+  
+}
+
+void
+GUIUndoButton::on_primary_button_click (int x, int y)
+{
+  controller->undo ();
 }
 
 /* EOF */

@@ -1,6 +1,6 @@
 //  $Id$
 //
-//  Pingus - A free Lemmings clone
+//  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
@@ -56,6 +56,12 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 
   world.draw (&gc);
 
+  Spring* selected_spring = world.get_spring (x, y);
+  if (selected_spring)
+    {
+      selected_spring->draw_highlight (&gc);
+    }
+
 
   if (current_particle)
     {
@@ -69,14 +75,12 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
 void
 WorldViewComponent::wheel_up (int x, int y)
 {
-  std::cout << "Wheel UP" << std::endl;
   gc.zoom_in (x, y);
 }
 
 void
 WorldViewComponent::wheel_down (int x, int y)
 {
-  std::cout << "Wheel down" << std::endl;
   gc.zoom_out (x, y);
 }
 
