@@ -39,6 +39,8 @@ public:
   virtual void draw_background (ZoomGraphicContext* gc) =0;
   virtual void draw_foreground (ZoomGraphicContext* gc) =0;
 
+  virtual void on_button_press (int button_id, int x, int y) {}
+
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}
 

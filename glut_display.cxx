@@ -77,7 +77,7 @@ GlutDisplay::GlutDisplay (int w, int h)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(width, height);
   //glutInitWindowPosition(100, 100); don't care
-  glutCreateWindow(argv[0]);
+  glutSetWindow(glutCreateWindow(argv[0]));
 
   glutDisplayFunc(::display_func);
   glutReshapeFunc(::reshape_func);
@@ -88,6 +88,8 @@ GlutDisplay::GlutDisplay (int w, int h)
 
   glutIdleFunc (::idle_func);
   glutKeyboardFunc(::keyboard_func);
+
+  is_fullscreen = false;
   
   glClearColor (0.0, 0.0, 0.0, 0.1);
   if (settings.alphablending)
@@ -313,7 +315,7 @@ GlutDisplay::idle_func ()
 void
 GlutDisplay::keyboard_func (unsigned char key, int x, int y)
 {
-  //std::cout << "keypress: " << int(key) << " " << x << " " << y << std::endl;
+  std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
 
   Event event;
   event.type = BUTTON_EVENT;
@@ -329,7 +331,7 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       event.button.id = BUTTON_ESCAPE;
       break;
     case 'f':
-      set_fullscreen(settings.fullscreen);
+      set_fullscreen(!get_fullscreen ());
       break;
     case '0':
       event.button.id = BUTTON_QUICKSAVE0;
@@ -366,9 +368,11 @@ GlutDisplay::set_fullscreen (bool fullscreen)
       std::cout << "GlutDisplay: switching to: " << mode << std::endl;
       glutGameModeString(mode);
       glutEnterGameMode();
+      is_fullscreen = true;
     }
   else
     {
+      is_fullscreen = false;
     }
 }
 

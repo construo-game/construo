@@ -84,12 +84,15 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
       gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
                           selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
                           Colors::selection_resizer);
-    }
 
-  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
-    {
-      (*i)->draw_velocity_vector (gc);
-      (*i)->draw_highlight (gc);
+      for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+        {
+          (*i)->draw_velocity_vector (gc);
+          (*i)->draw_highlight (gc);
+        }
+
+      gc->get_parent_gc()->draw_circle(gc->world_to_screen(selection.get_center ()),
+                                       8.0f, Colors::selection_rect);
     }
 }
 
@@ -267,6 +270,25 @@ void
 WorldViewSelectTool::on_duplicate_press (int x, int y)
 {
   selection.duplicate ();
+}
+
+void
+WorldViewSelectTool::on_button_press (int button_id, int x, int y)
+{
+  Vector2d pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y));
+
+  switch (button_id)
+    {
+    case BUTTON_SETVELOCITY:
+      selection.set_velocity (pos - selection.get_center ());
+      break;
+    case BUTTON_FLIP:
+      selection.flip();
+      break;
+      break;
+    default:
+      break;
+    }
 }
 
 /* EOF */

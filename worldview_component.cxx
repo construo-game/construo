@@ -135,6 +135,12 @@ WorldViewComponent::wheel_down (int x, int y)
 }
 
 void
+WorldViewComponent::on_button_press (int button_id, int x, int y)
+{
+  current_tool->on_button_press (button_id, x, y);
+}
+
+void
 WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
 {
   current_tool->on_primary_button_press (screen_x, screen_y);

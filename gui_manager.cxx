@@ -310,7 +310,7 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         default:
-          std::cout << "Got unhandled BUTTON_EVENT release: " << button.id << std::endl;
+          current_component->on_button_press (button.id, x, y);
           break;
         }
     }

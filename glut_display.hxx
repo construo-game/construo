@@ -39,6 +39,8 @@ private:
   bool block;
 
   int update_display;
+
+  bool is_fullscreen;
 public:
   static GlutDisplay* instance () { return instance_; }
 
@@ -57,6 +59,7 @@ public:
   void flip (int x1, int y1, int x2, int y2);
 
   void set_fullscreen (bool fullscreen);
+  bool get_fullscreen () { return is_fullscreen; }
 
   int get_width()  { return width; }
   int get_height() { return height; }

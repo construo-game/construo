@@ -113,36 +113,39 @@ Particle::update (float delta)
 
   velocity += totale_force * delta * (1.0f/mass);
 
+  // damping
+  velocity -= (velocity * (1.0f/mass) * delta) * 0.01f;
+
   //velocity *= .999999f ;
 
   pos += velocity * delta;
 
-  float damp = 0.2;
+  float collision_damp = 0.2;
 
 #if 0 // FIXME: Replace this with a generic shape collision handling thing
   // Calc collision with screen x border
   if (pos.x < 0) {
     velocity.x =  fabs(velocity.x);
     pos.x = 0;
-    velocity *= damp;
+    velocity *= collision_damp;
   } else if (pos.x > 799) {
     velocity.x =  -fabs(velocity.x);
     pos.x = 799;
-    velocity *= damp;
+    velocity *= collision_damp;
   }
 
   // Calc collision with screen y border
   if (pos.y < 0) {
     velocity.y =  fabs(velocity.y);
     pos.y = 0;
-    velocity *= damp;
+    velocity *= collision_damp;
   } else
 #endif
 
     if (pos.y > 599) {
       velocity.y =  -fabs(velocity.y);
       pos.y = 599;
-      velocity *= damp;
+      velocity *= collision_damp;
     }
 
   /*

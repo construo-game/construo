@@ -34,6 +34,7 @@ enum ButtonTypes {
   BUTTON_UNDO,      // bring the world back to its state before the simulation start
   BUTTON_REDO,      // bring the world back to its state before the last undo
   BUTTON_ZEROVELOCITY,   // set velocity to zero
+  BUTTON_SETVELOCITY,   // set the velocity of the selection
   BUTTON_TOGGLESLOWMO, 
   BUTTON_RUN,         // starts or stops the simulation
   BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)

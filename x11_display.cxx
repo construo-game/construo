@@ -331,6 +331,10 @@ X11Display::read_event ()
             send_button_press(BUTTON_SCROLL_DOWN);
             break;
 
+          case XK_v:
+            send_button_press(BUTTON_SETVELOCITY);
+            break;
+
           case XK_Shift_L:
           case XK_Shift_R:
             shift_pressed = true;
@@ -340,6 +344,9 @@ X11Display::read_event ()
             break;
           case XK_f:
             send_button_press(BUTTON_FIX);
+            break;
+          case XK_h:
+            send_button_press(BUTTON_FLIP);
             break;
           case XK_c:
             send_button_press(BUTTON_CLEAR);

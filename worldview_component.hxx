@@ -87,6 +87,8 @@ public:
   void on_delete_press (int x, int y);
   void on_fix_press (int x, int y);
 
+  void on_button_press (int button_id, int x, int y);
+
   void wheel_up (int x, int y);
   void wheel_down (int x, int y);
 

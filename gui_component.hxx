@@ -71,6 +71,8 @@ public:
   virtual void wheel_up (int x, int y) {}
   virtual void wheel_down (int x, int y) {}
 
+  virtual void on_button_press (int button_id, int x, int y) {}
+
   virtual void scroll_left () {}
   virtual void scroll_right () {}
   virtual void scroll_up () {}
