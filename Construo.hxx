@@ -209,8 +209,8 @@ public:
   {
     int size = int(10.0f/(mass*mass)) + 1;
         
-    CL_Display::fill_rect (pos.x - size, pos.y - size,
-			   pos.x + size, pos.y + size, 1.0, 0.0, 0.0);
+    CL_Display::fill_rect (int(pos.x - size), int(pos.y - size),
+			   int(pos.x + size), int(pos.y + size), 1.0f, 0.0f, 0.0f);
   }
 };
 
@@ -265,8 +265,8 @@ public:
 
     float color = fabs((stretch/max_stretch));
 
-    CL_Display::draw_line (particles.first->pos.x, particles.first->pos.y,
-			   particles.second->pos.x, particles.second->pos.y,
+    CL_Display::draw_line (int(particles.first->pos.x), int(particles.first->pos.y),
+			   int(particles.second->pos.x), int(particles.second->pos.y),
 			   color, 
 			   1.0f - color, 
 			   0.0f);

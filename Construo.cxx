@@ -395,8 +395,8 @@ Construo::main (int argc, char* argv[])
 
   DeltaManager delta_manager;
 
-  slot_press = CL_Input::sig_button_press.connect (CL_CreateSlot (this, &Construo::on_press));
-  slot_release = CL_Input::sig_button_release.connect (CL_CreateSlot (this, &Construo::on_release));
+  slot_press = CL_Input::sig_button_press ().connect (this, &Construo::on_press);
+  slot_release = CL_Input::sig_button_release ().connect (this, &Construo::on_release);
   
   while (!CL_Keyboard::get_keycode (CL_KEY_ESCAPE))
     {
@@ -486,8 +486,9 @@ Construo::main (int argc, char* argv[])
 	    if (p)
 	      {
 		int size = 5;
-		CL_Display::fill_rect (p->pos.x - size, p->pos.y - size,
-				       p->pos.x + size, p->pos.y + size, 1.0, 0.0, 0.0);
+		CL_Display::fill_rect (int(p->pos.x - size), int(p->pos.y - size),
+				       int(p->pos.x + size), int(p->pos.y + size), 
+				       1.0f, 0.0f, 0.0f);
 	      }
 	  }
 
