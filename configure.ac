@@ -17,6 +17,7 @@
 
 # init automake/conf
 AC_INIT(construo, 0.2.3-CVS)
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR(src/construo.hxx)
 AM_CONFIG_HEADER(config.h)
@@ -111,12 +112,25 @@ AC_SUBST(x11_CXXFLAGS)
 dnl --------------------
 dnl -- Check for Glut --
 dnl --------------------
-AC_CHECK_LIB(glut, glutMainLoop,
-[
-  ConstruoTargets="$ConstruoTargets construo.glut"
-  AC_SUBST(glut_LIBS,"-lglut")
-],
-[])
+
+dnl On MacOSX $target gives: powerpc-apple-darwin6.6 and the define __apple__
+dnl This doesn't seem entirily correct and there is a -framework GLUT
+case "$target_os" in
+     darwin*)
+        MY_CHECK_GLUT_OSX([
+        ConstruoTargets="$ConstruoTargets construo.glut"
+        AC_SUBST(glut_LIBS, "-framework GLUT -framework OpenGL")])
+        ;;
+     *)
+        AC_CHECK_LIB(glut, glutMainLoop,
+        [
+          ConstruoTargets="$ConstruoTargets construo.glut"
+          glut_LIBS="-lglut"
+          AC_SUBST(glut_LIBS)
+         ],
+        [])
+        ;;
+esac
 
 dnl ------------------------
 dnl -- Check for FreeGlut --

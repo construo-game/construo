@@ -8,3 +8,16 @@ AC_DEFUN([AC_DEFINE_DIR], [
     AC_DEFINE_UNQUOTED($1, "$ac_define_dir", $3))
 ])
 
+AC_DEFUN([MY_CHECK_GLUT_OSX], [
+ AC_MSG_CHECKING([for GLUT.framework and OpenGL.framework])
+ save_libs="$LIBS"
+ LIBS="-framework GLUT -framework OpenGL"
+ AC_TRY_LINK_FUNC(glutMainLoop,
+        [glut_available=yes
+        $1],
+        [glut_available=no])
+ LIBS="$save_libs"
+ AC_MSG_RESULT([$glut_available])
+])
+
+dnl EOF dnl
