@@ -109,8 +109,8 @@ GlutDisplay::GlutDisplay (int w, int h)
       glEnable(GL_LINE_SMOOTH);
     }
   
-  glEnable(GL_SCISSOR_TEST);
-  glScissor(0, 0, settings.screen_width, settings.screen_height);
+  //glEnable(GL_SCISSOR_TEST);
+  //glScissor(0, 0, settings.screen_width, settings.screen_height);
 }
 
 void
@@ -291,9 +291,14 @@ GlutDisplay::flip (int x1, int y1, int x2, int y2)
 void
 GlutDisplay::reshape_func(int w, int h)
 {
+  std::cout << "Reshape: " << w << " " << h << std::endl;
   glViewport (0,0, w, h);
+  glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluOrtho2D (0, w, h, 0);
+  glMatrixMode(GL_MODELVIEW);
+  width  = w;
+  height = h;
 }
 
 void

@@ -123,11 +123,11 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
     draw_grid();
 
   // Draw the buttom border line
-  if (gc.screen_to_world_y(gc.get_height()) >= 599)
+  if (gc.screen_to_world_y(gc.get_height()) >= parent_gc->get_height())
     gc.draw_fill_rect(gc.screen_to_world_x(0), 
-                      599, // FIXME: 599 is a relict from earlier versions, should be 0
-                      gc.screen_to_world_x(gc.get_width()),
-                      gc.screen_to_world_y(gc.get_height()), // FIXME: 599 is a relict from earlier versions, should be 0
+                      parent_gc->get_height(),
+                      gc.screen_to_world_x(parent_gc->get_width()),
+                      gc.screen_to_world_y(parent_gc->get_height()),
                       Colors::ground_color);
 
   World& world = *Controller::instance()->get_world();

@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <X11/Xutil.h>
+#include <X11/cursorfont.h>
 #include <X11/keysym.h>
 
 #include "construo_error.hxx"
@@ -136,15 +137,17 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   if (fullscreen)
     set_fullscreen (true);
 
-  if (0) // custom cursor code
+  if (1) // custom cursor code
     {
       XColor cursor_fg;
       XColor cursor_bg;
-
+      Cursor cursor = XCreateFontCursor(display, XC_crosshair); 
+      // XC_arrow, XC_crosshair
       //set colors here
 
-      Pixmap cursor_pm = XCreateBitmapFromData (display, window, zoom_tool_cursor, 8, 8);
-      Cursor cursor = XCreatePixmapCursor(display, cursor_pm, None, &cursor_bg, &cursor_fg, 4, 4);
+      //Pixmap cursor_pm = XCreateBitmapFromData (display, window, zoom_tool_cursor, 8, 8);
+      //Cursor cursor = XCreatePixmapCursor(display, cursor_pm, None, &cursor_bg, &cursor_fg, 4, 4);
+      //XDefineCursor (display, window, cursor);
       XDefineCursor (display, window, cursor);
     }
 }
