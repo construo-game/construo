@@ -63,11 +63,7 @@ float CL_Vector::dot(const CL_Vector& v) const
 
 float CL_Vector::angle(const CL_Vector& v) const
 {
-	#ifdef WIN32
-	return (float)acos(dot(v)/(norm()*v.norm()));  
-	#else
-	return std::acos(dot(v)/(norm()*v.norm()));  
-	#endif
+  return acos(dot(v)/(norm()*v.norm()));  
 }
 
 CL_Vector CL_Vector::cross(const CL_Vector& v) const
@@ -83,13 +79,8 @@ CL_Vector CL_Vector::rotate(float angle, const CL_Vector& a) const
 {
 	CL_Vector tmp = CL_Vector();
 
-	#ifdef WIN32
-	float s = (float)sin(angle);
-	float c = (float)cos(angle);
-	#else
-	float s = std::sin(angle);
-	float c = std::cos(angle);
-	#endif
+	float s = sin(angle);
+	float c = cos(angle);
 
 	tmp.x = x*(a.x*a.x*(1-c)+c)     + y*(a.x*a.y*(1-c)-a.z*s) + z*(a.x*a.z*(1-c)+a.y*s);
 	tmp.y = x*(a.y*a.x*(1-c)+a.z*s) + y*(a.y*a.y*(1-c)+c)     + z*(a.y*a.z*(1-c)-a.x*s);
