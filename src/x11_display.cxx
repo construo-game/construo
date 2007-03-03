@@ -774,6 +774,8 @@ X11Display::enter_fullscreen ()
 
               { // Now that we have switched to the correct mode, we
                 // need to position the Viewport correct to the window
+
+                // FIXME: This won't work if the window is partly outside of the screen
                 Window child_window;
                 int x, y;
                 // Get the windows absolute position (aka relative to
@@ -788,7 +790,7 @@ X11Display::enter_fullscreen ()
               XSetInputFocus(display, window, RevertToParent, CurrentTime);
 
               // Capture the pointer
-              if (XGrabPointer(display, window, true, 0, GrabModeAsync, GrabModeAsync, 
+              if (XGrabPointer(display, window, True, 0, GrabModeAsync, GrabModeAsync, 
                                window, None, CurrentTime) != GrabSuccess)
                 {
                   std::cout << "X11Display: Couldn't grab the pointer" << std::endl;

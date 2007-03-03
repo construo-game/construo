@@ -45,6 +45,10 @@ private:
 
   /** If set to true, display a grid and align dots to it */
   bool use_grid;
+  float grid_base_size;
+  int grid_constant;
+  float grid_scale_factor;
+  float grid_snap_factor;
   
   /** True if the third button is currently pressed and we are in
       scroll mode */
@@ -86,6 +90,8 @@ public:
   void draw (GraphicContext* parent_gc);
 
   bool uses_grid() const { return  use_grid; }
+  float get_grid_size();
+  float get_snap_size();
 
   void on_primary_button_press (int x, int y);
   void on_primary_button_release (int x, int y);

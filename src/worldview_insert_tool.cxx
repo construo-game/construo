@@ -62,9 +62,11 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
 
   Vector2d new_particle_pos;
           
+  float grid_size = WorldViewComponent::instance()->get_snap_size();
+      
   if (WorldViewComponent::instance()->uses_grid())
-    new_particle_pos = Vector2d(Math::round_to(click_pos.x, 10),
-                                Math::round_to(click_pos.y, 10));
+    new_particle_pos = Vector2d(Math::round_to_float(click_pos.x, grid_size),
+                                Math::round_to_float(click_pos.y, grid_size));
   else
     new_particle_pos = Vector2d(click_pos.x, click_pos.y);
   
@@ -119,9 +121,12 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
           else // add a new particle and connect it with the current one
             {
               Vector2d new_particle_pos;
+
+              float grid_size = WorldViewComponent::instance()->get_snap_size();
+      
               if (WorldViewComponent::instance()->uses_grid())
-                new_particle_pos = Vector2d(Math::round_to(x, 10),
-                                            Math::round_to(y, 10));
+                new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
+                                            Math::round_to_float(y, grid_size));
               else
                 new_particle_pos = Vector2d(x, y);
 
@@ -154,9 +159,11 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
         {
           Vector2d new_particle_pos;
           
+          float grid_size = WorldViewComponent::instance()->get_snap_size();
+                
           if (WorldViewComponent::instance()->uses_grid())
-            new_particle_pos = Vector2d(Math::round_to(x, 10),
-                                        Math::round_to(y, 10));
+            new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
+                                        Math::round_to_float(y, grid_size));
           else
             new_particle_pos = Vector2d(x, y);
 

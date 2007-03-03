@@ -39,6 +39,7 @@ Color rect_collider_bg  (0x0000AAFF);
 Color highlight         (0xEEEEEEFF);
 
 Color grid_color        (0x444444FF);
+Color grid_color2       (0x666666FF);
 Color ground_color      (0x000066FF);
 Color ground_grid_color (0x000073FF);
 

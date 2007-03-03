@@ -50,6 +50,7 @@ extern Color highlight;
 
 /** Color of the background grid */
 extern Color grid_color;
+extern Color grid_color2;
 
 } // namespace Colors
 

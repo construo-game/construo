@@ -68,6 +68,32 @@ inline int round_to(float x, int n)
     return static_cast<int>(x - (n/2)) / n * n;
 }
 
+/** Same as above, except n can be less to 1 */
+inline float round_to_float(float x, float n)
+{
+  if (x > 0)
+    return int((x + (n/2)) / n) * n;
+  else
+    return int((x - (n/2)) / n) * n;
+}
+
+/** Get exponent of x */
+inline int get_exp_n(float x, int n)
+{
+  int e = 0;
+  while(x < 1)
+  {
+    x *= n;
+    e--;
+  }
+  while(x >= n)
+  {
+    x /= n;
+    e++;
+  }
+  return e;
+}
+
 } // namespace Math
 
 #endif

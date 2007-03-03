@@ -37,6 +37,10 @@ WorldViewComponent::WorldViewComponent ()
 
   scrolling = false;
   use_grid  = false;
+  grid_base_size = 10;
+  grid_constant = 5;
+  grid_scale_factor = 1;
+  grid_snap_factor = 2;
 
   select_tool   = new WorldViewSelectTool ();
   insert_tool   = new WorldViewInsertTool ();
@@ -92,31 +96,44 @@ WorldViewComponent::~WorldViewComponent ()
   instance_ = 0;
 }
 
+float
+WorldViewComponent::get_grid_size()
+{
+	return grid_base_size / pow(grid_constant, Math::get_exp_n(gc.get_zoom() * grid_scale_factor, grid_constant));
+}
+
+float
+WorldViewComponent::get_snap_size()
+{
+	return get_grid_size() / grid_snap_factor;
+}
+
 void
 WorldViewComponent::draw_grid()
 {
-  if (gc.get_zoom() > 0.4f)
-    {
       Color color = Colors::grid_color;
-      int start_x = Math::round_to(gc.screen_to_world_x(0), 10) - 10;
-      int end_x   = Math::round_to(gc.screen_to_world_x(gc.get_width()), 10) + 10;
+      Color color2 = Colors::grid_color2;
 
-      int start_y = Math::round_to(gc.screen_to_world_y(0), 10) - 10;
-      int end_y   = Math::round_to(gc.screen_to_world_y(gc.get_height()), 10) + 10;
+      float grid_size = get_grid_size();
+
+      float start_x = Math::round_to_float(gc.screen_to_world_x(0), grid_size) - grid_size;
+      float end_x   = Math::round_to_float(gc.screen_to_world_x(gc.get_width()), grid_size) + grid_size;
+
+      float start_y = Math::round_to_float(gc.screen_to_world_y(0), grid_size) - grid_size;
+      float end_y   = Math::round_to_float(gc.screen_to_world_y(gc.get_height()), grid_size) + grid_size;
 
       gc.push_quick_draw();
-      for(int y = start_y; y < end_y; y += 10)
+      for(float y = start_y; y < end_y; y += grid_size)
         gc.draw_line(start_x, y, 
                      end_x, y,
-                     color, 1);
+                     ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
 
-      for(int x = start_x; x < end_x; x += 10)
+      for(float x = start_x; x < end_x; x += grid_size)
         gc.draw_line(x, start_y, 
                      x, end_y,
-                     color, 1);
+                     ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
       gc.pop_quick_draw();
     }
-}
 
 void
 WorldViewComponent::draw_ground()

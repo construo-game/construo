@@ -146,6 +146,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
                 Controller::instance()->push_undo();
                 mode = MOVING_SELECTION_MODE;
                 move_diff = Vector2d();
+		move_current_particle = new_current_particle;
                 break;
               }
           }
@@ -313,8 +314,13 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
 
         if (WorldViewComponent::instance()->uses_grid())
           {
-            diff.x = Math::round_to(diff.x, 10);
-            diff.y = Math::round_to(diff.y, 10);
+
+            float grid_size = WorldViewComponent::instance()->get_snap_size();
+      
+            diff.x = Math::round_to_float(diff.x, grid_size);
+            diff.y = Math::round_to_float(diff.y, grid_size);
+	    diff.x -= move_current_particle->pos.x - Math::round_to_float(move_current_particle->pos.x, grid_size);
+	    diff.y -= move_current_particle->pos.y - Math::round_to_float(move_current_particle->pos.y, grid_size);
           }
 
         move_diff = diff;

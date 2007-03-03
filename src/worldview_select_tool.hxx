@@ -45,6 +45,9 @@ private:
   /** The difference the selection was moved on the last mouse move */
   Vector2d move_diff;
 
+  /** The particle, by which is selection grabbed */
+  Particle* move_current_particle;
+
   /** The center of a rotation */
   Vector2d rotate_center;
 
