@@ -64,11 +64,6 @@ if test x$enable_fcheck = xyes; then
   LIBS="$LIBS `fc-config --libs`"
 fi
 
-AC_CHECK_HEADER([sstream],
-                [],
-                [AC_MSG_NOTICE([using replacement sstream from compatlib/])
-                CXXFLAGS="$CXXFLAGS -Icompatlib/"])
-
 dnl Checking for the install prefix and then use it to define PINGUS_DATADIR
 dnl PINGUS_EXPAND_DIR(pingus_datadir, "$datadir/games/$PACKAGE")
 dnl AC_DEFINE_UNQUOTED(PINGUS_DATADIR, "$pingus_datadir", [Location of Pingus data files])
