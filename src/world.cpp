@@ -151,6 +151,43 @@ World::World (const std::string& filename)
   //std::cout << "springs:   " << springs.size () << std::endl;
 }
 
+// Copy Constructor
+World::World (const World& old_world)
+{
+  file_version = 0;
+
+  for (Colliders::const_iterator i = old_world.colliders.begin(); 
+       i != old_world.colliders.end();
+       ++i)
+    {
+      colliders.push_back((*i)->duplicate());
+    }
+
+  // FIXME: Could need optimizations
+  particle_mgr = new ParticleFactory (this, *old_world.particle_mgr);
+  
+  for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)
+    {
+      Particle* first  = particle_mgr->lookup_particle((*i)->particles.first->get_id());
+      Particle* second = particle_mgr->lookup_particle((*i)->particles.second->get_id());
+
+      if (first && second)
+        {
+          // FIXME: Use copy c'tor here maxstiffnes and Co. aren't copied correctly
+          springs.push_back(new Spring (first, second, (*i)->length));
+        }
+      else
+        {
+          std::cout << "World: Error couldn't resolve particles" << std::endl;
+        }
+    }
+}
+
+World::~World ()
+{ 
+  clear ();
+}
+
 void
 World::parse_scene (lisp_object_t* cursor)
 {
@@ -226,42 +263,6 @@ World::parse_particles (lisp_object_t* cursor)
   particle_mgr = new ParticleFactory(this, cursor);
 }
 
-// Copy Constructor
-World::World (const World& old_world)
-{
-  file_version = 0;
-
-  for (Colliders::const_iterator i = old_world.colliders.begin(); 
-       i != old_world.colliders.end();
-       ++i)
-    {
-      colliders.push_back((*i)->duplicate());
-    }
-
-  // FIXME: Could need optimizations
-  particle_mgr = new ParticleFactory (this, *old_world.particle_mgr);
-  
-  for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)
-    {
-      Particle* first  = particle_mgr->lookup_particle((*i)->particles.first->get_id());
-      Particle* second = particle_mgr->lookup_particle((*i)->particles.second->get_id());
-
-      if (first && second)
-        {
-          // FIXME: Use copy c'tor here maxstiffnes and Co. aren't copied correctly
-          springs.push_back (new Spring (first, second, (*i)->length));
-        }
-      else
-        {
-          std::cout << "World: Error couldn't resolve particles" << std::endl;
-        }
-    }
-}
-
-World::~World ()
-{ 
-  clear ();
-}
 
 void
 World::draw (ZoomGraphicContext* gc)
@@ -436,7 +437,7 @@ Particle*
 World::get_particle (float x, float y)
 {
   Particle* particle = 0;
-  float min_dist = 15;
+  float min_dist = 25.0f; // FIXME: Make this configurable
   Vector2d mouse_pos (x, y);
 
   for (ParticleFactory::ParticleIter i = particle_mgr->begin (); i != particle_mgr->end (); ++i)

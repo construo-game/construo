@@ -19,7 +19,7 @@
 AC_INIT(construo, 0.2.3-CVS)
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR(src/construo.hxx)
+AC_CONFIG_SRCDIR(src/construo.hpp)
 AM_CONFIG_HEADER(config.h)
 
 # check for some programs

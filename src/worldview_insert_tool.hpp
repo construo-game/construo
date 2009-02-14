@@ -34,6 +34,7 @@ private:
   
   /** mass of the particles that are inserted on a primary press */
   float particle_mass;
+
 public:
   WorldViewInsertTool ();
   ~WorldViewInsertTool ();

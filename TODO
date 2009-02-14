@@ -80,4 +80,21 @@ Modes for Construo - The Game
    some text here and there
 
 
+Binary File Format
+------------------
+Thu Jun  7 10:52:39 2007
+
+Due to speed issues it is a good idea to switch to a binary
+format. The format shall follow the already established text format.
+
+MAGIC   Construo
+VERSION uint_32t
+AUTHOR
+PARTICLES
+SPRINGS
+COLLIDERS
+
+Use pretty TTF font, instead of default glut fonts
+---------------------------------------------------
+
 # EOF #

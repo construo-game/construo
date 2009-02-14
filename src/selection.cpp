@@ -37,10 +37,10 @@ Selection::get_center ()
 {
   validate();
 
-  Rect<float> rot_box ((*selection.begin ())->pos.x,
-                       (*selection.begin ())->pos.y,
-                       (*selection.begin ())->pos.x,
-                       (*selection.begin ())->pos.y);
+  Rect<float> rot_box((*selection.begin ())->pos.x,
+                      (*selection.begin ())->pos.y,
+                      (*selection.begin ())->pos.x,
+                      (*selection.begin ())->pos.y);
 
   for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
     {

@@ -37,13 +37,12 @@ public:
   Vector2d pos;
 
   /** velocity of the particle */
-  Vector2d  velocity;
+  Vector2d velocity;
 
-private:
   /** the mass of the particle as 1/mass (FIXME: is this still the
       case?!) */
   float mass;
-public:
+
   /** If true the particle will have a fixed position which cannot be
       changed, if false the particle reacts to forces as normal. */
   bool fixed;

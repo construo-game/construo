@@ -28,25 +28,25 @@
 #include "worldview_insert_tool.hpp"
 #include "world_gui_manager.hpp"
 
-WorldViewInsertTool::WorldViewInsertTool ()
+WorldViewInsertTool::WorldViewInsertTool()
 {
   current_particle = 0;
   particle_mass = 0.1f;
 }
 
-WorldViewInsertTool::~WorldViewInsertTool () 
+WorldViewInsertTool::~WorldViewInsertTool() 
 {
 }
 
 void
-WorldViewInsertTool::draw_background (ZoomGraphicContext* gc) 
+WorldViewInsertTool::draw_background(ZoomGraphicContext* gc) 
 {
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(input_context->get_mouse_x());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(input_context->get_mouse_y());
 
   World& world = *Controller::instance()->get_world();
 
-  Particle* selected_particle = world.get_particle (x, y);
+  Particle* selected_particle = world.get_particle(x, y);
   if (selected_particle)
     {
       selected_particle->draw_highlight(gc);
@@ -54,11 +54,11 @@ WorldViewInsertTool::draw_background (ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc) 
+WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc) 
 {
   World& world = *Controller::instance()->get_world();
 
-  Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world (input_context->get_mouse_pos ());
+  Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos());
 
   Vector2d new_particle_pos;
           
@@ -101,15 +101,15 @@ WorldViewInsertTool::draw_foreground (ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y) 
+WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y) 
 {
-  World& world = *Controller::instance()->get_world ();
+  World& world = *Controller::instance()->get_world();
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
   if (current_particle)
     {
-      // We are going to place a second particle and convert the last an
+      // We are going to place a second particle and connect the last an
       // the new one with a spring
       Particle* new_current_particle = world.get_particle (x, y);
       if (new_current_particle != current_particle)
@@ -142,7 +142,7 @@ WorldViewInsertTool::on_primary_button_press (int screen_x, int screen_y)
 
           current_particle = 0;
         }
-      WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+      WorldGUIManager::instance()->ungrab_mouse(WorldViewComponent::instance());
     }
   else
     {
