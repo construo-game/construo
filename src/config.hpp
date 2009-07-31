@@ -21,6 +21,7 @@
 #define CONFIG_HH
 
 #include <string>
+#include <stdlib.h>
 
 class Config
 {

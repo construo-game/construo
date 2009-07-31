@@ -55,7 +55,7 @@ ConstruoMain::~ConstruoMain ()
 {
 }
 
-char* 
+const char* 
 ConstruoMain::get_title ()
 {
   return "Construo " VERSION;

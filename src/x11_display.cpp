@@ -22,6 +22,7 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
+#include <string.h>
 
 #include "cursors/cursors.hpp"
 
@@ -83,10 +84,11 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
                          &attributes);
 
   { // Communicate a bit with the window manager
-    char *title = construo_main->get_title();
+    char *title = const_cast<char*>(construo_main->get_title());
 
     XTextProperty text_property;
     XStringListToTextProperty(&title, 1, &text_property);
+
     XSizeHints size_hints;
     size_hints.x = 0;
     size_hints.y = 0;

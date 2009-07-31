@@ -20,6 +20,8 @@
 #include <config.h>
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "settings.hpp"
 #include "command_line.hpp"
 

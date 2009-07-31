@@ -48,7 +48,7 @@ public:
   ConstruoMain ();
   virtual ~ConstruoMain ();
 
-  char* get_title ();
+  const char* get_title ();
   int main (int argc, char* argv[]);
 
   /** Exit ConstruoMain and do all stuff necesarry for a clean
