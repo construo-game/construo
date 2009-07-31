@@ -120,7 +120,7 @@ _unget_char (char c, lisp_stream_t *stream)
 static int
 _scan (lisp_stream_t *stream)
 {
-    static char *delims = "\"();";
+    static const char *delims = "\"();";
 
     int c;
 
