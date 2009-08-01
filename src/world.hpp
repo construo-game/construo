@@ -1,5 +1,3 @@
-//  $Id$
-// 
 //  Construo - A wire-frame construction game
 //  Copyright (C) 2002 Ingo Ruhnke <grumbel@gmx.de>
 //

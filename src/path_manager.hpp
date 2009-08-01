@@ -1,5 +1,3 @@
-//  $Id$
-//
 //  Pingus - A free Lemmings clone
 //  Copyright (C) 2000 Ingo Ruhnke <grumbel@gmx.de>
 //
