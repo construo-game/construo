@@ -129,7 +129,7 @@ case "$target_os" in
         AC_CHECK_LIB(glut, glutMainLoop,
         [
           ConstruoTargets="$ConstruoTargets construo.glut"
-          glut_LIBS="-lglut"
+          glut_LIBS="-lglut -lGLU"
           AC_SUBST(glut_LIBS)
           AC_SUBST(glut_CXXFLAGS, "")
          ],
@@ -143,7 +143,7 @@ dnl ------------------------
 AC_CHECK_LIB(freeglut-1.3, glutMainLoop,
 [
   ConstruoTargets="$ConstruoTargets construo.freeglut${EXEEXT}"
-  AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3")
+  AC_SUBST(freeglut_LIBS,"-lfreeglut-1.3 -lGLU")
 dnl  echo "Freeglut: " $freeglut_LIBS
 ],
 [])
