@@ -1,12 +1,12 @@
-Construo V0.2.2
-===============
+Construo
+========
 
 Construo is a programm for constructing wire-frame objects and let
 them react on physical forces, its neither a real simulation nor a
 real game, its just a little toy app which can be a nice way to waste
-time. Some game-like elements might follow later, see the file 'TODO'.
+time. Some game-like elements might follow later, see the file `TODO`.
 Installation and compile instructions can be found in the file
-'INSTALL'. Construo runs under both OpenGL and plain Xlib.
+`INSTALL`. Construo runs under both OpenGL and plain Xlib.
 
 The newest version can be found at:
 
@@ -15,11 +15,8 @@ The newest version can be found at:
 For questions, comments, constructions, bugs reports and other things
 write a mail to:
 
-  Ingo Ruhnke <grumbel@gmx.de>
+  Ingo Ruhnke <grumbel@gmail.com>
 
 or send it directly to the Construo-Development mailing list at:
- 
+
   construo-devel@nongnu.org
-
-
-# EOF #
