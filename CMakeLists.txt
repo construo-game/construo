@@ -23,6 +23,9 @@ include(FindGLUT)
 include(FindX11)
 include(FindZLIB)
 
+set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
+set(CONSTRUO_DATADIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}" CACHE PATH "Install location for datafiles")
+
 set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
   src/bounding_box.hpp
@@ -165,7 +168,7 @@ include_directories(.)
 add_definitions(-DVERSION="0.2.4")
 add_definitions(-DPACKAGE="construo")
 add_definitions(-DPACKAGE_STRING="construo 0.2.4")
-add_definitions(-DDATADIR="/usr/local/share")
+add_definitions(-DCONSTRUO_DATADIR="${DATADIR}")
 
 if(ZLIB_FOUND)
   add_definitions(-DHAVE_LIBZ)
@@ -173,7 +176,7 @@ if(ZLIB_FOUND)
   link_libraries(${ZLIB_LIBRARIES})
 endif()
 
-add_library(libconstruo ${CONSTRUO_SOURCES_CXX})
+add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 
 if(GLUT_FOUND AND OPENGL_FOUND)
@@ -182,6 +185,8 @@ if(GLUT_FOUND AND OPENGL_FOUND)
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
   target_link_libraries(construo.glut libconstruo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+
+  install(TARGETS construo.glut RUNTIME DESTINATION ${CONSTRUO_BINDIR})
 endif()
 
 if(X11_FOUND)
@@ -199,6 +204,10 @@ if(X11_FOUND)
     target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_xf86vmode_INCLUDE_PATH})
     target_link_libraries(construo.x11 ${X11_xf86vm_LIB})
   endif()
+
+  install(TARGETS construo.x11 RUNTIME DESTINATION ${CONSTRUO_BINDIR})
 endif()
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})
 
 # EOF #

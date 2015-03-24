@@ -17,8 +17,6 @@
 #ifndef HEADER_CONSTRUO_CONSTRUO_HPP
 #define HEADER_CONSTRUO_CONSTRUO_HPP
 
-#define CONSTRUO_DATADIR DATADIR"/games/"PACKAGE
-
 class SystemContext;
 class InputContext;
 class RootGraphicContext;
