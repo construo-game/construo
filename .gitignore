@@ -1,5 +1,3 @@
 *.o
 *~
-/autom4te.cache/
-/src/.deps/
 /build*
