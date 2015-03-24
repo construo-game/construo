@@ -1,5 +1,5 @@
 /*
-	$Id$
+	$Id: vector.cpp 152 2007-06-07 09:35:21Z grumbel $
 
 	------------------------------------------------------------------------
 	ClanLib, the platform independent game SDK.

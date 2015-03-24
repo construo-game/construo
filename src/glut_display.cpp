@@ -24,6 +24,7 @@
 #  include <GL/glut.h>
 #endif
 
+#include <string.h>
 #include <stdio.h>
 #include <assert.h>
 #include <iostream>
@@ -80,9 +81,12 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
   height = h;
 
   int argc = 1;
-  char* argv[] = { "construo", "\0" };
-
+  char* argv[2];
+  argv[0] = strdup("construo");
+  argv[1] = NULL;
   glutInit(&argc, argv); // Only pass empty dummies
+  free(argv[0]);
+
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(width, height);
   //glutInitWindowPosition(100, 100); don't care
