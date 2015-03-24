@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -70,19 +70,19 @@ UnixSystem::UnixSystem ()
         {
           throw ConstruoError("Error: " + construo_rc_path + " is not a directory!");
         }
-      
+
       if (access(construo_rc_path.c_str (), R_OK | W_OK | X_OK) != 0) // not readable/writeable
         {
           throw ConstruoError("Error: " + construo_rc_path + " is not read or writeable!");
         }
-    }     
+    }
 }
 
 UnixSystem::~UnixSystem ()
 {
 }
 
-unsigned int 
+unsigned int
 UnixSystem::get_time ()
 { // riped out of ClanLib-0.7
   timeval tv;
@@ -99,7 +99,7 @@ UnixSystem::sleep (unsigned long t)
   usleep (t);
 }
 
-std::string 
+std::string
 UnixSystem::get_construo_rc_path()
 {
   return construo_rc_path;
@@ -121,7 +121,7 @@ UnixSystem::get_user_realname()
     }
 }
 
-std::string 
+std::string
 UnixSystem::get_user_email()
 {
   const char* s_email = getenv("EMAIL");
@@ -157,7 +157,7 @@ UnixSystem::get_file_type(const std::string& filename)
     return FT_DIRECTORY;
 
   std::string sys_name = translate_filename(filename);
-  
+
   struct stat buf;
   if (stat(sys_name.c_str(), &buf) != 0)
     {
@@ -199,8 +199,8 @@ UnixSystem::translate_filename (const std::string& filename)
       return construo_rc_path + filename.substr(6);
     }
   else if (has_prefix(filename, "/examples/"))
-    { 
-      return path_manager.complete("examples/") + filename.substr(10); 
+    {
+      return path_manager.complete("examples/") + filename.substr(10);
     }
   else
     return filename;
@@ -236,7 +236,7 @@ struct DirectorySorter
   {
     FileType lhs_type = system_context->get_file_type(pathname + "/" + lhs);
     FileType rhs_type = system_context->get_file_type(pathname + "/" + rhs);
-    
+
     if (lhs_type == rhs_type)
       return (lhs < rhs);
     else if (lhs_type == FT_DIRECTORY)
@@ -247,7 +247,7 @@ struct DirectorySorter
       {
         return false;
       }
-    else 
+    else
       {
         return (lhs < rhs);
       }
@@ -270,7 +270,7 @@ UnixSystem::read_directory(const std::string& arg_pathname)
       std::string pathname = translate_filename (arg_pathname);
 
       DIR* dir = ::opendir (pathname.c_str());
-      
+
       if (!dir)
         {
           std::cout << "UnixSystem: Error couldn't open: '" << pathname << "', ignoring\n"
@@ -289,7 +289,7 @@ UnixSystem::read_directory(const std::string& arg_pathname)
                   dir_lst.push_back(entry->d_name);
                 }
             }
-  
+
           closedir (dir);
         }
 

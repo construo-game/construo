@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -52,7 +52,7 @@ ConstruoMain::~ConstruoMain ()
 {
 }
 
-const char* 
+const char*
 ConstruoMain::get_title ()
 {
   return "Construo " VERSION;
@@ -91,7 +91,7 @@ ConstruoMain::init_system()
 
   system = new UnixSystem();
 #ifdef USE_X11_DISPLAY
-  display = new X11Display(settings.screen_width, settings.screen_height, 
+  display = new X11Display(settings.screen_width, settings.screen_height,
                            settings.fullscreen);
 #elif USE_GLUT_DISPLAY
   display = new GlutDisplay(settings.screen_width, settings.screen_height, settings.fullscreen);
@@ -113,7 +113,7 @@ ConstruoMain::deinit_system()
   delete system;
 }
 
-int 
+int
 ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
 {
   CommandLine::parse(argc, argv);
@@ -123,7 +123,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     init_system();
 
     std::cout << PACKAGE_STRING"\n" << std::endl;
-    std::cout << "If you have throuble with programm startup, delete the file:\n\n" 
+    std::cout << "If you have throuble with programm startup, delete the file:\n\n"
               << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
 
     if (!settings.datadir.empty())
@@ -131,7 +131,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     path_manager.add_path(".");
     path_manager.add_path("..");
-    path_manager.add_path(CONSTRUO_DATADIR); 
+    path_manager.add_path(CONSTRUO_DATADIR);
     if (!path_manager.find_path("examples/"))
       {
         std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
@@ -146,17 +146,17 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
       }
     else
       {
-        try 
+        try
           {
             controller = new Controller ("/user/laststate.construo");
-          } 
-        catch (ConstruoError& err) 
+          }
+        catch (ConstruoError& err)
           {
             std::cout << "ConstruoMain: " << err.msg << std::endl;
             controller = new Controller ();
           }
       }
-  
+
     // For some targets this will never return
     display->run();
 

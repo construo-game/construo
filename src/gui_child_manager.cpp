@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -64,20 +64,20 @@ GUIChildManager::draw (GraphicContext* parent_gc)
 {
   gc.set_parent_gc (parent_gc);
   gc.set_offset (x_pos, y_pos);
-  
+
   parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos + height, 
+                             x_pos + width, y_pos + height,
                              Colors::button_bg_passive);
   parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos + height, 
+                        x_pos + width, y_pos + height,
                         Colors::button_fg_passive);
 
   parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos, 
+                             x_pos + width, y_pos,
                              Colors::button_bg_hover);
 
   parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos, 
+                        x_pos + width, y_pos,
                         Colors::button_fg_passive);
 
   for (ComponentLst::reverse_iterator i = components.rbegin (); i != components.rend (); ++i)
@@ -139,7 +139,7 @@ GUIChildManager::on_secondary_button_release (int x, int y)
         }
     }
 }
-  
+
 void
 GUIChildManager::on_delete_press (int x, int y)
 {
@@ -272,7 +272,7 @@ GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
     comp->on_mouse_move(x, y, of_x, of_y);
 }
 
-GUIComponent* 
+GUIComponent*
 GUIChildManager::find_component_at (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)

@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -61,7 +61,7 @@ public:
 
   /** clears the selection */
   void clear ();
-  
+
   /** @return true if no particle is in the selection */
   bool empty() const;
 
@@ -71,10 +71,10 @@ public:
 
   void rotate(float rot_angle, Vector2d rotate_center);
 
-  /** Join particles that are on nearly the same position 
+  /** Join particles that are on nearly the same position
    *
    *  @param toleranz minimum distance of to particles below which they
-   *  get joined (in world coordinates) 
+   *  get joined (in world coordinates)
    */
   void join_doubles(float toleranz);
 

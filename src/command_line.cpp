@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -49,7 +49,7 @@ CommandLine::parse (int argc, char** argv)
                    || strcmp(argv[i], "-v") == 0)
             {
               print_version ();
-              exit (EXIT_SUCCESS);              
+              exit (EXIT_SUCCESS);
             }
           else if (strcmp(argv[i], "--help") == 0
               || strcmp(argv[i], "-h") == 0)
@@ -85,11 +85,11 @@ CommandLine::parse (int argc, char** argv)
               if (++i < argc)
                 {
                   char c;
-                  if (sscanf(argv[i], "%d%c%d", 
+                  if (sscanf(argv[i], "%d%c%d",
                              &settings.screen_width, &c, &settings.screen_height) != 3 && c != 'x')
                     {
                       error ("geometry string must WIDTHxHEIGHT");
-                    }                
+                    }
                 }
               else
                 {
@@ -143,4 +143,4 @@ CommandLine::print_version ()
 }
 
 /* EOF */
-  
+

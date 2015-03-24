@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -54,7 +54,7 @@ LispWriter::write_float (const char* name, float f)
                      lisp_make_real(f)));
 }
 
-void 
+void
 LispWriter::write_int (const char* name, int i)
 {
   append(make_list2 (lisp_make_symbol (name),
@@ -93,14 +93,14 @@ lisp_object_t*
 LispWriter::create_lisp ()
 {
   lisp_object_t* lisp_obj = lisp_nil();
-  
-  for(std::vector<lisp_object_t*>::reverse_iterator i = lisp_objs.rbegin (); 
+
+  for(std::vector<lisp_object_t*>::reverse_iterator i = lisp_objs.rbegin ();
       i != lisp_objs.rend (); ++i)
     {
       lisp_obj = lisp_make_cons (*i, lisp_obj);
     }
   lisp_objs.clear();
-  
+
   return lisp_obj;
 }
 

@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -109,7 +109,7 @@ bool action_cam_hfunc ()
   return Controller::instance()->get_action_cam();
 }
 
-bool show_grid_hfunc() 
+bool show_grid_hfunc()
 {
   return WorldViewComponent::instance()->uses_grid();
 }
@@ -181,7 +181,7 @@ WorldGUIManager::WorldGUIManager ()
       add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
     }
   //add(new GUIWindow ("Test Window",   200, 100, 200, 90));
- 
+
   /*
     GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
@@ -235,7 +235,7 @@ WorldGUIManager::draw_overlay ()
       graphic_context->draw_string (400,  68, "     [j] - join dots");
       graphic_context->draw_string (400,  80, "     [s] - scale selection");
       break;
-      
+
     case WorldViewComponent::ZOOM_MODE:
       graphic_context->draw_string (600,  20, "  [left] - zoom into region");
       graphic_context->draw_string (600,  44, " [right] - zoom out");
@@ -253,7 +253,7 @@ WorldGUIManager::draw_overlay ()
   World& world = *Controller::instance()->get_world ();
 
   /*graphic_context->draw_string (600,  430, "Particles Mass: ");
-    graphic_context->draw_string (BUTTON_LX_POS,  430, 
+    graphic_context->draw_string (BUTTON_LX_POS,  430,
     to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
   int bottom_line = graphic_context->get_height() - 10;
@@ -261,7 +261,7 @@ WorldGUIManager::draw_overlay ()
   graphic_context->draw_string (80, bottom_line-20, to_string(get_fps()));
 
   graphic_context->draw_string (10, bottom_line, "Pos: ");
-  graphic_context->draw_string (80, bottom_line, 
+  graphic_context->draw_string (80, bottom_line,
                                 to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos())));
 
   graphic_context->draw_string (210, bottom_line-20, "Particles: ");

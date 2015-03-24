@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -46,7 +46,7 @@ WorldViewComponent::WorldViewComponent ()
 
   current_tool = insert_tool;
   mode = INSERT_MODE;
-  
+
   on_world_change();
 }
 
@@ -121,12 +121,12 @@ WorldViewComponent::draw_grid()
 
       gc.push_quick_draw();
       for(float y = start_y; y < end_y; y += grid_size)
-        gc.draw_line(start_x, y, 
+        gc.draw_line(start_x, y,
                      end_x, y,
                      ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
 
       for(float x = start_x; x < end_x; x += grid_size)
-        gc.draw_line(x, start_y, 
+        gc.draw_line(x, start_y,
                      x, end_y,
                      ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
       gc.pop_quick_draw();
@@ -139,7 +139,7 @@ WorldViewComponent::draw_ground()
 
   if (gc.screen_to_world_y(parent_gc->get_height()) >= 599)
     {
-      gc.draw_fill_rect(gc.screen_to_world_x(0), 
+      gc.draw_fill_rect(gc.screen_to_world_x(0),
                         599,
                         gc.screen_to_world_x(parent_gc->get_width()),
                         gc.screen_to_world_y(parent_gc->get_height()),
@@ -148,7 +148,7 @@ WorldViewComponent::draw_ground()
       Color color = Colors::ground_grid_color;
 
       int step_size = 100;
-      
+
       int start_x = Math::round_to(gc.screen_to_world_x(0), step_size) - step_size;
       int end_x   = Math::round_to(gc.screen_to_world_x(gc.get_width()), step_size) + step_size;
 
@@ -157,7 +157,7 @@ WorldViewComponent::draw_ground()
 
       gc.push_quick_draw();
       for(int y = start_y; y < end_y; y += step_size)
-        gc.draw_line(start_x, y, 
+        gc.draw_line(start_x, y,
                      end_x, y,
                      color, 1);
 
@@ -166,8 +166,8 @@ WorldViewComponent::draw_ground()
                      x, end_y,
                      color, 1);
       gc.pop_quick_draw();
-        
-      gc.draw_rect(gc.screen_to_world_x(0), 
+
+      gc.draw_rect(gc.screen_to_world_x(0),
                    599,
                    gc.screen_to_world_x(parent_gc->get_width()),
                    gc.screen_to_world_y(parent_gc->get_height()),
@@ -209,7 +209,7 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
   if (0) // draw bounding box
     {
       const BoundingBox& box = world.calc_bounding_box();
-      gc.draw_rect(box.x1, box.y1, box.x2, box.y2, 
+      gc.draw_rect(box.x1, box.y1, box.x2, box.y2,
                    Color(1.0f, 1.0f, 1.0f));
     }
 
@@ -341,7 +341,7 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
   graphic_context->set_cursor(CURSOR_SCROLL);
 
   x_offset = gc.get_x_offset ();
-  y_offset = gc.get_y_offset (); 
+  y_offset = gc.get_y_offset ();
   WorldGUIManager::instance()->grab_mouse (this);
 
   scroll_pos_x = gc.screen_to_world_x(x);

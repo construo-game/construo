@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,7 @@ private:
 
   /** X-Position of the glut window, used in fullscreen to allow a
       restore */
-  int window_x_pos; 
+  int window_x_pos;
 
   /** Y-Position of the glut window, used in fullscreen to allow a
       restore */
@@ -95,7 +95,7 @@ public:
   void mouse_motion_func (int x, int y);
 
   void set_clip_rect (int x1, int y1, int x2, int y2);
-  
+
   void push_quick_draw();
   void pop_quick_draw();
 

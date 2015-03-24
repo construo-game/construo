@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,7 +30,7 @@ RectCollider::duplicate() const
 RectCollider::RectCollider (lisp_object_t* cursor)
 {
   Vector2d pos1, pos2;
-  
+
   LispReader reader(cursor);
   if (reader.read_vector("pos1", &pos1) == false
       || reader.read_vector("pos2", &pos2) == false)
@@ -45,9 +45,9 @@ RectCollider::RectCollider (lisp_object_t* cursor)
 }
 
 RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_)
-  : x1 (Math::min(x1_, x2_)), 
-    y1 (Math::min(y1_, y2_)), 
-    x2 (Math::max(x1_, x2_)), 
+  : x1 (Math::min(x1_, x2_)),
+    y1 (Math::min(y1_, y2_)),
+    x2 (Math::max(x1_, x2_)),
     y2 (Math::max(y1_, y2_))
 {
 }
@@ -63,7 +63,7 @@ Vector2d
 RectCollider::get_pos()
 {
   return Vector2d ((x1 + x2)/2.0f,
-                   (y1 + y2)/2.0f); 
+                   (y1 + y2)/2.0f);
 }
 
 void
@@ -97,14 +97,14 @@ RectCollider::bounce ()
           float bottom_dist = y2 - pos.y;
 
           if (left_dist < right_dist
-              && left_dist < top_dist 
+              && left_dist < top_dist
               && left_dist < bottom_dist)
             {
               velocity.x = -fabs(velocity.x);
               pos.x = x1;
             }
           else if (right_dist < left_dist
-                   && right_dist < top_dist 
+                   && right_dist < top_dist
                    && right_dist < bottom_dist)
             {
               velocity.x = fabs(velocity.x);

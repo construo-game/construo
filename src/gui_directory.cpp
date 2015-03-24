@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,7 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
 {
   mtime = system_context->get_mtime(pathname);
   std::vector<std::string> dir = system_context->read_directory(pathname);
-  
+
   if (mode == SAVE_DIRECTORY && pathname != "/")
     files.push_back(new GUINewFileButton(pathname));
 
@@ -143,13 +143,13 @@ GUIDirectory::move_down ()
 void
 GUIDirectory::wheel_up (int x, int y)
 {
-  move_up(); 
+  move_up();
 }
 
 void
-GUIDirectory::wheel_down (int x, int y) 
+GUIDirectory::wheel_down (int x, int y)
 {
-  move_down();  
+  move_down();
 }
 
 /* EOF */

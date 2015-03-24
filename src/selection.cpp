@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -47,7 +47,7 @@ Selection::get_center ()
       rot_box.x2 = Math::max(rot_box.x2, (*i)->pos.x);
       rot_box.y2 = Math::max(rot_box.y2, (*i)->pos.y);
     }
- 
+
   return rot_box.get_center ();
 }
 
@@ -57,11 +57,11 @@ Selection::scale (float factor, Vector2d center)
   validate();
 
   if (!selection.empty())
-    {    
+    {
       for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
         {
           (*i)->pos = center + (((*i)->pos - center) * factor);
-          
+
           std::vector<Spring*>& springs = world->get_spring_mgr ();
           for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
             {
@@ -71,7 +71,7 @@ Selection::scale (float factor, Vector2d center)
                 }
             }
         }
-    }     
+    }
 }
 
 void
@@ -106,7 +106,7 @@ void
 Selection::select_particles (Vector2d p1, Vector2d p2)
 {
   world = Controller::instance()->get_world ();
-  
+
   std::vector<Particle*> particles = world->get_particles (p1.x, p1.y,
                                                            p2.x, p2.y);
 
@@ -120,7 +120,7 @@ Selection::duplicate ()
   validate();
 
   Controller::instance()->push_undo();
-  
+
   // particle translation table
   std::map<Particle*, Particle*> p_trans_table;
 
@@ -143,7 +143,7 @@ Selection::duplicate ()
     {
       // both particles of the spring are in the current selection
       if (std::find (selection.begin (), selection.end (), (*i)->particles.first) != selection.end ()
-          && 
+          &&
           std::find (selection.begin (), selection.end (), (*i)->particles.second) != selection.end ())
         {
           world->add_spring (p_trans_table[(*i)->particles.first],
@@ -161,7 +161,7 @@ Selection::empty() const
 }
 
 void
-Selection::clear() 
+Selection::clear()
 {
   selection.clear();
   world = 0;
@@ -175,10 +175,10 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
   for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
     {
       Vector2d& pos = (*i)->pos;
-      
+
       pos.x -= rotate_center.x;
       pos.y -= rotate_center.y;
-      
+
       float angle  = atan2(pos.y, pos.x) + rot_angle;
       float length = pos.norm ();
 
@@ -203,7 +203,7 @@ Selection::join_doubles(float toleranz)
   // FIXME: Undo add undo, if stuff is going to change
   Controller::instance()->push_undo();
   World& world = *Controller::instance()->get_world ();
-  
+
   for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
     {
       SelectionLst::iterator j = i;
@@ -216,7 +216,7 @@ Selection::join_doubles(float toleranz)
               std::cout << "joining particles: " << (*j)->pos << " " << (*i)->pos << std::endl;
               (*j)->pos      = ((*j)->pos + (*i)->pos) * 0.5f;
               (*j)->velocity = ((*j)->velocity + (*i)->velocity) * 0.5f;
-             
+
               //selection.remove(*i);
 
               { // Everything that is connected to the particle 'i'
@@ -227,7 +227,7 @@ Selection::join_doubles(float toleranz)
                   {
                     if ((*s)->particles.first == (*i))
                       (*s)->particles.first = (*j);
-                        
+
                     if ((*s)->particles.second == (*i))
                       (*s)->particles.second = (*j);
                   }

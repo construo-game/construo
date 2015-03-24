@@ -111,7 +111,7 @@ _unget_char (char c, lisp_stream_t *stream)
        case LISP_STREAM_ANY:
 	    stream->v.any.unget_char(c, stream->v.any.data);
 	    break;
-	 
+	
 	default :
 	    assert(0);
     }
@@ -295,13 +295,13 @@ lisp_stream_init_string (lisp_stream_t *stream, char *buf)
     return stream;
 }
 
-lisp_stream_t* 
-lisp_stream_init_any (lisp_stream_t *stream, void *data, 
+lisp_stream_t*
+lisp_stream_init_any (lisp_stream_t *stream, void *data,
 		      int (*next_char) (void *data),
 		      void (*unget_char) (char c, void *data))
 {
     assert(next_char != 0 && unget_char != 0);
-    
+
     stream->type = LISP_STREAM_ANY;
     stream->v.any.data = data;
     stream->v.any.next_char= next_char;
@@ -570,13 +570,13 @@ lisp_real (lisp_object_t *obj)
 	return obj->v.integer;
     return obj->v.real;
 }
-	   
+	
 lisp_object_t*
 lisp_car (lisp_object_t *obj)
 {
   if (!(obj->type == LISP_TYPE_CONS || obj->type == LISP_TYPE_PATTERN_CONS))
     ConstruoError::raise("lispreader Error: !(obj->type == LISP_TYPE_CONS || obj->type == LISP_TYPE_PATTERN_CONS)");
-    
+
     return obj->v.cons.car;
 }
 

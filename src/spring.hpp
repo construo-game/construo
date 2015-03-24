@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -31,11 +31,11 @@ public:
   /** Pointers to the two particles to which the Spring is
       connected */
   std::pair<Particle*, Particle*> particles;
-  
+
   /** The orignial length of the Spring, the actually length on the
       screen is different, since the spring can be streched */
   float length;
-  
+
   /** */
   bool destroyed;
 

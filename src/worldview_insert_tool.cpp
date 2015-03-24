@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -31,12 +31,12 @@ WorldViewInsertTool::WorldViewInsertTool()
   particle_mass = 0.1f;
 }
 
-WorldViewInsertTool::~WorldViewInsertTool() 
+WorldViewInsertTool::~WorldViewInsertTool()
 {
 }
 
 void
-WorldViewInsertTool::draw_background(ZoomGraphicContext* gc) 
+WorldViewInsertTool::draw_background(ZoomGraphicContext* gc)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(input_context->get_mouse_x());
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(input_context->get_mouse_y());
@@ -51,29 +51,29 @@ WorldViewInsertTool::draw_background(ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc) 
+WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
 {
   World& world = *Controller::instance()->get_world();
 
   Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos());
 
   Vector2d new_particle_pos;
-          
+
   float grid_size = WorldViewComponent::instance()->get_snap_size();
-      
+
   if (WorldViewComponent::instance()->uses_grid())
     new_particle_pos = Vector2d(Math::round_to_float(click_pos.x, grid_size),
                                 Math::round_to_float(click_pos.y, grid_size));
   else
     new_particle_pos = Vector2d(click_pos.x, click_pos.y);
-  
+
   Spring* selected_spring = world.get_spring (click_pos.x, click_pos.y);
 
   if (selected_spring)
     {
       selected_spring->draw_highlight (gc);
     }
-      
+
   if (current_particle)
     {
       gc->GraphicContext::draw_line (current_particle->pos, new_particle_pos,
@@ -98,7 +98,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y) 
+WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
 {
   World& world = *Controller::instance()->get_world();
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
@@ -120,7 +120,7 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
               Vector2d new_particle_pos;
 
               float grid_size = WorldViewComponent::instance()->get_snap_size();
-      
+
               if (WorldViewComponent::instance()->uses_grid())
                 new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
                                             Math::round_to_float(y, grid_size));
@@ -128,7 +128,7 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
                 new_particle_pos = Vector2d(x, y);
 
               new_current_particle = world.get_particle_mgr()->add_particle(new_particle_pos,
-                                                                            Vector2d(), 
+                                                                            Vector2d(),
                                                                             particle_mass);
               world.add_spring (current_particle, new_current_particle);
             }
@@ -155,9 +155,9 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
       else
         {
           Vector2d new_particle_pos;
-          
+
           float grid_size = WorldViewComponent::instance()->get_snap_size();
-                
+
           if (WorldViewComponent::instance()->uses_grid())
             new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
                                         Math::round_to_float(y, grid_size));
@@ -176,7 +176,7 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
 }
 
 void
-WorldViewInsertTool::on_primary_button_release (int x, int y) 
+WorldViewInsertTool::on_primary_button_release (int x, int y)
 {
 }
 
@@ -187,19 +187,19 @@ WorldViewInsertTool::on_secondary_button_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewInsertTool::on_secondary_button_release (int screen_x, int screen_y) 
+WorldViewInsertTool::on_secondary_button_release (int screen_x, int screen_y)
 {
 }
 
 void
-WorldViewInsertTool::on_delete_press (int screen_x, int screen_y) 
+WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 {
   World& world = *Controller::instance()->get_world ();
 
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
-  if (current_particle) 
+  if (current_particle)
     { // We are currently creating a new spring, abort that
       current_particle->spring_links -= 1;
       current_particle = 0;
@@ -224,7 +224,7 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewInsertTool::on_fix_press (int screen_x, int screen_y) 
+WorldViewInsertTool::on_fix_press (int screen_x, int screen_y)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);

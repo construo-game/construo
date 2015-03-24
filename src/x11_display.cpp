@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -61,10 +61,10 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   else
     attributes.override_redirect = False;
 
-  attributes.event_mask = 
+  attributes.event_mask =
     KeyPressMask         |
     KeyReleaseMask       |
-    ExposureMask         | 
+    ExposureMask         |
     PointerMotionMask    |
     ButtonPressMask      |
     ButtonReleaseMask    |
@@ -76,7 +76,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   window = XCreateWindow(display, RootWindow(display, screen),
                          0,0, // position
                          width, height, 0,
-                         CopyFromParent, InputOutput, CopyFromParent, 
+                         CopyFromParent, InputOutput, CopyFromParent,
                          CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
                          &attributes);
 
@@ -93,7 +93,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 
     size_hints.width  = width;
     size_hints.height = height;
-    
+
     size_hints.min_width  = width;
     size_hints.min_height = height;
     size_hints.max_width  = width;
@@ -116,8 +116,8 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   }
 
   if (doublebuffer)
-    drawable = XCreatePixmap (display, window, width, height, 
-                              DefaultDepth(display, screen));  
+    drawable = XCreatePixmap (display, window, width, height,
+                              DefaultDepth(display, screen));
   else
     drawable = window;
 
@@ -132,7 +132,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   else
     gcv.line_width = 0;
 
-  gc = XCreateGC(display, window, 
+  gc = XCreateGC(display, window,
                  GCLineWidth | GCForeground | GCBackground,
                  &gcv);
 
@@ -144,7 +144,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     depth = DefaultDepth(display, DefaultScreen(display));
     if (depth != 16 && depth != 32)
       {
-        std::cout << "X11Display: Warring color depth '" << depth 
+        std::cout << "X11Display: Warring color depth '" << depth
                   << "' not supported, Construo will be slow!" << std::endl;
       }
   }
@@ -153,40 +153,40 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     // Black&White
     XColor cursor_fg = get_xcolor(Color(1.0f, 1.0f, 1.0f));
     XColor cursor_bg = get_xcolor(Color(0, 0, 0));
-      
-    cursor_scroll_pix = XCreateBitmapFromData (display, window, (char*)cursor_scroll_bits, 
+
+    cursor_scroll_pix = XCreateBitmapFromData (display, window, (char*)cursor_scroll_bits,
                                                cursor_scroll_width, cursor_scroll_height);
-    cursor_scroll_mask = XCreateBitmapFromData (display, window, (char*)cursor_scroll_mask_bits, 
+    cursor_scroll_mask = XCreateBitmapFromData (display, window, (char*)cursor_scroll_mask_bits,
                                                 cursor_scroll_width, cursor_scroll_height);
-    cursor_scroll = XCreatePixmapCursor(display, cursor_scroll_pix, cursor_scroll_mask, &cursor_bg, &cursor_fg, 
+    cursor_scroll = XCreatePixmapCursor(display, cursor_scroll_pix, cursor_scroll_mask, &cursor_bg, &cursor_fg,
                                         cursor_scroll_x_hot, cursor_scroll_y_hot);
 
-    cursor_zoom_pix =  XCreateBitmapFromData (display, window, (char*)cursor_zoom_bits, 
+    cursor_zoom_pix =  XCreateBitmapFromData (display, window, (char*)cursor_zoom_bits,
                                               cursor_zoom_width, cursor_zoom_height);
-    cursor_zoom_mask = XCreateBitmapFromData (display, window, (char*)cursor_zoom_mask_bits, 
+    cursor_zoom_mask = XCreateBitmapFromData (display, window, (char*)cursor_zoom_mask_bits,
                                               cursor_zoom_width, cursor_zoom_height);
-    cursor_zoom = XCreatePixmapCursor(display, cursor_zoom_pix, cursor_zoom_mask, &cursor_bg, &cursor_fg, 
+    cursor_zoom = XCreatePixmapCursor(display, cursor_zoom_pix, cursor_zoom_mask, &cursor_bg, &cursor_fg,
                                       cursor_zoom_x_hot, cursor_zoom_y_hot);
 
-    cursor_insert_pix =  XCreateBitmapFromData (display, window, (char*)cursor_insert_bits, 
+    cursor_insert_pix =  XCreateBitmapFromData (display, window, (char*)cursor_insert_bits,
                                                 cursor_insert_width, cursor_insert_height);
-    cursor_insert_mask = XCreateBitmapFromData (display, window, (char*)cursor_insert_mask_bits, 
+    cursor_insert_mask = XCreateBitmapFromData (display, window, (char*)cursor_insert_mask_bits,
                                                 cursor_insert_width, cursor_insert_height);
-    cursor_insert = XCreatePixmapCursor(display, cursor_insert_pix, cursor_insert_mask, &cursor_bg, &cursor_fg, 
+    cursor_insert = XCreatePixmapCursor(display, cursor_insert_pix, cursor_insert_mask, &cursor_bg, &cursor_fg,
                                         cursor_insert_x_hot, cursor_insert_y_hot);
 
-    cursor_select_pix =  XCreateBitmapFromData (display, window, (char*)cursor_select_bits, 
+    cursor_select_pix =  XCreateBitmapFromData (display, window, (char*)cursor_select_bits,
                                                 cursor_select_width, cursor_select_height);
-    cursor_select_mask = XCreateBitmapFromData (display, window, (char*)cursor_select_mask_bits, 
+    cursor_select_mask = XCreateBitmapFromData (display, window, (char*)cursor_select_mask_bits,
                                                 cursor_select_width, cursor_select_height);
-    cursor_select = XCreatePixmapCursor(display, cursor_select_pix, cursor_select_mask, &cursor_bg, &cursor_fg, 
+    cursor_select = XCreatePixmapCursor(display, cursor_select_pix, cursor_select_mask, &cursor_bg, &cursor_fg,
                                         cursor_select_x_hot, cursor_select_y_hot);
 
-    cursor_collider_pix =  XCreateBitmapFromData (display, window, (char*)cursor_collider_bits, 
+    cursor_collider_pix =  XCreateBitmapFromData (display, window, (char*)cursor_collider_bits,
                                                   cursor_collider_width, cursor_collider_height);
-    cursor_collider_mask = XCreateBitmapFromData (display, window, (char*)cursor_collider_mask_bits, 
+    cursor_collider_mask = XCreateBitmapFromData (display, window, (char*)cursor_collider_mask_bits,
                                                   cursor_collider_width, cursor_collider_height);
-    cursor_collider = XCreatePixmapCursor(display, cursor_collider_pix, cursor_collider_mask, &cursor_bg, &cursor_fg, 
+    cursor_collider = XCreatePixmapCursor(display, cursor_collider_pix, cursor_collider_mask, &cursor_bg, &cursor_fg,
                                           cursor_collider_x_hot, cursor_collider_y_hot);
   }
 
@@ -196,18 +196,18 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
 X11Display::~X11Display ()
 {
   //std::cout << "Closing X11 display" << std::endl;
-  
+
   if (fullscreen)
     {
       //std::cout << "X11Display: Restoring video mode" << std::endl;
       leave_fullscreen ();
     }
-  
+
   if (doublebuffer)
     XFreePixmap (display, drawable);
-  
+
   XDestroyWindow (display, window);
-  XCloseDisplay(display); 
+  XCloseDisplay(display);
 }
 
 void
@@ -240,12 +240,12 @@ void
 X11Display::draw_lines (std::vector<Line>& lines, Color color, int wide)
 {
   std::vector<XSegment> segments (lines.size());
-  
+
   for (std::vector<Line>::size_type i = 0; i < lines.size(); ++i)
     {
       segments[i].x1 = static_cast<short>(lines[i].x1);
       segments[i].y1 = static_cast<short>(lines[i].y1);
-      segments[i].x2 = static_cast<short>(lines[i].x2);      
+      segments[i].x2 = static_cast<short>(lines[i].x2);
       segments[i].y2 = static_cast<short>(lines[i].y2);
     }
 
@@ -267,7 +267,7 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
     }
 
   XSetForeground(display, gc, get_color_value(color));
-  XFillArcs(display, drawable, gc, 
+  XFillArcs(display, drawable, gc,
             &*arcs.begin(), arcs.size());
 }
 
@@ -282,8 +282,8 @@ void
 X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
-  XFillRectangle (display, drawable, gc, 
-                  int(x1), int(y1), 
+  XFillRectangle (display, drawable, gc,
+                  int(x1), int(y1),
                   int(x2 - x1), int(y2 - y1));
 }
 
@@ -292,9 +292,9 @@ X11Display::draw_fill_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(display, gc, get_color_value(color));
-  XFillArc(display, drawable, gc, 
+  XFillArc(display, drawable, gc,
            int(x-r), int(y-r),
-           int(r*2), int(r*2), 0, 
+           int(r*2), int(r*2), 0,
            360*64);
 }
 
@@ -310,8 +310,8 @@ void
 X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
-  XDrawRectangle (display, drawable, gc, 
-                  int(x1), int(y1), 
+  XDrawRectangle (display, drawable, gc,
+                  int(x1), int(y1),
                   int(x2 - x1), int(y2 - y1));
 }
 
@@ -326,8 +326,8 @@ void
 X11Display::draw_string_centered(float x, float y, const std::string& str, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
-  XDrawString (display, drawable, gc, 
-               int(x) - ((str.length() * 6) / 2), int(y), 
+  XDrawString (display, drawable, gc,
+               int(x) - ((str.length() * 6) / 2), int(y),
                str.c_str (), str.length ());
 }
 
@@ -353,7 +353,7 @@ void
 X11Display::wait_for_events_blocking ()
 {
   do {
-    while (read_event () == false); 
+    while (read_event () == false);
   } while (XPending (display) > 0);
 }
 
@@ -372,7 +372,7 @@ X11Display::read_event ()
   XEvent event;
 
   XNextEvent (display, &event);
-     
+
   switch (event.type)
     {
     case MotionNotify:
@@ -426,7 +426,7 @@ X11Display::read_event ()
     case KeyPress:
       {
         KeySym sym = XLookupKeysym(&event.xkey,0);
-            
+
         switch (sym)
           {
           case XK_F11:
@@ -458,7 +458,7 @@ X11Display::read_event ()
           case XK_s:
             send_button_press(BUTTON_SCALE);
             break;
-              
+
           case XK_j:
             send_button_press(BUTTON_JOIN);
             break;
@@ -505,7 +505,7 @@ X11Display::read_event ()
           case XK_space:
             send_button_press(BUTTON_RUN);
             break;
-          case XK_g:            
+          case XK_g:
             send_button_press(BUTTON_GRID);
             break;
           case XK_Tab:
@@ -550,7 +550,7 @@ X11Display::read_event ()
           case XK_9:
             send_load_or_save(9);
             break;
-              
+
           default:
             std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_grave << std::endl;
             break;
@@ -561,7 +561,7 @@ X11Display::read_event ()
     case KeyRelease:
       {
         KeySym sym = XLookupKeysym(&event.xkey,0);
-            
+
         switch (sym)
           {
           case XK_Shift_L:
@@ -576,7 +576,7 @@ X11Display::read_event ()
       break;
 
     case ConfigureNotify:
-      //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height 
+      //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height
       //<< "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
       break;
 
@@ -593,7 +593,7 @@ X11Display::read_event ()
       }
       break;
 
-    default: 
+    default:
       //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
       break;
     }
@@ -616,7 +616,7 @@ X11Display::send_button_press (int i)
   ev.button.type = BUTTON_EVENT;
   ev.button.id = i;
   ev.button.pressed = true;
-  events.push(ev); 
+  events.push(ev);
 }
 
 void
@@ -626,7 +626,7 @@ X11Display::send_button_release (int i)
   ev.button.type = BUTTON_EVENT;
   ev.button.id = i;
   ev.button.pressed = false;
-  events.push(ev); 
+  events.push(ev);
 }
 
 void
@@ -693,7 +693,7 @@ X11Display::save_mode()
   memset(&orig_modeline, 0, sizeof(orig_modeline));
 
   // Get the current display settings for later restore
-  XF86VidModeGetModeLine(display, 
+  XF86VidModeGetModeLine(display,
                          DefaultScreen(display),
                          &orig_dotclock,
                          &orig_modeline);
@@ -703,7 +703,7 @@ X11Display::save_mode()
                          &orig_viewport_x,
                          &orig_viewport_y);
   std::cout << "save_mode: "
-            << orig_dotclock << " " 
+            << orig_dotclock << " "
             << orig_viewport_x << ", " << orig_viewport_y << std::endl;
 
 #endif /* HAVE_LIBXXF86VM */
@@ -728,7 +728,7 @@ X11Display::enter_fullscreen ()
 
   save_mode();
 
-  XF86VidModeModeInfo **modes; 
+  XF86VidModeModeInfo **modes;
   int nmodes;
   int mode_index = -1;
   if (XF86VidModeGetAllModeLines(display,
@@ -779,17 +779,17 @@ X11Display::enter_fullscreen ()
                 int x, y;
                 // Get the windows absolute position (aka relative to
                 // the root window)
-                XTranslateCoordinates(display, window, DefaultRootWindow(display), 
-                                      0, 0, 
+                XTranslateCoordinates(display, window, DefaultRootWindow(display),
+                                      0, 0,
                                       &x, &y, &child_window);
                 XF86VidModeSetViewPort(display, DefaultScreen(display), x, y);
               }
-              
+
               // Hijack the focus (works only till the next focus change)
               XSetInputFocus(display, window, RevertToParent, CurrentTime);
 
               // Capture the pointer
-              if (XGrabPointer(display, window, True, 0, GrabModeAsync, GrabModeAsync, 
+              if (XGrabPointer(display, window, True, 0, GrabModeAsync, GrabModeAsync,
                                window, None, CurrentTime) != GrabSuccess)
                 {
                   std::cout << "X11Display: Couldn't grab the pointer" << std::endl;
@@ -857,9 +857,9 @@ X11Display::leave_fullscreen()
   std::cout << "X11Display::restore_mode()" << std::endl;
 
   XF86VidModeModeInfo modeinfo;
-  
+
   modeinfo.dotclock   = orig_dotclock;
-  
+
   // Copy XF86VidModeModeLine struct into XF86VidModeModeInfo
   modeinfo.hdisplay   = orig_modeline.hdisplay;
   modeinfo.hsyncstart = orig_modeline.hsyncstart;
@@ -895,7 +895,7 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
   rect[0].width  = x2 - x1 + 1;
   rect[0].height = y2 - y1 + 1;
 
-  XSetClipRectangles (display, gc, 
+  XSetClipRectangles (display, gc,
                       0, 0, // clip origin
                       rect, 1,
                       Unsorted);
@@ -939,7 +939,7 @@ X11Display::get_xcolor(const Color& color)
   XAllocColor(display, colormap, &x_color);
 
   return x_color;
- 
+
 }
 
 /* EOF */

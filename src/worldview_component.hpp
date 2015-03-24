@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -46,11 +46,11 @@ private:
   int grid_constant;
   float grid_scale_factor;
   float grid_snap_factor;
-  
+
   /** True if the third button is currently pressed and we are in
       scroll mode */
   bool scrolling;
-  
+
   float scroll_pos_x;
   float scroll_pos_y;
 
@@ -69,11 +69,11 @@ private:
 
   /** Draw the background grid to which new dots align */
   void draw_grid();
-  
+
   /** Draw ground, aka the all overspanning collider at the bottem */
   void draw_ground();
 public:
-  void set_mode (Mode m); 
+  void set_mode (Mode m);
   Mode get_mode () { return mode; }
 
   WorldViewComponent ();
@@ -118,7 +118,7 @@ public:
   void scroll_up ();
   void scroll_down ();
 
-  float get_zoom (); 
+  float get_zoom ();
 
   /** Called once the world has changed, aka a new world got loaded */
   void on_world_change();

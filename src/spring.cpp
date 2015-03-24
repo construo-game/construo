@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -34,7 +34,7 @@ Spring::Spring (Particle* f, Particle* s, float l)
   s->spring_links += 1;
 }
 
-Spring::Spring (Particle* f, Particle* s) 
+Spring::Spring (Particle* f, Particle* s)
 {
   particles.first  = f;
   particles.second = s;
@@ -85,7 +85,7 @@ Spring::Spring (World* world, lisp_object_t* cursor)
 
   if (length == -1)
     {
-      //std::cout << "Spring: length missing in data file, recalculating" << std::endl;     
+      //std::cout << "Spring: length missing in data file, recalculating" << std::endl;
       length = fabs((particles.first->pos - particles.second->pos).norm ());
     }
 }
@@ -104,9 +104,9 @@ Spring::update (float delta)
   // Calculate the stretchness of the spring, 0.0 if unstretch, else
   // <> 0
   float stretch = (dist.norm () - length);
-  
+
   //std::cout << "Stretch: " << stretch << std::endl;
-  if (fabs(stretch/length) > max_stretch && 
+  if (fabs(stretch/length) > max_stretch &&
       length > 10.0f) // atomar spring
     { // If the spring is streched above limits, let it get destroyed
       destroyed = true;
@@ -118,8 +118,8 @@ Spring::update (float delta)
 
       dist.normalize ();
       Vector2d force = dist * (stretch + dterm);
-      
-      /*std::cout << "DTerm: " << dterm << " HTerm: " << stretch 
+
+      /*std::cout << "DTerm: " << dterm << " HTerm: " << stretch
                 << " Force: " << force
                 << std::endl;*/
 
@@ -133,11 +133,11 @@ Spring::draw (ZoomGraphicContext* gc)
 {
   Vector2d dist = particles.first->pos - particles.second->pos;
   float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
-  
+
   float color = fabs((stretch/max_stretch));
-  
+
   if (particles.first->pos.y  < 598.5f
-      || 
+      ||
       particles.second->pos.y < 598.5f)
     {
       gc->GraphicContext::draw_line(particles.first->pos,
@@ -155,7 +155,7 @@ Spring::draw_highlight (ZoomGraphicContext* gc)
 }
 
 
-lisp_object_t* 
+lisp_object_t*
 Spring::serialize()
 {
   LispWriter obj ("spring");

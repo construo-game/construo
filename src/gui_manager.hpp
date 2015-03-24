@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -35,7 +35,7 @@ private:
   GUIComponent* current_component;
 
   GUIComponent* grabbing_component;
-  
+
   int last_x;
   int last_y;
 
@@ -52,7 +52,7 @@ public:
 
   /** @return the current frames per second */
   float get_fps() const { return current_fps; }
-  
+
   /** Launches a single run from the games main loop */
   virtual void run_once ();
 

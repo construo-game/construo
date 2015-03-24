@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -59,7 +59,7 @@ GUIFileManager::GUIFileManager (Mode m)
     current_directory = new GUIDirectory ("/", GUIDirectory::LOAD_DIRECTORY);
 
   directories["/"] = current_directory;
-  
+
   add (new GUIGenericButton("Up", 0,0, 100, 25, DirectoryUp));
   add (new GUIGenericButton("Close", 700, 0, 100, 25, CloseFileManager));
 
@@ -69,13 +69,13 @@ GUIFileManager::GUIFileManager (Mode m)
   add (new GUIGenericButton("Update Directory", 650, 575, 150, 25, ReReadCurrentDir));
 
   add(current_directory);
- 
+
   instance_ = this;
 }
 
 GUIFileManager::~GUIFileManager ()
 {
-  
+
 }
 
 void
@@ -88,7 +88,7 @@ GUIFileManager::open_directory (const std::string& pathname)
     {
       if (mode == SAVE_MANAGER)
         {
-          current_directory = directories[pathname] = new GUIDirectory(pathname, 
+          current_directory = directories[pathname] = new GUIDirectory(pathname,
                                                                        GUIDirectory::SAVE_DIRECTORY);
         }
       else
@@ -144,13 +144,13 @@ GUIFileManager::draw_overlay (GraphicContext* gc)
 void
 GUIFileManager::scroll_up ()
 {
-  current_directory->move_up(); 
+  current_directory->move_up();
 }
 
 void
 GUIFileManager::scroll_down ()
 {
-  current_directory->move_down();   
+  current_directory->move_down();
 }
 
 void
@@ -163,7 +163,7 @@ GUIFileManager::update_current_directory()
 
   if (mode == SAVE_MANAGER)
     {
-      current_directory = directories[pathname] = new GUIDirectory(pathname, 
+      current_directory = directories[pathname] = new GUIDirectory(pathname,
                                                                    GUIDirectory::SAVE_DIRECTORY);
     }
   else
@@ -171,7 +171,7 @@ GUIFileManager::update_current_directory()
       current_directory = directories[pathname] = new GUIDirectory(pathname,
                                                                    GUIDirectory::LOAD_DIRECTORY);
     }
-  
+
   replace (old_directory, current_directory);
   delete old_directory;
 }

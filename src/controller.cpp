@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -57,7 +57,7 @@ Controller::load_world (const std::string& filename)
   WorldViewComponent::instance()->on_world_change();
 
   running = false;
-  //std::cout << "Loading World... DONE" << std::endl; 
+  //std::cout << "Loading World... DONE" << std::endl;
 }
 
 void
@@ -114,7 +114,7 @@ Controller::update ()
           delta /= 5.0f/20.0f;
           min_skip = 0.02; // 0.02
         }
-      
+
       float i = 0.0f;
       while (i < delta)
         {
@@ -152,14 +152,14 @@ Controller::clear_world ()
   std::cout << "Controller: Clear" << std::endl;
   undo_world_stack.push_back(world);
   world = new World ();
-  running = false;                
+  running = false;
 }
 
 void
 Controller::undo ()
 {
 #ifdef DEBUG
-  std::cout << "Controller::undo (): undostack: " << undo_world_stack.size() 
+  std::cout << "Controller::undo (): undostack: " << undo_world_stack.size()
             << " redostack: " << redo_world_stack.size() << std::endl;
 #endif
 

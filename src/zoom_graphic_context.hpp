@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -49,7 +49,7 @@ public:
 
   /** Resets the clipping to the old state */
   void unlock ();
-  
+
   void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
   void draw_rect(float x1, float y1, float x2, float y2, Color color);
@@ -70,33 +70,33 @@ public:
 
   void set_parent_gc (GraphicContext* gc);
 
-  /** 
+  /**
    * Zoom Out the GraphicContext by one 'unit', using the x and y
    * position as center.
-   * 
+   *
    * @param x x in screen coordinates
    * @param y y in screen coordinates
-   * 
+   *
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
    */
   bool zoom_in (int x, int y);
 
-  /** 
+  /**
    * Zoom Into the GraphicContext by one 'unit', using the x and y
    * position as center.
-   * 
+   *
    * @param x x in screen coordinates
    * @param y y in screen coordinates
-   * 
+   *
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
-   */  
+   */
   bool zoom_out (int x, int y);
-  
-  /** 
+
+  /**
    * Zoom into the given area, all coordinates in world units
-   * 
+   *
    * @param x1 left border in world coordinates
    * @param y1 top border in world coordinates
    * @param x2 right border in world coordinates

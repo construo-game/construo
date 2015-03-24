@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -115,7 +115,7 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
     {
       glEnable(GL_LINE_SMOOTH);
     }
-  
+
   //glEnable(GL_SCISSOR_TEST);
   //glScissor(0, 0, settings.screen_width, settings.screen_height);
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
@@ -133,7 +133,7 @@ void
 GlutDisplay::run()
 {
   std::cout << "Starting glut mainloop" << std::endl;
-  glutMainLoop(); 
+  glutMainLoop();
   std::cout << "Ending glut mainloop" << std::endl;
 }
 
@@ -146,22 +146,22 @@ GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
 {
   if (settings.thick_lines)
     glLineWidth (wide);
-  
+
   glBegin (GL_LINES);
   for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
     {
       glVertex2f (i->x1, i->y1);
-      glVertex2f (i->x2, i->y2);     
+      glVertex2f (i->x2, i->y2);
     }
   glEnd ();
 }
 
-void 
+void
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   if (settings.thick_lines)
     glLineWidth (wide);
-  
+
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINES);
   glVertex2f (x1, y1);
@@ -213,7 +213,7 @@ void
 GlutDisplay::draw_circle(float x, float y, float r, Color color)
 {
   glColor4f (color.r, color.g, color.b, color.a);
-  
+
   GLUquadricObj* qobj = gluNewQuadric ();
   gluQuadricDrawStyle(qobj, GLU_SILHOUETTE);
   //gluQuadricNormals (qobj, GLU_FLAT);
@@ -232,7 +232,7 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
   glColor4f (color.r, color.g, color.b, color.a);
   //draw_fill_rect (x - r, y - r, x + r, y + r,
   //              color);
-  
+
   GLUquadricObj* qobj = gluNewQuadric ();
   gluQuadricDrawStyle(qobj, GLU_FILL);
   //gluQuadricNormals (qobj, GLU_FLAT);
@@ -340,7 +340,7 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
 
   Event event;
   event.type = BUTTON_EVENT;
-  
+
   //std::cout << "mouse button press: " << button << " " << button_state <<  " " << x << " " << y << std::endl;
 
   if (button_state == 0)
@@ -560,12 +560,12 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       event.button.id = BUTTON_ZOOM_OUT;
       break;
     default:
-      //std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: " 
+      //std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: "
       //        << x << ", " << y << std::endl;
       return;
     }
 
-  events.push(event); 
+  events.push(event);
 }
 
 void
@@ -579,7 +579,7 @@ GlutDisplay::mouse_motion_func (int x, int y)
 void
 GlutDisplay::leave_fullscreen()
 {
-  std::cout << "GlutDisplay: leaving fullscreen: restoring to: pos: " 
+  std::cout << "GlutDisplay: leaving fullscreen: restoring to: pos: "
             << window_x_pos << ", " << window_y_pos << " - WxH: "
             << window_width << ", " << window_height << std::endl;
 
@@ -606,7 +606,7 @@ GlutDisplay::enter_fullscreen()
   window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
   window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
   window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
-  
+
   std::cout << "Saving window: " << window_x_pos << ", " << window_y_pos << " - WxH: "
             << window_width << ", " << window_height << std::endl;
 

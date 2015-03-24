@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -67,7 +67,7 @@ Vector2d
 ZoomGraphicContext::screen_to_world (const Vector2d& pos)
 {
   return Vector2d ((pos.x / zoom) - x_offset,
-                   (pos.y / zoom) - y_offset);  
+                   (pos.y / zoom) - y_offset);
 }
 
 Vector2d
@@ -96,7 +96,7 @@ ZoomGraphicContext::world_to_screen_x (float x)
 }
 
 float
-ZoomGraphicContext::world_to_screen_y (float y) 
+ZoomGraphicContext::world_to_screen_y (float y)
 {
   return (y + y_offset) * zoom + y1;
 }
@@ -143,7 +143,7 @@ ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
       i->y = world_to_screen_x(i->y);
       i->r = Math::max(2.0f, i->r * zoom);
     }
-  
+
   parent_gc->draw_circles(circles, color);
 }
 
@@ -164,7 +164,7 @@ ZoomGraphicContext::draw_fill_circle(float x, float y, float r, Color color)
                               Math::max(2.0f, r * zoom),
                               color);
 }
-  
+
 void
 ZoomGraphicContext::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
@@ -181,7 +181,7 @@ ZoomGraphicContext::draw_string_centered(float x, float y, const std::string& st
   parent_gc->draw_string_centered(world_to_screen_x(x),
                                   world_to_screen_y(y),
                                   str,
-                                  color);  
+                                  color);
 }
 
 void
@@ -286,7 +286,7 @@ ZoomGraphicContext::set_zoom (const float& z)
 {
   const float max_zoom = 20.0f;
   const float min_zoom = 0.05f;
-  
+
   if (z > max_zoom)
     {
       zoom = max_zoom;
@@ -313,12 +313,12 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
   float width  = x2 - x1;
   float height = y2 - y1;
   float screen_relation = float(get_height())/float(get_width ());
-  float rect_relation   = height/width; 
-  
+  float rect_relation   = height/width;
+
   //std::cout << "Screen: " << screen_relation << " Zoom: " << rect_relation << std::endl;
   if (rect_relation < screen_relation) // take width, ignore height
     {
-      set_zoom(get_width()/width); 
+      set_zoom(get_width()/width);
     }
   else // take height, ignore width
     {

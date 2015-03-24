@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,8 +30,8 @@ public:
   T y1;
   T x2;
   T y2;
-  
-  Rect () 
+
+  Rect ()
   {
   }
 
@@ -39,23 +39,23 @@ public:
         const T& y1_,
         const T& x2_,
         const T& y2_)
-    : x1 (Math::min(x1_, x2_)), 
-      y1 (Math::min(y1_, y2_)), 
-      x2 (Math::max(x1_, x2_)), 
+    : x1 (Math::min(x1_, x2_)),
+      y1 (Math::min(y1_, y2_)),
+      x2 (Math::max(x1_, x2_)),
       y2 (Math::max(y1_, y2_))
   {}
 
-  T get_width () 
+  T get_width ()
   {
     return x2 - x1;
   }
 
-  T get_height () 
+  T get_height ()
   {
     return x2 - x1;
   }
 
-  Vector2d get_center () const 
+  Vector2d get_center () const
   {
     return Vector2d ((x1 + x2)/2.0f,
                      (y1 + y2)/2.0f);

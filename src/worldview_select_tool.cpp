@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -50,7 +50,7 @@ void
 WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());               
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
 
   if (mode == GETTING_SELECTION_MODE)
     {
@@ -65,7 +65,7 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
     {
       Particle& p = **selection.begin();
       Rect<float> selection_box (p.pos.x, p.pos.y, p.pos.x, p.pos.y);
-      
+
       for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
         {
           selection_box.x1 = Math::min(selection_box.x1, (*i)->pos.x);
@@ -76,24 +76,24 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
         }
 
       float border = 20.0f / gc->get_zoom();
-      gc->draw_rect (selection_box.x1 - border, selection_box.y1 - border, 
-                     selection_box.x2 + border, selection_box.y2 + border, 
+      gc->draw_rect (selection_box.x1 - border, selection_box.y1 - border,
+                     selection_box.x2 + border, selection_box.y2 + border,
                      Colors::new_spring);
 
       if (0) // draw selection rect
         {
           float rsize = 5.0f / gc->get_zoom();
-          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize, 
-                              selection_box.x1 - border + rsize, selection_box.y1 - border + rsize, 
+          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
+                              selection_box.x1 - border + rsize, selection_box.y1 - border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize, 
-                              selection_box.x2 + border + rsize, selection_box.y1 - border + rsize, 
+          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize,
+                              selection_box.x2 + border + rsize, selection_box.y1 - border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize, 
-                              selection_box.x1 - border + rsize, selection_box.y2 + border + rsize, 
+          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize,
+                              selection_box.x1 - border + rsize, selection_box.y2 + border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize, 
-                              selection_box.x2 + border + rsize, selection_box.y2 + border + rsize, 
+          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize,
+                              selection_box.x2 + border + rsize, selection_box.y2 + border + rsize,
                               Colors::selection_resizer);
         }
 
@@ -124,13 +124,13 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
       {
         float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
         float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
-  
+
         World& world = *Controller::instance()->get_world ();
 
         WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
         mode = GETTING_SELECTION_MODE;
-  
+
         click_pos.x = x;
         click_pos.y = y;
 
@@ -147,15 +147,15 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
                 break;
               }
           }
-      
-        // If mouse clicks into empty space, we make a new selection 
+
+        // If mouse clicks into empty space, we make a new selection
         if (mode == GETTING_SELECTION_MODE)
           {
             selection.clear ();
           }
       }
       break;
-  
+
     case SCALING_SELECTION_MODE:
       {
         graphic_context->pop_cursor();
@@ -164,9 +164,9 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
         graphic_context->pop_cursor();
         old_scale_factor = 1.0f;
       }
-      
+
     default:
-      // Do nothing, so that we don't mess up other modes 
+      // Do nothing, so that we don't mess up other modes
       break;
     }
 }
@@ -175,11 +175,11 @@ void
 WorldViewSelectTool::on_primary_button_release (int x, int y)
 {
   WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
-  
+
   switch(mode)
     {
     case GETTING_SELECTION_MODE:
-      { 
+      {
         selection.select_particles(click_pos,
                                    WorldViewComponent::instance()->get_gc()->screen_to_world (Vector2d(x,y)));
         mode = IDLE_MODE;
@@ -207,10 +207,10 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
           graphic_context->set_cursor(CURSOR_ROTATE);
 
           mode = ROTATING_SELECTION_MODE;
-          WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());  
+          WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
           click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(screen_x, screen_y));
-      
+
           rotate_center = selection.get_center();
         }
       break;
@@ -299,7 +299,7 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
     case MOVING_SELECTION_MODE:
       {
         Vector2d new_pos(WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x),
-                         WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y));      
+                         WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y));
 
         Vector2d diff = new_pos - click_pos;
 
@@ -313,7 +313,7 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
           {
 
             float grid_size = WorldViewComponent::instance()->get_snap_size();
-      
+
             diff.x = Math::round_to_float(diff.x, grid_size);
             diff.y = Math::round_to_float(diff.y, grid_size);
 	    diff.x -= move_current_particle->pos.x - Math::round_to_float(move_current_particle->pos.x, grid_size);
@@ -329,7 +329,7 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
             // Recalculate all springs that are attached to the
             // selection, but not fully in it.
             std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
-            for (std::vector<Spring*>::iterator j = spring_mgr.begin (); 
+            for (std::vector<Spring*>::iterator j = spring_mgr.begin ();
                  j != spring_mgr.end (); ++j)
               {
                 if ((*j)->particles.first == *i

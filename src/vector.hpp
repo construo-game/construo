@@ -38,7 +38,7 @@ public:
 	float z;
 	//: w coordinate
 	float w;
-      
+
 public:
 	
 //! Construction:
@@ -89,7 +89,7 @@ public:
 //! Operators:
 	//: Scalar product (vector * scalar)
 	//return: The scalar product
-	CL_Vector operator * (float scalar) const;  
+	CL_Vector operator * (float scalar) const;
 
 	//: Scalar product (scalar * vector)
 	//return: The scalar product.
@@ -99,10 +99,10 @@ public:
 	void operator += (const CL_Vector& v);
 
 	//: -= operator.
-	void operator -= (const CL_Vector& v);  
+	void operator -= (const CL_Vector& v);
 
 	//: *= operator (scalar multiplication).
-	void operator *= (float s);  
+	void operator *= (float s);
 
 	//: + operator.
 	CL_Vector operator + (const CL_Vector& v) const;

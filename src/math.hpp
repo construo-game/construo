@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,16 +19,16 @@
 
 /** A collection of small math helper functions, some of them might be
     equal in functionality to standard STL functions, but provided
-    here for portability and broken STL implementations 
-    
+    here for portability and broken STL implementations
+
     @brief A collection of mathematical helper functions */
 namespace Math {
 
 const double pi   = 3.14159265358979323846;	/* pi */
 const double pi_2 = 1.57079632679489661923;	/* pi/2 */
 
-template<class T> 
-T min (const T& a, const T& b) 
+template<class T>
+T min (const T& a, const T& b)
 {
   if (a < b)
     return a;
@@ -36,8 +36,8 @@ T min (const T& a, const T& b)
     return b;
 }
 
-template<class T> 
-T max (const T& a, const T& b) 
+template<class T>
+T max (const T& a, const T& b)
 {
   if (a > b)
     return a;
@@ -45,8 +45,8 @@ T max (const T& a, const T& b)
     return b;
 }
 
-template<class T> 
-T mid (const T& a, const T& b, const T& c) 
+template<class T>
+T mid (const T& a, const T& b, const T& c)
 {
   return max((a), min((b), (c)));
 }

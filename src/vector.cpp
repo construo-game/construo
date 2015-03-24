@@ -58,12 +58,12 @@ void CL_Vector::normalize()
 
 float CL_Vector::dot(const CL_Vector& v) const
 {
-	return x*v.x + y*v.y + z*v.z;  
+	return x*v.x + y*v.y + z*v.z;
 }
 
 float CL_Vector::angle(const CL_Vector& v) const
 {
-  return acos(dot(v)/(norm()*v.norm()));  
+  return acos(dot(v)/(norm()*v.norm()));
 }
 
 CL_Vector CL_Vector::cross(const CL_Vector& v) const
@@ -71,7 +71,7 @@ CL_Vector CL_Vector::cross(const CL_Vector& v) const
 	CL_Vector tmp = CL_Vector(y * v.z - z * v.y,
 				  z * v.x - x * v.z,
 				  x * v.y - y * v.x);
-	return tmp;  
+	return tmp;
 }
 
 // quick hack, same as glRotatef(angle, a);
@@ -85,7 +85,7 @@ CL_Vector CL_Vector::rotate(float angle, const CL_Vector& a) const
 	tmp.x = x*(a.x*a.x*(1-c)+c)     + y*(a.x*a.y*(1-c)-a.z*s) + z*(a.x*a.z*(1-c)+a.y*s);
 	tmp.y = x*(a.y*a.x*(1-c)+a.z*s) + y*(a.y*a.y*(1-c)+c)     + z*(a.y*a.z*(1-c)-a.x*s);
 	tmp.z = x*(a.x*a.z*(1-c)-a.y*s) + y*(a.y*a.z*(1-c)+a.x*s) + z*(a.z*a.z*(1-c)+c);
-	return tmp;  
+	return tmp;
 }
 
 void CL_Vector::round()
@@ -161,14 +161,14 @@ CL_Vector CL_Vector::operator - () const
 }
 
 CL_Vector& CL_Vector::operator = (const CL_Vector& v)
-{ 
+{
 	x = v.x;
 	y = v.y;
 	z = v.z;
 	w = v.w;
 	return *this;
 }
- 
+
 int CL_Vector::operator == (const CL_Vector& v) const
 {
 	return ((x == v.x) && (y == v.y) && (z == v.z) && (w == v.w));

@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -28,8 +28,8 @@ class WorldViewSelectTool : public WorldViewTool
 private:
   Selection selection;
 
-  typedef enum { GETTING_SELECTION_MODE, 
-                 MOVING_SELECTION_MODE, 
+  typedef enum { GETTING_SELECTION_MODE,
+                 MOVING_SELECTION_MODE,
                  ROTATING_SELECTION_MODE,
                  SCALING_SELECTION_MODE,
                  IDLE_MODE } Mode;
@@ -38,7 +38,7 @@ private:
   /** The start position of a click & drap operation (aka move or
       rotate), in world coordinates */
   Vector2d click_pos;
-  
+
   /** The difference the selection was moved on the last mouse move */
   Vector2d move_diff;
 

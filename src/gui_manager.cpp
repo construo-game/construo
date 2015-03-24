@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -47,20 +47,20 @@ GUIManager::GUIManager ()
 GUIManager::~GUIManager ()
 {
 }
-  
+
 void
 GUIManager::run_once ()
-{ 
+{
   frame_count += 1;
 
   if (start_time + 3000 < system_context->get_time ())
     {
       float passed_time = (system_context->get_time () - start_time) / 1000.0f;
-      
+
       //std::cout << "FPS: " << frame_count / passed_time << std::endl;
 
       current_fps = frame_count / passed_time;
-      
+
       frame_count = 0;
       start_time  = system_context->get_time ();
     }
@@ -68,7 +68,7 @@ GUIManager::run_once ()
   process_events ();
 
   update();
-  
+
   graphic_context->clear ();
   draw ();
   draw_overlay ();
@@ -168,11 +168,11 @@ GUIManager::process_button_events (ButtonEvent& button)
         case BUTTON_CLEAR:
           Controller::instance()->clear_world ();
           break;
-                  
+
         case BUTTON_UNDO:
           Controller::instance()->undo ();
           break;
-                  
+
         case BUTTON_REDO:
           Controller::instance()->redo ();
           break;
@@ -278,7 +278,7 @@ GUIManager::process_events ()
 {
   int x = input_context->get_mouse_x();
   int y = input_context->get_mouse_y();
-      
+
   if (grabbing_component && (last_x != x || last_y != y))
     {
       grabbing_component->on_mouse_move (x, y, x - last_x, y - last_y);
@@ -291,7 +291,7 @@ GUIManager::process_events ()
   if (!grabbing_component)
     {
       current_component = find_component_at (x, y);
-      
+
       if (last_component != current_component)
         {
           if (current_component) current_component->on_mouse_enter ();
@@ -327,7 +327,7 @@ GUIManager::process_events ()
               //std::cout << "BUTTON_EVENT: " << event.button.id  << " state: " << event.button.pressed << std::endl;
               process_button_events (event.button);
               break;
-            default: 
+            default:
               std::cout << "GUIManager: Unhandled event type" << std::endl;
               break;
             }

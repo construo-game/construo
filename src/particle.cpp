@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,10 +23,10 @@
 using namespace StringUtils;
 
 Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
-  : id (i), 
+  : id (i),
     pos (arg_pos),
-    velocity (arg_velocity), 
-    mass (m), 
+    velocity (arg_velocity),
+    mass (m),
     fixed (f),
     totale_force (0,0),
     spring_links (0)
@@ -44,7 +44,7 @@ Particle::Particle (const Particle& p)
 {
 }
 
-lisp_object_t* 
+lisp_object_t*
 Particle::serialize()
 {
   LispWriter obj ("particle");

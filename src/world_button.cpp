@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -36,7 +36,7 @@ WorldButton::~WorldButton ()
 void
 WorldButton::load_world ()
 {
-  if ((world == 0 
+  if ((world == 0
        && !file_broken)
       || mtime != system_context->get_mtime(filename))
     {
@@ -58,7 +58,7 @@ WorldButton::draw (GraphicContext* parent_gc)
 {
   load_world();
 
-  parent_gc->draw_fill_rect (x_pos, y_pos, 
+  parent_gc->draw_fill_rect (x_pos, y_pos,
                              x_pos +  width, y_pos + height,
                              Color (0xBB0000FF));
 
@@ -86,11 +86,11 @@ WorldButton::draw (GraphicContext* parent_gc)
   gc.unlock();
 
   if (mouse_over)
-    parent_gc->draw_rect (x_pos, y_pos, 
+    parent_gc->draw_rect (x_pos, y_pos,
                           x_pos +  width, y_pos + height,
                           Color (0xFFFFFFFF));
   else
-    parent_gc->draw_rect (x_pos, y_pos, 
+    parent_gc->draw_rect (x_pos, y_pos,
                           x_pos +  width, y_pos + height,
                           Color (0xFF0000FF));
 

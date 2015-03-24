@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -33,14 +33,14 @@ enum ButtonTypes {
   BUTTON_ZEROVELOCITY,   // set velocity to zero
   BUTTON_SETVELOCITY,   // set the velocity of the selection
   BUTTON_SCALE,     // Scale the currently selected object
-  BUTTON_TOGGLESLOWMO, 
+  BUTTON_TOGGLESLOWMO,
   BUTTON_FULLSCREEN,  // Toggle fullscreen mode
   BUTTON_JOIN,  // Join objects that are close together
   BUTTON_GRID,  // display or hide the grid
   BUTTON_RUN,         // starts or stops the simulation
   BUTTON_MODE_CHANGE, // Switch the input mode (aka what happens when you click with the mouse)
-  BUTTON_ACTIONCAM,  
-  BUTTON_HIDEDOTS,  
+  BUTTON_ACTIONCAM,
+  BUTTON_HIDEDOTS,
 
   BUTTON_ZOOM_OUT,
   BUTTON_ZOOM_IN,

@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -39,7 +39,7 @@ ParticleFactory::ParticleFactory (World* w, lisp_object_t* cursor)
       float mass = 1.0f/10.0f;
       bool fixed = false;
       int id = -1;
-            
+
       obj = lisp_cdr(obj); // skip particle 'marker'
 
       LispReader reader(obj);
@@ -77,10 +77,10 @@ ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr)
 
 ParticleFactory&
 ParticleFactory::operator= (const ParticleFactory& pmgr)
-{  
+{
   ConstruoAssert (0, "Don't use this");
   for (CParticleIter i = pmgr.particles.begin ();
-       i != pmgr.particles.end (); 
+       i != pmgr.particles.end ();
        ++i)
     {
       particles.push_back (new Particle (*(*i)));
@@ -92,7 +92,7 @@ Particle*
 ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
 {
   Particle* p = new Particle(particle_id_count++,
-                             arg_pos, 
+                             arg_pos,
                              arg_velocity, m, f);
   particles.push_back(p);
   return p;
@@ -156,8 +156,8 @@ Particle*
 ParticleFactory::lookup_particle (int id)
 {
   // FIXME: Could need optimization
-  for (ParticleIter i = particles.begin (); 
-       i != particles.end (); 
+  for (ParticleIter i = particles.begin ();
+       i != particles.end ();
        ++i)
     {
       if ((*i)->get_id () == id)

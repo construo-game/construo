@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -35,7 +35,7 @@ public:
   void draw_border_hover(GraphicContext*);
   void draw_border_pressed(GraphicContext*);
   void draw_border_normal(GraphicContext*);
-  
+
   void on_mouse_enter ();
   void on_mouse_leave ();
 
@@ -106,7 +106,7 @@ private:
   Func func;
   HighlightFunc hfunc;
 public:
-  GUIGenericButton (const std::string& title, int x, int y, int width, int height, 
+  GUIGenericButton (const std::string& title, int x, int y, int width, int height,
                     Func f, HighlightFunc h = always_false)
     : GUIButton (title, x, y, width, height),
       func (f),
@@ -114,7 +114,7 @@ public:
   {
   }
 
-  void on_click () 
+  void on_click ()
   {
     func ();
   }

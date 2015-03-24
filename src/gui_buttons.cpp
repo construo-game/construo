@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -118,7 +118,7 @@ GUIButton::draw_border_pressed(GraphicContext* gc)
 
 void
 GUIButton::draw_border_normal(GraphicContext* gc)
-{   
+{
   gc->draw_rect (x_pos, y_pos,
                  x_pos + width, y_pos + height, Colors::button_fg_passive);
 }
@@ -162,7 +162,7 @@ GUIRunButton::on_click()
 GUISlowMoButton::GUISlowMoButton ()
   : GUIButton ("SlowMotion", 10, BUTTON_POS(1), BUTTON_WIDTH, BUTTON_HEIGHT)
 {
-  
+
 }
 
 void
@@ -183,7 +183,7 @@ GUISlowMoButton::draw_content (GraphicContext* gc)
 
 GUIZoomInButton::GUIZoomInButton ()
   : GUIButton ("Zoom In", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT)
-{  
+{
 }
 
 void
@@ -195,13 +195,13 @@ GUIZoomInButton::on_click()
 
 GUIZoomOutButton::GUIZoomOutButton ()
   : GUIButton ("Zoom Out", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT)
-{  
+{
 }
 
 void
 GUIZoomOutButton::on_click()
 {
-  WorldViewComponent::instance()->wheel_down (400,300); 
+  WorldViewComponent::instance()->wheel_down (400,300);
 }
 
 GUIQuitButton::GUIQuitButton ()

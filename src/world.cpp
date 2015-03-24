@@ -5,12 +5,12 @@
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -33,7 +33,7 @@
 #include "rect_collider.hpp"
 #include "string_utils.hpp"
 
-World* World::current_world = 0; 
+World* World::current_world = 0;
 
 World::World ()
   : particle_mgr (new ParticleFactory(this))
@@ -50,7 +50,7 @@ World::World (const std::string& filename)
 
   has_been_run = false;
   lisp_object_t* root_obj = 0;
-  
+
   // Try to read a file and store the content in root_obj
   if (StringUtils::has_suffix(filename, ".construo.gz"))
     {
@@ -93,14 +93,14 @@ World::World (const std::string& filename)
             }
           else // (ret < chunk_size)
             {
-              // everything fine, encountered EOF 
+              // everything fine, encountered EOF
               done = true;
             }
         }
-      
+
       lisp_stream_init_string (&stream, buf);
       root_obj = lisp_read (&stream);
-      
+
       free(buf);
       gzclose(in);
 #else
@@ -119,19 +119,19 @@ World::World (const std::string& filename)
       lisp_stream_init_file (&stream, in);
       root_obj = lisp_read (&stream);
     }
-  
+
   if (root_obj->type == LISP_TYPE_EOF || root_obj->type == LISP_TYPE_PARSE_ERROR)
     {
       std::cout << "World: Parse Error in file " << filename << std::endl;
     }
 
   lisp_object_t* cur = lisp_car(root_obj);
-  
+
   if (!lisp_symbol_p (cur))
     {
       throw ConstruoError ("World: Read error in " + filename);
     }
-  
+
   if (strcmp(lisp_symbol(cur), "construo-scene") == 0)
     {
       parse_scene (lisp_cdr(root_obj));
@@ -140,7 +140,7 @@ World::World (const std::string& filename)
     {
       throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
     }
-  
+
   lisp_free (root_obj);
 
   ConstruoAssert(particle_mgr, "No Particles given in file, load failed");
@@ -154,7 +154,7 @@ World::World (const World& old_world)
 {
   file_version = 0;
 
-  for (Colliders::const_iterator i = old_world.colliders.begin(); 
+  for (Colliders::const_iterator i = old_world.colliders.begin();
        i != old_world.colliders.end();
        ++i)
     {
@@ -163,7 +163,7 @@ World::World (const World& old_world)
 
   // FIXME: Could need optimizations
   particle_mgr = new ParticleFactory (this, *old_world.particle_mgr);
-  
+
   for (CSpringIter i = old_world.springs.begin (); i != old_world.springs.end (); ++i)
     {
       Particle* first  = particle_mgr->lookup_particle((*i)->particles.first->get_id());
@@ -182,7 +182,7 @@ World::World (const World& old_world)
 }
 
 World::~World ()
-{ 
+{
   clear ();
 }
 
@@ -217,7 +217,7 @@ World::parse_scene (lisp_object_t* cursor)
             }
           else
             {
-              std::cout << "World: Read error in parse_scene. Unhandled tag '" 
+              std::cout << "World: Read error in parse_scene. Unhandled tag '"
                         << lisp_symbol(lisp_car(cur)) << "' skipping and continuing" << std::endl;
             }
         }
@@ -233,7 +233,7 @@ World::parse_springs (lisp_object_t* cursor)
       lisp_object_t* cur = lisp_car(cursor);
       springs.push_back(new Spring (this, cur));
       cursor = lisp_cdr (cursor);
-    }  
+    }
 }
 
 void
@@ -274,14 +274,14 @@ World::draw (ZoomGraphicContext* gc)
   draw_particles(gc);
 }
 
-void 
+void
 World::draw_springs(ZoomGraphicContext* gc)
 {
 #ifdef NEW_SPRING_CODE
   std::vector<GraphicContext::Line> lines (springs.size());
 
   Vector2d dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = fabs(dist.norm ()/springs[0]->length - 1.0f) * 10.0f; 
+  float stretch = fabs(dist.norm ()/springs[0]->length - 1.0f) * 10.0f;
   float color = fabs((stretch/springs[0]->max_stretch));
 
   for (unsigned int i = 0; i < springs.size(); ++i)
@@ -301,7 +301,7 @@ World::draw_springs(ZoomGraphicContext* gc)
 #endif
 }
 
-void 
+void
 World::draw_particles(ZoomGraphicContext* gc)
 {
   particle_mgr->draw(gc);
@@ -329,13 +329,13 @@ World::update (float delta)
     {
       // Gravity
       (*i)->add_force (Vector2d (0.0, 15.0f) * (*i)->get_mass ());
-		    
+		
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
         if (direction.norm () != 0.0f)
         (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
       */
-            
+
       /*
         for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
         {
@@ -347,9 +347,9 @@ World::update (float delta)
 
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     (*i)->update (delta);
-  
+
   particle_mgr->update(delta);
-  
+
   //std::cout << "Colliders: " << colliders.size () << std::endl;
   for (Colliders::iterator i = colliders.begin (); i != colliders.end (); ++i)
     (*i)->bounce ();
@@ -415,10 +415,10 @@ World::get_spring (float x, float y)
       // FIXME: optimize me
       float u = (((x0 - x1)*(x2-x1) + (y0 - y1)*(y2 - y1))
                  / ((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
-      
+
       float distance = (fabs((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
                         / sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
-      
+
       if (u >= 0 && u <= 1.0f
           && ((spring && min_distance > distance)
               || (!spring && distance <= capture_threshold))) // FIXME: threashold is dependend on view
@@ -431,7 +431,7 @@ World::get_spring (float x, float y)
   return spring;
 }
 
-Particle* 
+Particle*
 World::get_particle (float x, float y)
 {
   Particle* particle = 0;
@@ -451,7 +451,7 @@ World::get_particle (float x, float y)
   return particle;
 }
 
-std::vector<Particle*> 
+std::vector<Particle*>
 World::get_particles (float x1_, float y1_, float x2_, float y2_)
 {
   float x1 = Math::min(x1_, x2_);
@@ -465,15 +465,15 @@ World::get_particles (float x1_, float y1_, float x2_, float y2_)
       if ((*i)->pos.x >= x1 && (*i)->pos.x < x2
           && (*i)->pos.y >= y1 && (*i)->pos.y < y2)
         caputred_particles.push_back(*i);
-    }  
+    }
   return caputred_particles;
 }
 
-void 
+void
 World::zero_out_velocity ()
 {
   std::cout << "Setting velocity to zero" << std::endl;
-  for (ParticleFactory::ParticleIter i = get_particle_mgr()->begin(); 
+  for (ParticleFactory::ParticleIter i = get_particle_mgr()->begin();
        i != get_particle_mgr()->end (); ++i)
     {
       (*i)->velocity = Vector2d ();
@@ -516,7 +516,7 @@ World::remove_spring (Spring* s)
   //std::cout << "springs:   " << springs.size () << std::endl;
 
   delete s;
-  springs.erase(std::remove(springs.begin (), springs.end (), s), 
+  springs.erase(std::remove(springs.begin (), springs.end (), s),
                 springs.end ());
 }
 
@@ -524,15 +524,15 @@ void
 World::remove_collider (Collider* c)
 {
   delete c;
-  colliders.erase(std::remove(colliders.begin (), colliders.end (), c), 
-                  colliders.end ());  
+  colliders.erase(std::remove(colliders.begin (), colliders.end (), c),
+                  colliders.end ());
 }
 
 void
 World::clear ()
 {
   particle_mgr->clear();
- 
+
   for (SpringIter i = springs.begin (); i != springs.end (); ++i)
     delete *i;
 
@@ -549,7 +549,7 @@ World::write_lisp (const std::string& filename)
   if (!out)
     {
       std::cout << "World: Couldn't open '" << filename << "' for writing" << std::endl;
-      return; 
+      return;
     }
 
   std::cout << "World: Writing to: " << filename << std::endl;
@@ -560,7 +560,7 @@ World::write_lisp (const std::string& filename)
 
   // FIXME: insert creation date here
   // FIXME: Filter '()"' here
-  fprintf(out, "  (author \"%s\" \"%s\")\n", 
+  fprintf(out, "  (author \"%s\" \"%s\")\n",
           system_context->get_user_realname().c_str(),
           system_context->get_user_email().c_str());
 
@@ -613,7 +613,7 @@ World::write_lisp (const std::string& filename)
           throw ConstruoError("World: Internal error, read buffer to small");
         }
       fclose (in);
-      
+
       // Write the buffer in compressed format
       gzFile out = gzopen(system_context->translate_filename(filename).c_str(), "wb");
       gzwrite (out, buf, len);

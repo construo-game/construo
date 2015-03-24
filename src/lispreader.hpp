@@ -100,7 +100,7 @@ struct _lisp_object_t
 
 lisp_stream_t* lisp_stream_init_file (lisp_stream_t *stream, FILE *file);
 lisp_stream_t* lisp_stream_init_string (lisp_stream_t *stream, char *buf);
-lisp_stream_t* lisp_stream_init_any (lisp_stream_t *stream, void *data, 
+lisp_stream_t* lisp_stream_init_any (lisp_stream_t *stream, void *data,
 				     int (*next_char) (void *data),
 				     void (*unget_char) (char c, void *data));
 
