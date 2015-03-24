@@ -179,7 +179,6 @@ set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 if(GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})
 
-  target_compile_definitions(construo.glut PUBLIC -DHAVE_FREEGLUT)
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
   target_link_libraries(construo.glut libconstruo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})

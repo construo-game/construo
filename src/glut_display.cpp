@@ -256,12 +256,8 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 
   for (std::string::const_iterator i = str.begin (); i != str.end (); ++i)
     {
-#ifdef HAVE_FREEGLUT
-      glutBitmapCharacter  (GLUT_BITMAP_8_BY_13, *i);
-#else
       glutStrokeCharacter  (GLUT_STROKE_MONO_ROMAN, *i);
       //glutStrokeWidth (GLUT_STROKE_MONO_ROMAN, *i);
-#endif
     }
   glPopMatrix();
 }
