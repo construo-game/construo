@@ -17,8 +17,6 @@
 #ifndef HEADER_CONSTRUO_CONSTRUO_HPP
 #define HEADER_CONSTRUO_CONSTRUO_HPP
 
-#include <config.h>
-
 #define CONSTRUO_DATADIR DATADIR"/games/"PACKAGE
 
 class SystemContext;

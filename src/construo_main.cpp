@@ -17,7 +17,6 @@
 #include <fstream>
 #include "construo.hpp"
 #include "particle.hpp"
-#include "config.h"
 #include "world.hpp"
 #include "path_manager.hpp"
 #include "construo_error.hpp"

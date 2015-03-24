@@ -17,7 +17,6 @@
 #include <string.h>
 #include <assert.h>
 #include <algorithm>
-#include "config.h"
 
 #ifdef HAVE_LIBZ
 #  include <zlib.h>
