@@ -1,4 +1,4 @@
-# Construo - A wire-frame construction gamee
+# Construo - A wire-frame construction game
 # Copyright (C) 2015 Ingo Ruhnke <grumbel@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
