@@ -36,6 +36,14 @@ if(WARNINGS)
   # -Winline -Wfloat-equal -Wunreachable-code
 endif()
 
+include_directories(SYSTEM external/lispreader-0.5)
+
+file(GLOB LISPREADER_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  external/lispreader-0.5/lispreader.c
+  external/lispreader-0.5/pools.c
+  external/lispreader-0.5/allocator.c)
+add_library(lispreader ${LISPREADER_SOURCES})
+
 set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
   src/bounding_box.hpp
@@ -101,8 +109,6 @@ set(CONSTRUO_SOURCES_CXX
   src/lisp_reader.hpp
   src/lisp_writer.cpp
   src/lisp_writer.hpp
-  src/lispreader.cpp
-  src/lispreader.hpp
   src/load_gui_manager.cpp
   src/load_gui_manager.hpp
   src/math.hpp
@@ -194,7 +200,7 @@ if(GLUT_FOUND AND OPENGL_FOUND)
 
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-  target_link_libraries(construo.glut libconstruo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+  target_link_libraries(construo.glut libconstruo lispreader ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
   install(TARGETS construo.glut RUNTIME DESTINATION ${CONSTRUO_BINDIR})
 endif()
@@ -204,10 +210,10 @@ if(X11_FOUND)
 
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
   target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_INCLUDE_DIR})
-  target_link_libraries(construo.x11 ${X11_LIBRARIES})
+  target_link_libraries(construo.x11 libconstruo lispreader ${X11_LIBRARIES})
 
   if(X11_Xext_FOUND)
-    target_link_libraries(construo.x11 libconstruo ${X11_Xext_LIB})
+    target_link_libraries(construo.x11 ${X11_Xext_LIB})
   endif()
 
   if(X11_xf86vmode_FOUND)

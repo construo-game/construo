@@ -18,8 +18,10 @@
 #define HEADER_CONSTRUO_LISP_WRITER_HPP
 
 #include <vector>
+extern "C" {
+#include <lispreader.h>
+}
 
-#include "lispreader.hpp"
 #include "vector2d.hpp"
 
 /** */

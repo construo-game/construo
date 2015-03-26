@@ -17,7 +17,10 @@
 #ifndef HEADER_LISP_READER_HPP
 #define HEADER_LISP_READER_HPP
 
-#include "lispreader.hpp"
+extern "C" {
+#include <lispreader.h>
+}
+
 #include "vector2d.hpp"
 
 /** */

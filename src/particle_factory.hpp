@@ -19,7 +19,9 @@
 
 #include <vector>
 #include "vector2d.hpp"
-#include "lispreader.hpp"
+extern "C" {
+#include <lispreader.h>
+}
 
 class ZoomGraphicContext;
 class Particle;
