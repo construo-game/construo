@@ -22,8 +22,19 @@ find_package(GLUT)
 find_package(X11)
 find_package(ZLIB)
 
+set(WARNINGS OFF CACHE BOOL "Enable extra compiler warnings")
 set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}" CACHE PATH "Install location for datafiles")
+
+set(CMAKE_CXX_FLAGS "-std=c++11")
+
+if(WARNINGS)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+-pedantic -Wall -Wextra -Wno-c++0x-compat -Wnon-virtual-dtor \
+-Werror -Wcast-qual -Winit-self -Wno-unused-parameter")
+  # -Wconversion -Weffc++ -Wshadow
+  # -Winline -Wfloat-equal -Wunreachable-code
+endif()
 
 set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
