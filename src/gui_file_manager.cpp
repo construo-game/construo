@@ -121,7 +121,7 @@ GUIFileManager::directory_up()
     {
       assert(*(pathname.end()-1) == '/');
 
-      for (std::string::size_type i = pathname.size() - 2; i >= 0; --i)
+      for (int i = static_cast<int>(pathname.size()) - 2; i >= 0; --i)
         {
           if (pathname[i] == '/') // Found second '/'
             {
