@@ -17,11 +17,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(construo VERSION 0.2.4)
 
-include(FindPkgConfig)
-include(FindOpenGL)
-include(FindGLUT)
-include(FindX11)
-include(FindZLIB)
+find_package(OpenGL)
+find_package(GLUT)
+find_package(X11)
+find_package(ZLIB)
 
 set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}" CACHE PATH "Install location for datafiles")
