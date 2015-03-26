@@ -28,6 +28,8 @@ class Collider
 private:
 
 public:
+  virtual ~Collider() {}
+
   virtual Collider* duplicate() const =0;
 
   virtual void draw (GraphicContext*) =0;
