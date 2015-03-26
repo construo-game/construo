@@ -26,12 +26,10 @@ set(WARNINGS OFF CACHE BOOL "Enable extra compiler warnings")
 set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}" CACHE PATH "Install location for datafiles")
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
-
 if(WARNINGS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
--pedantic -Wall -Wextra -Wno-c++0x-compat -Wnon-virtual-dtor \
--Werror -Wcast-qual -Winit-self -Wno-unused-parameter")
+  set(WARNINGS_CXX_FLAGS
+    -pedantic -Wall -Wextra -Wno-c++0x-compat -Wnon-virtual-dtor
+    -Werror -Wcast-qual -Winit-self -Wno-unused-parameter)
   # -Wconversion -Weffc++ -Wshadow
   # -Winline -Wfloat-equal -Wunreachable-code
 endif()
@@ -194,10 +192,11 @@ endif()
 
 add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
+target_compile_options(libconstruo PRIVATE -std=c++11)
 
 if(GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})
-
+  target_compile_options(construo.glut PRIVATE -std=c++11 ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
   target_link_libraries(construo.glut libconstruo lispreader ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
@@ -207,7 +206,7 @@ endif()
 
 if(X11_FOUND)
   add_executable(construo.x11 ${CONSTRUO_X11_SOURCES_CXX})
-
+  target_compile_options(construo.x11 PRIVATE -std=c++11 ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
   target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_INCLUDE_DIR})
   target_link_libraries(construo.x11 libconstruo lispreader ${X11_LIBRARIES})
