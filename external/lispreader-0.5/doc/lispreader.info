@@ -1,0 +1,851 @@
+This is lispreader.info, produced by makeinfo version 4.6 from
+lispreader.texi.
+
+   This file documents the `lispreader' library.
+
+   Copyright (C) 1998-2005, Mark Probst
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+START-INFO-DIR-ENTRY
+* lispreader::                          A library for reading Lisp expressions.
+END-INFO-DIR-ENTRY
+
+
+File: lispreader.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (dir)
+
+* Menu:
+
+* Introduction::
+* Using lispreader::
+* Syntax::
+* Pools::
+* Allocators::
+* Reference::
+* Example::
+* Function Index::
+
+
+File: lispreader.info,  Node: Introduction,  Next: Using lispreader,  Prev: Top,  Up: Top
+
+Introduction
+************
+
+* Menu:
+
+* What lispreader is::
+* What lispreader is not::
+* Licence::
+* Obtaining lispreader::
+
+
+File: lispreader.info,  Node: What lispreader is,  Next: What lispreader is not,  Prev: Introduction,  Up: Introduction
+
+What is `lispreader'?
+=====================
+
+`lispreader' is a small library for reading expressions in Lisp syntax.
+It has originally been written to facilitate simple exchange of
+structured data between processes but its main purpose is now to provide
+a framework for reading configuration files. To simplify interpretation
+of the data read, `lispreader' also provides functions for simple
+matching of expressions against patterns.
+
+   `lispreader' is also used in several application to read and write
+data files. Lisp syntax is very suitable for doing this, especially if
+the data is organized hierachically.
+
+
+File: lispreader.info,  Node: What lispreader is not,  Next: Licence,  Prev: What lispreader is,  Up: Introduction
+
+What is `lispreader' not?
+=========================
+
+`lispreader' is not a Lisp system in that it cannot, by itself,
+interpret Lisp expressions. It only provides a subset of the features of
+libraries like Guile of librep (namely the reading of expressions) and
+does thus not compete directly with those. If all you need is a simple
+way to read Lisp expressions without interpreting them with Lisp
+semantics, you will probably be satisfied with `lispreader'.
+
+
+File: lispreader.info,  Node: Licence,  Next: Obtaining lispreader,  Prev: What lispreader is not,  Up: Introduction
+
+Licence and Warranty
+====================
+
+`lispreader' is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+
+   `lispreader' is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+along with `chpp'; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+
+File: lispreader.info,  Node: Obtaining lispreader,  Prev: Licence,  Up: Introduction
+
+Obtaining `lispreader'
+======================
+
+`lispreader' is available for free download on the world-wide-web at
+the URL <http://www.complang.tuwien.ac.at/schani/lispreader/>.
+
+
+File: lispreader.info,  Node: Using lispreader,  Next: Syntax,  Prev: Introduction,  Up: Top
+
+Using `lispreader' in your programs
+***********************************
+
+`lispreader' consists of only a few C files, namely `lispreader.c',
+`lispreader.h', `lispscan.h', `allocator.c', `allocator.h', `pools.c',
+and `pools.h'.  To incorporate `lispreader' in your own programs, just
+add these files to your own program's files.
+
+
+File: lispreader.info,  Node: Syntax,  Next: Pools,  Prev: Using lispreader,  Up: Top
+
+Syntax
+******
+
+`lispreader' can read lists consisting of other lists, symbols,
+strings, integers, real numbers and booleans. It also provides a syntax
+for specifying patterns.
+
+* Menu:
+
+* Comments::
+* Lists::
+* Symbols::
+* Integers::
+* Reals::
+* Strings::
+* Booleans::
+* Patterns::
+
+
+File: lispreader.info,  Node: Comments,  Next: Lists,  Prev: Syntax,  Up: Syntax
+
+Comments
+========
+
+Comments are started by the semicolon (`;') and reach until the end of
+the line:
+
+     ; this line is completely ignored
+
+
+File: lispreader.info,  Node: Lists,  Next: Symbols,  Prev: Comments,  Up: Syntax
+
+Lists
+=====
+
+Lists consist of so-called cons-pairs, or conses. A cons is constituted
+by its car and cdr. A list is defined as either being the empty list,
+which is no cons at all, or as being a cons, the cdr of which is a
+list. The cars of these conses are the actual elements of the list.
+
+   An example: The list `(a b c)' consists of three conses, the cars of
+which are the symbols `a', `b' and `c'. The structure can be depicted
+using a box diagram:
+
+      _ _     _ _     _ _
+     |_|_|-->|_|_|-->|_|_|-->nil
+      |       |       |
+      v       v       v
+      a       b       c
+
+   Each box denotes a cons, with the left half being its car and the
+right half being its cdr. `nil' denotes the empty list.
+
+   It is also possible to explicitly set the cdr of the last cons using
+the dot-notation: `(a b . c)' can be illustrated thus:
+
+      _ _     _ _
+     |_|_|-->|_|_|-->c
+      |       |
+      v       v
+      a       b
+
+   Note that this is technically not a list. Since the empty list can be
+written as `()', the list `(a b c)' can be written using the
+dot-notation as `(a . (b . (c . ())))'.
+
+
+File: lispreader.info,  Node: Symbols,  Next: Integers,  Prev: Lists,  Up: Syntax
+
+Symbols
+=======
+
+Symbols are pretty much everything that cannot be interpreted as
+anything else. They can have arbitrary length.
+
+
+File: lispreader.info,  Node: Integers,  Next: Reals,  Prev: Symbols,  Up: Syntax
+
+Integers
+========
+
+As integers are internally represented by `int' values, their range is
+restricted to the range of the `int' data type. Bignums are not
+supported.
+
+
+File: lispreader.info,  Node: Reals,  Next: Strings,  Prev: Integers,  Up: Syntax
+
+Reals
+=====
+
+Reals are internally represented by values of the `float' datatype.
+`lispreader' cannot yet interpret exponential notation or reals without
+digits before the dot.
+
+
+File: lispreader.info,  Node: Strings,  Next: Booleans,  Prev: Reals,  Up: Syntax
+
+Strings
+=======
+
+Strings are delimited on both sides by double quotes (`"'). The
+backslash (`\') is used as escape character. The sequence `\n' is
+interpreted as newline, `\t' as tab. All other escape sequences
+evaluate to the char after the backslash, e.g. `\\' denotes the
+backslash itself and `\"' denotes the double quote.
+
+
+File: lispreader.info,  Node: Booleans,  Next: Patterns,  Prev: Strings,  Up: Syntax
+
+Booleans
+========
+
+The boolean values true and false are represented by `#t' and `#f',
+respectively.
+
+
+File: lispreader.info,  Node: Patterns,  Prev: Booleans,  Up: Syntax
+
+Patterns
+========
+
+Patterns are used to represent classes of expressions. They contain no
+other value than the types of expressions they match against.
+
+   Patterns are written using a special list syntax where the opening
+parenthesis is replaced by `#?('. There are patterns for matching all
+types of simple expressions:
+
+`#?(symbol)'
+     Any symbol.
+
+`#?(string)'
+     Any string.
+
+`#?(integer)'
+     Any integer.
+
+`#?(real)'
+     Any real.
+
+`#?(boolean)'
+     `#t' of `#f'.
+
+   Two other patterns have a wider scope:
+
+`#?(list)'
+     Any list.
+
+`#?(number)'
+     Any number, i.e., any integer or real.
+
+`#?(any)'
+     Any expression (including lists).
+
+   It is also possible to construct a pattern matching at least one out
+of a given set of expressions, which themselves can contain patterns,
+using the `or' pattern. For example, the pattern `#?(or (a . #?(list))
+(b #?(integer)))' matches the list `(a #t 43)' as well as the list `(b
+1)', but not the list `(b #f)'. As another example, `#?(boolean)' is
+equivalent to `#?(or #t #f)'.
+
+
+File: lispreader.info,  Node: Pools,  Next: Allocators,  Prev: Syntax,  Up: Top
+
+Pools
+*****
+
+* Menu:
+
+* Pools Introduction::
+* Pools Reference::
+
+
+File: lispreader.info,  Node: Pools Introduction,  Next: Pools Reference,  Prev: Pools,  Up: Pools
+
+Introduction
+============
+
+Most applications of `lispreader' use it to quickly read bits of data
+from a file, process it, and then read the next bit, until the end of
+the file.  If the file is big, it is an advantage if reading is fast.
+Part of the reading process is allocating memory for the data read, so
+fast memory allocation results in better reading performance.
+
+   `lispreader' comes with a memory allocator optimized for this
+application pattern, called the "pools" allocator.  It is very fast,
+can allocate lots of small chunks of memory with virtually no overhead
+apart from the alignment padding, and can free all allocated memory at
+once.  The downside is that freeing all allocated memory is the only
+way of freeing.
+
+   Using pools is not mandatory for using `lispreader', but it
+increases performance significantly (by about a factor of 2) compared
+to the standard malloc allocator.  If you never read files larger than
+a few tens of kilobytes, you will probably never notice, though.
+
+
+File: lispreader.info,  Node: Pools Reference,  Prev: Pools Introduction,  Up: Pools
+
+Reference
+=========
+
+ - Function: int init_pools (pools_t* POOLS)
+     Initializes the pools data structure pointed to by POOLS.  After
+     calling this function, the pools can be used to allocate memory via
+     `pools_alloc'.  Returns non-zero upon success, zero upon failure.
+
+ - Function: void reset_pools (pools_t* POOLS)
+     Resets the pools pointed to by POOLS.  This does not actually free
+     the memory allocated from this pools, but reuses it for further
+     allocations, i.e., the data previously allocated from it will be
+     overwritten.
+
+ - Function: void free_pools (pools_t* POOLS)
+     Frees all the memory allocated by POOLS.
+
+ - Function: void* pools_alloc (pools_t* POOLS, size_t SIZE)
+     Allocates a region of memory SIZE bytes long from the pools
+     pointed to by POOLS.  Returns a null pointer if the allocation
+     failed.
+
+
+File: lispreader.info,  Node: Allocators,  Next: Reference,  Prev: Pools,  Up: Top
+
+Allocators
+**********
+
+* Menu:
+
+* Allocators Introduction::
+* Allocators Reference::
+
+
+File: lispreader.info,  Node: Allocators Introduction,  Next: Allocators Reference,  Prev: Allocators,  Up: Allocators
+
+Introduction
+============
+
+The `allocator_t' data structure is `lispreader''s interface to your
+memory allocator of choice:
+
+     typedef struct
+     {
+         void* (*alloc) (void *allocator_data, size_t size);
+         void (*free) (void *allocator_data, void *chunk);
+         void *allocator_data;
+     } allocator_t;
+
+   An allocator must provide two functions:
+
+   * ALLOC allocates an aligned chunk of memory at least SIZE bytes
+     long.
+
+   * FREE frees the memory pointed to by CHUNK.
+
+   Both functions are always passed the value of ALLOCATOR_DATA as
+their first argument.
+
+   All `lispreader' functions which allocate or free (non-temporary)
+memory come in two versions: The "normal" version uses the standard
+`malloc'/`free' memory allocation mechanism.  The `*_with_allocator'
+version takes a pointer to an `allocator_t' as its first argument and
+allocates and frees memory via that allocator.
+
+
+File: lispreader.info,  Node: Allocators Reference,  Prev: Allocators Introduction,  Up: Allocators
+
+Reference
+=========
+
+ - Global Variable: allocator_t malloc_allocator
+     This is an allocator which uses the standard `malloc' and `free'
+     memory allocation functions.
+
+ - Function: void init_pools_allocator (allocator_t* ALLOCATOR,
+          pools_t* POOLS)
+     Initializes the data structure pointed to by ALLOCATOR to use the
+     pools allocator pointed to by POOLS.  Note that the FREE function
+     for the pools allocator does not free memory, so you'll have to
+     free the pools yourself.
+
+
+File: lispreader.info,  Node: Reference,  Next: Example,  Prev: Allocators,  Up: Top
+
+`lispreader' Reference
+**********************
+
+* Menu:
+
+* Reading::
+* Writing::
+* Examining::
+* Creating::
+* Matching::
+* Freeing::
+
+
+File: lispreader.info,  Node: Reading,  Next: Writing,  Prev: Reference,  Up: Reference
+
+Reading expressions
+===================
+
+ - Function: lisp_stream_t* lisp_stream_init_path (lisp_stream_t*
+          STREAM, const char* PATH)
+     Initializes STREAM to be a file stream reading from the file with
+     path PATH.  Returns a null pointer if the file cannot be opened.
+     The caller is supposed to use the function `lisp_stream_free_path'
+     to close the file.
+
+     This function should be preferred over `lisp_stream_init_file'
+     because it uses memory mapping if possible, resulting in better
+     parsing performance.
+
+ - Function: void lisp_stream_free_path (lisp_stream_t* STREAM)
+     Closes the file associated with the file stream STREAM.
+
+ - Function: lisp_stream_t* lisp_stream_init_file (lisp_stream_t*
+          STREAM, FILE* FILE)
+     Initializes STREAM to be a file stream reading from FILE. The
+     caller is still responsible to close FILE when it is not needed
+     any more.
+
+ - Function: lisp_stream_t* lisp_stream_init_string (lisp_stream_t*
+          STREAM, char* BUF)
+     Initializes STREAM to be a string stream reading from BUF. BUF is
+     not copied by this function, hence the effects of reading from the
+     stream after modifying BUF are undefined.
+
+ - Function: lisp_stream_t* lisp_stream_init_any (lisp_stream_t*
+          STREAM, void* DATA, int (*NEXT_CHAR) (void *data), void
+          (*UNGET_CHAR) (char c, void *data))
+     Initializes STREAM to be a user-defined stream. The function
+     NEXT_CHAR is used to read individual characters from the stream.
+     It must return `EOF' upon end-of-file and on all invocations
+     succeeding the invocation that first returned `EOF'. UNGET_CHAR is
+     called to push back a character for reading it again. The
+     character pushed back is always the character returned by the last
+     call to NEXT_CHAR. The next call to NEXT_CHAR must return that
+     character. UNGET_CHAR is never called twice without at least a
+     call to NEXT_CHAR in between. DATA is always passed to NEXT_CHAR
+     and UNGET_CHAR. No other action whatsoever is performed on DATA,
+     i.e. should it point to a dynamically allocated memory region, the
+     application is responsible for freeing it after the stream has been
+     closed.
+
+ - Function: lisp_object_t* lisp_read (lisp_stream_t* IN)
+ - Function: lisp_object_t* lisp_read_with_allocator (allocator_t*
+          ALLOCATOR, lisp_stream_t* IN)
+     Reads a Lisp expression from the stream IN and returns it. The
+     caller is responsible for deallocating its memory using
+     `lisp_free'/`lisp_free_with_allocator'.
+
+ - Function: lisp_object_t* lisp_read_from_string (char* BUF)
+ - Function: lisp_object_t* lisp_read_from_string_with_allocator
+          (allocator_t* ALLOCATOR, const char* BUF)
+     Reads a Lisp expression from the string BUF and returns it. The
+     caller is responsible for deallocating its memory using
+     `lisp_free'/`lisp_free_with_allocator'. Although BUF may contain
+     more than one expression, only the first is read. If you need to
+     read more than one expression from a string, use
+     `lisp_read'/`lisp_read_with_allocator' on a string stream created
+     by `lisp_stream_init_string'.
+
+
+File: lispreader.info,  Node: Writing,  Next: Examining,  Prev: Reading,  Up: Reference
+
+Writing expressions
+===================
+
+ - Function: int lisp_dump (lisp_object_t* OBJ, FILE* OUT)
+     Writes the external representation of OBJ, which can be read again
+     by `lisp_read', to OUT.
+
+
+File: lispreader.info,  Node: Examining,  Next: Creating,  Prev: Writing,  Up: Reference
+
+Examining expressions
+=====================
+
+ - Function: int lisp_type (lisp_object_t* OBJ)
+     Returns the type of the lisp object `obj'.
+
+   The returned type can be one of
+
+`LISP_TYPE_NIL'
+     The empty list.
+
+`LISP_TYPE_SYMBOL'
+     A symbol.
+
+`LISP_TYPE_INTEGER'
+     An integer.
+
+`LISP_TYPE_REAL'
+     A real.
+
+`LISP_TYPE_STRING'
+     A string.
+
+`LISP_TYPE_CONS'
+     A cons-pair.
+
+`LISP_TYPE_BOOLEAN'
+     A boolean.
+
+`LISP_TYPE_PATTERN_CONS'
+     A cons-pair of a pattern. The interpretation of these should be
+     left to the function `lisp_compile_pattern'.
+
+`LISP_TYPE_EOF'
+     Indicates that end-of-file occured during reading the expression.
+
+`LISP_TYPE_PARSE_ERROR'
+     Indicates a malformed expression.
+
+ - Function: int lisp_nil_p (lisp_object_t* OBJ)
+     If OBJ is the empty list, returns a non-zero value, otherwise zero.
+
+ - Function: int lisp_integer_p (lisp_object_t* OBJ)
+     If OBJ is an integer object, returns a non-zero value, otherwise
+     zero.
+
+ - Function: int lisp_integer (lisp_object_t* OBJ)
+     Returns the integer value for OBJ. This function must not be
+     called when the type of OBJ is not `LISP_TYPE_INTEGER'.
+
+ - Function: int lisp_real_p (lisp_object_t* OBJ)
+     If OBJ is a real object, returns a non-zero value, otherwise zero.
+
+ - Function: float lisp_real (lisp_object_t* OBJ)
+     Returns the real value for OBJ. This function must not be called
+     when the type of OBJ is not either `LISP_TYPE_REAL' or
+     `LISP_TYPE_INTEGER'.
+
+ - Function: int lisp_symbol_p (lisp_object_t* OBJ)
+     If OBJ is a symbol, returns a non-zero value, otherwise zero.
+
+ - Function: char* lisp_symbol (lisp_object_t* OBJ)
+     Returns the string for the symbol stored in OBJ. This function
+     must not be called when the type of OBJ is not `LISP_TYPE_SYMBOL'.
+
+ - Function: int lisp_string_p (lisp_object_t* OBJ)
+     If OBJ is a string object, returns a non-zero value, otherwise
+     zero.
+
+ - Function: char* lisp_string (lisp_object_t* OBJ)
+     Returns the string value for OBJ. This function must not be called
+     when the type of OBJ is not `LISP_TYPE_STRING'.
+
+ - Function: int lisp_boolean_p (lisp_object_t* OBJ)
+     If OBJ is a boolean object, returns a non-zero value, otherwise
+     zero.
+
+ - Function: int lisp_boolean (lisp_object_t* OBJ)
+     Returns the boolean value for OBJ. If OBJ represents false, the
+     result is `0', otherwise some integer not equal to `0'. This
+     function must not be called when the type of OBJ is not
+     `LISP_TYPE_BOOLEAN'.
+
+ - Function: int lisp_cons_p (lisp_object_t* OBJ)
+     If OBJ is a cons, returns a non-zero value, otherwise zero.
+
+ - Function: lisp_object_t* lisp_car (lisp_object_t* OBJ)
+     Returns the car of the cons stored in OBJ. This function must not
+     be called when type type of OBJ is not `LISP_TYPE_CONS'.
+
+ - Function: lisp_object_t* lisp_cdr (lisp_object_t* OBJ)
+     Returns the cdr of the cons stored in OBJ. This function must not
+     be called when type type of OBJ is not `LISP_TYPE_CONS'.
+
+ - Function: lisp_object_t* lisp_cxr (lisp_object_t* OBJ, const char* X)
+     X must be a string consisting of the chars `a' and D. Returns the
+     object resulting from applying `lisp_car' and `lisp_cdr' according
+     to X with `a' corresponding to the former and `d' to the latter
+     starting with OBJ in reverse order. As an example,
+     `lisp_cxr(o,"ad")' is equivalent to `lisp_car(lisp_cdr(o))'.
+
+ - Function: int lisp_list_length (lisp_object_t* OBJ)
+     Returns the length of the list stored in OBJ. A list is defined as
+     the empty list, which is represented by a null pointer, or a cons,
+     the cdr of which is a list.
+
+ - Function: lisp_object_t* lisp_list_nth_cdr (lisp_object_t* OBJ, int
+          N)
+     Returns the result of iterating `lisp_cdr' N times on OBJ.
+
+ - Function: lisp_object_t* lisp_list_nth (lisp_object_t* OBJ, int N)
+     Returns the car of the result of applying `lisp_list_nth_cdr' on
+     OBJ with N.
+
+
+File: lispreader.info,  Node: Creating,  Next: Matching,  Prev: Examining,  Up: Reference
+
+Creating expressions
+====================
+
+ - Function: lisp_object_t* lisp_nil ()
+     Returns the empty list.
+
+ - Function: lisp_object_t* lisp_make_integer (int VALUE)
+ - Function: lisp_object_t* lisp_make_integer_with_allocator
+          (allocator_t* ALLOCATOR, int VALUE)
+     Returns an integer object with the value VALUE.
+
+ - Function: lisp_object_t* lisp_make_real (float VALUE)
+ - Function: lisp_object_t* lisp_make_real_with_allocator (allocator_t*
+          ALLOCATOR, float VALUE)
+     Returns a real object with the value VALUE.
+
+ - Function: lisp_object_t* lisp_make_symbol (const char* VALUE)
+ - Function: lisp_object_t* lisp_make_symbol_with_allocator
+          (allocator_t* ALLOCATOR, const char* VALUE)
+     Returns a symbol object with the name VALUE.
+
+ - Function: lisp_object_t* lisp_make_string (const char* VALUE)
+ - Function: lisp_object_t* lisp_make_string_with_allocator
+          (allocator_t* ALLOCATOR, const char* VALUE)
+     Returns a string object with the value VALUE.
+
+ - Function: lisp_object_t* lisp_make_cons (lisp_object_t* CAR,
+          lisp_object_t* CDR)
+ - Function: lisp_object_t* lisp_make_cons_with_allocator (allocator_t*
+          ALLOCATOR, lisp_object_t* CAR, lisp_object_t* CDR)
+     Returns a cons object with car CAR and cdr CDR.
+
+ - Function: lisp_object_t* lisp_make_boolean (int VALUE)
+ - Function: lisp_object_t* lisp_make_boolean_with_allocator
+          (allocator_t* ALLOCATOR, int VALUE)
+     Returns a boolean. Its value is false if VALUE is `0', true
+     otherwise.
+
+
+File: lispreader.info,  Node: Matching,  Next: Freeing,  Prev: Creating,  Up: Reference
+
+Matching expressions against patterns
+=====================================
+
+ - Function: int lisp_compile_pattern (lisp_object_t** OBJ, int*
+          NUM_SUBS)
+     Prepares the expression `*'OBJ for use as a pattern in the
+     `lisp_match_pattern' function. The expression is modified in the
+     process. If NUM_SUBS is non-null, the number of pattern
+     expressions (including all sub-expressions) will be written to
+     `*'NUM_SUBS.
+
+     Returns `0' if an error occurred, non-zero on success. Note that
+     the expression could have been modified even if the function
+     returned `0'.
+
+ - Function: int lisp_match_pattern (lisp_object_t* PATTERN,
+          lisp_object_t* OBJ, lisp_object_t** VARS, int NUM_SUBS)
+     Matches the pattern PATTERN (which must have previously been
+     compiled using `lisp_compile_pattern') against OBJ, storing the
+     resulting subexpressions in VARS, if it is non-null. NUM_SUBS
+     should be the number of sub-patterns in PATTERN, if VARS is
+     non-null. Otherwise, it is ignored.
+
+     Patterns are counted by their special opening parenthesis (`#?(')
+     from left to right, beginning with 0. For example, in the pattern
+     expression `(a #?(or #?(integer) #?(string)) #?(symbol))', the
+     `or'-pattern has index 0, the `integer' index 1, the `string'
+     index 2 and the `symbol' index 3. This means than upon matching
+     this pattern against `(a 1 b)', the integer `1' is stored in
+     VARS`[0]' and VARS`[1]' and the symbol `b' is stored in VARS`[3]'.
+     The values for unmatched parts, like VARS`[2]', are set to an
+     expression of type `LISP_TYPE_PARSE_ERROR'.
+
+     Returns `0' if the match was unsuccessful, non-zero on success.
+
+ - Function: int lisp_match_string (char* PATTERN_STRING,
+          lisp_object_t* OBJ, lisp_object_t** VARS)
+     Reads an expression from PATTERN_STRING, compiles it using
+     `lisp_compile_pattern' and matches OBJ against it using
+     `lisp_match_pattern', storing the resulting subexpressions in
+     VARS, if it is non-zero.
+
+     Returns non-zero if reading and matching were successful, `0'
+     otherwise.
+
+
+File: lispreader.info,  Node: Freeing,  Prev: Matching,  Up: Reference
+
+Freeing expressions
+===================
+
+ - Function: void lisp_free (lisp_object_t* OBJ)
+ - Function: void lisp_free_with_allocator (allocator_t* ALLOCATOR,
+          lisp_object_t* OBJ)
+     Frees all memory occupied by OBJ, including all its subexpressions.
+
+
+File: lispreader.info,  Node: Example,  Next: Function Index,  Prev: Reference,  Up: Top
+
+An Example
+**********
+
+The following program reads expressions from standard input, prints the
+string `parse error' when a parse error occurs, exits on end-of-file
+and, if an entered expression is of the form `(+ 'NUMBER1` 'NUMBER2`)',
+prints the sum of NUMBER1 and NUMBER2.
+
+     #include <lispreader.h>
+     
+     int
+     main (void)
+     {
+         lisp_object_t *obj;
+         lisp_stream_t stream;
+     
+         lisp_stream_init_file(&stream, stdin);
+     
+         while (1)
+         {
+             int type;
+     
+             obj = lisp_read(&stream);
+             type = lisp_type(obj);
+             if (type != LISP_TYPE_EOF && type != LISP_TYPE_PARSE_ERROR)
+             {
+                 lisp_object_t *vars[2];
+     
+                 if (lisp_match_string("(+ #?(number) #?(number))",
+                                       obj, vars))
+                     printf("%f\n", lisp_real(vars[0])
+                                    + lisp_real(vars[1]));
+     
+             }
+             else if (type == LISP_TYPE_PARSE_ERROR)
+                 printf("parse error\n");
+             lisp_free(obj);
+     
+             if (type == LISP_TYPE_EOF)
+                 break;
+         }
+     
+         return 0;
+     }
+
+
+File: lispreader.info,  Node: Function Index,  Prev: Example,  Up: Top
+
+Function Index
+**************
+
+* Menu:
+
+* free_pools:                            Pools Reference.
+* init_pools:                            Pools Reference.
+* init_pools_allocator:                  Allocators Reference.
+* lisp_boolean:                          Examining.
+* lisp_boolean_p:                        Examining.
+* lisp_car:                              Examining.
+* lisp_cdr:                              Examining.
+* lisp_compile_pattern:                  Matching.
+* lisp_cons_p:                           Examining.
+* lisp_cxr:                              Examining.
+* lisp_dump:                             Writing.
+* lisp_free:                             Freeing.
+* lisp_free_with_allocator:              Freeing.
+* lisp_integer:                          Examining.
+* lisp_integer_p:                        Examining.
+* lisp_list_length:                      Examining.
+* lisp_list_nth:                         Examining.
+* lisp_list_nth_cdr:                     Examining.
+* lisp_make_boolean:                     Creating.
+* lisp_make_boolean_with_allocator:      Creating.
+* lisp_make_cons:                        Creating.
+* lisp_make_cons_with_allocator:         Creating.
+* lisp_make_integer:                     Creating.
+* lisp_make_integer_with_allocator:      Creating.
+* lisp_make_real:                        Creating.
+* lisp_make_real_with_allocator:         Creating.
+* lisp_make_string:                      Creating.
+* lisp_make_string_with_allocator:       Creating.
+* lisp_make_symbol:                      Creating.
+* lisp_make_symbol_with_allocator:       Creating.
+* lisp_match_pattern:                    Matching.
+* lisp_match_string:                     Matching.
+* lisp_nil:                              Creating.
+* lisp_nil_p:                            Examining.
+* lisp_read:                             Reading.
+* lisp_read_from_string:                 Reading.
+* lisp_read_from_string_with_allocator:  Reading.
+* lisp_read_with_allocator:              Reading.
+* lisp_real:                             Examining.
+* lisp_real_p:                           Examining.
+* lisp_stream_free_path:                 Reading.
+* lisp_stream_init_any:                  Reading.
+* lisp_stream_init_file:                 Reading.
+* lisp_stream_init_path:                 Reading.
+* lisp_stream_init_string:               Reading.
+* lisp_string:                           Examining.
+* lisp_string_p:                         Examining.
+* lisp_symbol:                           Examining.
+* lisp_symbol_p:                         Examining.
+* lisp_type:                             Examining.
+* pools_alloc:                           Pools Reference.
+* reset_pools:                           Pools Reference.
+
+
+
+Tag Table:
+Node: Top459
+Node: Introduction672
+Node: What lispreader is889
+Node: What lispreader is not1626
+Node: Licence2203
+Node: Obtaining lispreader3045
+Node: Using lispreader3314
+Node: Syntax3739
+Node: Comments4111
+Node: Lists4336
+Node: Symbols5527
+Node: Integers5742
+Node: Reals5993
+Node: Strings6255
+Node: Booleans6668
+Node: Patterns6858
+Node: Pools7971
+Node: Pools Introduction8120
+Node: Pools Reference9225
+Node: Allocators10172
+Node: Allocators Introduction10344
+Node: Allocators Reference11378
+Node: Reference11988
+Node: Reading12209
+Node: Writing15478
+Node: Examining15771
+Node: Creating19834
+Node: Matching21461
+Node: Freeing23676
+Node: Example24012
+Node: Function Index25329
+
+End Tag Table
