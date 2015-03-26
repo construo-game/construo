@@ -177,7 +177,7 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
   WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
 
   switch(mode)
-    {
+  {
     case GETTING_SELECTION_MODE:
       {
         selection.select_particles(click_pos,
@@ -191,6 +191,15 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
         mode = IDLE_MODE;
       }
       break;
+
+    case SCALING_SELECTION_MODE:
+      break;
+
+    case ROTATING_SELECTION_MODE:
+        break;
+
+    case IDLE_MODE:
+        break;
     }
 }
 

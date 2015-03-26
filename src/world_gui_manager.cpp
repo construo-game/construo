@@ -272,7 +272,7 @@ WorldGUIManager::draw_overlay ()
   graphic_context->draw_string (410, bottom_line, "Zoom: ");
   graphic_context->draw_string (480, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
 
-  graphic_context->draw_string (610, bottom_line, "..:: Construo V"VERSION" ::..");
+  graphic_context->draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
   //graphic_context->draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
 }
 

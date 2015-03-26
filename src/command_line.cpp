@@ -117,7 +117,7 @@ CommandLine::parse (int argc, char** argv)
 void
 CommandLine::print_help ()
 {
-  std::cout << "Construo "VERSION"\n\n"
+  std::cout << "Construo " VERSION "\n\n"
             << "Usage: construo [OPTIONS] [FILENAME]\n\n"
             << "  -h, --help                  display this help text\n"
             << "  -v,--version                Print version number of the programm\n"
@@ -134,7 +134,7 @@ CommandLine::print_help ()
 void
 CommandLine::print_version ()
 {
-  std::cout << "Construo "VERSION"\n"
+  std::cout << "Construo " VERSION "\n"
             << "Written by Ingo Ruhnke <grumbel@gmail.com>\n\n"
             << "Copyright (C) 2002 Ingo Ruhnke <grumbel@gmail.com>\n"
             << "This is free software; see the source for copying conditions.  There is NO\n"

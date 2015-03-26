@@ -39,6 +39,9 @@ public:
     float x, y, r;
   };
 
+public:
+  virtual ~GraphicContext() {}
+
   void draw_circle(const Vector2d& pos, float radius, Color color)
   {
     draw_circle (pos.x, pos.y, radius, color);

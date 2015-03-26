@@ -27,7 +27,10 @@ private:
   std::string construo_dir;
 
 public:
-  Config () {
+  Config () :
+    home_dir(),
+    construo_dir()
+  {
     char* home = getenv ("HOME");
     if (home) {
       home_dir = home;

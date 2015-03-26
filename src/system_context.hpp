@@ -35,6 +35,8 @@ class SystemContext
 {
 private:
 public:
+  virtual ~SystemContext() {}
+
   virtual unsigned int get_time () =0;
 
   /** sleep for the given number of milisec */

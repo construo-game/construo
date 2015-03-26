@@ -29,7 +29,7 @@ class InputContext
 protected:
   std::queue<Event> events;
 public:
-  InputContext () {}
+  InputContext () : events() {}
   virtual ~InputContext () {}
 
   // Polling functions
