@@ -640,12 +640,12 @@ X11Display::flip (int x1, int y1, int x2, int y2)
 {
   if (doublebuffer)
     {
-      FlipRect flip_rect;
+      // FlipRect flip_rect;
 
-      flip_rect.x1 = x1;
-      flip_rect.y1 = y1;
-      flip_rect.x2 = x2;
-      flip_rect.y2 = y2;
+      // flip_rect.x1 = x1;
+      // flip_rect.y1 = y1;
+      // flip_rect.x2 = x2;
+      // flip_rect.y2 = y2;
 
       //flip_rects.push_back(flip_rect);
     }

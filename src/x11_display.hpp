@@ -24,7 +24,6 @@
 #  include <X11/extensions/xf86vmode.h>
 #endif
 
-#include "cursors/cursors.hpp"
 #include "math.hpp"
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
