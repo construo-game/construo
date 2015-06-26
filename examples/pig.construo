@@ -1,7 +1,7 @@
 ;; Written by construo 0.2.0pre2
 (construo-scene
   (version 3)
-  (author "Ingo Ruhnke,,," "grumbel@gmx.de")
+  (author "Ingo Ruhnke,,," "grumbel@gmail.com")
   (particles
     (particle (id 0) (pos 622.389587 125.228165) (velocity -249.404907 -20.885437) (fixed #f) (mass 0.100000))
     (particle (id 1) (pos 650.496704 152.850418) (velocity -249.404907 -20.885437) (fixed #f) (mass 0.100000))
