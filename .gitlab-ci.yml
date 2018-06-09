@@ -1,0 +1,40 @@
+ # use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: ubuntu:latest
+
+build:
+  stage: build
+  before_script:
+    - apt-get -qq update
+    - apt-get -qq -y install lsb-release
+    - lsb_release -a
+    - apt-get -qq -y install build-essential
+    # - apt-get -qq -y install clang-5.0
+    - apt-get -qq -y install make
+    - apt-get -qq -y install cmake
+    - apt-get -qq -y install g++
+    - apt-get -qq -y install freeglut3-dev
+    - apt-get -qq -y install libx11-dev
+    - apt-get -qq -y install x11proto-core-dev
+    - apt-get -qq -y install pkg-config
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+  # artifacts:
+  #   paths:
+  #     - mybinary
+  # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
+  # cache:
+  #   paths:
+  #     - "*.o"
+
+# run tests using the binary built before
+# test:
+#   stage: test
+#   script:
+#     - ./runmytests.sh
+
+# EOF #
