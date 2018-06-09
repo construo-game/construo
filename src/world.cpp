@@ -18,9 +18,7 @@
 #include <assert.h>
 #include <algorithm>
 
-#ifdef HAVE_LIBZ
-#  include <zlib.h>
-#endif
+#include <zlib.h>
 
 #include "math.hpp"
 #include "construo_error.hpp"
@@ -53,7 +51,6 @@ World::World (const std::string& filename)
   // Try to read a file and store the content in root_obj
   if (StringUtils::has_suffix(filename, ".construo.gz"))
     {
-#ifdef HAVE_LIBZ
       lisp_stream_t stream;
       int chunk_size = 128 * 1024; // allocate 256kb, should be enough for most levels
       char* buf;
@@ -102,9 +99,6 @@ World::World (const std::string& filename)
 
       free(buf);
       gzclose(in);
-#else
-      throw ConstruoError ("World: Reading of compressed files not supported, recompile with zlib support or extract the levelfile manually, " + filename);
-#endif
     }
   else
     {

@@ -20,7 +20,7 @@ project(construo VERSION 0.2.4)
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
-find_package(ZLIB)
+find_package(ZLIB REQUIRED)
 
 set(WARNINGS OFF CACHE BOOL "Enable extra compiler warnings")
 set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
