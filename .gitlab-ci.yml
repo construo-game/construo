@@ -9,15 +9,16 @@ build:
     - apt-get -qq update
     - apt-get -qq -y install lsb-release
     - lsb_release -a
-    - apt-get -qq -y install build-essential
-    # - apt-get -qq -y install clang-5.0
-    - apt-get -qq -y install make
-    - apt-get -qq -y install cmake
-    - apt-get -qq -y install g++
-    - apt-get -qq -y install freeglut3-dev
-    - apt-get -qq -y install libx11-dev
-    - apt-get -qq -y install x11proto-core-dev
-    - apt-get -qq -y install pkg-config
+    - apt-get -qq -y install
+      build-essential
+      cmake
+      freeglut3-dev
+      g++
+      libx11-dev
+      make
+      pkg-config
+      x11proto-core-dev
+      zlib1g-dev
   script:
     - mkdir build
     - cd build
