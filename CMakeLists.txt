@@ -229,6 +229,10 @@ if(GLUT_FOUND AND OPENGL_FOUND)
   target_link_libraries(construo.glut libconstruo lispreader ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
   install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+  install(FILES
+    construo-glut.desktop
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
 if(X11_FOUND)
@@ -248,6 +252,10 @@ if(X11_FOUND)
   endif()
 
   install(TARGETS construo.x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+  install(FILES
+    construo.x11.desktop
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})
@@ -255,10 +263,6 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DA
 install(FILES
   construo.svg
   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
-
-install(FILES
-  construo.desktop
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
 configure_file(construo.appdata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml

@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Construo
+Name=Construo (Glut)
 Comment=A wire-frame construction game
-Icon=construo
+Icon=construo.glut
 Terminal=false
 Exec=construo %f
 Type=Application

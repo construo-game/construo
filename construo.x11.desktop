@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Construo (X11)
+Comment=A wire-frame construction game
+Icon=construo.x11
+Terminal=false
+Exec=construo %f
+Type=Application
+Categories=Game;LogicGame;
+StartupNotify=false
+MimeType=application/x-construo
