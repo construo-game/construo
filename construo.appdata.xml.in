@@ -16,6 +16,13 @@
     </p>
   </description>
   <url type="homepage">https://construo.gitlab.io</url>
+  <screenshots>
+    <screenshot type="default">http://construo.gitlab.io/images/screenshot_0.2.0-1.png</screenshot>
+    <screenshot>http://construo.gitlab.io/images/screenshot_0.2.0.png</screenshot>
+    <screenshot>http://construo.gitlab.io/images/screenshot_0.2.0-2.png</screenshot>
+    <screenshot>http://construo.gitlab.io/images/screenshot5.png</screenshot>
+    <screenshot>http://construo.gitlab.io/images/screenshot6.png</screenshot>
+  </screenshots>
   ​<releases>
   ​  <release version="@GIT_REPO_VERSION@" date="@GIT_REPO_DATE@" />
   </releases>
