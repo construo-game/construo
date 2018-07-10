@@ -28,7 +28,7 @@ option(WARNINGS "Enable extra compiler warnings" OFF)
 option(WERROR "Turn warnings into errors" OFF)
 option(BUILD_TESTS "Build test cases" OFF)
 
-set(CONSTRUO_DATADIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
 if (BUILD_TESTS)
   enable_testing()
