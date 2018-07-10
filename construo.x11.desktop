@@ -1,9 +1,9 @@
 [Desktop Entry]
 Name=Construo (X11)
 Comment=A wire-frame construction game
-Icon=construo.x11
+Icon=construo
 Terminal=false
-Exec=construo %f
+Exec=construo.x11 %f
 Type=Application
 Categories=Game;LogicGame;
 StartupNotify=false

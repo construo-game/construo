@@ -4,7 +4,7 @@
     "runtime-version": "1.6",
     "sdk": "org.freedesktop.Sdk",
     "rename-icon": "construo",
-    "rename-desktop-file": "construo.desktop",
+    "rename-desktop-file": "construo.x11.desktop",
     "rename-appdata-file": "construo.appdata.xml",
     "finish-args": [
         "--device=all",
