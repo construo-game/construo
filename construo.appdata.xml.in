@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id type="desktop">construo.desktop</id>
+  <name>Pingus</name>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <content_rating type="oars-1.1">
+  </content_rating>
+  <summary>A wire-frame construction game</summary>
+  <description>
+    <p>
+      Construo is a programm for constructing wire-frame objects and
+      let them react to physical forces, it is neither a real
+      simulation nor a real game, it is just a little toy app which
+      can be a nice way to waste time.
+    </p>
+  </description>
+  <url type="homepage">https://construo.gitlab.io</url>
+  ​<releases>
+  ​  <release version="@GIT_REPO_VERSION@" date="@GIT_REPO_DATE@" />
+  </releases>
+</component>

@@ -17,14 +17,36 @@
 cmake_minimum_required(VERSION 3.0)
 project(construo VERSION 0.2.4)
 
+include(GNUInstallDirs)
+
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
 find_package(ZLIB REQUIRED)
 
-set(WARNINGS OFF CACHE BOOL "Enable extra compiler warnings")
-set(CONSTRUO_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Install location for binaries")
-set(CONSTRUO_DATADIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}" CACHE PATH "Install location for datafiles")
+option(WARNINGS "Enable extra compiler warnings" OFF)
+option(WERROR "Turn warnings into errors" OFF)
+option(BUILD_TESTS "Build test cases" OFF)
+
+set(CONSTRUO_DATADIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+
+if (BUILD_TESTS)
+  enable_testing()
+endif(BUILD_TESTS)
+
+find_package(Git)
+if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags --always HEAD
+    OUTPUT_VARIABLE GIT_REPO_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  execute_process(COMMAND ${GIT_EXECUTABLE} log -n 1 --pretty=%cd --date=format:%Y-%m-%d ${GIT_REPO_VERSION}
+    OUTPUT_VARIABLE GIT_REPO_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+else()
+  set(GIT_REPO_VERSION "${PROJECT_VERSION}")
+  string(TIMESTAMP GIT_REPO_DATE "%Y-%m-%d")
+endif()
 
 if(WARNINGS)
   set(WARNINGS_CXX_FLAGS
@@ -32,6 +54,11 @@ if(WARNINGS)
     -Werror -Wcast-qual -Winit-self -Wno-unused-parameter)
   # -Wconversion -Weffc++ -Wshadow
   # -Winline -Wfloat-equal -Wunreachable-code
+endif()
+
+if(WERROR)
+  set(WARNINGS_CXX_FLAGS ${WARNINGS_CXX_FLAGS}
+    -Werror)
 endif()
 
 include_directories(SYSTEM external/lispreader-0.5)
@@ -182,7 +209,7 @@ include_directories(.)
 add_definitions(-DVERSION="0.2.4")
 add_definitions(-DPACKAGE="construo")
 add_definitions(-DPACKAGE_STRING="construo 0.2.4")
-add_definitions(-DCONSTRUO_DATADIR="${DATADIR}")
+add_definitions(-DCONSTRUO_DATADIR="${CONSTRUO_DATADIR}")
 
 if(ZLIB_FOUND)
   add_definitions(-DHAVE_LIBZ)
@@ -201,7 +228,7 @@ if(GLUT_FOUND AND OPENGL_FOUND)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
   target_link_libraries(construo.glut libconstruo lispreader ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
-  install(TARGETS construo.glut RUNTIME DESTINATION ${CONSTRUO_BINDIR})
+  install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 if(X11_FOUND)
@@ -220,9 +247,27 @@ if(X11_FOUND)
     target_link_libraries(construo.x11 ${X11_xf86vm_LIB})
   endif()
 
-  install(TARGETS construo.x11 RUNTIME DESTINATION ${CONSTRUO_BINDIR})
+  install(TARGETS construo.x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})
+
+install(FILES
+  construo.svg
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+
+install(FILES
+  construo.desktop
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+
+configure_file(construo.appdata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+
+if (BUILD_TESTS)
+  add_test(NAME construo.appdata.xml
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND appstream-util validate-relax ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
+endif(BUILD_TESTS)
 
 # EOF #
