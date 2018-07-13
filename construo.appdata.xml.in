@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Ingo Ruhnke <grumbel@gmail.com> -->
 <component type="desktop-application">
   <id>io.gitlab.construo.construo</id>
-  <name>Construo</name>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
-  <content_rating type="oars-1.1">
-  </content_rating>
+  <content_rating type="oars-1.1" />
+  <name>Construo</name>
   <summary>A wire-frame construction game</summary>
   <description>
     <p>
@@ -15,7 +15,10 @@
       can be a nice way to waste time.
     </p>
   </description>
+  <developer_name>Ingo Ruhnke</developer_name>
+  <update_contact>grumbel@gmail.com</update_contact>
   <url type="homepage">https://construo.gitlab.io</url>
+  <url type="bugtracker">https://gitlab.com/construo/construo/issues</url>
   <screenshots>
     <screenshot type="default">http://construo.gitlab.io/images/screenshot_0.2.0-1.png</screenshot>
     <screenshot>http://construo.gitlab.io/images/screenshot_0.2.0.png</screenshot>
@@ -23,7 +26,7 @@
     <screenshot>http://construo.gitlab.io/images/screenshot5.png</screenshot>
     <screenshot>http://construo.gitlab.io/images/screenshot6.png</screenshot>
   </screenshots>
-  ​<releases>
-  ​  <release version="@GIT_REPO_VERSION@" date="@GIT_REPO_DATE@" />
+  <releases>
+    <release version="@GIT_REPO_VERSION@" date="@GIT_REPO_DATE@" />
   </releases>
 </component>
