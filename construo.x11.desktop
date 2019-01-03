@@ -5,6 +5,6 @@ Icon=construo
 Terminal=false
 Exec=construo.x11 %f
 Type=Application
-Categories=Game;LogicGame;
+Categories=Game;LogicGame;Simulation;
 StartupNotify=false
 MimeType=application/x-construo
