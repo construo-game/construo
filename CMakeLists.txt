@@ -231,7 +231,7 @@ if(GLUT_FOUND AND OPENGL_FOUND)
   install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   install(FILES
-    construo-glut.desktop
+    construo.glut.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
