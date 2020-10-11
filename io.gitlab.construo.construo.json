@@ -12,6 +12,7 @@
     ],
     "modules": [
         "external/shared-modules/jsoncpp/jsoncpp-1.8.json",
+        "external/shared-modules/fmt/fmt.json",
         {
             "name": "construo",
             "buildsystem": "cmake-ninja",

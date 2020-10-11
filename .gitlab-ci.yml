@@ -99,8 +99,8 @@ build:flatpak:
   script:
     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     - flatpak install -y flathub org.freedesktop.Platform//20.08 org.freedesktop.Sdk//20.08
-    - flatpak-builder --repo=build-flatpak-repo/ build-flatpak/ org.seul.project.Project.json
-    - flatpak build-bundle build-flatpak-repo/ project.flatpak org.seul.project.Project
+    - flatpak-builder --repo=build-flatpak-repo/ build-flatpak/ io.gitlab.construo.construo.json
+    - flatpak build-bundle build-flatpak-repo/ project.flatpak io.gitlab.construo.construo
   artifacts:
     paths:
       - project.flatpak
