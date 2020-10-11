@@ -80,8 +80,8 @@ Controller::save_to_slot (int n)
 {
   try {
     save_world (get_slot_filename (n));
-  } catch (ConstruoError& err) {
-    std::cout << "Controller: Error: " << err.msg << std::endl;
+  } catch (std::exception const& err) {
+    print_exception(err);
   }
 }
 
@@ -90,8 +90,8 @@ Controller::load_from_slot (int n)
 {
   try {
     load_world (get_slot_filename (n));
-  } catch (ConstruoError& err) {
-    std::cout << "Controller: Error: " << err.msg << std::endl;
+  } catch (std::exception const& err) {
+    print_exception(err);
   }
 }
 

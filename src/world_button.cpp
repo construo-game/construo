@@ -44,8 +44,8 @@ WorldButton::load_world ()
         delete world;
         world = new World(filename);
         mtime = system_context->get_mtime(filename);
-      } catch (ConstruoError& err) {
-        std::cout << "ERROR: " << err.msg << std::endl;
+      } catch (std::exception const& err) {
+        print_exception(err);
         std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
         world = 0;
         file_broken = true;

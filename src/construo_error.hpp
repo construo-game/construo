@@ -17,24 +17,41 @@
 #ifndef HEADER_CONSTRUO_ERROR_HPP
 #define HEADER_CONSTRUO_ERROR_HPP
 
+#include <iostream>
+#include <stdexcept>
 #include <string>
 
 #ifndef NODEBUG
 #  define ConstruoAssert(expr, str) assert(expr && str)
 #endif
 
-class ConstruoError
+class ConstruoError : public std::exception
 {
 public:
   std::string msg;
 
-  ConstruoError(const std::string& str)
-    : msg(str) {}
+  ConstruoError(const std::string& str) : msg(str) {}
+
+  char const* what() const noexcept override { return msg.c_str(); }
 
   static void raise(const std::string& str) {
     throw ConstruoError (str);
   }
 };
+
+inline
+void print_exception(std::exception const& err, int level = 0)
+{
+  std::cout << std::string(level, ' ') << "exception: " << err.what() << '\n';
+
+  try {
+    std::rethrow_if_nested(err);
+  } catch(std::exception const& new_err) {
+    print_exception(new_err, level + 1);
+  } catch(...) {
+    std::cout << "unknown exception\n";
+  }
+}
 
 #endif
 

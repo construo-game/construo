@@ -149,9 +149,9 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
           {
             controller = new Controller ("/user/laststate.construo");
           }
-        catch (ConstruoError& err)
+        catch (std::exception const& err)
           {
-            std::cout << "ConstruoMain: " << err.msg << std::endl;
+            print_exception(err);
             controller = new Controller ();
           }
       }
@@ -161,8 +161,8 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     // Shutdown the system and exit
     exit();
-  } catch (ConstruoError& err) {
-    std::cout << "Error ocurred: " << err.msg << std::endl;
+  } catch (std::exception const& err) {
+    print_exception(err);
     return EXIT_FAILURE;
   }
 
