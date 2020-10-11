@@ -89,7 +89,7 @@ public:
 
   void draw_velocity_vector (ZoomGraphicContext* gc);
 
-  lisp_object_t* serialize();
+  void serialize(LispWriter& writer);
 
   friend class ParticleFactory;
 

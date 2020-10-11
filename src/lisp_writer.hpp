@@ -18,34 +18,18 @@
 #define HEADER_CONSTRUO_LISP_WRITER_HPP
 
 #include <vector>
-extern "C" {
-#include <lispreader.h>
-}
 
 #include "vector2d.hpp"
 
-/** */
-class LispWriter
-{
-private:
-  std::vector<lisp_object_t*> lisp_objs;
+#include <prio/writer.hpp>
 
-  void append (lisp_object_t* obj);
-  lisp_object_t* make_list3 (lisp_object_t*, lisp_object_t*, lisp_object_t*);
-  lisp_object_t* make_list2 (lisp_object_t*, lisp_object_t*);
-public:
-  LispWriter (const char* name);
-  void write_vector (const char* name, const Vector2d& pos);
-  void write_float (const char* name, float f);
-  void write_int (const char* name, int i);
-  void write_boolean (const char* name, bool b);
-  void write_string (const char* name, const char* str);
-  void write_symbol (const char* name, const char* symname);
-  void write_lisp_obj(const char* name, lisp_object_t* lst);
+using LispWriter = prio::Writer;
 
-  /** caller is responible to free the returned lisp_object_t */
-  lisp_object_t* create_lisp ();
-};
+namespace prio {
+
+template<> void write_custom(prio::Writer& writer, std::string_view key, Vector2d const& value);
+
+} // namespace prio
 
 #endif
 

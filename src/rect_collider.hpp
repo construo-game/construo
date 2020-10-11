@@ -30,8 +30,8 @@ private:
   float y2;                     /**< bottom border */
 
 public:
-  RectCollider (lisp_object_t* cursor);
-  RectCollider (float x1_, float y1_, float x2_, float y2_);
+  RectCollider(ReaderMapping const& reader);
+  RectCollider(float x1_, float y1_, float x2_, float y2_);
 
   Collider* duplicate() const;
 
@@ -45,7 +45,7 @@ public:
 
   BoundingBox get_bounding_box() const;
 
-  lisp_object_t* serialize();
+  void serialize(LispWriter& writer);
 };
 
 #endif

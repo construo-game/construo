@@ -36,7 +36,7 @@ public:
   typedef std::vector<Spring*>::const_iterator CSpringIter;
 private:
   /** Version number of the file, used to ensure backward compability */
-  unsigned int file_version;
+  int file_version;
 
   friend class ParticleFactory;
   bool has_been_run;
@@ -46,10 +46,10 @@ private:
 
   Colliders colliders;
 
-  void parse_scene (lisp_object_t* lst);
-  void parse_springs (lisp_object_t* lst);
-  void parse_particles (lisp_object_t* lst);
-  void parse_colliders (lisp_object_t* lst);
+  void parse_scene(ReaderMapping const& reader);
+  void parse_springs(ReaderCollection const& collection);
+  void parse_particles(ReaderCollection const& collection);
+  void parse_colliders(ReaderCollection const& collection);
 
 public:
   /** Create an empty world */

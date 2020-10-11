@@ -19,9 +19,9 @@
 
 #include <vector>
 #include "vector2d.hpp"
-extern "C" {
-#include <lispreader.h>
-}
+
+#include "lisp_reader.hpp"
+#include "lisp_writer.hpp"
 
 class ZoomGraphicContext;
 class Particle;
@@ -46,7 +46,7 @@ public:
   ParticleFactory (World*);
 
   /** Create a particle manager from the data in a .construo file */
-  ParticleFactory (World*, lisp_object_t* cursor);
+  ParticleFactory (World*, ReaderCollection const& particles_collection);
 
   /** Copy a particle manager, the id's will be keep */
   ParticleFactory (World*, const ParticleFactory&);
@@ -76,7 +76,7 @@ public:
   ParticleIter end () { return particles.end(); }
 
   void clear ();
-  void write_lisp(FILE* out);
+  void write_lisp(LispWriter& writer);
 
 private:
   ParticleFactory (const ParticleFactory&);

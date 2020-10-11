@@ -27,16 +27,13 @@ RectCollider::duplicate() const
   return new RectCollider(x1, y1, x2, y2);
 }
 
-RectCollider::RectCollider (lisp_object_t* cursor)
+RectCollider::RectCollider(ReaderMapping const& reader)
 {
   Vector2d pos1, pos2;
-
-  LispReader reader(cursor);
-  if (reader.read_vector("pos1", &pos1) == false
-      || reader.read_vector("pos2", &pos2) == false)
-    {
-      throw ConstruoError("RectCollider entry incomplete");
-    }
+  if (reader.read("pos1", pos1) == false ||
+      reader.read("pos2", pos2) == false) {
+    throw ConstruoError("RectCollider entry incomplete");
+  }
 
   x1 = pos1.x;
   y1 = pos1.y;
@@ -148,13 +145,12 @@ RectCollider::get_bounding_box() const
   return BoundingBox(x1, y1, x2, y2);
 }
 
-lisp_object_t*
-RectCollider::serialize()
+void
+RectCollider::serialize(LispWriter& writer)
 {
-  LispWriter obj ("rect");
-  obj.write_vector ("pos1", Vector2d(x1, y1));
-  obj.write_vector ("pos2", Vector2d(x2, y2));
-  return obj.create_lisp ();
+  writer.begin_object("rect")
+    .write("pos1", Vector2d(x1, y1))
+    .write("pos2", Vector2d(x2, y2));
 }
 
 /* EOF */

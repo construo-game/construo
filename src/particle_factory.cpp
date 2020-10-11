@@ -28,43 +28,38 @@ ParticleFactory::ParticleFactory (World* w)
 {
 }
 
-ParticleFactory::ParticleFactory (World* w, lisp_object_t* cursor)
+ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection)
   : world (w),particle_id_count (0)
 {
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* obj = lisp_car(cursor);
-      Vector2d pos;
-      Vector2d velocity;
-      float mass = 1.0f/10.0f;
-      bool fixed = false;
-      int id = -1;
+  for(ReaderObject const& item : collection.get_objects()) {
+    ReaderMapping const& reader = item.get_mapping();
 
-      obj = lisp_cdr(obj); // skip particle 'marker'
+    Vector2d pos;
+    Vector2d velocity;
+    float mass = 1.0f/10.0f;
+    bool fixed = false;
+    int id = -1;
 
-      LispReader reader(obj);
-      reader.read_vector ("pos", &pos);
-      reader.read_vector ("velocity", &velocity);
-      reader.read_float ("mass", &mass);
-      reader.read_bool ("fixed", &fixed);
-      reader.read_int ("id", &id);
+    reader.read("pos", pos);
+    reader.read("velocity", velocity);
+    reader.read("mass", mass);
+    reader.read("fixed", fixed);
+    reader.read("id", id);
 
-      switch (world->file_version)
-        {
-        case 0:
-        case 1:
-        case 2:
-          mass = 1.0f/10.0f;
-          break;
-        }
-
-      if (id >= particle_id_count)
-        particle_id_count = id + 1;
-
-      particles.push_back(new Particle (id, pos, velocity, mass, fixed));
-
-      cursor = lisp_cdr (cursor);
+    switch (world->file_version) {
+      case 0:
+      case 1:
+      case 2:
+        mass = 1.0f/10.0f;
+        break;
     }
+
+    if (id >= particle_id_count) {
+      particle_id_count = id + 1;
+    }
+
+    particles.push_back(new Particle (id, pos, velocity, mass, fixed));
+  }
 }
 
 ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr)
@@ -175,18 +170,13 @@ ParticleFactory::clear ()
 }
 
 void
-ParticleFactory::write_lisp(FILE* out)
+ParticleFactory::write_lisp(LispWriter& writer)
 {
-  fputs("  (particles\n", out);
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
-    {
-      lisp_object_t* obj = (*i)->serialize ();
-      fputs("    ", out);
-      lisp_dump (obj, out);
-      lisp_free(obj);
-      fputc('\n', out);
-    }
-  fputs("  )\n", out);
+  writer.begin_collection("particles");
+  for (CParticleIter i = particles.begin (); i != particles.end (); ++i) {
+    (*i)->serialize(writer);
+  }
+  writer.end_collection();
 }
 
 /* EOF */

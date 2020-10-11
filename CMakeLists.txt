@@ -17,6 +17,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(construo VERSION 0.2.4)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+
 include(GNUInstallDirs)
 
 find_package(OpenGL)
@@ -61,13 +63,12 @@ if(WERROR)
     -Werror)
 endif()
 
-include_directories(SYSTEM external/lispreader-0.5)
-
-file(GLOB LISPREADER_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-  external/lispreader-0.5/lispreader.c
-  external/lispreader-0.5/pools.c
-  external/lispreader-0.5/allocator.c)
-add_library(lispreader ${LISPREADER_SOURCES})
+# Build dependencies
+function(build_dependencies)
+  set(BUILD_TESTS OFF)
+  add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+endfunction()
+build_dependencies()
 
 set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
@@ -218,15 +219,24 @@ if(ZLIB_FOUND)
 endif()
 
 add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})
+set_target_properties(libconstruo PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 target_compile_options(libconstruo PRIVATE -std=c++11)
+target_link_libraries(libconstruo PUBLIC prio)
 
 if(GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})
-  target_compile_options(construo.glut PRIVATE -std=c++11 ${WARNINGS_CXX_FLAGS})
+  set_target_properties(construo.glut PROPERTIES
+      CXX_STANDARD 20
+      CXX_STANDARD_REQUIRED ON
+      CXX_EXTENSIONS OFF)
+  target_compile_options(construo.glut PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-  target_link_libraries(construo.glut libconstruo lispreader ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+  target_link_libraries(construo.glut libconstruo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
   install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -237,10 +247,14 @@ endif()
 
 if(X11_FOUND)
   add_executable(construo.x11 ${CONSTRUO_X11_SOURCES_CXX})
-  target_compile_options(construo.x11 PRIVATE -std=c++11 ${WARNINGS_CXX_FLAGS})
+  set_target_properties(construo.x11 PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF)
+  target_compile_options(construo.x11 PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
   target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_INCLUDE_DIR})
-  target_link_libraries(construo.x11 libconstruo lispreader ${X11_LIBRARIES})
+  target_link_libraries(construo.x11 libconstruo prio ${X11_LIBRARIES})
 
   if(X11_Xext_FOUND)
     target_link_libraries(construo.x11 ${X11_Xext_LIB})

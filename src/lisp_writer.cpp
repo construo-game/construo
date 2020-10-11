@@ -16,92 +16,15 @@
 
 #include "lisp_writer.hpp"
 
-LispWriter::LispWriter (const char* name)
+namespace prio {
+
+template<>
+void write_custom(prio::Writer& writer, std::string_view key, Vector2d const& value)
 {
-  lisp_objs.push_back(lisp_make_symbol (name));
+  std::array<float, 2> v{value.x, value.y};
+  writer.write(key, std::span<float const>(v));
 }
 
-void
-LispWriter::append (lisp_object_t* obj)
-{
-  lisp_objs.push_back(obj);
-}
-
-lisp_object_t*
-LispWriter::make_list3 (lisp_object_t* a, lisp_object_t* b, lisp_object_t* c)
-{
-  return lisp_make_cons (a, lisp_make_cons(b, lisp_make_cons(c, lisp_nil())));
-}
-
-lisp_object_t*
-LispWriter::make_list2 (lisp_object_t* a, lisp_object_t* b)
-{
-  return lisp_make_cons (a, lisp_make_cons(b, lisp_nil()));
-}
-
-void
-LispWriter::write_vector (const char* name, const Vector2d& pos)
-{
-  append(lisp_make_cons (lisp_make_symbol (name),
-                         make_list2(lisp_make_real(pos.x),
-                                    lisp_make_real(pos.y))));
-}
-
-void
-LispWriter::write_float (const char* name, float f)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lisp_make_real(f)));
-}
-
-void
-LispWriter::write_int (const char* name, int i)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lisp_make_integer(i)));
-}
-
-void
-LispWriter::write_string (const char* name, const char* str)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lisp_make_string(str)));
-}
-
-void
-LispWriter::write_symbol (const char* name, const char* symname)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lisp_make_symbol(symname)));
-}
-
-void
-LispWriter::write_lisp_obj(const char* name, lisp_object_t* lst)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lst));
-}
-
-void
-LispWriter::write_boolean (const char* name, bool b)
-{
-  append(make_list2 (lisp_make_symbol (name),
-                     lisp_make_boolean(b)));
-}
-
-lisp_object_t*
-LispWriter::create_lisp ()
-{
-  lisp_object_t* lisp_obj = lisp_nil();
-
-  for(std::vector<lisp_object_t*>::reverse_iterator i = lisp_objs.rbegin ();
-      i != lisp_objs.rend (); ++i)
-    {
-      lisp_obj = lisp_make_cons (*i, lisp_obj);
-    }
-  lisp_objs.clear();
-
-  return lisp_obj;
-}
+} // namespace prio
 
 /* EOF */

@@ -46,7 +46,7 @@ public:
   Spring (Particle* f, Particle* s, float l);
   Spring (Particle* f, Particle* s);
 
-  Spring (World* world, lisp_object_t* cursor);
+  Spring (World* world, ReaderMapping const& reader);
 
   ~Spring ();
 
@@ -57,7 +57,7 @@ public:
   /** Forces the recalculation of the springs length */
   void recalc_length ();
 
-  lisp_object_t* serialize();
+  void serialize(LispWriter& writer);
 };
 
 #endif

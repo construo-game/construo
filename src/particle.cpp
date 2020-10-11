@@ -44,16 +44,16 @@ Particle::Particle (const Particle& p)
 {
 }
 
-lisp_object_t*
-Particle::serialize()
+void
+Particle::serialize(LispWriter& writer)
 {
-  LispWriter obj ("particle");
-  obj.write_int ("id", id);
-  obj.write_vector ("pos", pos);
-  obj.write_vector ("velocity", velocity);
-  obj.write_boolean ("fixed", fixed);
-  obj.write_float ("mass", mass);
-  return obj.create_lisp ();
+  writer.begin_object("particle")
+    .write("id", id)
+    .write("pos", pos)
+    .write("velocity", velocity)
+    .write("fixed", fixed)
+    .write("mass", mass)
+    .end_object();
 }
 
 void

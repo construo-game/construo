@@ -17,28 +17,20 @@
 #ifndef HEADER_LISP_READER_HPP
 #define HEADER_LISP_READER_HPP
 
-extern "C" {
-#include <lispreader.h>
-}
-
 #include "vector2d.hpp"
 
-/** */
-class LispReader
-{
-private:
-  lisp_object_t* lst;
+#include <prio/reader.hpp>
 
-  lisp_object_t* search_for(const char* name);
-public:
-  /** cur == ((pos 1 2 3) (id 12 3 4)...) */
-  LispReader (lisp_object_t* l);
+using ReaderCollection = prio::ReaderCollection;
+using ReaderDocument = prio::ReaderDocument;
+using ReaderMapping = prio::ReaderMapping;
+using ReaderObject = prio::ReaderObject;
 
-  bool read_vector (const char* name, Vector2d* vec);
-  bool read_int (const char* name, int* i);
-  bool read_float (const char* name, float* f);
-  bool read_bool (const char* name, bool* b);
-};
+namespace prio {
+
+template<> bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d& value_out);
+
+} // namespace prio
 
 #endif
 

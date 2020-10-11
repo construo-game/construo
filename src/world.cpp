@@ -46,8 +46,8 @@ World::World (const std::string& filename)
   file_version = 0;
 
   has_been_run = false;
-  lisp_object_t* root_obj = 0;
 
+#if 0 // FIXME:
   // Try to read a file and store the content in root_obj
   if (StringUtils::has_suffix(filename, ".construo.gz"))
     {
@@ -102,7 +102,6 @@ World::World (const std::string& filename)
     }
   else
     {
-      lisp_stream_t stream;
       FILE* in = system_context->open_input_file(filename);
       if (!in)
         {
@@ -112,29 +111,14 @@ World::World (const std::string& filename)
       lisp_stream_init_file (&stream, in);
       root_obj = lisp_read (&stream);
     }
+#endif
 
-  if (root_obj->type == LISP_TYPE_EOF || root_obj->type == LISP_TYPE_PARSE_ERROR)
-    {
-      std::cout << "World: Parse Error in file " << filename << std::endl;
-    }
+  ReaderDocument doc = ReaderDocument::from_file(system_context->translate_filename(filename));
+  if (doc.get_name() != "construo-scene") {
+    throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
+  }
 
-  lisp_object_t* cur = lisp_car(root_obj);
-
-  if (!lisp_symbol_p (cur))
-    {
-      throw ConstruoError ("World: Read error in " + filename);
-    }
-
-  if (strcmp(lisp_symbol(cur), "construo-scene") == 0)
-    {
-      parse_scene (lisp_cdr(root_obj));
-    }
-  else
-    {
-      throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
-    }
-
-  lisp_free (root_obj);
+  parse_scene(doc.get_mapping());
 
   ConstruoAssert(particle_mgr, "No Particles given in file, load failed");
 
@@ -180,80 +164,49 @@ World::~World ()
 }
 
 void
-World::parse_scene (lisp_object_t* cursor)
+World::parse_scene(ReaderMapping const& reader)
 {
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* cur = lisp_car(cursor);
+  reader.read("version", file_version);
 
-      if (!lisp_cons_p(cur) || !lisp_symbol_p (lisp_car(cur)))
-        {
-          throw ConstruoError ("World: Read error in parse_scene");
-        }
-      else
-        {
-          if (strcmp(lisp_symbol(lisp_car(cur)), "particles") == 0)
-            {
-              parse_particles(lisp_cdr(cur));
-            }
-          else if (strcmp(lisp_symbol(lisp_car(cur)), "springs") == 0)
-            {
-              parse_springs(lisp_cdr(cur));
-            }
-          else if (strcmp(lisp_symbol(lisp_car(cur)), "colliders") == 0)
-            {
-              parse_colliders(lisp_cdr(cur));
-            }
-          else if (strcmp(lisp_symbol(lisp_car(cur)), "version") == 0)
-            {
-              file_version = lisp_integer(lisp_car(lisp_cdr(cur)));
-            }
-          else
-            {
-              std::cout << "World: Read error in parse_scene. Unhandled tag '"
-                        << lisp_symbol(lisp_car(cur)) << "' skipping and continuing" << std::endl;
-            }
-        }
-      cursor = lisp_cdr (cursor);
-    }
+  if (ReaderCollection particles = reader.get<ReaderCollection>("particles")) {
+    parse_particles(particles);
+  }
+
+  if (ReaderCollection springs = reader.get<ReaderCollection>("springs")) {
+    parse_springs(springs);
+  }
+
+  if (ReaderCollection colliders = reader.get<ReaderCollection>("colliders")) {
+    parse_colliders(colliders);
+  }
 }
 
 void
-World::parse_springs (lisp_object_t* cursor)
+World::parse_springs(ReaderCollection const& collection)
 {
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* cur = lisp_car(cursor);
-      springs.push_back(new Spring (this, cur));
-      cursor = lisp_cdr (cursor);
-    }
+  for (ReaderObject const& item : collection.get_objects()) {
+    springs.push_back(new Spring(this, item.get_mapping()));
+  }
 }
 
 void
-World::parse_colliders (lisp_object_t* cursor)
+World::parse_colliders(ReaderCollection const& collection)
 {
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* cur = lisp_car(cursor);
-      if (strcmp(lisp_symbol(lisp_car(cur)), "rect") == 0)
-        {
-          colliders.push_back(new RectCollider(lisp_cdr(cur)));
-        }
-      else
-        {
-          std::cout << "WARNING: Unknown collider type '" << lisp_symbol(lisp_car(cur))
-                    << "' skipping" << std::endl;
-        }
-      cursor = lisp_cdr (cursor);
+  for(auto const& item : collection.get_objects()) {
+    if (item.get_name() == "rect") {
+      colliders.push_back(new RectCollider(item.get_mapping()));
+    } else {
+      std::cout << "WARNING: Unknown collider type '" << item.get_name()
+                << "' skipping" << std::endl;
     }
+  }
 }
 
 void
-World::parse_particles (lisp_object_t* cursor)
+World::parse_particles(ReaderCollection const& collection)
 {
-  particle_mgr = new ParticleFactory(this, cursor);
+  particle_mgr = new ParticleFactory(this, collection);
 }
-
 
 void
 World::draw (ZoomGraphicContext* gc)
@@ -535,58 +488,33 @@ World::clear ()
 void
 World::write_lisp (const std::string& filename)
 {
-  FILE* out;
-
-  out = system_context->open_output_file(filename);
-
-  if (!out)
-    {
-      std::cout << "World: Couldn't open '" << filename << "' for writing" << std::endl;
-      return;
-    }
-
   std::cout << "World: Writing to: " << filename << std::endl;
 
-  fputs(";; Written by " PACKAGE_STRING "\n", out);
-  fputs("(construo-scene\n", out);
-  fputs("  (version 3)\n", out);
+  LispWriter writer = LispWriter::from_file(system_context->translate_filename(filename));
 
-  // FIXME: insert creation date here
-  // FIXME: Filter '()"' here
-  fprintf(out, "  (author \"%s\" \"%s\")\n",
-          system_context->get_user_realname().c_str(),
-          system_context->get_user_email().c_str());
+  writer.write_comment("Written by " PACKAGE_STRING);
+  writer.begin_object("construo-scene");
+  writer.write("version",  3);
+  writer.write("author", std::vector<std::string>({
+        system_context->get_user_realname(),
+        system_context->get_user_email()}));
 
-  particle_mgr->write_lisp(out);
+  particle_mgr->write_lisp(writer);
 
+  writer.begin_collection("springs");
+  for (CSpringIter i = springs.begin (); i != springs.end (); ++i) {
+    (*i)->serialize(writer);
+  }
+  writer.end_collection();
 
-  fputs("  (springs\n", out);
-  for (CSpringIter i = springs.begin (); i != springs.end (); ++i)
-    {
-      lisp_object_t* obj = (*i)->serialize ();
-      fputs("    ", out);
-      lisp_dump (obj, out);
-      fputc('\n', out);
-      lisp_free(obj);
-    }
-  fputs("  )\n", out);
+  writer.begin_collection("colliders");
+  for (Colliders::iterator i = colliders.begin(); i != colliders.end(); ++i) {
+    (*i)->serialize (writer);
+  }
+  writer.end_collection();
+  writer.end_object();
 
-  fputs ("  (colliders\n", out);
-  for (Colliders::iterator i = colliders.begin(); i != colliders.end(); ++i)
-    {
-      lisp_object_t* obj = (*i)->serialize ();
-      fputs("    ", out);
-      lisp_dump (obj, out);
-      fputc('\n', out);
-      lisp_free(obj);
-    }
-  fputs("  )", out);
-
-
-  fputs(")\n\n;; EOF ;;\n", out);
-
-  fclose(out);
-
+#if 0
   if (StringUtils::has_suffix(filename, ".gz"))
     { // Rewrite file compressed
       std::cout << "World: Filename ends with .gz, rewriting " << filename << " compressed" << std::endl;
@@ -613,6 +541,7 @@ World::write_lisp (const std::string& filename)
       gzclose (out);
       free (buf);
     }
+#endif
 }
 
 BoundingBox

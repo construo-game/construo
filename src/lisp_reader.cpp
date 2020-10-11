@@ -15,93 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string.h>
+#include <span>
 
 #include "construo_error.hpp"
 #include "lisp_reader.hpp"
 
-LispReader::LispReader (lisp_object_t* l)
-  : lst (l)
+namespace prio {
+
+template<>
+bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d& value_out)
 {
-  //std::cout << "LispReader: " << std::flush;
-  //lisp_dump(lst, stdout);
-  //std::cout << std::endl;
+  std::vector<float> v;
+  if (!map.read(key, v)) {
+    return false;
+  }
+
+  if (v.size() != 2) {
+    return false;
+  }
+
+  value_out = Vector2d(v[0], v[1]);
+  return true;
 }
 
-lisp_object_t*
-LispReader::search_for(const char* name)
-{
-  //std::cout << "LispReader::search_for(" << name << ")" << std::endl;
-  lisp_object_t* cursor = lst;
-
-  while(!lisp_nil_p(cursor))
-    {
-      lisp_object_t* cur = lisp_car(cursor);
-
-      if (!lisp_cons_p(cur) || !lisp_symbol_p (lisp_car(cur)))
-        {
-          lisp_dump(cur, stdout);
-          throw ConstruoError (std::string("LispReader: Read error in search_for ") + name);
-        }
-      else
-        {
-          if (strcmp(lisp_symbol(lisp_car(cur)), name) == 0)
-            {
-              return lisp_cdr(cur);
-            }
-        }
-
-      cursor = lisp_cdr (cursor);
-    }
-  return 0;
-}
-
-bool
-LispReader::read_vector (const char* name, Vector2d* vec)
-{
-  lisp_object_t* obj = search_for (name);
-  if (obj)
-    {
-      vec->x = lisp_real(lisp_car(obj));
-      vec->y = lisp_real(lisp_car(lisp_cdr(obj)));
-      return true;
-    }
-  return false;
-}
-
-bool
-LispReader::read_int (const char* name, int* i)
-{
-  lisp_object_t* obj = search_for (name);
-  if (obj)
-    {
-      *i = lisp_integer(lisp_car(obj));
-      return true;
-    }
-  return false;
-}
-
-bool
-LispReader::read_float (const char* name, float* f)
-{
-  lisp_object_t* obj = search_for (name);
-  if (obj)
-    {
-      *f = lisp_real(lisp_car(obj));
-      return true;
-    }
-  return false;
-}
-
-bool
-LispReader::read_bool (const char* name, bool* b)
-{
-  lisp_object_t* obj = search_for (name);
-  if (obj)
-    {
-      *b = lisp_boolean(lisp_car(obj));
-      return true;
-    }
-  return false;
-}
+} // namespace prio
 
 /* EOF */

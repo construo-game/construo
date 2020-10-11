@@ -51,11 +51,9 @@ Spring::Spring (Particle* f, Particle* s)
   assert (length != 0);
 }
 
-Spring::Spring (World* world, lisp_object_t* cursor)
+Spring::Spring (World* world, ReaderMapping const& reader)
   : destroyed (false)
 {
-  cursor = lisp_cdr(cursor); // Skip the identifer
-
   int first_id = -1;
   int second_id = -1;
   length = -1;
@@ -64,13 +62,12 @@ Spring::Spring (World* world, lisp_object_t* cursor)
   damping     = .1f;
   max_stretch = 0.15f;
 
-  LispReader reader(cursor);
-  reader.read_int ("first", &first_id);
-  reader.read_int ("second", &second_id);
-  reader.read_float ("length", &length);
-  reader.read_float ("stiffness",   &stiffness);
-  reader.read_float ("damping",     &damping);
-  reader.read_float ("maxstretch", &max_stretch);
+  reader.read("first", first_id);
+  reader.read("second", second_id);
+  reader.read("length", length);
+  reader.read("stiffness", stiffness);
+  reader.read("damping", damping);
+  reader.read("maxstretch", max_stretch);
 
   particles.first  = world->get_particle_mgr()->lookup_particle (first_id);
   particles.second = world->get_particle_mgr()->lookup_particle (second_id);
@@ -154,19 +151,17 @@ Spring::draw_highlight (ZoomGraphicContext* gc)
                                  Colors::highlight, 4);
 }
 
-
-lisp_object_t*
-Spring::serialize()
+void
+Spring::serialize(LispWriter& writer)
 {
-  LispWriter obj ("spring");
-  obj.write_int ("first", particles.first->get_id());
-  obj.write_int ("second", particles.second->get_id());
-  obj.write_float ("length", length);
-  obj.write_float ("stiffness",   stiffness);
-  obj.write_float ("damping",     damping);
-  obj.write_float ("maxstretch", max_stretch);
-
-  return obj.create_lisp ();
+  writer.begin_object("spring")
+    .write("first", particles.first->get_id())
+    .write("second", particles.second->get_id())
+    .write ("length", length)
+    .write("stiffness", stiffness)
+    .write("damping", damping)
+    .write("maxstretch", max_stretch)
+    .end_object();
 }
 
 void
