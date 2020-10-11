@@ -47,72 +47,6 @@ World::World (const std::string& filename)
 
   has_been_run = false;
 
-#if 0 // FIXME:
-  // Try to read a file and store the content in root_obj
-  if (StringUtils::has_suffix(filename, ".construo.gz"))
-    {
-      lisp_stream_t stream;
-      int chunk_size = 128 * 1024; // allocate 256kb, should be enough for most levels
-      char* buf;
-      int buf_pos = 0;
-      int try_number = 1;
-      bool done = false;
-
-      buf = static_cast<char*>(malloc(chunk_size));
-      if (!buf)
-        {
-          throw ConstruoError ("World: Out of memory while opening " + filename);
-        }
-
-      gzFile in = gzopen(system_context->translate_filename(filename).c_str (), "rb");
-
-      while (!done)
-        {
-          int ret = gzread(in, buf + buf_pos, chunk_size);
-          if (ret == -1)
-            {
-              free (buf);
-              throw ConstruoError ("World: Out of memory while opening " + filename);
-            }
-          else if (ret == chunk_size) // buffer got full, eof not yet there
-            {
-              std::cout << "World: Read buffer to small, allocating more space" << std::endl;
-
-              buf_pos = chunk_size * try_number;
-              try_number += 1;
-              buf = static_cast<char*>(realloc(buf, chunk_size * try_number));
-
-              if (!buf)
-                {
-                  throw ConstruoError ("World: Out of memory while opening " + filename);
-                }
-            }
-          else // (ret < chunk_size)
-            {
-              // everything fine, encountered EOF
-              done = true;
-            }
-        }
-
-      lisp_stream_init_string (&stream, buf);
-      root_obj = lisp_read (&stream);
-
-      free(buf);
-      gzclose(in);
-    }
-  else
-    {
-      FILE* in = system_context->open_input_file(filename);
-      if (!in)
-        {
-          throw ConstruoError ("World: Couldn't open " + filename);
-          return;
-        }
-      lisp_stream_init_file (&stream, in);
-      root_obj = lisp_read (&stream);
-    }
-#endif
-
   ReaderDocument doc = ReaderDocument::from_file(system_context->translate_filename(filename));
   if (doc.get_name() != "construo-scene") {
     throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
@@ -513,35 +447,6 @@ World::write_lisp (const std::string& filename)
   }
   writer.end_collection();
   writer.end_object();
-
-#if 0
-  if (StringUtils::has_suffix(filename, ".gz"))
-    { // Rewrite file compressed
-      std::cout << "World: Filename ends with .gz, rewriting " << filename << " compressed" << std::endl;
-
-      int len = 512*1024;
-      int read_len;
-      char* buf;
-      buf = static_cast<char*>(malloc(len));
-      if (!buf)
-        {
-          throw ConstruoError("Out of memory");
-        }
-      FILE* in = system_context->open_input_file(filename);
-      read_len = fread (buf, sizeof (char), len, in);
-      if (len >= read_len)
-        {
-          throw ConstruoError("World: Internal error, read buffer to small");
-        }
-      fclose (in);
-
-      // Write the buffer in compressed format
-      gzFile out = gzopen(system_context->translate_filename(filename).c_str(), "wb");
-      gzwrite (out, buf, len);
-      gzclose (out);
-      free (buf);
-    }
-#endif
 }
 
 BoundingBox

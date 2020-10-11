@@ -24,7 +24,6 @@ include(GNUInstallDirs)
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
-find_package(ZLIB REQUIRED)
 
 option(WARNINGS "Enable extra compiler warnings" OFF)
 option(WERROR "Turn warnings into errors" OFF)
@@ -211,12 +210,6 @@ add_definitions(-DVERSION="0.2.4")
 add_definitions(-DPACKAGE="construo")
 add_definitions(-DPACKAGE_STRING="construo 0.2.4")
 add_definitions(-DCONSTRUO_DATADIR="${CONSTRUO_DATADIR}")
-
-if(ZLIB_FOUND)
-  add_definitions(-DHAVE_LIBZ)
-  include_directories(${ZLIB_INCLUDE_DIRS})
-  link_libraries(${ZLIB_LIBRARIES})
-endif()
 
 add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})
 set_target_properties(libconstruo PROPERTIES
