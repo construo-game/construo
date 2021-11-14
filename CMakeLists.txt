@@ -17,7 +17,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(construo VERSION 0.2.4)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
+find_package(tinycmmc CONFIG)
+message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
+list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 
 include(GNUInstallDirs)
 
@@ -65,7 +68,11 @@ endif()
 # Build dependencies
 function(build_dependencies)
   set(BUILD_TESTS OFF)
-  add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+
+  find_package(priocpp QUIET)
+  if(NOT TARGET prio)
+    add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+  endif()
 endfunction()
 build_dependencies()
 
