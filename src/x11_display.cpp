@@ -141,7 +141,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   {
     // Visual* visual = XDefaultVisual(display, DefaultScreen(display));
     depth = DefaultDepth(display, DefaultScreen(display));
-    if (depth != 16 && depth != 32)
+    if (depth != 16 && depth != 24 && depth != 32)
       {
         std::cout << "X11Display: Warring color depth '" << depth
                   << "' not supported, Construo will be slow!" << std::endl;
@@ -905,9 +905,9 @@ X11Display::get_color_value(const Color& color)
 {
   switch (depth)
     {
+    case 24:
     case 32:
-      // FIXME Cast evil?!
-      return static_cast<unsigned int>(color.get_as_rrggbb());
+      return color.get_as_rrggbb();
     case 16:
       return int(31 * color.b) | (int((63 * color.g)) << 5) | (int((31 * color.r)) << 11);
     default:
