@@ -45,6 +45,10 @@ ZoomGraphicContext::ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_)
   parent_gc  = NULL;
 }
 
+ZoomGraphicContext::~ZoomGraphicContext()
+{
+}
+
 void
 ZoomGraphicContext::set_clip_rect (int x1_, int y1_, int x2_, int y2_)
 {

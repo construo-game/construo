@@ -30,8 +30,12 @@ class RootGraphicContext : public GraphicContext
 private:
   std::stack<CursorType> cursor_stack;
   CursorType current_cursor;
+
 public:
-  RootGraphicContext() {}
+  RootGraphicContext() :
+    cursor_stack(),
+    current_cursor()
+  {}
   virtual ~RootGraphicContext() {}
 
   void set_cursor(CursorType);

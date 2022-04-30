@@ -38,11 +38,13 @@ private:
 
   int translate_x (int);
   int translate_y (int);
-public:
-  ZoomGraphicContext ();
-  ZoomGraphicContext (int x1_, int y1_, int x2_, int y2_);
 
-  void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
+public:
+  ZoomGraphicContext();
+  ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_);
+  virtual ~ZoomGraphicContext();
+
+  void set_clip_rect (int x1_, int y1_, int x2_, int y2_) override;
 
   /** Sets the clipping rectangles needed for the GC */
   void lock ();
@@ -50,23 +52,23 @@ public:
   /** Resets the clipping to the old state */
   void unlock ();
 
-  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
-  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
-  void draw_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_circle(float x, float y, float r, Color color);
-  void draw_circles(std::vector<Circle>& circles, Color color);
-  void draw_fill_circle(float x, float y, float r, Color color);
-  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
-  void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF));
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
+  void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_circle(float x, float y, float r, Color color) override;
+  void draw_circles(std::vector<Circle>& circles, Color color) override;
+  void draw_fill_circle(float x, float y, float r, Color color) override;
+  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) override;
+  void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) override;
 
-  int get_width ();
-  int get_height ();
+  int get_width() override;
+  int get_height() override;
 
-  void clear ()  { parent_gc->clear (); }
+  void clear () override { parent_gc->clear (); }
 
   /** FIXME: flip should be handled outsite of GraphicContext */
-  void flip () { parent_gc->flip (); }
+  void flip () override { parent_gc->flip (); }
 
   void set_parent_gc (GraphicContext* gc);
 
@@ -150,10 +152,14 @@ public:
   /** Convert a coordinate from world units to screen units */
   Vector2d world_to_screen (const Vector2d&);
 
-  void flip (int x1, int y1, int x2, int y2);
+  void flip (int x1, int y1, int x2, int y2) override;
 
-  void push_quick_draw() { parent_gc->push_quick_draw(); }
-  void pop_quick_draw()  { parent_gc->pop_quick_draw(); }
+  void push_quick_draw() override { parent_gc->push_quick_draw(); }
+  void pop_quick_draw() override { parent_gc->pop_quick_draw(); }
+
+public:
+  ZoomGraphicContext(const ZoomGraphicContext&) = delete;
+  ZoomGraphicContext& operator=(const ZoomGraphicContext&) = delete;
 };
 
 #endif

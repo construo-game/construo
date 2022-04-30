@@ -27,10 +27,10 @@ struct Color
   float a;
 
   Color (uint32_t i) :
-    r(((i & 0xFF000000) >> 24) / 255.0f),
-    g(((i & 0x00FF0000) >> 16) / 255.0f),
-    b(((i & 0x0000FF00) >>  8) / 255.0f),
-    a(((i & 0x000000FF) >>  0) / 255.0f)
+    r(static_cast<float>((i & 0xFF000000) >> 24) / 255.0f),
+    g(static_cast<float>((i & 0x00FF0000) >> 16) / 255.0f),
+    b(static_cast<float>((i & 0x0000FF00) >>  8) / 255.0f),
+    a(static_cast<float>((i & 0x000000FF) >>  0) / 255.0f)
   {}
 
   Color (float r_, float g_, float b_, float a_ = 1.0f) :
@@ -39,9 +39,9 @@ struct Color
   /** Convert the color into 0xRRGGBB format */
   inline unsigned int get_as_rrggbb () const
   {
-    return ((unsigned int)(255 * b))
-      |   (((unsigned int)(255 * g)) << 8)
-      |   (((unsigned int)(255 * r)) << 16);
+    return (static_cast<unsigned int>(255.0f * b))
+      |   ((static_cast<unsigned int>(255.0f * g)) << 8)
+      |   ((static_cast<unsigned int>(255.0f * r)) << 16);
   }
 };
 

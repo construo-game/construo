@@ -71,6 +71,10 @@ public:
 
   void grab_mouse (GUIComponent*);
   void ungrab_mouse (GUIComponent*);
+
+private:
+  GUIManager(const GUIManager&) = delete;
+  GUIManager& operator=(const GUIManager&) = delete;
 };
 
 #endif

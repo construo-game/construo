@@ -84,6 +84,10 @@ public:
 
   /** start or stops the simulation */
   void start_simulation ();
+
+public:
+  Controller(const Controller&) = delete;
+  Controller& operator=(const Controller&) = delete;
 };
 
 #endif

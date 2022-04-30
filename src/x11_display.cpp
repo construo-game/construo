@@ -33,9 +33,43 @@
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
-X11Display::X11Display(int w, int h, bool fullscreen_)
-  : doublebuffer (settings.doublebuffer),
-    width(w), height(h), shift_pressed (false), fullscreen (fullscreen_)
+X11Display::X11Display(int w, int h, bool fullscreen_) :
+  cursor_scroll(),
+  cursor_scroll_pix(),
+  cursor_scroll_mask(),
+  cursor_zoom(),
+  cursor_zoom_pix(),
+  cursor_zoom_mask(),
+  cursor_insert(),
+  cursor_insert_pix(),
+  cursor_insert_mask(),
+  cursor_select(),
+  cursor_select_pix(),
+  cursor_select_mask(),
+  cursor_collider(),
+  cursor_collider_pix(),
+  cursor_collider_mask(),
+  doublebuffer(settings.doublebuffer),
+#ifdef HAVE_LIBXXF86VM
+  orig_modeline(),
+#endif
+  orig_viewport_x(),
+  orig_viewport_y(),
+  orig_dotclock(),
+  width(w),
+  height(h),
+  display(),
+  window(),
+  colormap(),
+  drawable(),
+  gc(),
+  shift_pressed (false),
+  mouse_x(),
+  mouse_y(),
+  depth(),
+  fullscreen (fullscreen_),
+  flip_rects(),
+  last_flip_rects()
 {
 #ifndef HAVE_LIBXXF86VM
   fullscreen_ = false;
@@ -75,7 +109,9 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
   window = XCreateWindow(display, RootWindow(display, screen),
                          0,0, // position
                          width, height, 0,
-                         CopyFromParent, InputOutput, CopyFromParent,
+                         CopyFromParent, // depth
+                         InputOutput, // class
+                         nullptr /*CopyFromParent*/, // visual
                          CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
                          &attributes);
 
@@ -103,11 +139,11 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
                      window,
                      &text_property,
                      &text_property,
-                     0,
+                     nullptr,
                      0,
                      &size_hints,
-                     0,
-                     0);
+                     nullptr,
+                     nullptr);
 
     // Set WM_DELETE_WINDOW atom in WM_PROTOCOLS property (to get window_delete requests).
     wm_delete_window = XInternAtom (display, "WM_DELETE_WINDOW", False);
@@ -153,37 +189,37 @@ X11Display::X11Display(int w, int h, bool fullscreen_)
     XColor cursor_fg = get_xcolor(Color(1.0f, 1.0f, 1.0f));
     XColor cursor_bg = get_xcolor(Color(0, 0, 0));
 
-    cursor_scroll_pix = XCreateBitmapFromData (display, window, (char*)cursor_scroll_bits,
+    cursor_scroll_pix = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_scroll_bits),
                                                cursor_scroll_width, cursor_scroll_height);
-    cursor_scroll_mask = XCreateBitmapFromData (display, window, (char*)cursor_scroll_mask_bits,
+    cursor_scroll_mask = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_scroll_mask_bits),
                                                 cursor_scroll_width, cursor_scroll_height);
     cursor_scroll = XCreatePixmapCursor(display, cursor_scroll_pix, cursor_scroll_mask, &cursor_bg, &cursor_fg,
                                         cursor_scroll_x_hot, cursor_scroll_y_hot);
 
-    cursor_zoom_pix =  XCreateBitmapFromData (display, window, (char*)cursor_zoom_bits,
+    cursor_zoom_pix =  XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_zoom_bits),
                                               cursor_zoom_width, cursor_zoom_height);
-    cursor_zoom_mask = XCreateBitmapFromData (display, window, (char*)cursor_zoom_mask_bits,
+    cursor_zoom_mask = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_zoom_mask_bits),
                                               cursor_zoom_width, cursor_zoom_height);
     cursor_zoom = XCreatePixmapCursor(display, cursor_zoom_pix, cursor_zoom_mask, &cursor_bg, &cursor_fg,
                                       cursor_zoom_x_hot, cursor_zoom_y_hot);
 
-    cursor_insert_pix =  XCreateBitmapFromData (display, window, (char*)cursor_insert_bits,
+    cursor_insert_pix =  XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_insert_bits),
                                                 cursor_insert_width, cursor_insert_height);
-    cursor_insert_mask = XCreateBitmapFromData (display, window, (char*)cursor_insert_mask_bits,
+    cursor_insert_mask = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_insert_mask_bits),
                                                 cursor_insert_width, cursor_insert_height);
     cursor_insert = XCreatePixmapCursor(display, cursor_insert_pix, cursor_insert_mask, &cursor_bg, &cursor_fg,
                                         cursor_insert_x_hot, cursor_insert_y_hot);
 
-    cursor_select_pix =  XCreateBitmapFromData (display, window, (char*)cursor_select_bits,
+    cursor_select_pix =  XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_select_bits),
                                                 cursor_select_width, cursor_select_height);
-    cursor_select_mask = XCreateBitmapFromData (display, window, (char*)cursor_select_mask_bits,
+    cursor_select_mask = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_select_mask_bits),
                                                 cursor_select_width, cursor_select_height);
     cursor_select = XCreatePixmapCursor(display, cursor_select_pix, cursor_select_mask, &cursor_bg, &cursor_fg,
                                         cursor_select_x_hot, cursor_select_y_hot);
 
-    cursor_collider_pix =  XCreateBitmapFromData (display, window, (char*)cursor_collider_bits,
+    cursor_collider_pix =  XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_collider_bits),
                                                   cursor_collider_width, cursor_collider_height);
-    cursor_collider_mask = XCreateBitmapFromData (display, window, (char*)cursor_collider_mask_bits,
+    cursor_collider_mask = XCreateBitmapFromData (display, window, reinterpret_cast<char*>(cursor_collider_mask_bits),
                                                   cursor_collider_width, cursor_collider_height);
     cursor_collider = XCreatePixmapCursor(display, cursor_collider_pix, cursor_collider_mask, &cursor_bg, &cursor_fg,
                                           cursor_collider_x_hot, cursor_collider_y_hot);
@@ -230,7 +266,7 @@ X11Display::set_cursor_real(CursorType cursor)
       XDefineCursor (display, window, cursor_select);
       break;
     default:
-      std::cout << "X11Display: Unhandled cursor type: " << cursor << std::endl;
+      std::cout << "X11Display: Unhandled cursor type: " << static_cast<int>(cursor) << std::endl;
       break;
     }
 }
@@ -248,7 +284,7 @@ X11Display::draw_lines (std::vector<Line>& lines, Color color, int wide)
       segments[i].y2 = static_cast<short>(lines[i].y2);
     }
 
-  XDrawSegments(display, drawable, gc, &*segments.begin(), segments.size());
+  XDrawSegments(display, drawable, gc, &*segments.begin(), static_cast<int>(segments.size()));
 }
 
 void
@@ -267,14 +303,14 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
 
   XSetForeground(display, gc, get_color_value(color));
   XFillArcs(display, drawable, gc,
-            &*arcs.begin(), arcs.size());
+            &*arcs.begin(), static_cast<int>(arcs.size()));
 }
 
 void
 X11Display::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   XSetForeground(display, gc, get_color_value(color));
-  XDrawLine (display, drawable, gc, (int) x1, (int) y1, (int) x2, (int) y2);
+  XDrawLine (display, drawable, gc, static_cast<int>(x1), static_cast<int>(y1), static_cast<int>(x2), static_cast<int>(y2));
 }
 
 void
@@ -282,8 +318,8 @@ X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
   XFillRectangle (display, drawable, gc,
-                  int(x1), int(y1),
-                  int(x2 - x1), int(y2 - y1));
+                  static_cast<int>(x1), static_cast<int>(y1),
+                  static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
 }
 
 void
@@ -292,8 +328,8 @@ X11Display::draw_fill_circle(float x, float y, float r, Color color)
   // FIXME: doesn't work
   XSetForeground(display, gc, get_color_value(color));
   XFillArc(display, drawable, gc,
-           int(x-r), int(y-r),
-           int(r*2), int(r*2), 0,
+           static_cast<int>(x-r), static_cast<int>(y-r),
+           static_cast<int>(r*2), static_cast<int>(r*2), 0,
            360*64);
 }
 
@@ -302,7 +338,7 @@ X11Display::draw_circle(float x, float y, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(display, gc, get_color_value(color));
-  XDrawArc(display, drawable, gc, int(x-r), int(y-r), int(r*2.0f), int(r*2.0f), 0, 360*64);
+  XDrawArc(display, drawable, gc, static_cast<int>(x-r), static_cast<int>(y-r), static_cast<int>(r*2.0f), static_cast<int>(r*2.0f), 0, 360*64);
 }
 
 void
@@ -310,15 +346,15 @@ X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
   XDrawRectangle (display, drawable, gc,
-                  int(x1), int(y1),
-                  int(x2 - x1), int(y2 - y1));
+                  static_cast<int>(x1), static_cast<int>(y1),
+                  static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
 }
 
 void
 X11Display::draw_string(float x, float y, const std::string& str, Color color)
 {
   XSetForeground(display, gc, get_color_value(color));
-  XDrawString (display, drawable, gc, int(x), int(y), str.c_str (), str.length ());
+  XDrawString (display, drawable, gc, static_cast<int>(x), static_cast<int>(y), str.c_str (), static_cast<int>(str.length()));
 }
 
 void
@@ -326,8 +362,8 @@ X11Display::draw_string_centered(float x, float y, const std::string& str, Color
 {
   XSetForeground(display, gc, get_color_value(color));
   XDrawString (display, drawable, gc,
-               int(x) - ((str.length() * 6) / 2), int(y),
-               str.c_str (), str.length ());
+               static_cast<int>(x) - ((static_cast<int>(str.length()) * 6) / 2), static_cast<int>(y),
+               str.c_str (), static_cast<int>(str.length()));
 }
 
 int
@@ -586,7 +622,7 @@ X11Display::read_event ()
     case ClientMessage:
       std::cout << "X11Display: got client message" << std::endl;
       // Window close request
-      if ((int) event.xclient.data.l[0] == (int) wm_delete_window) {
+      if (static_cast<int>(event.xclient.data.l[0]) == static_cast<int>(wm_delete_window)) {
         std::cout << "Window is destroyed" << std::endl;
         send_button_press(BUTTON_ESCAPE);
       }
@@ -889,10 +925,10 @@ X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
 {
   XRectangle rect[1];
 
-  rect[0].x = x1;
-  rect[0].y = y1;
-  rect[0].width  = x2 - x1 + 1;
-  rect[0].height = y2 - y1 + 1;
+  rect[0].x = static_cast<short int>(x1);
+  rect[0].y = static_cast<short int>(y1);
+  rect[0].width  = static_cast<short int>(x2 - x1 + 1);
+  rect[0].height = static_cast<short int>(y2 - y1 + 1);
 
   XSetClipRectangles (display, gc,
                       0, 0, // clip origin
@@ -909,18 +945,18 @@ X11Display::get_color_value(const Color& color)
     case 32:
       return color.get_as_rrggbb();
     case 16:
-      return int(31 * color.b) | (int((63 * color.g)) << 5) | (int((31 * color.r)) << 11);
+      return static_cast<int>(31 * color.b) | (static_cast<int>((63 * color.g)) << 5) | (static_cast<int>((31 * color.r)) << 11);
     default:
       { // This is extremly slow!
         XColor x_color;
 
-        x_color.red   = int(color.r * 65535);
-        x_color.green = int(color.g * 65535);
-        x_color.blue  = int(color.b * 65535);
+        x_color.red   = static_cast<unsigned short>(color.r * 65535);
+        x_color.green = static_cast<unsigned short>(color.g * 65535);
+        x_color.blue  = static_cast<unsigned short>(color.b * 65535);
 
         XAllocColor(display, colormap, &x_color);
 
-        return x_color.pixel;
+        return static_cast<unsigned int>(x_color.pixel);
       }
       break;
     }
@@ -931,9 +967,9 @@ X11Display::get_xcolor(const Color& color)
 {
   XColor x_color;
 
-  x_color.red   = int(color.r * 65535);
-  x_color.green = int(color.g * 65535);
-  x_color.blue  = int(color.b * 65535);
+  x_color.red   = static_cast<unsigned short>(color.r * 65535);
+  x_color.green = static_cast<unsigned short>(color.g * 65535);
+  x_color.blue  = static_cast<unsigned short>(color.b * 65535);
 
   XAllocColor(display, colormap, &x_color);
 

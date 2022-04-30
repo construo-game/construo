@@ -33,7 +33,7 @@
 #include "screen_manager.hpp"
 #include "glut_display.hpp"
 
-GlutDisplay* GlutDisplay::instance_ = 0;
+GlutDisplay* GlutDisplay::instance_ = nullptr;
 
 void reshape_func(int w, int h)
 {
@@ -70,7 +70,18 @@ void mouse_motion_func (int x, int y)
   GlutDisplay::instance()->mouse_motion_func(x, y);
 }
 
-GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
+GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
+  window_x_pos(),
+  window_y_pos(),
+  window_width(),
+  window_height(),
+  width(),
+  height(),
+  mouse_x(),
+  mouse_y(),
+  block(),
+  update_display(),
+  is_fullscreen()
 {
   instance_ = this;
 
@@ -101,18 +112,18 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen)
   glutKeyboardFunc(::keyboard_func);
   glutSpecialFunc(::special_func);
 
-  glClearColor (0.0, 0.0, 0.0, 0.1);
+  glClearColor (0.0f, 0.0f, 0.0f, 0.1f);
   if (settings.alphablending)
-    {
-      glShadeModel (GL_SMOOTH);
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
+  {
+    glShadeModel (GL_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  }
 
   if (settings.antialiasing && settings.alphablending)
-    {
-      glEnable(GL_LINE_SMOOTH);
-    }
+  {
+    glEnable(GL_LINE_SMOOTH);
+  }
 
   //glEnable(GL_SCISSOR_TEST);
   //glScissor(0, 0, settings.screen_width, settings.screen_height);
@@ -143,7 +154,7 @@ void
 GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
 {
   if (settings.thick_lines)
-    glLineWidth (wide);
+    glLineWidth(static_cast<float>(wide));
 
   glBegin (GL_LINES);
   for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
@@ -158,7 +169,7 @@ void
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
   if (settings.thick_lines)
-    glLineWidth (wide);
+    glLineWidth(static_cast<float>(wide));
 
   glColor4f (color.r, color.g, color.b, color.a);
   glBegin (GL_LINES);
@@ -252,7 +263,7 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
   glColor4f (color.r, color.g, color.b, color.a);
   glPushMatrix();
   glTranslatef (x , y, 0);
-  glScalef (.07f, -.07, 0);
+  glScalef (.07f, -.07f, 0);
 
   for (std::string::const_iterator i = str.begin (); i != str.end (); ++i)
     {
@@ -266,7 +277,7 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 void
 GlutDisplay::draw_string_centered(float x, float y, const std::string& str, Color color)
 {
-  draw_string(x - (7.5 * str.length())/2,
+  draw_string(x - (7.5f * static_cast<float>(str.length())) / 2.0f,
               y, str, color);
 }
 
@@ -661,7 +672,7 @@ GlutDisplay::set_cursor_real(CursorType cursor)
       glutSetCursor(GLUT_CURSOR_CYCLE);
       break;
     default:
-      std::cout << "GlutDisplay: Unhandled cursor type: " << cursor << std::endl;
+      std::cout << "GlutDisplay: Unhandled cursor type: " << static_cast<int>(cursor) << std::endl;
       break;
     }
 

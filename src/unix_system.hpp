@@ -34,21 +34,22 @@ private:
 public:
   UnixSystem ();
   virtual ~UnixSystem ();
-  unsigned int get_time ();
-  void sleep (unsigned long);
-  std::string get_construo_rc_path();
-  std::string get_user_realname();
-  std::string get_user_email();
 
-  FILE* open_input_file(const std::string& filename);
-  FILE* open_output_file(const std::string& filename);
+  unsigned int get_time () override;
+  void sleep (unsigned long) override;
+  std::string get_construo_rc_path() override;
+  std::string get_user_realname() override;
+  std::string get_user_email() override;
 
-  unsigned int get_mtime (const std::string& filename);
+  FILE* open_input_file(const std::string& filename) override;
+  FILE* open_output_file(const std::string& filename) override;
 
-  FileType get_file_type(const std::string& filename);
-  std::vector<std::string> read_directory(const std::string& pathname);
+  unsigned int get_mtime (const std::string& filename) override;
 
-  std::string translate_filename (const std::string&);
+  FileType get_file_type(const std::string& filename) override;
+  std::vector<std::string> read_directory(const std::string& pathname) override;
+
+  std::string translate_filename(const std::string&) override;
 };
 
 #endif

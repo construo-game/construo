@@ -17,6 +17,7 @@
 #ifndef HEADER_CONSTRUO_CONSTRUO_MAIN_HPP
 #define HEADER_CONSTRUO_CONSTRUO_MAIN_HPP
 
+#include <memory>
 #include <vector>
 #include <iostream>
 #include <list>
@@ -32,15 +33,16 @@ class ConstruoMain
 {
 private:
 #ifdef USE_X11_DISPLAY
-  X11Display*  display;
+  std::unique_ptr<X11Display>  display;
 #elif USE_GLUT_DISPLAY
-  GlutDisplay* display;
+  std::unique_ptr<GlutDisplay> display;
 #endif
-  UnixSystem* system;
+  std::unique_ptr<UnixSystem> system;
 
   bool do_quit;
   Config config;
-  GUIManager* gui_manager;
+  std::unique_ptr<GUIManager> gui_manager;
+
 public:
   ConstruoMain ();
   virtual ~ConstruoMain ();

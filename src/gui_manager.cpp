@@ -37,9 +37,9 @@ GUIManager::GUIManager ()
 
   start_time  = system_context->get_time ();
 
-  last_component     = 0;
-  grabbing_component = 0;
-  current_component  = 0;
+  last_component     = nullptr;
+  grabbing_component = nullptr;
+  current_component  = nullptr;
 }
 
 GUIManager::~GUIManager ()

@@ -53,25 +53,25 @@ T mid (const T& a, const T& b, const T& c)
 
 inline int round(float a)
 {
-  return int((a > 0) ? (a + .5f) : (a - .5));
+  return int((a > 0.0f) ? (a + 0.5f) : (a - 0.5f));
 }
 
 /** Round x to a multilple of n */
 inline int round_to(float x, int n)
 {
-  if (x > 0)
-    return static_cast<int>(x + (n/2)) / n * n;
+  if (x > 0.0f)
+    return static_cast<int>(x + (static_cast<float>(n) / 2.0f)) / n * n;
   else
-    return static_cast<int>(x - (n/2)) / n * n;
+    return static_cast<int>(x - (static_cast<float>(n) / 2.0f)) / n * n;
 }
 
 /** Same as above, except n can be less to 1 */
 inline float round_to_float(float x, float n)
 {
-  if (x > 0)
-    return int((x + (n/2)) / n) * n;
+  if (x > 0.0f)
+    return int((x + (static_cast<float>(n) / 2.0f)) / n) * n;
   else
-    return int((x - (n/2)) / n) * n;
+    return int((x - (static_cast<float>(n) / 2.0f)) / n) * n;
 }
 
 /** Get exponent of x */
@@ -80,12 +80,12 @@ inline int get_exp_n(float x, int n)
   int e = 0;
   while(x < 1)
   {
-    x *= n;
+    x *= static_cast<float>(n);
     e--;
   }
-  while(x >= n)
+  while(x >= static_cast<float>(n))
   {
-    x /= n;
+    x /= static_cast<float>(n);
     e++;
   }
   return e;

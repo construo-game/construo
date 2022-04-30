@@ -41,9 +41,12 @@
 ConstruoMain* construo_main;
 Controller*   controller;
 
-ConstruoMain::ConstruoMain ()
-  : do_quit(false),
-    gui_manager(0)
+ConstruoMain::ConstruoMain () :
+  display(),
+  system(),
+  do_quit(false),
+  config(),
+  gui_manager()
 {
 }
 
@@ -61,7 +64,7 @@ void
 ConstruoMain::exit()
 {
   on_exit();
-  delete gui_manager;
+  gui_manager.reset();
   deinit_system();
   ::exit(EXIT_SUCCESS);
 }
@@ -88,28 +91,28 @@ ConstruoMain::init_system()
 {
   //std::cout << "ConstruoMain::init_system()" << std::endl;
 
-  system = new UnixSystem();
+  system = std::make_unique<UnixSystem>();
 #ifdef USE_X11_DISPLAY
-  display = new X11Display(settings.screen_width, settings.screen_height,
-                           settings.fullscreen);
+  display = std::make_unique<X11Display>(settings.screen_width, settings.screen_height,
+                                         settings.fullscreen);
 #elif USE_GLUT_DISPLAY
-  display = new GlutDisplay(settings.screen_width, settings.screen_height, settings.fullscreen);
+  display = std::make_unique<GlutDisplay>(settings.screen_width, settings.screen_height, settings.fullscreen);
 #else
 #  error "No display type defined"
 #endif
 
   // Init the display, input systems
-  graphic_context = display;
-  input_context   = display;
-  system_context  = system;
+  graphic_context = display.get();
+  input_context   = display.get();
+  system_context  = system.get();
 }
 
 void
 ConstruoMain::deinit_system()
 {
   //std::cout << "ConstruoMain::deinit_system()" << std::endl;
-  delete display;
-  delete system;
+  display.reset();
+  system.reset();
 }
 
 int
@@ -137,7 +140,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
         ::exit(EXIT_FAILURE);
       }
 
-    gui_manager = new GUIManager ();
+    gui_manager = std::make_unique<GUIManager>();
 
     if (!settings.startup_file.empty())
       {

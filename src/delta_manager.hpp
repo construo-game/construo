@@ -43,7 +43,7 @@ public:
 
   float get ()
   {
-    return ( system_context->get_time () - last_time) / 1000.0f;
+    return static_cast<float>( system_context->get_time () - last_time) / 1000.0f;
   }
 };
 

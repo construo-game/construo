@@ -55,37 +55,38 @@ private:
   int update_display;
 
   bool is_fullscreen;
+
 public:
   static GlutDisplay* instance () { return instance_; }
 
   GlutDisplay (int w, int h, int fullscreen);
   virtual ~GlutDisplay();
 
-  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
-  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
-  void draw_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_circle(float x, float y, float r, Color color);
-  void draw_circles(std::vector<Circle>& circles, Color color);
-  void draw_fill_circle(float x, float y, float r, Color color);
-  void draw_string(float x, float y, const std::string& str, Color color);
-  void draw_string_centered(float x, float y, const std::string& str, Color color);
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
+  void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_circle(float x, float y, float r, Color color) override;
+  void draw_circles(std::vector<Circle>& circles, Color color) override;
+  void draw_fill_circle(float x, float y, float r, Color color) override;
+  void draw_string(float x, float y, const std::string& str, Color color) override;
+  void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  void clear ();
-  void flip ();
-  void flip (int x1, int y1, int x2, int y2);
+  void clear () override;
+  void flip () override;
+  void flip (int x1, int y1, int x2, int y2) override;
 
   bool get_fullscreen () { return is_fullscreen; }
 
-  int get_width()  { return width; }
-  int get_height() { return height; }
+  int get_width() override { return width; }
+  int get_height() override { return height; }
 
-  bool get_key (int key);
-  int  get_mouse_x ();
-  int  get_mouse_y ();
+  bool get_key(int key) override;
+  int  get_mouse_x() override;
+  int  get_mouse_y() override;
 
   void run();
-  void set_cursor_real(CursorType);
+  void set_cursor_real(CursorType) override;
   void reshape_func(int w, int h);
   void display_func ();
   void mouse_func (int button, int button_state, int x, int y);
@@ -94,13 +95,14 @@ public:
   void special_func (int key, int x, int y);
   void mouse_motion_func (int x, int y);
 
-  void set_clip_rect (int x1, int y1, int x2, int y2);
+  void set_clip_rect (int x1, int y1, int x2, int y2) override;
 
-  void push_quick_draw();
-  void pop_quick_draw();
+  void push_quick_draw() override;
+  void pop_quick_draw() override;
 
-  void enter_fullscreen();
-  void leave_fullscreen();
+  void enter_fullscreen() override;
+  void leave_fullscreen() override;
+
 private:
   GlutDisplay (const GlutDisplay&);
   GlutDisplay& operator= (const GlutDisplay&);

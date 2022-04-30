@@ -101,54 +101,54 @@ public:
   virtual ~X11Display ();
 
   // Graphic Context stuff
-  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0);
-  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0);
-  void draw_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color);
-  void draw_circle(float x, float y, float r, Color color);
-  void draw_circles(std::vector<Circle>& circles, Color color);
+  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
+  void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
+  void draw_circle(float x, float y, float r, Color color) override;
+  void draw_circles(std::vector<Circle>& circles, Color color) override;
 
-  void draw_fill_circle(float x, float y, float r, Color color);
-  void draw_string(float x, float y, const std::string& str, Color color);
-  void draw_string_centered(float x, float y, const std::string& str, Color color);
+  void draw_fill_circle(float x, float y, float r, Color color) override;
+  void draw_string(float x, float y, const std::string& str, Color color) override;
+  void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  int get_width () { return width; }
-  int get_height () { return height; }
+  int get_width() override { return width; }
+  int get_height() override { return height; }
 
   void toggle_fullscreen();
 
-  void clear ();
+  void clear () override;
 
   /** Flip the double buffered display */
-  void flip ();
+  void flip () override;
 
-  void enter_fullscreen();
-  void leave_fullscreen();
+  void enter_fullscreen() override;
+  void leave_fullscreen() override;
 
   /** perform the real flip, only flip marked reagions */
-  void real_flip ();
+  void real_flip() override;
 
-  void flip (int x1, int y1, int x2, int y2);
+  void flip (int x1, int y1, int x2, int y2) override;
 
   // Input Context stuff
-  int get_mouse_x ();
-  int get_mouse_y ();
+  int get_mouse_x () override;
+  int get_mouse_y () override;
 
-  bool get_key (int key);
+  bool get_key (int key) override;
 
   /** Waits for events to come in, blocks until new events are available */
-  void wait_for_events_blocking ();
+  void wait_for_events_blocking();
 
-  void wait_for_events ();
+  void wait_for_events();
 
   void run();
 
-  void set_clip_rect (int x1_, int y1_, int x2_, int y2_);
+  void set_clip_rect (int x1_, int y1_, int x2_, int y2_) override;
 
   unsigned int get_color_value(const Color& color);
   XColor get_xcolor(const Color& color);
 
-  void set_cursor_real(CursorType cursor);
+  void set_cursor_real(CursorType cursor) override;
 private:
   bool read_event ();
   void send_button_press (int i);
