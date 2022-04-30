@@ -36,28 +36,25 @@
            construo = pkgs.stdenv.mkDerivation {
              name = "construo";
              src = nixpkgs.lib.cleanSource ./.;
-             cmakeFlags = [];
              postFixup = ''
                wrapProgram $out/bin/construo.glut \
                   --prefix LIBGL_DRIVERS_PATH ":" "${pkgs.mesa.drivers}/lib/dri" \
                   --prefix LD_LIBRARY_PATH ":" "${pkgs.mesa.drivers}/lib"
             '';
-             nativeBuildInputs = [
-               pkgs.cmake
-               pkgs.gcc
-               pkgs.git
-               pkgs.makeWrapper
-               pkgs.ninja
-               pkgs.pkgconfig
+             nativeBuildInputs = with pkgs; [
+               cmake
+               makeWrapper
+               pkgconfig
              ];
-             buildInputs = [
+             buildInputs = with pkgs; [
+               zlib
+               xorg.libX11
+               freeglut
+               libGL
+               libGLU
+             ] ++ [
+               tinycmmc.defaultPackage.${system}
                priocpp.defaultPackage.${system}
-
-               pkgs.zlib
-               pkgs.xorg.libX11
-               pkgs.freeglut
-               pkgs.libGL
-               pkgs.libGLU
              ];
            };
         };
