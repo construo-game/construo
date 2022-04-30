@@ -184,7 +184,6 @@ set(CONSTRUO_X11_SOURCES_CXX
   )
 
 include_directories(src/)
-include_directories(.)
 
 add_definitions(-DVERSION="${PROJECT_VERSION}")
 add_definitions(-DPACKAGE="construo")
