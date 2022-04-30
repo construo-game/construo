@@ -28,6 +28,7 @@ include(GNUInstallDirs)
 include(MaximumWarnings)
 include(GetProjectVersion)
 
+set(OpenGL_GL_PREFERENCE "LEGACY")
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
