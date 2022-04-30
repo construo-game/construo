@@ -106,9 +106,6 @@ set(CONSTRUO_SOURCES_CXX
   src/gui_window.hpp
   src/input_context.cpp
   src/input_context.hpp
-  src/keep_alive.hpp
-  src/keep_alive_mgr.cpp
-  src/keep_alive_mgr.hpp
   src/keys.hpp
   src/lisp_reader.cpp
   src/lisp_reader.hpp

@@ -20,7 +20,6 @@
 #include "input_context.hpp"
 #include "system_context.hpp"
 #include "controller.hpp"
-#include "keep_alive_mgr.hpp"
 #include "events.hpp"
 #include "gui_component.hpp"
 #include "gui_manager.hpp"
