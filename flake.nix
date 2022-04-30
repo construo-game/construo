@@ -41,11 +41,16 @@
              pname = "construo";
              version = construo_version;
              src = nixpkgs.lib.cleanSource ./.;
+             cmakeFlags = [
+               "-DWARNINGS=ON"
+               # "-DWERROR=ON"
+               "-DBUILD_TESTS=ON"
+             ];
              postFixup = ''
                wrapProgram $out/bin/construo.glut \
                   --prefix LIBGL_DRIVERS_PATH ":" "${pkgs.mesa.drivers}/lib/dri" \
                   --prefix LD_LIBRARY_PATH ":" "${pkgs.mesa.drivers}/lib"
-            '';
+             '';
              nativeBuildInputs = with pkgs; [
                cmake
                makeWrapper

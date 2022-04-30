@@ -22,35 +22,21 @@ find_package(tinycmmc CONFIG)
 message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 
+option(BUILD_TESTS "Build test cases" OFF)
+
 include(GNUInstallDirs)
+include(MaximumWarnings)
 include(GetProjectVersion)
 
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
 
-option(WARNINGS "Enable extra compiler warnings" OFF)
-option(WERROR "Turn warnings into errors" OFF)
-option(BUILD_TESTS "Build test cases" OFF)
-
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
 if (BUILD_TESTS)
   enable_testing()
 endif(BUILD_TESTS)
-
-if(WARNINGS)
-  set(WARNINGS_CXX_FLAGS
-    -pedantic -Wall -Wextra -Wno-c++0x-compat -Wnon-virtual-dtor
-    -Werror -Wcast-qual -Winit-self -Wno-unused-parameter)
-  # -Wconversion -Weffc++ -Wshadow
-  # -Winline -Wfloat-equal -Wunreachable-code
-endif()
-
-if(WERROR)
-  set(WARNINGS_CXX_FLAGS ${WARNINGS_CXX_FLAGS}
-    -Werror)
-endif()
 
 # Build dependencies
 function(build_dependencies)
