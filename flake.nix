@@ -31,10 +31,15 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        version_file = pkgs.lib.fileContents ./VERSION;
+        construo_version = if (((builtins.substring 0 1) version_file) != "v")
+                           then ("0.2.4-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
+                           else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
        in rec {
          packages = flake-utils.lib.flattenTree rec {
-           construo = pkgs.stdenv.mkDerivation {
-             name = "construo";
+           construo = pkgs.stdenv.mkDerivation rec {
+             pname = "construo";
+             version = construo_version;
              src = nixpkgs.lib.cleanSource ./.;
              postFixup = ''
                wrapProgram $out/bin/construo.glut \

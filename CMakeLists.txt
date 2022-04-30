@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.0)
-project(construo VERSION 0.2.4)
+project(construo)
 
 set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
 find_package(tinycmmc CONFIG)
@@ -23,6 +23,7 @@ message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 
 include(GNUInstallDirs)
+include(GetProjectVersion)
 
 find_package(OpenGL)
 find_package(GLUT)
@@ -37,20 +38,6 @@ set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 if (BUILD_TESTS)
   enable_testing()
 endif(BUILD_TESTS)
-
-find_package(Git)
-if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags --always HEAD
-    OUTPUT_VARIABLE GIT_REPO_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-  execute_process(COMMAND ${GIT_EXECUTABLE} log -n 1 --pretty=%cd --date=format:%Y-%m-%d ${GIT_REPO_VERSION}
-    OUTPUT_VARIABLE GIT_REPO_DATE
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-else()
-  set(GIT_REPO_VERSION "${PROJECT_VERSION}")
-  string(TIMESTAMP GIT_REPO_DATE "%Y-%m-%d")
-endif()
 
 if(WARNINGS)
   set(WARNINGS_CXX_FLAGS
