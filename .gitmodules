@@ -4,6 +4,3 @@
 [submodule "external/cmake-modules"]
 	path = external/cmake-modules
 	url = https://gitlab.com/grumbel/cmake-modules.git
-[submodule "external/shared-modules"]
-	path = external/shared-modules
-	url = https://github.com/Grumbel/shared-modules.git
