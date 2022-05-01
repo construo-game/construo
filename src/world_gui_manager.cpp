@@ -83,13 +83,13 @@ void action_cam_callback() {
 }
 
 void zoom_in_callback() {
-  WorldViewComponent::instance()->wheel_up (graphic_context->get_width()/2,
-                                            graphic_context->get_height()/2);
+  WorldViewComponent::instance()->wheel_up (g_graphic_context->get_width()/2,
+                                            g_graphic_context->get_height()/2);
 }
 
 void zoom_out_callback() {
-  WorldViewComponent::instance()->wheel_down (graphic_context->get_width()/2,
-                                              graphic_context->get_height()/2);
+  WorldViewComponent::instance()->wheel_down (g_graphic_context->get_width()/2,
+                                              g_graphic_context->get_height()/2);
 
 }
 
@@ -197,8 +197,8 @@ WorldGUIManager::WorldGUIManager() :
     add (window);
   */
 
-  resize(graphic_context->get_width(),
-         graphic_context->get_height());
+  resize(g_graphic_context->get_width(),
+         g_graphic_context->get_height());
 }
 
 WorldGUIManager::~WorldGUIManager ()
@@ -214,7 +214,7 @@ WorldGUIManager::resize(int width, int height)
   auto BUTTON_RPOS = [](int n) { return 50 + n * 30; };
   int const BUTTON_WIDTH = 75;
   int const BUTTON_HEIGHT = 25;
-  int const BUTTON_LX_POS = graphic_context->get_width() - BUTTON_WIDTH - 10;
+  int const BUTTON_LX_POS = g_graphic_context->get_width() - BUTTON_WIDTH - 10;
 
   m_worldview_component->set_geometry(0, 0, width, height);
 
@@ -249,48 +249,48 @@ WorldGUIManager::update()
 void
 WorldGUIManager::draw_overlay ()
 {
-  graphic_context->draw_string (10,  20, "      [1-9] - quick save");
-  graphic_context->draw_string (10,  32, "[shift 1-9] - quick load");
-  graphic_context->draw_string (10,  44, "    [space] - run simulation");
-  graphic_context->draw_string (10,  56, "      [tab] - toggle slow motion");
-  graphic_context->draw_string (10,  68, "      [F11] - toggle fullscreen");
+  g_graphic_context->draw_string (10,  20, "      [1-9] - quick save");
+  g_graphic_context->draw_string (10,  32, "[shift 1-9] - quick load");
+  g_graphic_context->draw_string (10,  44, "    [space] - run simulation");
+  g_graphic_context->draw_string (10,  56, "      [tab] - toggle slow motion");
+  g_graphic_context->draw_string (10,  68, "      [F11] - toggle fullscreen");
 
-  graphic_context->draw_string (200,  20, "     [c] - clear scene");
-  graphic_context->draw_string (200,  32, "     [u] - undo to last state");
-  graphic_context->draw_string (200,  44, "     [r] - redo (undo an undo)");
-  graphic_context->draw_string (200,  56, "   [+/-] - zoom in/out");
-  graphic_context->draw_string (200,  68, "     [g] - toggle grid");
+  g_graphic_context->draw_string (200,  20, "     [c] - clear scene");
+  g_graphic_context->draw_string (200,  32, "     [u] - undo to last state");
+  g_graphic_context->draw_string (200,  44, "     [r] - redo (undo an undo)");
+  g_graphic_context->draw_string (200,  56, "   [+/-] - zoom in/out");
+  g_graphic_context->draw_string (200,  68, "     [g] - toggle grid");
 
-  graphic_context->draw_string (600,  32, "[middle] - scroll");
+  g_graphic_context->draw_string (600,  32, "[middle] - scroll");
 
   switch (WorldViewComponent::instance()->get_mode())
     {
     case WorldViewComponent::INSERT_MODE:
-      graphic_context->draw_string (600,  20, "  [left] - insert/connect spots");
-      graphic_context->draw_string (600,  44, " [right] - remove spot");
-      graphic_context->draw_string (400,  20, "     [f] - fix current dot");
+      g_graphic_context->draw_string (600,  20, "  [left] - insert/connect spots");
+      g_graphic_context->draw_string (600,  44, " [right] - remove spot");
+      g_graphic_context->draw_string (400,  20, "     [f] - fix current dot");
       break;
 
     case WorldViewComponent::SELECT_MODE:
-      graphic_context->draw_string (600,  20, "  [left] - create/move selection");
-      graphic_context->draw_string (600,  44, " [right] - rotate selection");
+      g_graphic_context->draw_string (600,  20, "  [left] - create/move selection");
+      g_graphic_context->draw_string (600,  44, " [right] - rotate selection");
 
-      graphic_context->draw_string (400,  20, "     [v] - set velocity");
-      graphic_context->draw_string (400,  32, "     [d] - duplicate selection");
-      graphic_context->draw_string (400,  44, "     [h] - flip selection");
-      graphic_context->draw_string (400,  56, "     [f] - fix selection");
-      graphic_context->draw_string (400,  68, "     [j] - join dots");
-      graphic_context->draw_string (400,  80, "     [s] - scale selection");
+      g_graphic_context->draw_string (400,  20, "     [v] - set velocity");
+      g_graphic_context->draw_string (400,  32, "     [d] - duplicate selection");
+      g_graphic_context->draw_string (400,  44, "     [h] - flip selection");
+      g_graphic_context->draw_string (400,  56, "     [f] - fix selection");
+      g_graphic_context->draw_string (400,  68, "     [j] - join dots");
+      g_graphic_context->draw_string (400,  80, "     [s] - scale selection");
       break;
 
     case WorldViewComponent::ZOOM_MODE:
-      graphic_context->draw_string (600,  20, "  [left] - zoom into region");
-      graphic_context->draw_string (600,  44, " [right] - zoom out");
+      g_graphic_context->draw_string (600,  20, "  [left] - zoom into region");
+      g_graphic_context->draw_string (600,  44, " [right] - zoom out");
       break;
 
     case WorldViewComponent::COLLIDER_MODE:
-      graphic_context->draw_string (600,  20, "  [left] - create/move collider");
-      graphic_context->draw_string (600,  44, " [right] - remove collider");
+      g_graphic_context->draw_string (600,  20, "  [left] - create/move collider");
+      g_graphic_context->draw_string (600,  44, " [right] - remove collider");
       break;
 
     default:
@@ -303,25 +303,25 @@ WorldGUIManager::draw_overlay ()
     graphic_context->draw_string (BUTTON_LX_POS,  430,
     to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
-  int bottom_line = graphic_context->get_height() - 10;
-  graphic_context->draw_string (10, bottom_line-20, "FPS: ");
-  graphic_context->draw_string (80, bottom_line-20, to_string(get_fps()));
+  int bottom_line = g_graphic_context->get_height() - 10;
+  g_graphic_context->draw_string (10, bottom_line-20, "FPS: ");
+  g_graphic_context->draw_string (80, bottom_line-20, to_string(get_fps()));
 
-  graphic_context->draw_string (10, bottom_line, "Pos: ");
-  graphic_context->draw_string (80, bottom_line,
-                                to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos())));
+  g_graphic_context->draw_string (10, bottom_line, "Pos: ");
+  g_graphic_context->draw_string (80, bottom_line,
+                                to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos())));
 
-  graphic_context->draw_string (210, bottom_line-20, "Particles: ");
-  graphic_context->draw_string (280, bottom_line-20, to_string(world.get_num_particles()));
+  g_graphic_context->draw_string (210, bottom_line-20, "Particles: ");
+  g_graphic_context->draw_string (280, bottom_line-20, to_string(world.get_num_particles()));
 
-  graphic_context->draw_string (210, bottom_line, "Springs: ");
-  graphic_context->draw_string (280, bottom_line, to_string(world.get_num_springs()));
+  g_graphic_context->draw_string (210, bottom_line, "Springs: ");
+  g_graphic_context->draw_string (280, bottom_line, to_string(world.get_num_springs()));
 
-  graphic_context->draw_string (410, bottom_line, "Zoom: ");
-  graphic_context->draw_string (480, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
+  g_graphic_context->draw_string (410, bottom_line, "Zoom: ");
+  g_graphic_context->draw_string (480, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
 
-  graphic_context->draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
-  //graphic_context->draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
+  g_graphic_context->draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
+  //g_graphic_context->draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
 }
 
 /* EOF */

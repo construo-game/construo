@@ -49,8 +49,8 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 void
 WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
 {
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(g_input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(g_input_context->get_mouse_y ());
 
   if (mode == GETTING_SELECTION_MODE)
     {
@@ -158,10 +158,10 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 
     case SCALING_SELECTION_MODE:
       {
-        graphic_context->pop_cursor();
+        g_graphic_context->pop_cursor();
         WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
         mode = IDLE_MODE;
-        graphic_context->pop_cursor();
+        g_graphic_context->pop_cursor();
         old_scale_factor = 1.0f;
       }
 
@@ -212,8 +212,8 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
       if (!selection.empty())
         {
           Controller::instance()->push_undo();
-          graphic_context->push_cursor();
-          graphic_context->set_cursor(CURSOR_ROTATE);
+          g_graphic_context->push_cursor();
+          g_graphic_context->set_cursor(CURSOR_ROTATE);
 
           mode = ROTATING_SELECTION_MODE;
           WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
@@ -226,10 +226,10 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 
     case SCALING_SELECTION_MODE:
       {
-        graphic_context->pop_cursor();
+        g_graphic_context->pop_cursor();
         WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
         mode = IDLE_MODE;
-        graphic_context->pop_cursor();
+        g_graphic_context->pop_cursor();
         selection.scale(1.0f/old_scale_factor, scale_center);
         old_scale_factor = 1.0f;
       }
@@ -246,7 +246,7 @@ WorldViewSelectTool::on_secondary_button_release (int x, int y)
   switch (mode)
     {
     case ROTATING_SELECTION_MODE:
-      graphic_context->pop_cursor();
+      g_graphic_context->pop_cursor();
       WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
       mode = IDLE_MODE;
       break;
@@ -388,8 +388,8 @@ WorldViewSelectTool::on_scale_press (int x, int y)
     {
       rotate_center = selection.get_center();
       Controller::instance()->push_undo();
-      graphic_context->push_cursor();
-      graphic_context->set_cursor(CURSOR_SCALE);
+      g_graphic_context->push_cursor();
+      g_graphic_context->set_cursor(CURSOR_SCALE);
 
       click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y));
       WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());

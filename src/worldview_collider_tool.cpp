@@ -37,7 +37,7 @@ WorldViewColliderTool::~WorldViewColliderTool ()
 void
 WorldViewColliderTool::draw_background (ZoomGraphicContext* gc)
 {
-  Vector2d mouse_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos ());
+  Vector2d mouse_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
   if (creating_rect)
     {
       gc->GraphicContext::draw_rect(click_pos, mouse_pos, Colors::selection_rect);
@@ -62,7 +62,7 @@ void
 WorldViewColliderTool::draw_foreground (ZoomGraphicContext* gc)
 {
   Vector2d mouse_pos
-    = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos ());
+    = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
   Collider* collider = get_collider (mouse_pos);
 
   if (collider)
@@ -74,7 +74,7 @@ WorldViewColliderTool::on_primary_button_press (int x, int y)
 {
   WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
-  click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos ());
+  click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
 
   if ((move_collider = get_collider (click_pos)) != 0)
     {
@@ -97,7 +97,7 @@ WorldViewColliderTool::on_primary_button_release (int x, int y)
 
   if (creating_rect)
     {
-      Vector2d pos2 = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos ());
+      Vector2d pos2 = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
       World& world = *Controller::instance()->get_world();
 
       if (fabs(pos2.x - click_pos.x) < 15

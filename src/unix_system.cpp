@@ -234,8 +234,8 @@ struct DirectorySorter
 
   bool operator()(const std::string& lhs, const std::string& rhs)
   {
-    FileType lhs_type = system_context->get_file_type(pathname + "/" + lhs);
-    FileType rhs_type = system_context->get_file_type(pathname + "/" + rhs);
+    FileType lhs_type = g_system_context->get_file_type(pathname + "/" + lhs);
+    FileType rhs_type = g_system_context->get_file_type(pathname + "/" + rhs);
 
     if (lhs_type == rhs_type)
       return (lhs < rhs);

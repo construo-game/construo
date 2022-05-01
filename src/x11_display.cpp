@@ -852,7 +852,7 @@ X11Display::run()
 
       if (Controller::instance()->is_running())
         {
-          system_context->sleep (0); // FIXME: limit CPU usage via brute force
+          g_system_context->sleep (0); // FIXME: limit CPU usage via brute force
           wait_for_events();
         }
       else

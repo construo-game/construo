@@ -18,13 +18,13 @@
 
 /* Global variables, mainly the different system components */
 
-SystemContext*  system_context      = nullptr;
-InputContext*   input_context       = nullptr;
-RootGraphicContext* graphic_context = nullptr;
+SystemContext*  g_system_context      = nullptr;
+InputContext*   g_input_context       = nullptr;
+RootGraphicContext* g_graphic_context = nullptr;
 
 #ifdef CONSTRUO_0_1_0
-const double back_force = 500.0;
-const double max_stretch = 0.1f;
+const double g_back_force = 500.0;
+const double g_max_stretch = 0.1f;
 #else
 #endif
 

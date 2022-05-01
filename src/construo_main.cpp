@@ -102,9 +102,9 @@ ConstruoMain::init_system()
 #endif
 
   // Init the display, input systems
-  graphic_context = display.get();
-  input_context   = display.get();
-  system_context  = system.get();
+  g_graphic_context = display.get();
+  g_input_context   = display.get();
+  g_system_context  = system.get();
 }
 
 void
@@ -126,7 +126,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     std::cout << PACKAGE_STRING"\n" << std::endl;
     std::cout << "If you have throuble with programm startup, delete the file:\n\n"
-              << "    " << system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
+              << "    " << g_system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
 
     if (!settings.datadir.empty())
       path_manager.add_path(settings.datadir);

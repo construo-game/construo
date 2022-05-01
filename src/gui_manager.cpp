@@ -35,7 +35,7 @@ GUIManager::GUIManager ()
   m_frame_count = 0;
   m_current_fps = 0.0f;
 
-  m_start_time  = system_context->get_time ();
+  m_start_time  = g_system_context->get_time ();
 
   m_last_component     = nullptr;
   m_grabbing_component = nullptr;
@@ -51,26 +51,26 @@ GUIManager::run_once ()
 {
   m_frame_count += 1;
 
-  if (m_start_time + 3000 < system_context->get_time ())
+  if (m_start_time + 3000 < g_system_context->get_time ())
     {
-      float passed_time = (system_context->get_time () - m_start_time) / 1000.0f;
+      float passed_time = (g_system_context->get_time () - m_start_time) / 1000.0f;
 
       //std::cout << "FPS: " << frame_count / passed_time << std::endl;
 
       m_current_fps = m_frame_count / passed_time;
 
       m_frame_count = 0;
-      m_start_time  = system_context->get_time ();
+      m_start_time  = g_system_context->get_time ();
     }
 
   process_events ();
 
   update();
 
-  graphic_context->clear ();
+  g_graphic_context->clear ();
   draw ();
   draw_overlay ();
-  graphic_context->flip ();
+  g_graphic_context->flip ();
 }
 
 void
@@ -78,7 +78,7 @@ GUIManager::draw ()
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
-      (*i)->draw (graphic_context);
+      (*i)->draw (g_graphic_context);
     }
 }
 
@@ -97,8 +97,8 @@ GUIManager::find_component_at (int x, int y)
 void
 GUIManager::process_button_events (ButtonEvent& button)
 {
-  int x = input_context->get_mouse_x();
-  int y = input_context->get_mouse_y();
+  int x = g_input_context->get_mouse_x();
+  int y = g_input_context->get_mouse_y();
 
   if (button.pressed)
     {
@@ -274,8 +274,8 @@ GUIManager::process_button_events (ButtonEvent& button)
 void
 GUIManager::process_events ()
 {
-  int x = input_context->get_mouse_x();
-  int y = input_context->get_mouse_y();
+  int x = g_input_context->get_mouse_x();
+  int y = g_input_context->get_mouse_y();
 
   if (m_grabbing_component && (m_last_x != x || m_last_y != y))
     {
@@ -315,7 +315,7 @@ GUIManager::process_events ()
     }
 
   Event event;
-  while (input_context->get_event (&event))
+  while (g_input_context->get_event (&event))
     {
       if (m_current_component)
         {

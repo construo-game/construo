@@ -28,8 +28,8 @@ LoadGUIManager::LoadGUIManager ()
 void
 LoadGUIManager::draw_overlay ()
 {
-  graphic_context->draw_string(10, graphic_context->get_height() - 10,
-                               "Load Dialog");
+  g_graphic_context->draw_string(10, g_graphic_context->get_height() - 10,
+                                 "Load Dialog");
 }
 
 void
@@ -37,7 +37,7 @@ LoadGUIManager::run_once ()
 {
   GUIFileManager::set_instance(file_manager);
   GUIManager::run_once();
-  system_context->sleep (1000);
+  g_system_context->sleep(1000);
 }
 
 /* EOF */

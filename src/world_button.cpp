@@ -38,12 +38,12 @@ WorldButton::load_world ()
 {
   if ((world == 0
        && !file_broken)
-      || mtime != system_context->get_mtime(filename))
+      || mtime != g_system_context->get_mtime(filename))
     {
       try {
         delete world;
         world = new World(filename);
-        mtime = system_context->get_mtime(filename);
+        mtime = g_system_context->get_mtime(filename);
       } catch (std::exception const& err) {
         print_exception(err);
         std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;

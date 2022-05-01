@@ -30,8 +30,8 @@ ZoomGraphicContext::ZoomGraphicContext()
   m_x1 = 0;
   m_y1 = 0;
   // FIXME: should use parent gc
-  m_x2 = graphic_context->get_width();
-  m_y2 = graphic_context->get_height();
+  m_x2 = g_graphic_context->get_width();
+  m_y2 = g_graphic_context->get_height();
 }
 
 ZoomGraphicContext::ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_) :

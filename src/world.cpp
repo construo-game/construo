@@ -47,7 +47,7 @@ World::World (const std::string& filename)
 
   has_been_run = false;
 
-  ReaderDocument doc = ReaderDocument::from_file(system_context->translate_filename(filename));
+  ReaderDocument doc = ReaderDocument::from_file(g_system_context->translate_filename(filename));
   if (doc.get_name() != "construo-scene") {
     throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
   }
@@ -424,14 +424,14 @@ World::write_lisp (const std::string& filename)
 {
   std::cout << "World: Writing to: " << filename << std::endl;
 
-  LispWriter writer = LispWriter::from_file(system_context->translate_filename(filename));
+  LispWriter writer = LispWriter::from_file(g_system_context->translate_filename(filename));
 
   writer.write_comment("Written by " PACKAGE_STRING);
   writer.begin_object("construo-scene");
   writer.write("version",  3);
   writer.write("author", std::vector<std::string>({
-        system_context->get_user_realname(),
-        system_context->get_user_email()}));
+        g_system_context->get_user_realname(),
+        g_system_context->get_user_email()}));
 
   particle_mgr->write_lisp(writer);
 

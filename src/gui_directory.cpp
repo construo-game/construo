@@ -27,8 +27,8 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
     pathname (arg_pathname),
     mode (m)
 {
-  mtime = system_context->get_mtime(pathname);
-  std::vector<std::string> dir = system_context->read_directory(pathname);
+  mtime = g_system_context->get_mtime(pathname);
+  std::vector<std::string> dir = g_system_context->read_directory(pathname);
 
   if (mode == SAVE_DIRECTORY && pathname != "/")
     files.push_back(new GUINewFileButton(pathname));
@@ -37,7 +37,7 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
     {
       std::string filename = pathname + *i;
 
-      FileType type = system_context->get_file_type (filename);
+      FileType type = g_system_context->get_file_type (filename);
 
       //std::cout << "Creating object for: " << filename << std::endl;
 

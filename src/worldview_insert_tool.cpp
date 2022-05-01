@@ -38,8 +38,8 @@ WorldViewInsertTool::~WorldViewInsertTool()
 void
 WorldViewInsertTool::draw_background(ZoomGraphicContext* gc)
 {
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(input_context->get_mouse_x());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(input_context->get_mouse_y());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(g_input_context->get_mouse_x());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(g_input_context->get_mouse_y());
 
   World& world = *Controller::instance()->get_world();
 
@@ -55,7 +55,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
 {
   World& world = *Controller::instance()->get_world();
 
-  Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(input_context->get_mouse_pos());
+  Vector2d click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos());
 
   Vector2d new_particle_pos;
 
@@ -80,8 +80,8 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
                                      Colors::new_spring, 2);
     }
 
-  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(input_context->get_mouse_x ());
-  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(input_context->get_mouse_y ());
+  float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(g_input_context->get_mouse_x ());
+  float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(g_input_context->get_mouse_y ());
 
   Particle* selected_particle = world.get_particle (x, y);
   if (selected_particle)

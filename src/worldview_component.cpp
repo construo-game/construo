@@ -59,25 +59,25 @@ WorldViewComponent::set_mode (Mode m)
   {
     m_current_tool = m_insert_tool.get();
     m_mode = INSERT_MODE;
-    graphic_context->set_cursor(CURSOR_INSERT);
+    g_graphic_context->set_cursor(CURSOR_INSERT);
   }
   else if (m == SELECT_MODE)
   {
     m_current_tool = m_select_tool.get();
     m_mode = SELECT_MODE;
-    graphic_context->set_cursor(CURSOR_SELECT);
+    g_graphic_context->set_cursor(CURSOR_SELECT);
   }
   else if (m == ZOOM_MODE)
   {
     m_current_tool = m_zoom_tool.get();
     m_mode = ZOOM_MODE;
-    graphic_context->set_cursor(CURSOR_ZOOM);
+    g_graphic_context->set_cursor(CURSOR_ZOOM);
   }
   else if (m == COLLIDER_MODE)
   {
     m_current_tool = m_collider_tool.get();
     m_mode = COLLIDER_MODE;
-    graphic_context->set_cursor(CURSOR_COLLIDER);
+    g_graphic_context->set_cursor(CURSOR_COLLIDER);
   }
   else
   {
@@ -343,8 +343,8 @@ void
 WorldViewComponent::on_tertiary_button_press (int x, int y)
 {
   m_scrolling = true;
-  graphic_context->push_cursor();
-  graphic_context->set_cursor(CURSOR_SCROLL);
+  g_graphic_context->push_cursor();
+  g_graphic_context->set_cursor(CURSOR_SCROLL);
 
   m_x_offset = m_gc.get_x_offset();
   m_y_offset = m_gc.get_y_offset();
@@ -357,7 +357,7 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
 void
 WorldViewComponent::on_tertiary_button_release (int x, int y)
 {
-  graphic_context->pop_cursor();
+  g_graphic_context->pop_cursor();
   m_scrolling = false;
   WorldGUIManager::instance()->ungrab_mouse (this);
 }

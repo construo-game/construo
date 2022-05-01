@@ -22,13 +22,13 @@ class InputContext;
 class RootGraphicContext;
 
 /** Global accessor to the system functions */
-extern SystemContext*  system_context;
+extern SystemContext*  g_system_context;
 
 /** Global accessor to the input functions */
-extern InputContext*   input_context;
+extern InputContext*   g_input_context;
 
 /** Global accessor to the graphic device */
-extern RootGraphicContext* graphic_context;
+extern RootGraphicContext* g_graphic_context;
 
 #endif
 

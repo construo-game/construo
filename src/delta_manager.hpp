@@ -26,7 +26,7 @@ private:
   unsigned int last_time;
 public:
   DeltaManager ()
-    : last_time (system_context->get_time ())
+    : last_time (g_system_context->get_time ())
   {}
 
   float getset ()
@@ -38,12 +38,12 @@ public:
 
   void set ()
   {
-    last_time = system_context->get_time ();
+    last_time = g_system_context->get_time ();
   }
 
   float get ()
   {
-    return static_cast<float>( system_context->get_time () - last_time) / 1000.0f;
+    return static_cast<float>( g_system_context->get_time () - last_time) / 1000.0f;
   }
 };
 
