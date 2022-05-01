@@ -24,21 +24,6 @@
     coordinate translation like zoom and scrolling */
 class ZoomGraphicContext : public GraphicContext
 {
-private:
-  int x1;
-  int y1;
-  int x2;
-  int y2;
-
-  GraphicContext* parent_gc;
-
-  float x_offset;
-  float y_offset;
-  float zoom;
-
-  int translate_x (int);
-  int translate_y (int);
-
 public:
   ZoomGraphicContext();
   ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_);
@@ -65,10 +50,10 @@ public:
   int get_width() override;
   int get_height() override;
 
-  void clear () override { parent_gc->clear (); }
+  void clear () override { m_parent_gc->clear (); }
 
   /** FIXME: flip should be handled outsite of GraphicContext */
-  void flip () override { parent_gc->flip (); }
+  void flip () override { m_parent_gc->flip (); }
 
   void set_parent_gc (GraphicContext* gc);
 
@@ -112,7 +97,7 @@ public:
 
   /** Allows a client application to make use of the partent GC in
       case it wants to draw elements which should not get scaled */
-  GraphicContext* get_parent_gc () { return parent_gc; }
+  GraphicContext* get_parent_gc () { return m_parent_gc; }
 
   /** Move the current position relativly x/y width */
   void translate_offset (int x, int y);
@@ -121,13 +106,13 @@ public:
   void set_offset (float x, float y);
 
   /** FIXME: What exactly is an offset?! */
-  float get_x_offset () { return x_offset; }
+  float get_x_offset () { return m_x_offset; }
 
   /** FIXME: What exactly is an offset?! */
-  float get_y_offset () { return y_offset; }
+  float get_y_offset () { return m_y_offset; }
 
   /** @return current zoom factor in use */
-  float get_zoom () const { return zoom; }
+  float get_zoom () const { return m_zoom; }
 
   /** Set the zoom factor, if zoom is to large/small false will
       returned and zoom will be set to lowest/highest possible
@@ -154,8 +139,24 @@ public:
 
   void flip (int x1, int y1, int x2, int y2) override;
 
-  void push_quick_draw() override { parent_gc->push_quick_draw(); }
-  void pop_quick_draw() override { parent_gc->pop_quick_draw(); }
+  void push_quick_draw() override { m_parent_gc->push_quick_draw(); }
+  void pop_quick_draw() override { m_parent_gc->pop_quick_draw(); }
+
+private:
+  int translate_x (int);
+  int translate_y (int);
+
+private:
+  int m_x1;
+  int m_y1;
+  int m_x2;
+  int m_y2;
+
+  GraphicContext* m_parent_gc;
+
+  float m_x_offset;
+  float m_y_offset;
+  float m_zoom;
 
 public:
   ZoomGraphicContext(const ZoomGraphicContext&) = delete;
