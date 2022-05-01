@@ -40,7 +40,7 @@ UnixSystem::UnixSystem ()
 { // riped out of ClanLib-0.7
   timeval tv;
   gettimeofday(&tv, NULL);
-  start_time = (long) tv.tv_sec*(long) 1000+(long) tv.tv_usec/(long) 1000;
+  start_time = static_cast<long>(tv.tv_sec) * static_cast<long>(1000) + static_cast<long>(tv.tv_usec) / static_cast<long>(1000);
 
   char* home = getenv("HOME");
   if (home)
@@ -88,7 +88,7 @@ UnixSystem::get_time ()
   timeval tv;
   gettimeofday(&tv, NULL);
 
-  long tid = (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000 - start_time;
+  long tid = static_cast<long>(tv.tv_sec) * static_cast<long>(1000) + static_cast<long>(tv.tv_usec) / static_cast<long>(1000) - start_time;
 
   return tid;
 }

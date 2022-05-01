@@ -68,10 +68,10 @@ WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
-  WorldViewComponent::instance()->get_gc()->zoom_to((int)Math::min(x, click_pos.x),
-                                                    (int)Math::min(y, click_pos.y),
-                                                    (int)Math::max(x, click_pos.x),
-                                                    (int)Math::max(y, click_pos.y));
+  WorldViewComponent::instance()->get_gc()->zoom_to(static_cast<int>(Math::min(x, click_pos.x)),
+                                                    static_cast<int>(Math::min(y, click_pos.y)),
+                                                    static_cast<int>(Math::max(x, click_pos.x)),
+                                                    static_cast<int>(Math::max(y, click_pos.y)));
 }
 
 void

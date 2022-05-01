@@ -201,8 +201,8 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
     // Live Action Cam
     const BoundingBox& box = world.calc_bounding_box();
     // Zoom to the bounding box
-    m_gc.zoom_to((int) box.x1, (int)box.y1,
-                 (int)box.x2, (int)box.y2);
+    m_gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
+                 static_cast<int>(box.x2), static_cast<int>(box.y2));
     // Zoom out two times so that the area isn't covered up by the
     // GUI
     m_gc.zoom_out (get_width()/2, get_height()/2);
@@ -405,8 +405,8 @@ WorldViewComponent::on_world_change()
 
   const BoundingBox& box = world.calc_bounding_box();
   // Zoom to the bounding box
-  m_gc.zoom_to((int) box.x1, (int)box.y1,
-               (int)box.x2, (int)box.y2);
+  m_gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
+               static_cast<int>(box.x2), static_cast<int>(box.y2));
   // Zoom out two times so that the area isn't covered up by the
   // GUI
   m_gc.zoom_out(get_width()/2, get_height()/2);
