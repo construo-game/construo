@@ -69,15 +69,15 @@ GUIButton::draw (GraphicContext* gc)
 {
   if (m_pressed && m_mouse_over)
     {
-      gc->draw_fill_rect (m_x_pos, m_y_pos, m_x_pos + m_width,  m_y_pos + m_height, Colors::button_bg_pressed);
+      gc->draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_pressed);
     }
   else if (m_mouse_over)
     {
-      gc->draw_fill_rect (m_x_pos, m_y_pos, m_x_pos + m_width,  m_y_pos + m_height, Colors::button_bg_hover);
+      gc->draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_hover);
     }
   else
     {
-      gc->draw_fill_rect (m_x_pos, m_y_pos, m_x_pos + m_width,  m_y_pos + m_height, Colors::button_bg_passive);
+      gc->draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_passive);
     }
 
   draw_content (gc);
@@ -99,28 +99,28 @@ GUIButton::draw (GraphicContext* gc)
 void
 GUIButton::draw_content (GraphicContext* gc)
 {
-  gc->draw_string_centered (m_x_pos + m_width/2, m_y_pos + 16, m_title);
+  gc->draw_string_centered (m_x + m_width/2, m_y + 16, m_title);
 }
 
 void
 GUIButton::draw_border_hover(GraphicContext* gc)
 {
-  gc->draw_rect (m_x_pos, m_y_pos,
-                 m_x_pos + m_width, m_y_pos + m_height, Colors::button_fg_hover);
+  gc->draw_rect (m_x, m_y,
+                 m_x + m_width, m_y + m_height, Colors::button_fg_hover);
 }
 
 void
 GUIButton::draw_border_pressed(GraphicContext* gc)
 {
-  gc->draw_rect (m_x_pos, m_y_pos,
-                 m_x_pos + m_width, m_y_pos + m_height, Colors::button_fg_pressed);
+  gc->draw_rect (m_x, m_y,
+                 m_x + m_width, m_y + m_height, Colors::button_fg_pressed);
 }
 
 void
 GUIButton::draw_border_normal(GraphicContext* gc)
 {
-  gc->draw_rect (m_x_pos, m_y_pos,
-                 m_x_pos + m_width, m_y_pos + m_height, Colors::button_fg_passive);
+  gc->draw_rect (m_x, m_y,
+                 m_x + m_width, m_y + m_height, Colors::button_fg_passive);
 }
 
 GUIRunButton::GUIRunButton ()
@@ -138,15 +138,15 @@ void
 GUIRunButton::draw_content (GraphicContext* gc)
 {
   if ((!m_pressed || !m_mouse_over) && Controller::instance()->is_running ())
-    gc->draw_fill_rect (m_x_pos, m_y_pos,
-                   m_x_pos + m_width, m_y_pos + m_height, Colors::button_bg_active) ;
+    gc->draw_fill_rect (m_x, m_y,
+                   m_x + m_width, m_y + m_height, Colors::button_bg_active) ;
   /*
-  gc->draw_line (m_x_pos, m_y_pos,
-                m_x_pos + width, m_y_pos + height,
+  gc->draw_line (m_x, m_y,
+                m_x + width, m_y + height,
                 Color (0x0000FFFF));
 
-  gc->draw_line (m_x_pos + width, m_y_pos,
-                m_x_pos, m_y_pos + height,
+  gc->draw_line (m_x + width, m_y,
+                m_x, m_y + height,
                 Color (0x0000FFFF));
   */
   GUIButton::draw_content (gc);
@@ -175,8 +175,8 @@ void
 GUISlowMoButton::draw_content (GraphicContext* gc)
 {
   if (Controller::instance()->slow_down_active())
-    gc->draw_fill_rect (m_x_pos, m_y_pos,
-                        m_x_pos + m_width, m_y_pos + m_height, Colors::button_bg_active);
+    gc->draw_fill_rect (m_x, m_y,
+                        m_x + m_width, m_y + m_height, Colors::button_bg_active);
 
   GUIButton::draw_content (gc);
 }

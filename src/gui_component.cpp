@@ -19,10 +19,10 @@
 bool
 GUIComponent::is_at (int x, int y)
 {
-  return (x    >= m_x_pos
-          && y >= m_y_pos
-          && x < m_x_pos + m_width
-          && y < m_y_pos + m_height);
+  return (x    >= m_x
+          && y >= m_y
+          && x < m_x + m_width
+          && y < m_y + m_height);
 }
 
 /* EOF */

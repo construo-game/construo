@@ -27,7 +27,7 @@ GUILabel::GUILabel (const std::string& title, int x, int y, int width, int heigh
 void
 GUILabel::draw (GraphicContext* gc)
 {
-  gc->draw_string(m_x_pos + 10, m_y_pos + 15, m_title);
+  gc->draw_string(m_x + 10, m_y + 15, m_title);
 }
 
 /* EOF */

@@ -25,8 +25,8 @@ class GUIComponent
 {
 public:
   GUIComponent (int x_, int y_, int width_, int height_) :
-    m_x_pos(x_),
-    m_y_pos(y_),
+    m_x(x_),
+    m_y(y_),
     m_width (width_),
     m_height(height_)
   {}
@@ -38,11 +38,11 @@ public:
   /** @return true if the component is present at the given location */
   virtual bool is_at (int x, int y);
 
-  void set_position (int x, int y) { m_x_pos = x, m_y_pos = y; }
+  void set_position (int x, int y) { m_x = x, m_y = y; }
   void set_width (int w) { m_width = w; }
   void set_height (int h) { m_height = h; }
-  int  get_x_pos () { return m_x_pos; }
-  int  get_y_pos () { return m_y_pos; }
+  int  get_x_pos () { return m_x; }
+  int  get_y_pos () { return m_y; }
   int  get_width () { return m_width; }
   int  get_height () { return m_height; }
 
@@ -80,8 +80,8 @@ public:
   virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
 
 protected:
-  int m_x_pos;
-  int m_y_pos;
+  int m_x;
+  int m_y;
   int m_width;
   int m_height;
 

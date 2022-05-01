@@ -121,8 +121,8 @@ public:
   void draw_content (GraphicContext* gc)
   {
     if (m_hfunc()) {
-      gc->draw_fill_rect(m_x_pos, m_y_pos,
-                         m_x_pos + m_width, m_y_pos + m_height,
+      gc->draw_fill_rect(m_x, m_y,
+                         m_x + m_width, m_y + m_height,
                          Colors::button_bg_active);
     }
 
