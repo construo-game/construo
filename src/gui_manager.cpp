@@ -32,14 +32,14 @@ using namespace StringUtils;
 
 GUIManager::GUIManager ()
 {
-  frame_count = 0;
-  current_fps = 0.0f;
+  m_frame_count = 0;
+  m_current_fps = 0.0f;
 
-  start_time  = system_context->get_time ();
+  m_start_time  = system_context->get_time ();
 
-  last_component     = nullptr;
-  grabbing_component = nullptr;
-  current_component  = nullptr;
+  m_last_component     = nullptr;
+  m_grabbing_component = nullptr;
+  m_current_component  = nullptr;
 }
 
 GUIManager::~GUIManager ()
@@ -49,18 +49,18 @@ GUIManager::~GUIManager ()
 void
 GUIManager::run_once ()
 {
-  frame_count += 1;
+  m_frame_count += 1;
 
-  if (start_time + 3000 < system_context->get_time ())
+  if (m_start_time + 3000 < system_context->get_time ())
     {
-      float passed_time = (system_context->get_time () - start_time) / 1000.0f;
+      float passed_time = (system_context->get_time () - m_start_time) / 1000.0f;
 
       //std::cout << "FPS: " << frame_count / passed_time << std::endl;
 
-      current_fps = frame_count / passed_time;
+      m_current_fps = m_frame_count / passed_time;
 
-      frame_count = 0;
-      start_time  = system_context->get_time ();
+      m_frame_count = 0;
+      m_start_time  = system_context->get_time ();
     }
 
   process_events ();
@@ -76,7 +76,7 @@ GUIManager::run_once ()
 void
 GUIManager::draw ()
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
       (*i)->draw (graphic_context);
     }
@@ -86,7 +86,7 @@ GUIComponent*
 GUIManager::find_component_at (int x, int y)
 {
   GUIComponent* component = 0;
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
       if ((*i)->is_at (x, y))
         component = *i;
@@ -113,54 +113,54 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_PRIMARY:
-          current_component->on_primary_button_press(x, y);
+          m_current_component->on_primary_button_press(x, y);
           break;
 
         case BUTTON_SECONDARY:
-          current_component->on_secondary_button_press(x, y);
+          m_current_component->on_secondary_button_press(x, y);
           break;
 
         case BUTTON_TERTIARY:
-          current_component->on_tertiary_button_press(x, y);
+          m_current_component->on_tertiary_button_press(x, y);
           break;
 
         case BUTTON_SCALE:
-          current_component->on_scale_press (x, y);
+          m_current_component->on_scale_press (x, y);
           break;
 
         case BUTTON_FIX:
-          current_component->on_fix_press (x, y);
+          m_current_component->on_fix_press (x, y);
           break;
 
         case BUTTON_JOIN:
-          current_component->on_join_press (x, y);
+          m_current_component->on_join_press (x, y);
           break;
 
         case BUTTON_GRID:
-          current_component->on_grid_press(x, y);
+          m_current_component->on_grid_press(x, y);
           break;
 
         case BUTTON_DELETE:
-          current_component->on_delete_press (x, y);
+          m_current_component->on_delete_press (x, y);
           break;
         case BUTTON_DUPLICATE:
-          current_component->on_duplicate_press (x, y);
+          m_current_component->on_duplicate_press (x, y);
           break;
 
         case BUTTON_SCROLL_LEFT:
-          current_component->scroll_left ();
+          m_current_component->scroll_left ();
           break;
 
         case BUTTON_SCROLL_RIGHT:
-          current_component->scroll_right ();
+          m_current_component->scroll_right ();
           break;
 
         case BUTTON_SCROLL_UP:
-          current_component->scroll_up ();
+          m_current_component->scroll_up ();
           break;
 
         case BUTTON_SCROLL_DOWN:
-          current_component->scroll_down ();
+          m_current_component->scroll_down ();
           break;
 
         case BUTTON_CLEAR:
@@ -233,15 +233,15 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         case BUTTON_ZOOM_OUT:
-          current_component->wheel_down (x, y);
+          m_current_component->wheel_down (x, y);
           break;
 
         case BUTTON_ZOOM_IN:
-          current_component->wheel_up (x, y);
+          m_current_component->wheel_up (x, y);
           break;
 
         default:
-          current_component->on_button_press (button.id, x, y);
+          m_current_component->on_button_press (button.id, x, y);
           break;
         }
     }
@@ -250,15 +250,15 @@ GUIManager::process_button_events (ButtonEvent& button)
       switch (button.id)
         {
         case BUTTON_PRIMARY:
-          current_component->on_primary_button_release(x, y);
+          m_current_component->on_primary_button_release(x, y);
           break;
 
         case BUTTON_SECONDARY:
-          current_component->on_secondary_button_release(x, y);
+          m_current_component->on_secondary_button_release(x, y);
           break;
 
         case BUTTON_TERTIARY:
-          current_component->on_tertiary_button_release(x, y);
+          m_current_component->on_tertiary_button_release(x, y);
           break;
 
         default:
@@ -277,47 +277,47 @@ GUIManager::process_events ()
   int x = input_context->get_mouse_x();
   int y = input_context->get_mouse_y();
 
-  if (grabbing_component && (last_x != x || last_y != y))
+  if (m_grabbing_component && (m_last_x != x || m_last_y != y))
     {
-      grabbing_component->on_mouse_move (x, y, x - last_x, y - last_y);
+      m_grabbing_component->on_mouse_move (x, y, x - m_last_x, y - m_last_y);
     }
-  if (current_component != grabbing_component)
+  if (m_current_component != m_grabbing_component)
     {
-      current_component->on_mouse_move (x, y, x - last_x, y - last_y);
+      m_current_component->on_mouse_move (x, y, x - m_last_x, y - m_last_y);
     }
 
-  if (!grabbing_component)
+  if (!m_grabbing_component)
     {
-      current_component = find_component_at (x, y);
+      m_current_component = find_component_at (x, y);
 
-      if (last_component != current_component)
+      if (m_last_component != m_current_component)
         {
-          if (current_component) current_component->on_mouse_enter ();
-          if (last_component)
-            last_component->on_mouse_leave ();
+          if (m_current_component) m_current_component->on_mouse_enter ();
+          if (m_last_component)
+            m_last_component->on_mouse_leave ();
 
-          last_component = current_component;
+          m_last_component = m_current_component;
         }
     }
   else
     {
       GUIComponent* comp = find_component_at (x, y);
 
-      if (comp != grabbing_component)
+      if (comp != m_grabbing_component)
         {
-          grabbing_component->on_mouse_leave();
-          last_component = comp;
+          m_grabbing_component->on_mouse_leave();
+          m_last_component = comp;
         }
-      else if (last_component != grabbing_component)
+      else if (m_last_component != m_grabbing_component)
         {
-          grabbing_component->on_mouse_enter();
+          m_grabbing_component->on_mouse_enter();
         }
     }
 
   Event event;
   while (input_context->get_event (&event))
     {
-      if (current_component)
+      if (m_current_component)
         {
           switch (event.type)
             {
@@ -332,28 +332,28 @@ GUIManager::process_events ()
         }
     }
 
-  last_x = x;
-  last_y = y;
+  m_last_x = x;
+  m_last_y = y;
 }
 
 void
 GUIManager::grab_mouse (GUIComponent* comp)
 {
-  grabbing_component = comp;
-  current_component  = comp;
+  m_grabbing_component = comp;
+  m_current_component  = comp;
 }
 
 void
 GUIManager::ungrab_mouse (GUIComponent* comp)
 {
-  grabbing_component = 0;
+  m_grabbing_component = 0;
 }
 
 void
 GUIManager::add (GUIComponent* c)
 {
   assert(c);
-  components.push_back(c);
+  m_components.push_back(c);
 }
 
 /* EOF */

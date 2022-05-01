@@ -25,33 +25,12 @@ struct ButtonEvent;
 /** The GUIManager is basically the place where the main loop runs */
 class GUIManager
 {
-private:
-  unsigned int frame_count;
-  unsigned int start_time;
-  float current_fps;
-
-  /** component where the mouse is currently over */
-  GUIComponent* last_component;
-  GUIComponent* current_component;
-
-  GUIComponent* grabbing_component;
-
-  int last_x;
-  int last_y;
-
-  /** A collection of GUI components aka widgets */
-  typedef std::vector<GUIComponent*> ComponentLst;
-  ComponentLst components;
-
-  void process_events ();
-  void process_button_events (ButtonEvent&);
-  GUIComponent* find_component_at (int, int);
 public:
   GUIManager ();
   virtual ~GUIManager ();
 
   /** @return the current frames per second */
-  float get_fps() const { return current_fps; }
+  float get_fps() const { return m_current_fps; }
 
   /** Launches a single run from the games main loop */
   virtual void run_once ();
@@ -73,6 +52,28 @@ public:
   void ungrab_mouse (GUIComponent*);
 
 private:
+  void process_events ();
+  void process_button_events (ButtonEvent&);
+  GUIComponent* find_component_at (int, int);
+
+private:
+  unsigned int m_frame_count;
+  unsigned int m_start_time;
+  float m_current_fps;
+
+  /** component where the mouse is currently over */
+  GUIComponent* m_last_component;
+  GUIComponent* m_current_component;
+
+  GUIComponent* m_grabbing_component;
+
+  int m_last_x;
+  int m_last_y;
+
+  /** A collection of GUI components aka widgets */
+  std::vector<GUIComponent*> m_components;
+
+public:
   GUIManager(const GUIManager&) = delete;
   GUIManager& operator=(const GUIManager&) = delete;
 };
