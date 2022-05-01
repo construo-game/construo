@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_GUI_BUTTONS_HPP
 #define HEADER_CONSTRUO_GUI_BUTTONS_HPP
 
+#include <functional>
+
 #include "colors.hpp"
 #include "gui_component.hpp"
 
@@ -86,8 +88,8 @@ inline bool always_false()
 class GUIGenericButton : public GUIButton
 {
 public:
-  typedef void (*Func)();
-  typedef bool (*HighlightFunc)();
+  using Func = std::function<void ()>;
+  using HighlightFunc = std::function<bool ()>;
 
 public:
   GUIGenericButton (const std::string& title, int x, int y, int width, int height,
