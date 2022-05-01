@@ -88,8 +88,8 @@ GUIManager::find_component_at (int x, int y)
   GUIComponent* component = 0;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
-      if ((*i)->is_at (x, y))
-        component = *i;
+      if ((*i)->is_at(x, y))
+        component = i->get();
     }
   return component;
 }
@@ -350,10 +350,10 @@ GUIManager::ungrab_mouse (GUIComponent* comp)
 }
 
 void
-GUIManager::add (GUIComponent* c)
+GUIManager::add(std::unique_ptr<GUIComponent> component)
 {
-  assert(c);
-  m_components.push_back(c);
+  assert(component != nullptr);
+  m_components.emplace_back(std::move(component));
 }
 
 /* EOF */

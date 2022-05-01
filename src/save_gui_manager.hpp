@@ -19,17 +19,16 @@
 
 #include "gui_manager.hpp"
 
-/** */
 class SaveGUIManager : public GUIManager
 {
-private:
-  GUIFileManager* file_manager;
 public:
-
   SaveGUIManager ();
 
   void draw_overlay ();
   void run_once ();
+
+private:
+  GUIFileManager* file_manager;
 };
 
 #endif

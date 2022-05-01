@@ -19,60 +19,61 @@
 #include "world_gui_manager.hpp"
 #include "screen_manager.hpp"
 
-ScreenManager* ScreenManager::instance_ = 0;
+std::unique_ptr<ScreenManager> ScreenManager::s_instance;
 
-ScreenManager::ScreenManager ()
-  : do_quit(false)
+ScreenManager::ScreenManager() :
+   m_do_quit(false)
 {
-  load_gui_manager  = new LoadGUIManager();
-  save_gui_manager  = new SaveGUIManager();
-  world_gui_manager = new WorldGUIManager();
+  m_load_gui_manager  = std::make_unique<LoadGUIManager>();
+  m_save_gui_manager  = std::make_unique<SaveGUIManager>();
+  m_world_gui_manager = std::make_unique<WorldGUIManager>();
 
-  current_gui_manager = world_gui_manager;
+  m_current_gui_manager = m_world_gui_manager.get();
 }
 
 void
 ScreenManager::run_once ()
 {
-  current_gui_manager->run_once ();
+  m_current_gui_manager->run_once ();
 }
 
 bool
 ScreenManager::is_finished ()
 {
-  return do_quit;
+  return m_do_quit;
 }
 
 void
 ScreenManager::quit()
 {
-  do_quit = true;
+  m_do_quit = true;
 }
 
 void
 ScreenManager::set_gui (int gui_id)
 {
   switch (gui_id)
-    {
+  {
     case WORLD_GUI:
-      current_gui_manager = world_gui_manager;
+      m_current_gui_manager = m_world_gui_manager.get();
       break;
     case LOAD_GUI:
-      current_gui_manager = load_gui_manager;
+      m_current_gui_manager = m_load_gui_manager.get();
       break;
     case SAVE_GUI:
-      current_gui_manager = save_gui_manager;
+      m_current_gui_manager = m_save_gui_manager.get();
       break;
-    }
+  }
 }
 
 ScreenManager*
 ScreenManager::instance ()
 {
-  if (instance_ == 0)
-    return (instance_ = new ScreenManager ());
-  else
-    return instance_;
+  if (!s_instance) {
+    s_instance.reset(new ScreenManager);
+  }
+
+  return s_instance.get();
 }
 
 /* EOF */

@@ -17,6 +17,7 @@
 #ifndef HEADER_CONSTRUO_GUI_MANAGER_HPP
 #define HEADER_CONSTRUO_GUI_MANAGER_HPP
 
+#include <memory>
 #include <vector>
 
 class GUIComponent;
@@ -44,9 +45,15 @@ public:
   /** Stops the GUIManager */
   void quit();
 
-  /** add a GUIComponent, the component will get deleted after in the
-   *  destruction of the guimanager */
-  void add (GUIComponent*);
+  void add(std::unique_ptr<GUIComponent> component);
+
+  template<typename T, typename... Args>
+  T* create(Args&&... args) {
+    std::unique_ptr<T> obj = std::make_unique<T>(std::forward<Args>(args)...);
+    T* ptr = obj.get();
+    add(std::move(obj));
+    return ptr;
+  }
 
   void grab_mouse (GUIComponent*);
   void ungrab_mouse (GUIComponent*);
@@ -71,7 +78,7 @@ private:
   int m_last_y;
 
   /** A collection of GUI components aka widgets */
-  std::vector<GUIComponent*> m_components;
+  std::vector<std::unique_ptr<GUIComponent> > m_components;
 
 public:
   GUIManager(const GUIManager&) = delete;

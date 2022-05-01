@@ -17,21 +17,14 @@
 #ifndef HEADER_CONSTRUO_SCREEN_MANAGER_HPP
 #define HEADER_CONSTRUO_SCREEN_MANAGER_HPP
 
+#include <memory>
+
 class GUIManager;
 
-/** */
 class ScreenManager
 {
 private:
-  bool do_quit;
-
-  GUIManager* current_gui_manager;
-
-  GUIManager* load_gui_manager;
-  GUIManager* save_gui_manager;
-  GUIManager* world_gui_manager;
-
-  static ScreenManager* instance_;
+  static std::unique_ptr<ScreenManager> s_instance;
   ScreenManager ();
 
 public:
@@ -45,6 +38,19 @@ public:
   bool is_finished ();
 
   void run_once ();
+
+private:
+  bool m_do_quit;
+
+  GUIManager* m_current_gui_manager;
+
+  std::unique_ptr<GUIManager> m_load_gui_manager;
+  std::unique_ptr<GUIManager> m_save_gui_manager;
+  std::unique_ptr<GUIManager> m_world_gui_manager;
+
+public:
+  ScreenManager(const ScreenManager&) = delete;
+  ScreenManager& operator=(const ScreenManager&) = delete;
 };
 
 #endif

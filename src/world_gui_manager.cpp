@@ -138,52 +138,52 @@ WorldGUIManager::WorldGUIManager ()
 {
   instance_  = this;
 
-  add(new WorldViewComponent ());
-  //add(new GUILabel ("Sim:", 10, 50, 10, 10));
-  add(new GUIRunButton ());
-  add(new GUISlowMoButton  ());
-  //add(new GUIZoomInButton ());
-  //add(new GUIZoomOutButton ());
-  add(new GUILoadButton ());
-  add(new GUIGenericButton ("Save", 10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT, save_button_callback));
+  create<WorldViewComponent>();
+  //create<GUILabel>("Sim:", 10, 50, 10, 10);
+  create<GUIRunButton>();
+  create<GUISlowMoButton>();
+  //create<GUIZoomInButton>();
+  //create<GUIZoomOutButton>();
+  create<GUILoadButton>();
+  create<GUIGenericButton>("Save", 10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT, save_button_callback);
 
-  add(new GUIGenericButton ("Undo", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT, undo_callback));
-  add(new GUIGenericButton ("Redo", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT, redo_callback));
+  create<GUIGenericButton>("Undo", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT, undo_callback);
+  create<GUIGenericButton>("Redo", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT, redo_callback);
 
-  add(new GUIGenericButton ("ActionCam", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT, action_cam_callback, action_cam_hfunc));
-  add(new GUIGenericButton ("Hide Dots", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT, hide_dots_callback, hide_dots_hfunc));
-  add(new GUIGenericButton ("Use Grid", 10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT, show_grid_callback, show_grid_hfunc));
-  add(new GUIQuitButton ());
+  create<GUIGenericButton>("ActionCam", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT, action_cam_callback, action_cam_hfunc);
+  create<GUIGenericButton>("Hide Dots", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT, hide_dots_callback, hide_dots_hfunc);
+  create<GUIGenericButton>("Use Grid", 10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT, show_grid_callback, show_grid_hfunc);
+  create<GUIQuitButton>();
 
-  //add(new GUILabel ("Tools", BUTTON_LX_POS, BUTTON_POS(3)+5, BUTTON_WIDTH, BUTTON_HEIGHT));
+  //create<GUILabel>("Tools", BUTTON_LX_POS, BUTTON_POS(3)+5, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-  add(new GUIGenericButton ("Insert", BUTTON_LX_POS, BUTTON_RPOS(4), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_insert_mode, insert_mode_hfunc));
-  add(new GUIGenericButton ("Select", BUTTON_LX_POS, BUTTON_RPOS(5), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_select_mode, select_mode_hfunc));
-  add(new GUIGenericButton ("Collider",   BUTTON_LX_POS, BUTTON_RPOS(6), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_collider_mode, collider_mode_hfunc));
-  add(new GUIGenericButton ("Zoom",   BUTTON_LX_POS, BUTTON_RPOS(7), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_zoom_mode, zoom_mode_hfunc));
+  create<GUIGenericButton>("Insert", BUTTON_LX_POS, BUTTON_RPOS(4), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_insert_mode, insert_mode_hfunc);
+  create<GUIGenericButton>("Select", BUTTON_LX_POS, BUTTON_RPOS(5), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_select_mode, select_mode_hfunc);
+  create<GUIGenericButton>("Collider",   BUTTON_LX_POS, BUTTON_RPOS(6), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_collider_mode, collider_mode_hfunc);
+  create<GUIGenericButton>("Zoom",   BUTTON_LX_POS, BUTTON_RPOS(7), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_zoom_mode, zoom_mode_hfunc);
 
-  add(new GUIGenericButton ("-", BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25, zoom_out_callback));
-  add(new GUIGenericButton ("+", BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25, zoom_in_callback));
+  create<GUIGenericButton>("-", BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25, zoom_out_callback);
+  create<GUIGenericButton>("+", BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25, zoom_in_callback);
 
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
   if(0)
     {
-      add(new GUIGenericButton ("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass));
-      add(new GUIGenericButton ("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass));
+      create<GUIGenericButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
+      create<GUIGenericButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
 
-      add(new GUILabel ("Stiffness",   550, 280, 75, 25));
+      create<GUILabel>("Stiffness",   550, 280, 75, 25);
 
-      add(new GUIGenericButton ("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass));
-      add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+      create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
+      create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
 
-      add(new GUIGenericButton ("+",   650, 280, 25, 25, increase_particle_mass));
-      add(new GUIGenericButton ("-",   680, 280, 25, 25, decrease_particle_mass));
+      create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);
+      create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
     }
-  //add(new GUIWindow ("Test Window",   200, 100, 200, 90));
+  //create<GUIWindow>("Test Window",   200, 100, 200, 90);
 
   /*
     GUIWindow* window = new GUIWindow ("Window Title", 300, 100, 300, 400);
-    window->add (new GUIButton ("Testbutton", 10, 10, 100, 25));
+    window->add (new GUIButton ("Testbutton", 10, 10, 100, 25);
     add (window);
   */
 }

@@ -22,8 +22,7 @@
 
 LoadGUIManager::LoadGUIManager ()
 {
-  file_manager = new GUIFileManager (GUIFileManager::LOAD_MANAGER);
-  add (file_manager);
+  file_manager = create<GUIFileManager>(GUIFileManager::LOAD_MANAGER);
 }
 
 void

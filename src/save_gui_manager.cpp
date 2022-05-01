@@ -22,8 +22,7 @@
 
 SaveGUIManager::SaveGUIManager ()
 {
-  file_manager = new GUIFileManager (GUIFileManager::SAVE_MANAGER);
-  add (file_manager);
+  file_manager = create<GUIFileManager>(GUIFileManager::SAVE_MANAGER);
 }
 
 void
