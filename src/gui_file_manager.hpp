@@ -59,6 +59,10 @@ public:
 
   void scroll_up () override;
   void scroll_down () override;
+
+public:
+  GUIFileManager(const GUIFileManager&) = delete;
+  GUIFileManager& operator=(const GUIFileManager&) = delete;
 };
 
 #endif

@@ -130,6 +130,10 @@ private:
   std::unique_ptr<WorldViewInsertTool> m_insert_tool;
   std::unique_ptr<WorldViewZoomTool>   m_zoom_tool;
   std::unique_ptr<WorldViewColliderTool> m_collider_tool;
+
+public:
+  WorldViewComponent(const WorldViewComponent&) = delete;
+  WorldViewComponent& operator=(const WorldViewComponent&) = delete;
 };
 
 #endif

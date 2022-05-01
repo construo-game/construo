@@ -21,7 +21,6 @@
 
 class GUIFileManager;
 
-/** */
 class LoadGUIManager : public GUIManager
 {
 private:
@@ -32,6 +31,10 @@ public:
 
   void draw_overlay() override;
   void run_once() override;
+
+public:
+  LoadGUIManager(const LoadGUIManager&) = delete;
+  LoadGUIManager& operator=(const LoadGUIManager&) = delete;
 };
 
 #endif

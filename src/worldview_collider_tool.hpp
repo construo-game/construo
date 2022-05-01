@@ -48,6 +48,10 @@ public:
   void on_secondary_button_release (int x, int y) override;
 
   void on_mouse_move (int x, int y, int of_x, int of_y) override;
+
+public:
+  WorldViewColliderTool(const WorldViewColliderTool&) = delete;
+  WorldViewColliderTool& operator=(const WorldViewColliderTool&) = delete;
 };
 
 #endif

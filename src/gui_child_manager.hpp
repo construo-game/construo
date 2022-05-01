@@ -23,7 +23,6 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_component.hpp"
 
-/** */
 class GUIChildManager : public GUIComponent
 {
 private:
@@ -74,6 +73,10 @@ public:
   void scroll_down () override;
 
   void on_mouse_move (int x, int y, int of_x, int of_y) override;
+
+public:
+  GUIChildManager(const GUIChildManager&) = delete;
+  GUIChildManager& operator=(const GUIChildManager&) = delete;
 };
 
 #endif

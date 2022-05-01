@@ -77,6 +77,10 @@ public:
   void on_delete_press (int x, int y) override;
   void on_fix_press (int x, int y) override;
   void on_join_press (int x, int y) override;
+
+public:
+  WorldViewSelectTool(const WorldViewSelectTool&) = delete;
+  WorldViewSelectTool& operator=(const WorldViewSelectTool&) = delete;
 };
 
 #endif

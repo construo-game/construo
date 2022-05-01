@@ -29,6 +29,10 @@ public:
 
 private:
   GUIFileManager* file_manager;
+
+public:
+  SaveGUIManager(const SaveGUIManager&) = delete;
+  SaveGUIManager& operator=(const SaveGUIManager&) = delete;
 };
 
 #endif

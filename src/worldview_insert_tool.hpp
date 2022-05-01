@@ -50,6 +50,10 @@ public:
 
   void  set_particle_mass (float p) { particle_mass = p; }
   float get_particle_mass () { return particle_mass; }
+
+public:
+  WorldViewInsertTool(const WorldViewInsertTool&) = delete;
+  WorldViewInsertTool& operator=(const WorldViewInsertTool&) = delete;
 };
 
 #endif
