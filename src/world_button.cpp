@@ -22,7 +22,7 @@
 
 WorldButton::WorldButton (const std::string& arg_filename, Mode m)
   : GUIFileButton (arg_filename),
-    world(0),
+    world(),
     file_broken(false),
     mode (m)
 {
@@ -36,7 +36,7 @@ WorldButton::~WorldButton ()
 void
 WorldButton::load_world ()
 {
-  if ((world == 0
+  if ((world == nullptr
        && !file_broken)
       || mtime != g_system_context->get_mtime(filename))
     {
@@ -47,7 +47,7 @@ WorldButton::load_world ()
       } catch (std::exception const& err) {
         print_exception(err);
         std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
-        world = 0;
+        world = nullptr;
         file_broken = true;
       }
     }

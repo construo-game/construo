@@ -22,7 +22,7 @@
 GUIChildManager::GUIChildManager (int x, int y, int width, int height) :
   GUIComponent (x, y, width, height)
 {
-  m_current_component = 0;
+  m_current_component = nullptr;
 }
 
 GUIChildManager::~GUIChildManager ()
@@ -288,7 +288,7 @@ GUIChildManager::find_component_at (int x, int y)
       return *i;
     }
   }
-  return 0;
+  return nullptr;
 }
 
 /* EOF */

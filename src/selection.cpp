@@ -25,7 +25,7 @@
 
 Selection::Selection ()
 {
-  world = 0;
+  world = nullptr;
 }
 
 Vector2d
@@ -163,7 +163,7 @@ void
 Selection::clear()
 {
   selection.clear();
-  world = 0;
+  world = nullptr;
 }
 
 void

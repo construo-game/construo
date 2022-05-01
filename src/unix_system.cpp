@@ -280,7 +280,7 @@ UnixSystem::read_directory(const std::string& arg_pathname)
         {
           struct dirent* entry;
 
-          while ((entry = readdir(dir)) != 0)
+          while ((entry = readdir(dir)) != nullptr)
             {
               if (strcmp(entry->d_name, ".") != 0
                   && strcmp(entry->d_name, "..") != 0

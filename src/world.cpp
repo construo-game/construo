@@ -30,7 +30,7 @@
 #include "rect_collider.hpp"
 #include "string_utils.hpp"
 
-World* World::current_world = 0;
+World* World::current_world = nullptr;
 
 World::World ()
   : particle_mgr (new ParticleFactory(this))
@@ -40,7 +40,7 @@ World::World ()
 }
 
 World::World (const std::string& filename)
-  : particle_mgr (0)
+  : particle_mgr()
 {
   std::cout << "World: Loading '" << filename << "'..." << std::endl;
   file_version = 0;
@@ -278,7 +278,7 @@ World::update (float delta)
 Spring*
 World::get_spring (float x, float y)
 {
-  Spring* spring = 0;
+  Spring* spring = nullptr;
   float min_distance = 0.0f;
 
   float capture_threshold = 15;
@@ -314,7 +314,7 @@ World::get_spring (float x, float y)
 Particle*
 World::get_particle (float x, float y)
 {
-  Particle* particle = 0;
+  Particle* particle = nullptr;
   float min_dist = 25.0f; // FIXME: Make this configurable
   Vector2d mouse_pos (x, y);
 

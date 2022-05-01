@@ -90,7 +90,7 @@ WorldViewComponent::set_mode (Mode m)
 
 WorldViewComponent::~WorldViewComponent()
 {
-  instance_ = 0;
+  instance_ = nullptr;
 }
 
 float

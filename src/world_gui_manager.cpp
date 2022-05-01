@@ -29,7 +29,7 @@
 
 using namespace StringUtils;
 
-WorldGUIManager* WorldGUIManager::instance_ = 0;
+WorldGUIManager* WorldGUIManager::instance_ = nullptr;
 
 
 void increase_particle_mass() {

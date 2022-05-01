@@ -85,7 +85,7 @@ GUIManager::draw ()
 GUIComponent*
 GUIManager::find_component_at (int x, int y)
 {
-  GUIComponent* component = 0;
+  GUIComponent* component = nullptr;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
       if ((*i)->is_at(x, y))
@@ -346,7 +346,7 @@ GUIManager::grab_mouse (GUIComponent* comp)
 void
 GUIManager::ungrab_mouse (GUIComponent* comp)
 {
-  m_grabbing_component = 0;
+  m_grabbing_component = nullptr;
 }
 
 void

@@ -47,7 +47,7 @@ void CloseFileManager ()
   ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
 }
 
-GUIFileManager* GUIFileManager::instance_ = 0;
+GUIFileManager* GUIFileManager::instance_ = nullptr;
 
 GUIFileManager::GUIFileManager (Mode m)
   : GUIChildManager (0, 0, 800, 600),
@@ -84,7 +84,7 @@ GUIFileManager::open_directory (const std::string& pathname)
   std::cout << "GUIFileManager::open_directory: " << pathname << std::endl;
   GUIDirectory* old_directory = current_directory;
 
-  if (directories[pathname] == 0)
+  if (directories[pathname] == nullptr)
     {
       if (mode == SAVE_MANAGER)
         {

@@ -158,7 +158,7 @@ ParticleFactory::lookup_particle (int id)
       if ((*i)->get_id () == id)
         return *i;
     }
-  return 0;
+  return nullptr;
 }
 
 void

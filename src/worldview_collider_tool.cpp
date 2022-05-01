@@ -26,8 +26,8 @@
 WorldViewColliderTool::WorldViewColliderTool ()
 {
   creating_rect = false;
-  to_delete_collider = 0;
-  move_collider      = 0;
+  to_delete_collider = nullptr;
+  move_collider      = nullptr;
 }
 
 WorldViewColliderTool::~WorldViewColliderTool ()
@@ -55,7 +55,7 @@ WorldViewColliderTool::get_collider (const Vector2d& pos)
       if ((*i)->is_at(pos))
         return *i;
     }
-  return 0;
+  return nullptr;
 }
 
 void
@@ -76,7 +76,7 @@ WorldViewColliderTool::on_primary_button_press (int x, int y)
 
   click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
 
-  if ((move_collider = get_collider (click_pos)) != 0)
+  if ((move_collider = get_collider (click_pos)) != nullptr)
     {
       // click_pos Offset, not position
       click_pos = click_pos - move_collider->get_pos();
@@ -112,7 +112,7 @@ WorldViewColliderTool::on_primary_button_release (int x, int y)
     }
 
   creating_rect = false;
-  move_collider = 0;
+  move_collider = nullptr;
 }
 
 void
@@ -143,7 +143,7 @@ WorldViewColliderTool::on_secondary_button_release (int x, int y)
       Controller::instance()->push_undo();
       world.remove_collider(to_delete_collider);
     }
-  to_delete_collider = 0;
+  to_delete_collider = nullptr;
 }
 
 /* EOF */

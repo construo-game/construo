@@ -72,7 +72,7 @@ Spring::Spring (World* world, ReaderMapping const& reader)
   particles.first  = world->get_particle_mgr()->lookup_particle (first_id);
   particles.second = world->get_particle_mgr()->lookup_particle (second_id);
 
-  if (particles.first == 0 || particles.second == 0)
+  if (particles.first == nullptr || particles.second == nullptr)
     {
       throw ConstruoError ("Spring: Pair lookup failed");
     }

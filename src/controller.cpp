@@ -18,7 +18,7 @@
 #include "construo_error.hpp"
 #include "controller.hpp"
 
-Controller* Controller::instance_ = 0;
+Controller* Controller::instance_ = nullptr;
 
 Controller::Controller ()
 {
@@ -42,7 +42,7 @@ Controller::Controller (const std::string& filename)
 
 Controller::~Controller ()
 {
-  instance_ = 0;
+  instance_ = nullptr;
 }
 
 void

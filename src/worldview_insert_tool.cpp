@@ -27,7 +27,7 @@
 
 WorldViewInsertTool::WorldViewInsertTool()
 {
-  current_particle = 0;
+  current_particle = nullptr;
   particle_mass = 0.1f;
 }
 
@@ -137,7 +137,7 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
           // its no longer needed
           current_particle->spring_links -= 1;
 
-          current_particle = 0;
+          current_particle = nullptr;
         }
       WorldGUIManager::instance()->ungrab_mouse(WorldViewComponent::instance());
     }
@@ -202,7 +202,7 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
   if (current_particle)
     { // We are currently creating a new spring, abort that
       current_particle->spring_links -= 1;
-      current_particle = 0;
+      current_particle = nullptr;
       WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
     }
   else
