@@ -25,13 +25,6 @@
 
 class GUIChildManager : public GUIComponent
 {
-private:
-  ZoomGraphicContext gc;
-  typedef std::vector<GUIComponent*> ComponentLst;
-  ComponentLst components;
-
-  GUIComponent* current_component;
-  GUIComponent* find_component_at (int, int);
 public:
   GUIChildManager (int x, int y, int width, int height);
   ~GUIChildManager ();
@@ -73,6 +66,14 @@ public:
   void scroll_down () override;
 
   void on_mouse_move (int x, int y, int of_x, int of_y) override;
+
+private:
+  GUIComponent* find_component_at (int, int);
+
+private:
+  ZoomGraphicContext m_gc;
+  std::vector<GUIComponent*> m_components;
+  GUIComponent* m_current_component;
 
 public:
   GUIChildManager(const GUIChildManager&) = delete;

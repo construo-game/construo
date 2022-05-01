@@ -19,51 +19,51 @@
 #include "colors.hpp"
 #include "gui_child_manager.hpp"
 
-GUIChildManager::GUIChildManager (int x, int y, int width, int height)
-  : GUIComponent (x, y, width, height)
+GUIChildManager::GUIChildManager (int x, int y, int width, int height) :
+  GUIComponent (x, y, width, height)
 {
-  current_component = 0;
+  m_current_component = 0;
 }
 
 GUIChildManager::~GUIChildManager ()
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
-    {
-      delete *i;
-    }
+  for (auto i = m_components.begin(); i != m_components.end (); ++i)
+  {
+    delete *i;
+  }
 }
 
 void
 GUIChildManager::add (GUIComponent* comp)
 {
-  components.push_back(comp);
+  m_components.push_back(comp);
 }
 
 void
 GUIChildManager::remove (GUIComponent* comp)
 {
   // FIXME: Memory leak
-  components.erase(std::remove(components.begin(), components.end(), comp), components.end());
+  m_components.erase(std::remove(m_components.begin(), m_components.end(), comp), m_components.end());
 }
 
 void
 GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
 {
-  for (ComponentLst::iterator i = components.begin(); i != components.end(); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  {
+    if (*i == old_comp)
     {
-      if (*i == old_comp)
-        {
-          *i = new_comp;
-          return;
-        }
+      *i = new_comp;
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::draw (GraphicContext* parent_gc)
 {
-  gc.set_parent_gc (parent_gc);
-  gc.set_offset (m_x, m_y);
+  m_gc.set_parent_gc (parent_gc);
+  m_gc.set_offset (m_x, m_y);
 
   parent_gc->draw_fill_rect (m_x, m_y,
                              m_x + m_width, m_y + m_height,
@@ -80,10 +80,10 @@ GUIChildManager::draw (GraphicContext* parent_gc)
                         m_x + m_width, m_y,
                         Colors::button_fg_passive);
 
-  for (ComponentLst::reverse_iterator i = components.rbegin (); i != components.rend (); ++i)
-    {
-      (*i)->draw (&gc);
-    }
+  for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
+  {
+    (*i)->draw(&m_gc);
+  }
 
   draw_overlay(parent_gc);
 }
@@ -91,79 +91,79 @@ GUIChildManager::draw (GraphicContext* parent_gc)
 void
 GUIChildManager::on_primary_button_press (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_primary_button_press (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_primary_button_press (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::on_primary_button_release (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_primary_button_release (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_primary_button_release (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::on_secondary_button_press (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_secondary_button_press (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_secondary_button_press (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::on_secondary_button_release (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_secondary_button_release (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_secondary_button_release (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::on_delete_press (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_delete_press (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_delete_press (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::on_fix_press (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->on_fix_press (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->on_fix_press (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
@@ -179,33 +179,33 @@ GUIChildManager::on_mouse_leave ()
 void
 GUIChildManager::wheel_up (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->wheel_up (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->wheel_up (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::wheel_down (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          (*i)->wheel_down (x - m_x, y - m_y);
-          return;
-        }
+      (*i)->wheel_down (x - m_x, y - m_y);
+      return;
     }
+  }
 }
 
 void
 GUIChildManager::scroll_left ()
 {
-  /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  /*  for (auto i = m_components.begin (); i != m_components.end (); ++i)
       {
       if ((*i)->is_at (x - m_x, y - m_y))
       {
@@ -219,7 +219,7 @@ void
 GUIChildManager::scroll_right ()
 {
   /*
-    for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+    for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
     if ((*i)->is_at (x - m_x, y - m_y))
     {
@@ -232,7 +232,7 @@ GUIChildManager::scroll_right ()
 void
 GUIChildManager::scroll_up ()
 {
-  /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  /*  for (auto i = m_components.begin (); i != m_components.end (); ++i)
       {
       if ((*i)->is_at (x - m_x, y - m_y))
       {
@@ -246,7 +246,7 @@ void
 GUIChildManager::scroll_down ()
 {
   /*
-    for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+    for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
     if ((*i)->is_at (x - m_x, y - m_y))
     {
@@ -259,29 +259,35 @@ GUIChildManager::scroll_down ()
 void
 GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
 {
-  GUIComponent* comp = find_component_at (x, y);
+  GUIComponent* const comp = find_component_at (x, y);
   //std::cout << " MouseMove: " << x << " " << y << " " << comp << std::endl;
 
-  if (comp != current_component)
-    {
-      if (comp) comp->on_mouse_enter();
-      if (current_component) current_component->on_mouse_leave();
-      current_component = comp;
+  if (comp != m_current_component)
+  {
+    if (comp) {
+      comp->on_mouse_enter();
     }
+    if (m_current_component) {
+      m_current_component->on_mouse_leave();
+    }
+    m_current_component = comp;
+  }
   else if (comp)
+  {
     comp->on_mouse_move(x, y, of_x, of_y);
+  }
 }
 
 GUIComponent*
 GUIChildManager::find_component_at (int x, int y)
 {
-  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
+  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  {
+    if ((*i)->is_at (x - m_x, y - m_y))
     {
-      if ((*i)->is_at (x - m_x, y - m_y))
-        {
-          return *i;
-        }
+      return *i;
     }
+  }
   return 0;
 }
 
