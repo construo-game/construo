@@ -41,7 +41,7 @@ public:
   GUIDirectory (const std::string& pathname, Mode m);
   ~GUIDirectory ();
 
-  void draw_overlay (GraphicContext* gc);
+  void draw_overlay (GraphicContext* gc) override;
 
   std::string get_path() { return pathname; }
 
@@ -50,8 +50,8 @@ public:
   /** Move the shown directory content down */
   void move_down ();
 
-  void wheel_up (int x, int y);
-  void wheel_down (int x, int y);
+  void wheel_up (int x, int y) override;
+  void wheel_down (int x, int y) override;
 };
 
 #endif

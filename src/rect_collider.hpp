@@ -19,7 +19,6 @@
 
 #include "collider.hpp"
 
-/** */
 class RectCollider : public Collider
 {
 private:
@@ -33,19 +32,19 @@ public:
   RectCollider(ReaderMapping const& reader);
   RectCollider(float x1_, float y1_, float x2_, float y2_);
 
-  Collider* duplicate() const;
+  Collider* duplicate() const override;
 
-  Vector2d get_pos();
-  void     set_pos(const Vector2d&);
+  Vector2d get_pos() override;
+  void     set_pos(const Vector2d&) override;
 
-  bool is_at (const Vector2d& pos);
-  void bounce ();
-  void draw (GraphicContext* gc);
-  void draw_highlight (GraphicContext* gc);
+  bool is_at (const Vector2d& pos) override;
+  void bounce() override;
+  void draw (GraphicContext* gc) override;
+  void draw_highlight (GraphicContext* gc) override;
 
-  BoundingBox get_bounding_box() const;
+  BoundingBox get_bounding_box() const override;
 
-  void serialize(LispWriter& writer);
+  void serialize(LispWriter& writer) override;
 };
 
 #endif

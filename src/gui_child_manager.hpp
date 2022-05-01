@@ -49,31 +49,31 @@ public:
     return ptr;
   }
 
-  void draw (GraphicContext* gc);
+  void draw(GraphicContext* gc) override;
   virtual void draw_overlay (GraphicContext* gc) {}
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
   void on_secondary_button_click (int x, int y);
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
+  void on_secondary_button_press (int x, int y) override;
+  void on_secondary_button_release (int x, int y) override;
 
-  void on_delete_press (int x, int y);
-  void on_fix_press (int x, int y);
+  void on_delete_press (int x, int y) override;
+  void on_fix_press (int x, int y) override;
 
-  virtual void on_mouse_enter ();
-  virtual void on_mouse_leave ();
+  virtual void on_mouse_enter () override;
+  virtual void on_mouse_leave () override;
 
-  void wheel_up (int x, int y);
-  void wheel_down (int x, int y);
+  void wheel_up (int x, int y) override;
+  void wheel_down (int x, int y) override;
 
-  void scroll_left ();
-  void scroll_right ();
-  void scroll_up ();
-  void scroll_down ();
+  void scroll_left () override;
+  void scroll_right () override;
+  void scroll_up () override;
+  void scroll_down () override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y);
+  void on_mouse_move (int x, int y, int of_x, int of_y) override;
 };
 
 #endif

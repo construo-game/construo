@@ -37,8 +37,8 @@ public:
   WorldButton (const std::string& arg_filename, Mode m);
   ~WorldButton ();
 
-  void draw (GraphicContext* gc);
-  void on_click ();
+  void draw (GraphicContext* gc) override;
+  void on_click() override;
 
   /** Load the given world, if not called it will be loaded on demand */
   void load_world ();

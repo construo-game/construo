@@ -38,16 +38,16 @@ public:
   WorldViewColliderTool ();
   ~WorldViewColliderTool ();
 
-  void draw_background (ZoomGraphicContext* gc);
-  void draw_foreground (ZoomGraphicContext* gc);
+  void draw_background (ZoomGraphicContext* gc) override;
+  void draw_foreground (ZoomGraphicContext* gc) override;
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
+  void on_secondary_button_press (int x, int y) override;
+  void on_secondary_button_release (int x, int y) override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y);
+  void on_mouse_move (int x, int y, int of_x, int of_y) override;
 };
 
 #endif

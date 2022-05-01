@@ -49,7 +49,7 @@ public:
   WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
   ZoomGraphicContext* get_gc () { return &m_gc; }
-  void draw (GraphicContext* parent_gc);
+  void draw (GraphicContext* parent_gc) override;
 
   void set_mode (Mode m);
   Mode get_mode () { return m_mode; }
@@ -58,33 +58,33 @@ public:
   float get_grid_size();
   float get_snap_size();
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
+  void on_secondary_button_press (int x, int y) override;
+  void on_secondary_button_release (int x, int y) override;
 
-  void on_tertiary_button_press (int x, int y);
-  void on_tertiary_button_release (int x, int y);
+  void on_tertiary_button_press (int x, int y) override;
+  void on_tertiary_button_release (int x, int y) override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y);
+  void on_mouse_move (int x, int y, int of_x, int of_y) override;
 
-  void on_scale_press(int x, int y);
-  void on_grid_press(int x, int y);
-  void on_duplicate_press (int x, int y);
-  void on_delete_press (int x, int y);
-  void on_fix_press (int x, int y);
-  void on_join_press (int x, int y);
+  void on_scale_press(int x, int y) override;
+  void on_grid_press(int x, int y) override;
+  void on_duplicate_press (int x, int y) override;
+  void on_delete_press (int x, int y) override;
+  void on_fix_press (int x, int y) override;
+  void on_join_press (int x, int y) override;
 
-  void on_button_press (int button_id, int x, int y);
+  void on_button_press (int button_id, int x, int y) override;
 
-  void wheel_up (int x, int y);
-  void wheel_down (int x, int y);
+  void wheel_up (int x, int y) override;
+  void wheel_down (int x, int y) override;
 
-  void scroll_left ();
-  void scroll_right ();
-  void scroll_up ();
-  void scroll_down ();
+  void scroll_left () override;
+  void scroll_right () override;
+  void scroll_up () override;
+  void scroll_down () override;
 
   float get_zoom ();
 
@@ -92,7 +92,7 @@ public:
   void on_world_change();
 
   /** */
-  bool is_at (int x, int y) { return true; }
+  bool is_at (int x, int y) override { return true; }
 
 private:
   /** Draw the background grid to which new dots align */

@@ -45,7 +45,7 @@ public:
   static GUIFileManager* instance() { return instance_; }
   static void set_instance(GUIFileManager* g) { instance_ = g; }
 
-  void draw_overlay (GraphicContext* gc);
+  void draw_overlay (GraphicContext* gc) override;
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */
@@ -57,8 +57,8 @@ public:
 
   void update_current_directory();
 
-  void scroll_up ();
-  void scroll_down ();
+  void scroll_up () override;
+  void scroll_down () override;
 };
 
 #endif

@@ -36,17 +36,17 @@ public:
   WorldViewInsertTool ();
   ~WorldViewInsertTool ();
 
-  void draw_background (ZoomGraphicContext* gc);
-  void draw_foreground (ZoomGraphicContext* gc);
+  void draw_background (ZoomGraphicContext* gc) override;
+  void draw_foreground (ZoomGraphicContext* gc) override;
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
+  void on_secondary_button_press (int x, int y) override;
+  void on_secondary_button_release (int x, int y) override;
 
-  void on_delete_press (int x, int y);
-  void on_fix_press (int x, int y);
+  void on_delete_press (int x, int y) override;
+  void on_fix_press (int x, int y) override;
 
   void  set_particle_mass (float p) { particle_mass = p; }
   float get_particle_mass () { return particle_mass; }

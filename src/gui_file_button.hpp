@@ -34,11 +34,11 @@ public:
   //virtual void draw (ZoomGraphicContext*) =0;
   virtual void on_click() =0;
 
-  void on_mouse_enter () { mouse_over = true; }
-  void on_mouse_leave () { mouse_over = false; }
+  void on_mouse_enter() override { mouse_over = true; }
+  void on_mouse_leave() override { mouse_over = false; }
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press(int x, int y) override;
+  void on_primary_button_release(int x, int y) override;
 };
 
 #endif

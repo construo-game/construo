@@ -32,8 +32,8 @@ public:
 
   void resize(int width, int height) override;
 
-  void update();
-  void draw_overlay ();
+  void update() override;
+  void draw_overlay() override;
 
 private:
   GUIComponent* m_worldview_component;

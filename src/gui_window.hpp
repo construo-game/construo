@@ -32,9 +32,9 @@ public:
   GUIWindow (const std::string&, int x, int y, int width, int height);
   ~GUIWindow ();
 
-  void draw(GraphicContext*);
-  void on_mouse_enter () { mouse_over = true; }
-  void on_mouse_leave () { mouse_over = false; }
+  void draw(GraphicContext*) override;
+  void on_mouse_enter() override { mouse_over = true; }
+  void on_mouse_leave() override { mouse_over = false; }
 
 };
 

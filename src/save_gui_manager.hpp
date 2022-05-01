@@ -24,8 +24,8 @@ class SaveGUIManager : public GUIManager
 public:
   SaveGUIManager ();
 
-  void draw_overlay ();
-  void run_once ();
+  void draw_overlay() override;
+  void run_once() override;
 
 private:
   GUIFileManager* file_manager;

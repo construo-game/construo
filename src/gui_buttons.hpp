@@ -32,13 +32,13 @@ public:
   void draw_border_pressed(GraphicContext*);
   void draw_border_normal(GraphicContext*);
 
-  void on_mouse_enter ();
-  void on_mouse_leave ();
+  void on_mouse_enter() override;
+  void on_mouse_leave() override;
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
-  void draw (GraphicContext*);
+  void draw (GraphicContext*) override;
 
   virtual void draw_content (GraphicContext*);
   virtual void on_click ();
@@ -54,30 +54,30 @@ class GUIRunButton : public GUIButton
 {
 public:
   GUIRunButton ();
-  void draw_content (GraphicContext*);
-  void on_click();
+  void draw_content (GraphicContext*) override;
+  void on_click() override;
 };
 
 class GUISlowMoButton : public GUIButton
 {
 public:
   GUISlowMoButton ();
-  void draw_content (GraphicContext*);
-  void on_click();
+  void draw_content (GraphicContext*) override;
+  void on_click() override;
 };
 
 class GUIQuitButton : public GUIButton
 {
 public:
   GUIQuitButton ();
-  void on_click();
+  void on_click() override;
 };
 
 class GUILoadButton : public GUIButton
 {
 public:
   GUILoadButton ();
-  void on_click();
+  void on_click() override;
 };
 
 inline bool always_false()
@@ -107,12 +107,12 @@ public:
   {
   }
 
-  void on_click ()
+  void on_click() override
   {
     m_func();
   }
 
-  void draw_content (GraphicContext* gc)
+  void draw_content (GraphicContext* gc) override
   {
     if (m_hfunc()) {
       gc->draw_fill_rect(m_x, m_y,

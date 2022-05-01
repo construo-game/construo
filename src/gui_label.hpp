@@ -26,8 +26,8 @@ class GUILabel : public GUIComponent
 public:
   GUILabel (const std::string& title_, int x, int y, int width, int height);
 
-  void draw (GraphicContext*);
-  bool is_at (int, int) { return false; }
+  void draw(GraphicContext*) override;
+  bool is_at(int, int) override { return false; }
 
 private:
   std::string m_title;

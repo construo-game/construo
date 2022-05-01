@@ -19,7 +19,6 @@
 
 #include "gui_file_button.hpp"
 
-/** */
 class GUIDirectoryButton : public GUIFileButton
 {
 private:
@@ -27,9 +26,8 @@ public:
   GUIDirectoryButton (const std::string& pathname);
   ~GUIDirectoryButton ();
 
-  void draw (GraphicContext*);
-  void on_click();
-private:
+  void draw(GraphicContext*) override;
+  void on_click() override;
 };
 
 #endif

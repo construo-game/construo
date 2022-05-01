@@ -30,8 +30,8 @@ private:
 public:
   LoadGUIManager ();
 
-  void draw_overlay ();
-  void run_once ();
+  void draw_overlay() override;
+  void run_once() override;
 };
 
 #endif

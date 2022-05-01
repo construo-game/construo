@@ -35,16 +35,16 @@ public:
   WorldViewZoomTool ();
   ~WorldViewZoomTool ();
 
-  void activate ();
+  void activate() override;
 
-  void draw_foreground (ZoomGraphicContext* gc);
-  void draw_background (ZoomGraphicContext* gc) {}
+  void draw_foreground (ZoomGraphicContext* gc) override;
+  void draw_background (ZoomGraphicContext* gc) override {}
 
-  void on_primary_button_press (int x, int y);
-  void on_primary_button_release (int x, int y);
+  void on_primary_button_press (int x, int y) override;
+  void on_primary_button_release (int x, int y) override;
 
-  void on_secondary_button_press (int x, int y);
-  void on_secondary_button_release (int x, int y);
+  void on_secondary_button_press (int x, int y) override;
+  void on_secondary_button_release (int x, int y) override;
 };
 
 #endif
