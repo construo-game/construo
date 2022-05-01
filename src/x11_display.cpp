@@ -102,6 +102,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
     ButtonPressMask      |
     ButtonReleaseMask    |
     StructureNotifyMask  |
+    // ResizeRedirectMask   |
     ExposureMask;
 
   colormap = DefaultColormap (display, screen);
@@ -124,26 +125,28 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
     XSizeHints size_hints;
     size_hints.x = 0;
     size_hints.y = 0;
-    size_hints.flags  = PSize | PMinSize | PMaxSize;
+    size_hints.flags  = PSize | PMinSize;
 
     size_hints.width  = width;
     size_hints.height = height;
 
-    size_hints.min_width  = width;
-    size_hints.min_height = height;
-    size_hints.max_width  = width;
-    size_hints.max_height = height;
+    size_hints.min_width  = 0;
+    size_hints.min_height = 0;
+
+    size_hints.max_width  = 0;
+    size_hints.max_height = 0;
 
     XSetWMProperties(
-                     display,
-                     window,
-                     &text_property,
-                     &text_property,
-                     nullptr,
-                     0,
-                     &size_hints,
-                     nullptr,
-                     nullptr);
+      display,
+      window,
+      &text_property, // window name
+      &text_property, // icon name
+      nullptr, // argv
+      0, // argc
+      &size_hints,
+      nullptr, // XWMHints
+      nullptr // class_hinst
+      );
 
     // Set WM_DELETE_WINDOW atom in WM_PROTOCOLS property (to get window_delete requests).
     wm_delete_window = XInternAtom (display, "WM_DELETE_WINDOW", False);
@@ -610,9 +613,17 @@ X11Display::read_event ()
       }
       break;
 
+    case ResizeRequest:
+      std::cout << "X11Display:ResizeRequest: "
+                << event.xresizerequest.width << "x" << event.xresizerequest.height << std::endl;
+      break;
+
     case ConfigureNotify:
-      //std::cout << "X11Display: " << event.xconfigure.width << "x" << event.xconfigure.height
-      //<< "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+      std::cout << "X11Display:ConfigureNotify: "
+                << event.xconfigure.width << "x" << event.xconfigure.height
+                << "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+      width = event.xconfigure.width;
+      height = event.xconfigure.height;
       break;
 
     case DestroyNotify:
