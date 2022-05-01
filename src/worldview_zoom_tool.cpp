@@ -21,33 +21,34 @@
 #include "worldview_component.hpp"
 #include "worldview_zoom_tool.hpp"
 
-WorldViewZoomTool::WorldViewZoomTool ()
+WorldViewZoomTool::WorldViewZoomTool() :
+  m_click_pos(),
+  m_creating_zoom_rectangle(false)
 {
-  creating_zoom_rectangle = false;
 }
 
-WorldViewZoomTool::~WorldViewZoomTool ()
+WorldViewZoomTool::~WorldViewZoomTool()
 {
 }
 
 void
 WorldViewZoomTool::activate ()
 {
-  creating_zoom_rectangle = false;
+  m_creating_zoom_rectangle = false;
 }
 
 void
 WorldViewZoomTool::draw_foreground (ZoomGraphicContext* gc)
 {
-  if (creating_zoom_rectangle)
+  if (m_creating_zoom_rectangle)
     {
       float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (g_input_context->get_mouse_x ());
       float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (g_input_context->get_mouse_y ());
 
-      gc->draw_rect (Math::min(x, click_pos.x),
-                     Math::min(y, click_pos.y),
-                     Math::max(x, click_pos.x),
-                     Math::max(y, click_pos.y),
+      gc->draw_rect (Math::min(x, m_click_pos.x),
+                     Math::min(y, m_click_pos.y),
+                     Math::max(x, m_click_pos.x),
+                     Math::max(y, m_click_pos.y),
                      Colors::new_spring);
     }
 }
@@ -55,23 +56,23 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext* gc)
 void
 WorldViewZoomTool::on_primary_button_press (int screen_x, int screen_y)
 {
-  creating_zoom_rectangle = true;
-  click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
-  click_pos.y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
+  m_creating_zoom_rectangle = true;
+  m_click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
+  m_click_pos.y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 }
 
 void
 WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
 {
-  creating_zoom_rectangle = false;
+  m_creating_zoom_rectangle = false;
 
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);
 
-  WorldViewComponent::instance()->get_gc()->zoom_to(static_cast<int>(Math::min(x, click_pos.x)),
-                                                    static_cast<int>(Math::min(y, click_pos.y)),
-                                                    static_cast<int>(Math::max(x, click_pos.x)),
-                                                    static_cast<int>(Math::max(y, click_pos.y)));
+  WorldViewComponent::instance()->get_gc()->zoom_to(static_cast<int>(Math::min(x, m_click_pos.x)),
+                                                    static_cast<int>(Math::min(y, m_click_pos.y)),
+                                                    static_cast<int>(Math::max(x, m_click_pos.x)),
+                                                    static_cast<int>(Math::max(y, m_click_pos.y)));
 }
 
 void

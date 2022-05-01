@@ -30,16 +30,17 @@
 
 using namespace StringUtils;
 
-GUIManager::GUIManager ()
+GUIManager::GUIManager() :
+  m_frame_count(0),
+  m_start_time(g_system_context->get_time ()),
+  m_current_fps(0.0f),
+  m_last_component(nullptr),
+  m_current_component(nullptr),
+  m_grabbing_component(nullptr),
+  m_last_x(),
+  m_last_y(),
+  m_components()
 {
-  m_frame_count = 0;
-  m_current_fps = 0.0f;
-
-  m_start_time  = g_system_context->get_time ();
-
-  m_last_component     = nullptr;
-  m_grabbing_component = nullptr;
-  m_current_component  = nullptr;
 }
 
 GUIManager::~GUIManager ()

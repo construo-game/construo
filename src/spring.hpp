@@ -28,21 +28,6 @@ class World;
 class Spring
 {
 public:
-  /** Pointers to the two particles to which the Spring is
-      connected */
-  std::pair<Particle*, Particle*> particles;
-
-  /** The orignial length of the Spring, the actually length on the
-      screen is different, since the spring can be streched */
-  float length;
-
-  /** */
-  bool destroyed;
-
-  float stiffness;
-  float damping;
-  float max_stretch;
-
   Spring (Particle* f, Particle* s, float l);
   Spring (Particle* f, Particle* s);
 
@@ -58,6 +43,21 @@ public:
   void recalc_length ();
 
   void serialize(LispWriter& writer);
+
+public:
+  /** Pointers to the two particles to which the Spring is
+      connected */
+  std::pair<Particle*, Particle*> particles;
+
+  /** The orignial length of the Spring, the actually length on the
+      screen is different, since the spring can be streched */
+  float length;
+
+  bool destroyed;
+
+  float stiffness;
+  float damping;
+  float max_stretch;
 };
 
 #endif

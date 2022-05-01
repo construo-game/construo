@@ -22,20 +22,23 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_child_manager.hpp"
 
-/** */
 class GUIWindow : public GUIChildManager
 {
-private:
-  std::string title;
-  bool mouse_over;
 public:
   GUIWindow (const std::string&, int x, int y, int width, int height);
   ~GUIWindow ();
 
   void draw(GraphicContext*) override;
-  void on_mouse_enter() override { mouse_over = true; }
-  void on_mouse_leave() override { mouse_over = false; }
+  void on_mouse_enter() override { m_mouse_over = true; }
+  void on_mouse_leave() override { m_mouse_over = false; }
 
+private:
+  std::string m_title;
+  bool m_mouse_over;
+
+public:
+  GUIWindow(const GUIWindow&) = delete;
+  GUIWindow& operator=(const GUIWindow&) = delete;
 };
 
 #endif

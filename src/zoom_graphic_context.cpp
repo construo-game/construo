@@ -21,29 +21,29 @@
 #include "root_graphic_context.hpp"
 #include "zoom_graphic_context.hpp"
 
-ZoomGraphicContext::ZoomGraphicContext()
-{
-  m_x_offset = 0.0f;
-  m_y_offset = 0.0f;
-  m_zoom = 1.0f;
-
-  m_x1 = 0;
-  m_y1 = 0;
+ZoomGraphicContext::ZoomGraphicContext() :
+  m_x1(0),
+  m_y1(0),
   // FIXME: should use parent gc
-  m_x2 = g_graphic_context->get_width();
-  m_y2 = g_graphic_context->get_height();
+  m_x2(g_graphic_context->get_width()),
+  m_y2(g_graphic_context->get_height()),
+  m_x_offset(0.0f),
+  m_y_offset(0.0f),
+  m_zoom(1.0f),
+  m_parent_gc(nullptr)
+{
 }
 
 ZoomGraphicContext::ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_) :
   m_x1(x1_),
   m_y1(y1_),
   m_x2(x2_),
-  m_y2(y2_)
+  m_y2(y2_),
+  m_x_offset(0.0f),
+  m_y_offset(0.0f),
+  m_zoom(1.0f),
+  m_parent_gc(nullptr)
 {
-  m_x_offset   = 0;
-  m_y_offset   = 0;
-  m_zoom       = 1.0f;
-  m_parent_gc  = nullptr;
 }
 
 ZoomGraphicContext::~ZoomGraphicContext()

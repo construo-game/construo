@@ -19,48 +19,43 @@
 #include "particle_factory.hpp"
 #include "spring.hpp"
 
-Spring::Spring (Particle* f, Particle* s, float l)
+Spring::Spring(Particle* f, Particle* s, float l) :
+  particles(f, s),
+  length(l),
+  destroyed(false),
+  stiffness(50.0f),
+  damping(0.1f),
+  max_stretch(0.15f)
 {
-  particles.first  = f;
-  particles.second = s;
-  destroyed        = false;
-  length           = l;
-
-  stiffness   = 50.0f;
-  damping     = .1f;
-  max_stretch = 0.15f;
-
   f->spring_links += 1;
   s->spring_links += 1;
 }
 
-Spring::Spring (Particle* f, Particle* s)
+Spring::Spring(Particle* f, Particle* s) :
+  particles(f, s),
+  length(fabs((f->pos - s->pos).norm ())),
+  destroyed(false),
+  stiffness(50.0f),
+  damping(0.1f),
+  max_stretch(0.15f)
 {
-  particles.first  = f;
-  particles.second = s;
-  destroyed        = false;
-  length           = fabs((f->pos - s->pos).norm ());
-
-  stiffness   = 50.0f;
-  damping     = .1f;
-  max_stretch = 0.15f;
-
   f->spring_links += 1;
   s->spring_links += 1;
 
   assert (length != 0);
 }
 
-Spring::Spring (World* world, ReaderMapping const& reader)
-  : destroyed (false)
+Spring::Spring(World* world, ReaderMapping const& reader) :
+  particles(nullptr, nullptr),
+  length(-1),
+  destroyed(false),
+  stiffness(50.0f),
+  damping(0.1f),
+  max_stretch(0.15f)
 {
   int first_id = -1;
   int second_id = -1;
   length = -1;
-
-  stiffness   = 50.0f;
-  damping     = .1f;
-  max_stretch = 0.15f;
 
   reader.read("first", first_id);
   reader.read("second", second_id);

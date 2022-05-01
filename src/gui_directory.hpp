@@ -26,24 +26,16 @@ class GUIFileButton;
 /** Widget which shows a complete directory */
 class GUIDirectory : public GUIChildManager
 {
-private:
-  std::string pathname;
-  std::vector<GUIFileButton*> files;
-  int offset;
-  unsigned int mtime;
-
-  void place_components ();
 public:
   enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };
-private:
-  Mode mode;
+
 public:
   GUIDirectory (const std::string& pathname, Mode m);
   ~GUIDirectory ();
 
   void draw_overlay (GraphicContext* gc) override;
 
-  std::string get_path() { return pathname; }
+  std::string get_path() { return m_pathname; }
 
   /** Move the shown directory content up */
   void move_up ();
@@ -52,6 +44,20 @@ public:
 
   void wheel_up (int x, int y) override;
   void wheel_down (int x, int y) override;
+
+private:
+  void place_components();
+
+private:
+  std::string m_pathname;
+  std::vector<GUIFileButton*> m_files;
+  int m_offset;
+  unsigned int m_mtime;
+  Mode m_mode;
+
+public:
+  GUIDirectory(const GUIDirectory&) = delete;
+  GUIDirectory& operator=(const GUIDirectory&) = delete;
 };
 
 #endif

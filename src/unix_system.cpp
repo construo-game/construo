@@ -36,8 +36,11 @@
 
 using namespace StringUtils;
 
-UnixSystem::UnixSystem ()
-{ // riped out of ClanLib-0.7
+UnixSystem::UnixSystem () :
+  start_time(0),
+  construo_rc_path()
+{
+  // riped out of ClanLib-0.7
   timeval tv;
   gettimeofday(&tv, NULL);
   start_time = static_cast<long>(tv.tv_sec) * static_cast<long>(1000) + static_cast<long>(tv.tv_usec) / static_cast<long>(1000);

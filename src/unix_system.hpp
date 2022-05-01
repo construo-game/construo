@@ -24,13 +24,6 @@
     the current time */
 class UnixSystem : public SystemContext
 {
-private:
-  unsigned int start_time;
-
-  /** The location of the users construo directory, aka ~/.construo/,
-      the name contains a trailing slash */
-  std::string construo_rc_path;
-
 public:
   UnixSystem ();
   virtual ~UnixSystem ();
@@ -50,6 +43,13 @@ public:
   std::vector<std::string> read_directory(const std::string& pathname) override;
 
   std::string translate_filename(const std::string&) override;
+
+private:
+  unsigned int start_time;
+
+  /** The location of the users construo directory, aka ~/.construo/,
+      the name contains a trailing slash */
+  std::string construo_rc_path;
 };
 
 #endif

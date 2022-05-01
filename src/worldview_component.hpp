@@ -102,8 +102,6 @@ private:
   void draw_ground();
 
 private:
-  Mode m_mode;
-
   ZoomGraphicContext m_gc;
 
   /** If set to true, display a grid and align dots to it */
@@ -125,11 +123,12 @@ private:
 
   /** If the user clicks in this component, the tool decides what to
       do */
-  WorldViewTool*       m_current_tool;
   std::unique_ptr<WorldViewSelectTool> m_select_tool;
   std::unique_ptr<WorldViewInsertTool> m_insert_tool;
-  std::unique_ptr<WorldViewZoomTool>   m_zoom_tool;
+  std::unique_ptr<WorldViewZoomTool> m_zoom_tool;
   std::unique_ptr<WorldViewColliderTool> m_collider_tool;
+  WorldViewTool* m_current_tool;
+  Mode m_mode;
 
 public:
   WorldViewComponent(const WorldViewComponent&) = delete;

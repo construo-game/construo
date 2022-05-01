@@ -21,13 +21,6 @@
 
 class RectCollider : public Collider
 {
-private:
-  // FIXME: Use the Rect class here
-  float x1;                     /**< left border */
-  float y1;                     /**< top border */
-  float x2;                     /**< right border */
-  float y2;                     /**< bottom border */
-
 public:
   RectCollider(ReaderMapping const& reader);
   RectCollider(float x1_, float y1_, float x2_, float y2_);
@@ -45,6 +38,13 @@ public:
   BoundingBox get_bounding_box() const override;
 
   void serialize(LispWriter& writer) override;
+
+private:
+  // FIXME: Use the Rect class here
+  float x1;                     /**< left border */
+  float y1;                     /**< top border */
+  float x2;                     /**< right border */
+  float y2;                     /**< bottom border */
 };
 
 #endif

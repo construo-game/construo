@@ -28,11 +28,11 @@ void no_press()
 {
 }
 
-GUIWindow::GUIWindow (const std::string& t, int x, int y, int width, int height)
-  : GUIChildManager (x, y, width, height),
-    title (t)
+GUIWindow::GUIWindow (const std::string& t, int x, int y, int width, int height) :
+  GUIChildManager (x, y, width, height),
+  m_title(t),
+  m_mouse_over(true)
 {
-  mouse_over = true;
   create<GUILabel>("Do you really want to quit?", 10, 10, 100, 30);
   create<GUIGenericButton>("Yes", 10, 50, 80, 25, yes_press);
   create<GUIGenericButton>("No", 110, 50, 80, 25, no_press);
@@ -45,7 +45,7 @@ GUIWindow::~GUIWindow ()
 void
 GUIWindow::draw(GraphicContext* gc)
 {
-  std::cout << "Window draw.." << mouse_over << std::endl;
+  std::cout << "Window draw.." << m_mouse_over << std::endl;
   /*if (mouse_over)
     {
       std::cout << "MOUSEOVER" << std::endl;

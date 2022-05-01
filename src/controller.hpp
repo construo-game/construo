@@ -24,21 +24,8 @@
 class Controller
 {
 private:
-  std::vector<World*> undo_world_stack;
-  std::vector<World*> redo_world_stack;
-
-  bool running;
-  bool slow_down;
-  bool action_cam;
-  bool hide_dots;
-
-  /** The current active world, don't delete this, delet is handled in
-      the undo stacks */
-  World* world;
-
-  DeltaManager delta_manager;
-
   static Controller* instance_;
+
 public:
   /** Create an empty world workspace */
   Controller ();
@@ -47,11 +34,11 @@ public:
 
   static inline Controller* instance() { return instance_; }
 
-  bool has_been_run () { return world && world->get_has_been_run (); }
+  bool has_been_run () { return m_world && m_world->get_has_been_run (); }
 
-  bool is_running () { return running; }
-  bool slow_down_active () { return slow_down; }
-  void set_slow_down (bool s) { slow_down = s; }
+  bool is_running () { return m_running; }
+  bool slow_down_active () { return m_slow_down; }
+  void set_slow_down (bool s) { m_slow_down = s; }
 
   void set_action_cam(bool);
   bool get_action_cam();
@@ -59,7 +46,7 @@ public:
   void set_hide_dots (bool);
   bool get_hide_dots ();
 
-  World* get_world () { assert(world); return world; }
+  World* get_world () { assert(m_world); return m_world; }
 
   /** Load a world by name, name is relative to the construo user directory */
   void load_world (const std::string& name);
@@ -84,6 +71,21 @@ public:
 
   /** start or stops the simulation */
   void start_simulation ();
+
+private:
+  /** The current active world, don't delete this, delete is handled in
+      the undo stacks */
+  World* m_world;
+
+  std::vector<World*> m_undo_world_stack;
+  std::vector<World*> m_redo_world_stack;
+
+  bool m_running;
+  bool m_slow_down;
+  bool m_action_cam;
+  bool m_hide_dots;
+
+  DeltaManager m_delta_manager;
 
 public:
   Controller(const Controller&) = delete;

@@ -27,7 +27,11 @@ RectCollider::duplicate() const
   return new RectCollider(x1, y1, x2, y2);
 }
 
-RectCollider::RectCollider(ReaderMapping const& reader)
+RectCollider::RectCollider(ReaderMapping const& reader) :
+  x1(),
+  y1(),
+  x2(),
+  y2()
 {
   Vector2d pos1, pos2;
   if (reader.read("pos1", pos1) == false ||
@@ -41,11 +45,11 @@ RectCollider::RectCollider(ReaderMapping const& reader)
   y2 = pos2.y;
 }
 
-RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_)
-  : x1 (Math::min(x1_, x2_)),
-    y1 (Math::min(y1_, y2_)),
-    x2 (Math::max(x1_, x2_)),
-    y2 (Math::max(y1_, y2_))
+RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_) :
+  x1(Math::min(x1_, x2_)),
+  y1(Math::min(y1_, y2_)),
+  x2(Math::max(x1_, x2_)),
+  y2(Math::max(y1_, y2_))
 {
 }
 

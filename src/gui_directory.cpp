@@ -22,20 +22,23 @@
 #include "gui_new_file_button.hpp"
 #include "gui_directory.hpp"
 
-GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
-  : GUIChildManager (0, 0, 800, 600),
-    pathname (arg_pathname),
-    mode (m)
+GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
+  GUIChildManager (0, 0, 800, 600),
+  m_pathname (arg_pathname),
+  m_files(),
+  m_offset(),
+  m_mtime(),
+  m_mode(m)
 {
-  mtime = g_system_context->get_mtime(pathname);
-  std::vector<std::string> dir = g_system_context->read_directory(pathname);
+  m_mtime = g_system_context->get_mtime(m_pathname);
+  std::vector<std::string> dir = g_system_context->read_directory(m_pathname);
 
-  if (mode == SAVE_DIRECTORY && pathname != "/")
-    files.push_back(new GUINewFileButton(pathname));
+  if (m_mode == SAVE_DIRECTORY && m_pathname != "/")
+    m_files.push_back(new GUINewFileButton(m_pathname));
 
   for (std::vector<std::string>::iterator i = dir.begin(); i != dir.end(); ++i)
     {
-      std::string filename = pathname + *i;
+      std::string filename = m_pathname + *i;
 
       FileType type = g_system_context->get_file_type (filename);
 
@@ -44,16 +47,16 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
       if (type == FT_DIRECTORY)
         {
           if (*(filename.end()-1) == '/') // FIXME: Hack
-            files.push_back (new GUIDirectoryButton (filename));
+            m_files.push_back (new GUIDirectoryButton (filename));
           else
-            files.push_back (new GUIDirectoryButton (filename + "/"));
+            m_files.push_back (new GUIDirectoryButton (filename + "/"));
         }
       else if (type == FT_CONSTRUO_FILE)
         {
-          if (mode == SAVE_DIRECTORY)
-            files.push_back (new WorldButton (filename, WorldButton::SAVE_BUTTON));
+          if (m_mode == SAVE_DIRECTORY)
+            m_files.push_back (new WorldButton (filename, WorldButton::SAVE_BUTTON));
           else
-            files.push_back (new WorldButton (filename, WorldButton::LOAD_BUTTON));
+            m_files.push_back (new WorldButton (filename, WorldButton::LOAD_BUTTON));
         }
       else // (type == FT_UNKNOWN_FILE)
         {
@@ -63,14 +66,14 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m)
         }
     }
 
-  offset = 0;
+  m_offset = 0;
   place_components ();
 }
 
 GUIDirectory::~GUIDirectory ()
 {
-  for(std::vector<GUIFileButton*>::iterator i = files.begin();
-      i != files.end(); ++i)
+  for(std::vector<GUIFileButton*>::iterator i = m_files.begin();
+      i != m_files.end(); ++i)
     {
       // FIXME: Very ugly, we remove all components from the manager so that he doesn't delete them twice
       remove(*i);
@@ -82,8 +85,8 @@ void
 GUIDirectory::place_components ()
 {
   // Remove all file components
-  for(std::vector<GUIFileButton*>::iterator i = files.begin();
-      i != files.end(); ++i)
+  for(std::vector<GUIFileButton*>::iterator i = m_files.begin();
+      i != m_files.end(); ++i)
     {
       remove(*i);
     }
@@ -94,13 +97,13 @@ GUIDirectory::place_components ()
 
   //std::cout << "OFFSET: " << offset << std::endl;
 
-  for(std::vector<GUIFileButton*>::size_type i = 0 + offset;
-      i < files.size() && count < 9;
+  for(std::vector<GUIFileButton*>::size_type i = 0 + m_offset;
+      i < m_files.size() && count < 9;
       ++i)
     {
-      files[i]->set_position(column * (200 + 50) + 50,
+      m_files[i]->set_position(column * (200 + 50) + 50,
                              row * (150 + 37) + 30);
-      add(files[i]);
+      add(m_files[i]);
 
       column += 1;
       if (column >= 3) // row is full
@@ -123,8 +126,8 @@ GUIDirectory::draw_overlay (GraphicContext* gc)
 void
 GUIDirectory::move_up ()
 {
-  if (offset >= 3)
-    offset -= 3;
+  if (m_offset >= 3)
+    m_offset -= 3;
 
   place_components ();
 }
@@ -132,10 +135,10 @@ GUIDirectory::move_up ()
 void
 GUIDirectory::move_down ()
 {
-  offset += 3;
+  m_offset += 3;
 
-  if (offset >= int(files.size()))
-    offset -= 3;
+  if (m_offset >= int(m_files.size()))
+    m_offset -= 3;
 
   place_components ();
 }

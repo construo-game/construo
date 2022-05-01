@@ -20,24 +20,30 @@
 
 Controller* Controller::instance_ = nullptr;
 
-Controller::Controller ()
+Controller::Controller() :
+  m_world(new World),
+  m_undo_world_stack(),
+  m_redo_world_stack(),
+  m_running(false),
+  m_slow_down(false),
+  m_action_cam(false),
+  m_hide_dots(false),
+  m_delta_manager()
 {
-  instance_  = this;
-  running    = false;
-  slow_down  = false;
-  action_cam = false;
-  hide_dots  = false;
-  world      = new World ();
+  instance_ = this;
 }
 
-Controller::Controller (const std::string& filename)
+Controller::Controller(const std::string& filename) :
+  m_world(new World(filename)),
+  m_undo_world_stack(),
+  m_redo_world_stack(),
+  m_running(false),
+  m_slow_down(false),
+  m_action_cam(false),
+  m_hide_dots(false),
+  m_delta_manager()
 {
-  instance_  = this;
-  running    = false;
-  slow_down  = false;
-  action_cam = false;
-  hide_dots  = false;
-  world     = new World (filename);
+  instance_ = this;
 }
 
 Controller::~Controller ()
@@ -46,17 +52,18 @@ Controller::~Controller ()
 }
 
 void
-Controller::load_world (const std::string& filename)
+Controller::load_world(const std::string& filename)
 {
-  if (world)
-    undo_world_stack.push_back(world);
+  if (m_world) {
+    m_undo_world_stack.push_back(m_world);
+  }
 
   //std::cout << "Loading World..." << std::endl;
-  world = new World (filename);
+  m_world = new World (filename);
 
   WorldViewComponent::instance()->on_world_change();
 
-  running = false;
+  m_running = false;
   //std::cout << "Loading World... DONE" << std::endl;
 }
 
@@ -64,7 +71,7 @@ void
 Controller::save_world (const std::string& filename)
 {
   //std::cout << "Saving World..." << std::endl;
-  world->write_lisp (filename);
+  m_world->write_lisp (filename);
   //std::cout << "Saving World... DONE" << std::endl;
 }
 
@@ -98,13 +105,13 @@ Controller::load_from_slot (int n)
 void
 Controller::update ()
 {
-  float delta = delta_manager.getset ();
+  float delta = m_delta_manager.getset ();
 
-  if (running)
+  if (m_running)
     {
       float min_skip;
 
-      if (slow_down)
+      if (m_slow_down)
         {
           delta /= 50.0f/20.0f;
           min_skip = 0.0007f;
@@ -118,7 +125,7 @@ Controller::update ()
       float i = 0.0f;
       while (i < delta)
         {
-          world->update (min_skip);
+          m_world->update (min_skip);
           i += min_skip;
         }
     }
@@ -127,32 +134,33 @@ Controller::update ()
 void
 Controller::start_simulation ()
 {
-  if (!running)
-    undo_world_stack.push_back(world->duplicate());
+  if (!m_running) {
+    m_undo_world_stack.push_back(m_world->duplicate());
+  }
 
-  if (undo_world_stack.size() > 100)
+  if (m_undo_world_stack.size() > 100)
     {
       // FIXME: shrink stack here
       //delete *undo_world_stack.front();
       //std::cout << "Stak
     }
 
-  running = !running;
+  m_running = !m_running;
 }
 
 void
 Controller::push_undo()
 {
-  undo_world_stack.push_back(world->duplicate());
+  m_undo_world_stack.push_back(m_world->duplicate());
 }
 
 void
 Controller::clear_world ()
 {
   std::cout << "Controller: Clear" << std::endl;
-  undo_world_stack.push_back(world);
-  world = new World ();
-  running = false;
+  m_undo_world_stack.push_back(m_world);
+  m_world = new World;
+  m_running = false;
 }
 
 void
@@ -163,13 +171,13 @@ Controller::undo ()
             << " redostack: " << redo_world_stack.size() << std::endl;
 #endif
 
-  if (!undo_world_stack.empty())
+  if (!m_undo_world_stack.empty())
     {
       //delete world; // fixme: memory hole
-      redo_world_stack.push_back (world);
-      world = undo_world_stack.back();
-      undo_world_stack.pop_back();
-      running = false;
+      m_redo_world_stack.push_back(m_world);
+      m_world = m_undo_world_stack.back();
+      m_undo_world_stack.pop_back();
+      m_running = false;
     }
   else
     {
@@ -180,12 +188,12 @@ Controller::undo ()
 void
 Controller::redo ()
 {
-  if (!redo_world_stack.empty())
+  if (!m_redo_world_stack.empty())
     {
-      undo_world_stack.push_back (world);
-      world = redo_world_stack.back();
-      redo_world_stack.pop_back();
-      running = false;
+      m_undo_world_stack.push_back(m_world);
+      m_world = m_redo_world_stack.back();
+      m_redo_world_stack.pop_back();
+      m_running = false;
     }
   else
     {
@@ -196,25 +204,25 @@ Controller::redo ()
 void
 Controller::set_action_cam(bool a)
 {
-  action_cam = a;
+  m_action_cam = a;
 }
 
 bool
 Controller::get_action_cam()
 {
-  return action_cam;
+  return m_action_cam;
 }
 
 void
 Controller::set_hide_dots (bool d)
 {
-  hide_dots = d;
+  m_hide_dots = d;
 }
 
 bool
 Controller::get_hide_dots ()
 {
-  return hide_dots;
+  return m_hide_dots;
 }
 
 /* EOF */

@@ -28,24 +28,26 @@
 WorldViewComponent* WorldViewComponent::instance_;
 
 WorldViewComponent::WorldViewComponent() :
-  GUIComponent()
+  GUIComponent(),
+  m_gc(),
+  m_use_grid(false),
+  m_grid_base_size(10),
+  m_grid_constant(5),
+  m_grid_scale_factor(1),
+  m_grid_snap_factor(2),
+  m_scrolling(false),
+  m_scroll_pos_x(0.0f),
+  m_scroll_pos_y(0.0f),
+  m_x_offset(0.0f),
+  m_y_offset(0.0f),
+  m_select_tool(std::make_unique<WorldViewSelectTool>()),
+  m_insert_tool(std::make_unique<WorldViewInsertTool>()),
+  m_zoom_tool(std::make_unique<WorldViewZoomTool>()),
+  m_collider_tool(std::make_unique<WorldViewColliderTool>()),
+  m_current_tool(m_insert_tool.get()),
+  m_mode(INSERT_MODE)
 {
   instance_ = this;
-
-  m_scrolling = false;
-  m_use_grid  = false;
-  m_grid_base_size = 10;
-  m_grid_constant = 5;
-  m_grid_scale_factor = 1;
-  m_grid_snap_factor = 2;
-
-  m_select_tool   = std::make_unique<WorldViewSelectTool>();
-  m_insert_tool   = std::make_unique<WorldViewInsertTool>();
-  m_zoom_tool     = std::make_unique<WorldViewZoomTool>();
-  m_collider_tool = std::make_unique<WorldViewColliderTool>();
-
-  m_current_tool = m_insert_tool.get();
-  m_mode = INSERT_MODE;
 
   on_world_change();
 }

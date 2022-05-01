@@ -28,7 +28,7 @@ public:
   void run_once() override;
 
 private:
-  GUIFileManager* file_manager;
+  GUIFileManager* m_file_manager;
 
 public:
   SaveGUIManager(const SaveGUIManager&) = delete;

@@ -26,15 +26,8 @@ class World;
 /** A class to keep track of a group of selected particles */
 class Selection
 {
-private:
+public:
   typedef std::list<Particle*> SelectionLst;
-  /** Collection of particles */
-  SelectionLst selection;
-
-  /** Pointer to the world that contains the particle this selection
-      is pointing to. Used to check if the world has changed, so that
-      the selection needs to get cleared. */
-  World* world;
 
 public:
   Selection ();
@@ -78,11 +71,21 @@ public:
    */
   void join_doubles(float toleranz);
 
-  SelectionLst::size_type size() { return selection.size(); }
-  SelectionLst::iterator begin() { return selection.begin(); };
-  SelectionLst::iterator end()   { return selection.end(); };
+  SelectionLst::size_type size() { return m_selection.size(); }
+  SelectionLst::iterator begin() { return m_selection.begin(); };
+  SelectionLst::iterator end()   { return m_selection.end(); };
 
   typedef SelectionLst::iterator iterator;
+
+private:
+  /** Collection of particles */
+  SelectionLst m_selection;
+
+  /** Pointer to the world that contains the particle this selection
+      is pointing to. Used to check if the world has changed, so that
+      the selection needs to get cleared. */
+  World* m_world;
+
 private:
   Selection (const Selection&);
   Selection& operator= (const Selection&);

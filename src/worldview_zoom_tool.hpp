@@ -23,14 +23,6 @@
 /** */
 class WorldViewZoomTool : public WorldViewTool
 {
-private:
-  /** Position of the mouse click, click_pos and the button_release
-      pos form the rectangle. click_pos is in world coordinates */
-  Vector2d click_pos;
-
-  /** true if we are currently creating the zoom rectangle and
-      click_pos is set, false otherwise */
-  bool creating_zoom_rectangle;
 public:
   WorldViewZoomTool ();
   ~WorldViewZoomTool ();
@@ -45,6 +37,15 @@ public:
 
   void on_secondary_button_press (int x, int y) override;
   void on_secondary_button_release (int x, int y) override;
+
+private:
+  /** Position of the mouse click, click_pos and the button_release
+      pos form the rectangle. click_pos is in world coordinates */
+  Vector2d m_click_pos;
+
+  /** true if we are currently creating the zoom rectangle and
+      click_pos is set, false otherwise */
+  bool m_creating_zoom_rectangle;
 };
 
 #endif

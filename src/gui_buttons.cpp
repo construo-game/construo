@@ -29,19 +29,19 @@
 
 GUIButton::GUIButton (const std::string& title_,
                       int x_pos_, int y_pos_, int width_, int height_) :
-  GUIComponent (x_pos_, y_pos_, width_, height_),
-  m_title (title_)
+  GUIComponent(x_pos_, y_pos_, width_, height_),
+  m_title (title_),
+  m_mouse_over(false),
+  m_pressed(false)
 {
-  m_mouse_over = false;
-  m_pressed    = false;
 }
 
 GUIButton::GUIButton (const std::string& title_) :
   GUIComponent(),
-  m_title (title_)
+  m_title(title_),
+  m_mouse_over(false),
+  m_pressed(false)
 {
-  m_mouse_over = false;
-  m_pressed    = false;
 }
 
 void

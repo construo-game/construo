@@ -22,34 +22,27 @@
 #include "gui_child_manager.hpp"
 #include "gui_directory.hpp"
 
-/** */
 class GUIFileManager : public GUIChildManager
 {
 private:
-  /** Cache for directories */
-  std::map<std::string, GUIDirectory*> directories;
-
-  GUIDirectory* current_directory;
-
-  GUIDirectory* get_directory (const std::string& pathname);
-
   static GUIFileManager* instance_;
-public:
-  enum Mode { LOAD_MANAGER, SAVE_MANAGER };
-private:
-  Mode mode;
-public:
-  GUIFileManager (Mode m);
-  ~GUIFileManager ();
 
+public:
   static GUIFileManager* instance() { return instance_; }
   static void set_instance(GUIFileManager* g) { instance_ = g; }
 
-  void draw_overlay (GraphicContext* gc) override;
+public:
+  enum Mode { LOAD_MANAGER, SAVE_MANAGER };
+
+public:
+  GUIFileManager(Mode m);
+  ~GUIFileManager();
+
+  void draw_overlay(GraphicContext* gc) override;
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */
-  void open_directory (const std::string& pathname);
+  void open_directory(const std::string& pathname);
 
   /** move one directory up, aka cut the last directory from a
       directory pathname */
@@ -57,8 +50,17 @@ public:
 
   void update_current_directory();
 
-  void scroll_up () override;
-  void scroll_down () override;
+  void scroll_up() override;
+  void scroll_down() override;
+
+private:
+  GUIDirectory* get_directory(const std::string& pathname);
+
+private:
+  /** Cache for directories */
+  std::map<std::string, GUIDirectory*> m_directories;
+  GUIDirectory* m_current_directory;
+  Mode m_mode;
 
 public:
   GUIFileManager(const GUIFileManager&) = delete;

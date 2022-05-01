@@ -22,12 +22,6 @@
 
 class PathManager
 {
-private:
-  std::list<std::string> path_list;
-  typedef std::list<std::string>::const_iterator PathIter;
-
-  bool path_found;
-  std::string base_path;
 public:
   PathManager ();
   ~PathManager ();
@@ -51,6 +45,12 @@ public:
   /** Complete a releative path to the absolute path, the returned
       path contains a trailing slash */
   std::string complete (const std::string& relative_path);
+
+private:
+  typedef std::list<std::string>::const_iterator PathIter;
+  std::list<std::string> path_list;
+  bool path_found;
+  std::string base_path;
 
 private:
   PathManager (const PathManager&);

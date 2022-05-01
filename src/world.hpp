@@ -30,26 +30,18 @@ class Spring;
 /** This class holds all particles and springs */
 class World
 {
+private:
+  static World* current_world;
+public:
+  /** @return pointer to the current world */
+  static World* current() { return current_world; }
+
+  friend class ParticleFactory;
+
 public:
   typedef std::vector<Collider*> Colliders;
   typedef std::vector<Spring*>::iterator SpringIter;
   typedef std::vector<Spring*>::const_iterator CSpringIter;
-private:
-  /** Version number of the file, used to ensure backward compability */
-  int file_version;
-
-  friend class ParticleFactory;
-  bool has_been_run;
-  ParticleFactory* particle_mgr;
-
-  std::vector<Spring*> springs;
-
-  Colliders colliders;
-
-  void parse_scene(ReaderMapping const& reader);
-  void parse_springs(ReaderCollection const& collection);
-  void parse_particles(ReaderCollection const& collection);
-  void parse_colliders(ReaderCollection const& collection);
 
 public:
   /** Create an empty world */
@@ -90,14 +82,14 @@ public:
   /** Remove the gives collider from the world */
   void remove_collider (Collider*);
 
-  ParticleFactory* get_particle_mgr() { return particle_mgr; }
-  std::vector<Spring*>& get_spring_mgr () { return springs; }
-  Colliders& get_colliders() { return colliders; }
+  ParticleFactory* get_particle_mgr() { return m_particle_mgr; }
+  std::vector<Spring*>& get_spring_mgr () { return m_springs; }
+  Colliders& get_colliders() { return m_colliders; }
 
   /** removes everything from the world */
   void clear ();
 
-  bool get_has_been_run () { return has_been_run; }
+  bool get_has_been_run () { return m_has_been_run; }
 
   /** Sets the velocity of all particles to zero, usefull if the
       particles are getting out of order (aka. explode). Also usefull
@@ -116,11 +108,21 @@ public:
   /** Callculate the bounding box of the world from the particle and
    *  collider it contains. */
   BoundingBox calc_bounding_box();
+
 private:
-  static World* current_world;
-public:
-  /** @return pointer to the current world */
-  static World* current() { return current_world; }
+  void parse_scene(ReaderMapping const& reader);
+  void parse_springs(ReaderCollection const& collection);
+  void parse_particles(ReaderCollection const& collection);
+  void parse_colliders(ReaderCollection const& collection);
+
+private:
+  /** Version number of the file, used to ensure backward compability */
+  int m_file_version;
+  bool m_has_been_run;
+  ParticleFactory* m_particle_mgr;
+  std::vector<Spring*> m_springs;
+  Colliders m_colliders;
+
 private:
   World& operator= (const World&);
 };

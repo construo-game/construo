@@ -23,9 +23,10 @@
 #include "particle_factory.hpp"
 #include "controller.hpp"
 
-Selection::Selection ()
+Selection::Selection () :
+  m_selection(),
+  m_world(nullptr)
 {
-  world = nullptr;
 }
 
 Vector2d
@@ -33,12 +34,12 @@ Selection::get_center ()
 {
   validate();
 
-  Rect<float> rot_box((*selection.begin ())->pos.x,
-                      (*selection.begin ())->pos.y,
-                      (*selection.begin ())->pos.x,
-                      (*selection.begin ())->pos.y);
+  Rect<float> rot_box((*m_selection.begin ())->pos.x,
+                      (*m_selection.begin ())->pos.y,
+                      (*m_selection.begin ())->pos.x,
+                      (*m_selection.begin ())->pos.y);
 
-  for (Selection::iterator i = selection.begin (); i != selection.end (); ++i)
+  for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       rot_box.x1 = Math::min(rot_box.x1, (*i)->pos.x);
       rot_box.y1 = Math::min(rot_box.y1, (*i)->pos.y);
@@ -55,13 +56,13 @@ Selection::scale (float factor, Vector2d center)
 {
   validate();
 
-  if (!selection.empty())
+  if (!m_selection.empty())
     {
-      for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           (*i)->pos = center + (((*i)->pos - center) * factor);
 
-          std::vector<Spring*>& springs = world->get_spring_mgr ();
+          std::vector<Spring*>& springs = m_world->get_spring_mgr ();
           for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
             {
               if ((*s)->particles.first == (*i) || ((*s)->particles.second == (*i)))
@@ -76,7 +77,7 @@ Selection::scale (float factor, Vector2d center)
 void
 Selection::set_velocity (const Vector2d vel)
 {
-  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+  for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     (*i)->velocity = vel;
 }
 
@@ -85,16 +86,16 @@ Selection::flip ()
 {
   validate();
 
-  if (!selection.empty())
+  if (!m_selection.empty())
     {
       float midpoint = 0.0f;
-      for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           midpoint += (*i)->pos.x;
         }
-      midpoint /= selection.size ();
+      midpoint /= m_selection.size ();
 
-      for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           (*i)->pos.x = midpoint - ((*i)->pos.x - midpoint);
         }
@@ -104,12 +105,12 @@ Selection::flip ()
 void
 Selection::select_particles (Vector2d p1, Vector2d p2)
 {
-  world = Controller::instance()->get_world ();
+  m_world = Controller::instance()->get_world ();
 
-  std::vector<Particle*> particles = world->get_particles (p1.x, p1.y,
+  std::vector<Particle*> particles = m_world->get_particles (p1.x, p1.y,
                                                            p2.x, p2.y);
 
-  selection = SelectionLst(particles.begin(),
+  m_selection = SelectionLst(particles.begin(),
                            particles.end());
 }
 
@@ -126,9 +127,9 @@ Selection::duplicate ()
   SelectionLst new_selection;
 
   std::cout << "Trying to duplicate the selection" << std::endl;
-  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+  for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
-      Particle* p = world->get_particle_mgr()->add_particle(**i);
+      Particle* p = m_world->get_particle_mgr()->add_particle(**i);
       p->pos += Vector2d (50,50);
       new_selection.push_back(p);
       p_trans_table[*i] = p;
@@ -137,33 +138,33 @@ Selection::duplicate ()
     }
 
   // FIXME: Warning, make sure that iterators stays intact while modifing the container
-  std::vector<Spring*> springs = world->get_spring_mgr ();
+  std::vector<Spring*> springs = m_world->get_spring_mgr ();
   for (std::vector<Spring*>::iterator i = springs.begin (); i != springs.end (); ++i)
     {
       // both particles of the spring are in the current selection
-      if (std::find (selection.begin (), selection.end (), (*i)->particles.first) != selection.end ()
+      if (std::find (m_selection.begin(), m_selection.end(), (*i)->particles.first) != m_selection.end ()
           &&
-          std::find (selection.begin (), selection.end (), (*i)->particles.second) != selection.end ())
+          std::find (m_selection.begin(), m_selection.end(), (*i)->particles.second) != m_selection.end ())
         {
-          world->add_spring (p_trans_table[(*i)->particles.first],
-                             p_trans_table[(*i)->particles.second]);
+          m_world->add_spring (p_trans_table[(*i)->particles.first],
+                               p_trans_table[(*i)->particles.second]);
         }
     }
 
-  selection = new_selection;
+  m_selection = new_selection;
 }
 
 bool
 Selection::empty() const
 {
-  return selection.empty();
+  return m_selection.empty();
 }
 
 void
 Selection::clear()
 {
-  selection.clear();
-  world = nullptr;
+  m_selection.clear();
+  m_world = nullptr;
 }
 
 void
@@ -171,7 +172,7 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
 {
   validate();
 
-  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+  for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       Vector2d& pos = (*i)->pos;
 
@@ -189,7 +190,7 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
 void
 Selection::validate()
 {
-  if (world != Controller::instance()->get_world ())
+  if (m_world != Controller::instance()->get_world ())
     {
       //std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
       clear();
@@ -203,11 +204,11 @@ Selection::join_doubles(float toleranz)
   Controller::instance()->push_undo();
   World& world = *Controller::instance()->get_world ();
 
-  for (SelectionLst::iterator i = selection.begin (); i != selection.end (); ++i)
+  for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       SelectionLst::iterator j = i;
       ++j;
-      for (; j != selection.end (); ++j)
+      for (; j != m_selection.end (); ++j)
         {
           if (Vector2d::distance((*j)->pos, (*i)->pos) < toleranz)
             {

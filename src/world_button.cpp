@@ -20,35 +20,36 @@
 #include "world_button.hpp"
 #include "construo_error.hpp"
 
-WorldButton::WorldButton (const std::string& arg_filename, Mode m)
-  : GUIFileButton (arg_filename),
-    world(),
-    file_broken(false),
-    mode (m)
+WorldButton::WorldButton (const std::string& arg_filename, Mode m) :
+  GUIFileButton(arg_filename),
+  m_world(nullptr),
+  m_file_broken(false),
+  m_mtime(),
+  m_mode(m)
 {
 }
 
 WorldButton::~WorldButton ()
 {
-  delete world;
+  delete m_world;
 }
 
 void
 WorldButton::load_world ()
 {
-  if ((world == nullptr
-       && !file_broken)
-      || mtime != g_system_context->get_mtime(filename))
+  if ((m_world == nullptr
+       && !m_file_broken)
+      || m_mtime != g_system_context->get_mtime(filename))
     {
       try {
-        delete world;
-        world = new World(filename);
-        mtime = g_system_context->get_mtime(filename);
+        delete m_world;
+        m_world = new World(filename);
+        m_mtime = g_system_context->get_mtime(filename);
       } catch (std::exception const& err) {
         print_exception(err);
         std::cout << "ERROR: WorldButton: Somthing went wrong loading " << filename << std::endl;
-        world = nullptr;
-        file_broken = true;
+        m_world = nullptr;
+        m_file_broken = true;
       }
     }
 }
@@ -67,14 +68,14 @@ WorldButton::draw (GraphicContext* parent_gc)
 
   gc.lock();
 
-  if (world)
+  if (m_world)
     {
       // FIXME: bounding box should be calculated in construtor
-      const BoundingBox& box = world->calc_bounding_box();
+      const BoundingBox& box = m_world->calc_bounding_box();
       gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
                  static_cast<int>(box.x2),  static_cast<int>(box.y2));
-      world->draw_colliders (&gc);
-      world->draw_springs (&gc);
+      m_world->draw_colliders (&gc);
+      m_world->draw_springs (&gc);
     }
   else
     {
@@ -101,7 +102,7 @@ void
 WorldButton::on_click ()
 {
   //std::cout << "WorldButton: detected click on: " << filename << std::endl;
-  if (mode == SAVE_BUTTON)
+  if (m_mode == SAVE_BUTTON)
     {
       Controller::instance()->save_world(filename);
       ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);

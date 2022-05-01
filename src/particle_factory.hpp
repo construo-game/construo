@@ -33,14 +33,6 @@ typedef int ParticleId;
 /** Its really more a particle manager, but lets see */
 class ParticleFactory
 {
-private:
-  /** Pointer to the world holding this ParticleManager */
-  World* world;
-
-  std::vector<Particle*> particles;
-
-  /** the id of next particle that will get created */
-  int particle_id_count;
 public:
   /** Create an empty particle manager */
   ParticleFactory (World*);
@@ -63,7 +55,7 @@ public:
   /** Remove a particle by id */
   void remove_particle (int id);
 
-  int size () { return particles.size(); }
+  int size () { return m_particles.size(); }
   Particle* lookup_particle (int id);
 
   void update (float delta);
@@ -72,11 +64,20 @@ public:
   typedef std::vector<Particle*>::const_iterator CParticleIter;
   typedef std::vector<Particle*>::iterator ParticleIter;
 
-  ParticleIter begin () { return particles.begin(); }
-  ParticleIter end () { return particles.end(); }
+  ParticleIter begin () { return m_particles.begin(); }
+  ParticleIter end () { return m_particles.end(); }
 
   void clear ();
   void write_lisp(LispWriter& writer);
+
+private:
+  /** Pointer to the world holding this ParticleManager */
+  World* m_world;
+
+  std::vector<Particle*> m_particles;
+
+  /** the id of next particle that will get created */
+  int m_particle_id_count;
 
 private:
   ParticleFactory (const ParticleFactory&);

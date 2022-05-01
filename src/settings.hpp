@@ -51,7 +51,7 @@ public:
   /** directory with data files */
   std::string datadir;
 
-  Settings ();
+  Settings();
 };
 
 extern Settings settings;

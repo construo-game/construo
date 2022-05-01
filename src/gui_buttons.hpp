@@ -45,7 +45,6 @@ public:
 
 protected:
   std::string m_title;
-
   bool m_mouse_over;
   bool m_pressed;
 };

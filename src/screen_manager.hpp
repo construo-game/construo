@@ -25,30 +25,31 @@ class ScreenManager
 {
 private:
   static std::unique_ptr<ScreenManager> s_instance;
-  ScreenManager ();
+
+public:
+  static ScreenManager* instance ();
 
 public:
   enum { LOAD_GUI, SAVE_GUI, WORLD_GUI };
-  static ScreenManager* instance ();
 
+private:
+  ScreenManager ();
+
+public:
   void set_gui (int gui_id);
-
   void quit();
-
   bool is_finished ();
-
   void run_once ();
-
   void resize(int width, int height);
 
 private:
   bool m_do_quit;
 
-  GUIManager* m_current_gui_manager;
-
   std::unique_ptr<GUIManager> m_load_gui_manager;
   std::unique_ptr<GUIManager> m_save_gui_manager;
   std::unique_ptr<GUIManager> m_world_gui_manager;
+
+  GUIManager* m_current_gui_manager;
 
 public:
   ScreenManager(const ScreenManager&) = delete;

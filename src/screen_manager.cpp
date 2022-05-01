@@ -22,13 +22,12 @@
 std::unique_ptr<ScreenManager> ScreenManager::s_instance;
 
 ScreenManager::ScreenManager() :
-   m_do_quit(false)
+  m_do_quit(false),
+  m_load_gui_manager(std::make_unique<LoadGUIManager>()),
+  m_save_gui_manager(std::make_unique<SaveGUIManager>()),
+  m_world_gui_manager(std::make_unique<WorldGUIManager>()),
+  m_current_gui_manager(m_world_gui_manager.get())
 {
-  m_load_gui_manager  = std::make_unique<LoadGUIManager>();
-  m_save_gui_manager  = std::make_unique<SaveGUIManager>();
-  m_world_gui_manager = std::make_unique<WorldGUIManager>();
-
-  m_current_gui_manager = m_world_gui_manager.get();
 }
 
 void

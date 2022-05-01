@@ -23,14 +23,14 @@ class GUIFileManager;
 
 class LoadGUIManager : public GUIManager
 {
-private:
-  GUIFileManager* file_manager;
-
 public:
   LoadGUIManager ();
 
   void draw_overlay() override;
   void run_once() override;
+
+private:
+  GUIFileManager* m_file_manager;
 
 public:
   LoadGUIManager(const LoadGUIManager&) = delete;

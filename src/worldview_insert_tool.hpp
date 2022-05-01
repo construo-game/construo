@@ -24,14 +24,6 @@ class Particle;
 /** */
 class WorldViewInsertTool : public WorldViewTool
 {
-private:
-  /** The last particle that got inserted or marked by a click, it is
-      used as the first particle of the newly created spring */
-  Particle* current_particle;
-
-  /** mass of the particles that are inserted on a primary press */
-  float particle_mass;
-
 public:
   WorldViewInsertTool ();
   ~WorldViewInsertTool ();
@@ -48,8 +40,16 @@ public:
   void on_delete_press (int x, int y) override;
   void on_fix_press (int x, int y) override;
 
-  void  set_particle_mass (float p) { particle_mass = p; }
-  float get_particle_mass () { return particle_mass; }
+  void  set_particle_mass (float p) { m_particle_mass = p; }
+  float get_particle_mass () { return m_particle_mass; }
+
+private:
+  /** The last particle that got inserted or marked by a click, it is
+      used as the first particle of the newly created spring */
+  Particle* m_current_particle;
+
+  /** mass of the particles that are inserted on a primary press */
+  float m_particle_mass;
 
 public:
   WorldViewInsertTool(const WorldViewInsertTool&) = delete;

@@ -150,11 +150,11 @@ private:
   int m_x2;
   int m_y2;
 
-  GraphicContext* m_parent_gc;
-
   float m_x_offset;
   float m_y_offset;
   float m_zoom;
+
+  GraphicContext* m_parent_gc;
 
 public:
   ZoomGraphicContext(const ZoomGraphicContext&) = delete;

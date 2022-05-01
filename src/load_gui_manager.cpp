@@ -20,9 +20,10 @@
 #include "root_graphic_context.hpp"
 #include "load_gui_manager.hpp"
 
-LoadGUIManager::LoadGUIManager ()
+LoadGUIManager::LoadGUIManager() :
+  m_file_manager()
 {
-  file_manager = create<GUIFileManager>(GUIFileManager::LOAD_MANAGER);
+  m_file_manager = create<GUIFileManager>(GUIFileManager::LOAD_MANAGER);
 }
 
 void
@@ -35,7 +36,7 @@ LoadGUIManager::draw_overlay ()
 void
 LoadGUIManager::run_once ()
 {
-  GUIFileManager::set_instance(file_manager);
+  GUIFileManager::set_instance(m_file_manager);
   GUIManager::run_once();
   g_system_context->sleep(1000);
 }

@@ -22,18 +22,8 @@
 
 class Collider;
 
-/** */
 class WorldViewColliderTool : public WorldViewTool
 {
-private:
-  bool creating_rect;
-  Vector2d click_pos;
-
-  Collider* to_delete_collider;
-  Collider* move_collider;
-
-  /** Get the collider on the given world cooridnates */
-  Collider* get_collider (const Vector2d&);
 public:
   WorldViewColliderTool ();
   ~WorldViewColliderTool ();
@@ -48,6 +38,17 @@ public:
   void on_secondary_button_release (int x, int y) override;
 
   void on_mouse_move (int x, int y, int of_x, int of_y) override;
+
+private:
+  /** Get the collider on the given world cooridnates */
+  Collider* get_collider (const Vector2d&);
+
+private:
+  bool m_creating_rect;
+  Vector2d m_click_pos;
+
+  Collider* m_to_delete_collider;
+  Collider* m_move_collider;
 
 public:
   WorldViewColliderTool(const WorldViewColliderTool&) = delete;

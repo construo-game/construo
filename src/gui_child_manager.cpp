@@ -20,9 +20,11 @@
 #include "gui_child_manager.hpp"
 
 GUIChildManager::GUIChildManager (int x, int y, int width, int height) :
-  GUIComponent (x, y, width, height)
+  GUIComponent (x, y, width, height),
+  m_gc(),
+  m_components(),
+  m_current_component(nullptr)
 {
-  m_current_component = nullptr;
 }
 
 GUIChildManager::~GUIChildManager ()

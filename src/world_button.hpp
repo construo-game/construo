@@ -24,15 +24,9 @@ class World;
 /** button in the load/save dialog */
 class WorldButton : public GUIFileButton
 {
-private:
-  World* world;
-  bool   file_broken;
-  unsigned int mtime;
-
 public:
   enum Mode { LOAD_BUTTON, SAVE_BUTTON};
-private:
-  Mode mode;
+
 public:
   WorldButton (const std::string& arg_filename, Mode m);
   ~WorldButton ();
@@ -42,6 +36,12 @@ public:
 
   /** Load the given world, if not called it will be loaded on demand */
   void load_world ();
+
+private:
+  World* m_world;
+  bool m_file_broken;
+  unsigned int m_mtime;
+  Mode m_mode;
 
 private:
   WorldButton (const WorldButton&);

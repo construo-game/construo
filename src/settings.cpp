@@ -18,15 +18,17 @@
 
 Settings settings;
 
-Settings::Settings ()
+Settings::Settings () :
+  fullscreen(false),
+  doublebuffer(true),
+  screen_width(800),
+  screen_height(600),
+  alphablending(true),
+  antialiasing(true),
+  thick_lines(true),
+  startup_file(),
+  datadir()
 {
-  fullscreen    = false;
-  doublebuffer  = true;
-  screen_width  = 800;
-  screen_height = 600;
-  alphablending = true;
-  antialiasing  = true;
-  thick_lines   = true;
 }
 
 /* EOF */

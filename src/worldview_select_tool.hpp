@@ -25,32 +25,6 @@ class Particle;
 /** */
 class WorldViewSelectTool : public WorldViewTool
 {
-private:
-  Selection selection;
-
-  typedef enum { GETTING_SELECTION_MODE,
-                 MOVING_SELECTION_MODE,
-                 ROTATING_SELECTION_MODE,
-                 SCALING_SELECTION_MODE,
-                 IDLE_MODE } Mode;
-  Mode mode;
-
-  /** The start position of a click & drap operation (aka move or
-      rotate), in world coordinates */
-  Vector2d click_pos;
-
-  /** The difference the selection was moved on the last mouse move */
-  Vector2d move_diff;
-
-  /** The particle, by which is selection grabbed */
-  Particle* move_current_particle;
-
-  /** The center of a rotation */
-  Vector2d rotate_center;
-
-  /** The center of a scalation */
-  Vector2d scale_center;
-  float old_scale_factor;
 public:
   WorldViewSelectTool ();
   ~WorldViewSelectTool ();
@@ -77,6 +51,36 @@ public:
   void on_delete_press (int x, int y) override;
   void on_fix_press (int x, int y) override;
   void on_join_press (int x, int y) override;
+
+private:
+  enum Mode {
+    GETTING_SELECTION_MODE,
+    MOVING_SELECTION_MODE,
+    ROTATING_SELECTION_MODE,
+    SCALING_SELECTION_MODE,
+    IDLE_MODE
+  };
+
+private:
+  Selection m_selection;
+  Mode m_mode;
+
+  /** The start position of a click & drap operation (aka move or
+      rotate), in world coordinates */
+  Vector2d m_click_pos;
+
+  /** The difference the selection was moved on the last mouse move */
+  Vector2d m_move_diff;
+
+  /** The particle, by which is selection grabbed */
+  Particle* m_move_current_particle;
+
+  /** The center of a rotation */
+  Vector2d m_rotate_center;
+
+  /** The center of a scalation */
+  Vector2d m_scale_center;
+  float m_old_scale_factor;
 
 public:
   WorldViewSelectTool(const WorldViewSelectTool&) = delete;

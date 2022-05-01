@@ -23,13 +23,17 @@
 #include "world.hpp"
 #include "particle_factory.hpp"
 
-ParticleFactory::ParticleFactory (World* w)
-  : world (w), particle_id_count(0)
+ParticleFactory::ParticleFactory (World* w) :
+  m_world (w),
+  m_particles(),
+  m_particle_id_count(0)
 {
 }
 
-ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection)
-  : world (w),particle_id_count (0)
+ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection) :
+  m_world(w),
+  m_particles(),
+  m_particle_id_count(0)
 {
   for(ReaderObject const& item : collection.get_objects()) {
     ReaderMapping const& reader = item.get_mapping();
@@ -46,7 +50,7 @@ ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection)
     reader.read("fixed", fixed);
     reader.read("id", id);
 
-    switch (world->file_version) {
+    switch (m_world->m_file_version) {
       case 0:
       case 1:
       case 2:
@@ -54,31 +58,32 @@ ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection)
         break;
     }
 
-    if (id >= particle_id_count) {
-      particle_id_count = id + 1;
+    if (id >= m_particle_id_count) {
+      m_particle_id_count = id + 1;
     }
 
-    particles.push_back(new Particle (id, pos, velocity, mass, fixed));
+    m_particles.push_back(new Particle (id, pos, velocity, mass, fixed));
   }
 }
 
-ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr)
-  : world (w)
+ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr) :
+  m_world (w),
+  m_particles(),
+  m_particle_id_count(pmgr.m_particle_id_count)
 {
-  particle_id_count = pmgr.particle_id_count;
-  for (CParticleIter i = pmgr.particles.begin (); i != pmgr.particles.end (); ++i)
-    particles.push_back(new Particle(**i));
+  for (CParticleIter i = pmgr.m_particles.begin (); i != pmgr.m_particles.end (); ++i)
+    m_particles.push_back(new Particle(**i));
 }
 
 ParticleFactory&
 ParticleFactory::operator= (const ParticleFactory& pmgr)
 {
   ConstruoAssert (0, "Don't use this");
-  for (CParticleIter i = pmgr.particles.begin ();
-       i != pmgr.particles.end ();
+  for (CParticleIter i = pmgr.m_particles.begin ();
+       i != pmgr.m_particles.end ();
        ++i)
     {
-      particles.push_back (new Particle (*(*i)));
+      m_particles.push_back (new Particle (*(*i)));
     }
   return *this;
 }
@@ -86,10 +91,10 @@ ParticleFactory::operator= (const ParticleFactory& pmgr)
 Particle*
 ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
 {
-  Particle* p = new Particle(particle_id_count++,
+  Particle* p = new Particle(m_particle_id_count++,
                              arg_pos,
                              arg_velocity, m, f);
-  particles.push_back(p);
+  m_particles.push_back(p);
   return p;
 }
 
@@ -97,8 +102,8 @@ Particle*
 ParticleFactory::add_particle (const Particle& particle)
 {
   Particle* p = new Particle (particle);
-  p->id = particle_id_count++,
-  particles.push_back(p);
+  p->id = m_particle_id_count++,
+  m_particles.push_back(p);
   return p;
 }
 
@@ -106,12 +111,12 @@ void
 ParticleFactory::remove_particle (Particle* p)
 {
   // Remove the particle itself
-  for (ParticleIter i = particles.begin (); i != particles.end (); ++i)
+  for (ParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
     {
       if (*i == p)
         {
           delete *i;
-          particles.erase(i);
+          m_particles.erase(i);
           return;
         }
     }
@@ -130,20 +135,20 @@ struct particle_obsolete
 void
 ParticleFactory::update (float delta)
 {
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
+  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
     (*i)->update(delta);
 
   // FIXME: There is no need to do this on any update, doing it only
   //once a second should be enough
-  particles.erase(std::remove_if(particles.begin(), particles.end(),
-                                 particle_obsolete()),
-                  particles.end());
+  m_particles.erase(std::remove_if(m_particles.begin(), m_particles.end(),
+                                   particle_obsolete()),
+                    m_particles.end());
 }
 
 void
 ParticleFactory::draw (ZoomGraphicContext* gc)
 {
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
+  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
     (*i)->draw(gc);
 }
 
@@ -151,8 +156,8 @@ Particle*
 ParticleFactory::lookup_particle (int id)
 {
   // FIXME: Could need optimization
-  for (ParticleIter i = particles.begin ();
-       i != particles.end ();
+  for (ParticleIter i = m_particles.begin ();
+       i != m_particles.end ();
        ++i)
     {
       if ((*i)->get_id () == id)
@@ -164,16 +169,16 @@ ParticleFactory::lookup_particle (int id)
 void
 ParticleFactory::clear ()
 {
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i)
+  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
     delete *i;
-  particles.clear ();
+  m_particles.clear ();
 }
 
 void
 ParticleFactory::write_lisp(LispWriter& writer)
 {
   writer.begin_collection("particles");
-  for (CParticleIter i = particles.begin (); i != particles.end (); ++i) {
+  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i) {
     (*i)->serialize(writer);
   }
   writer.end_collection();
