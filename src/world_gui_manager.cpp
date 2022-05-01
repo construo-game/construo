@@ -128,12 +128,6 @@ void undo_callback ()
   return Controller::instance()->undo();
 }
 
-#define BUTTON_POS(n) (80 + n * 30)
-#define BUTTON_RPOS(n) (50 + n * 30)
-#define BUTTON_WIDTH  75
-#define BUTTON_HEIGHT 25
-#define BUTTON_LX_POS (graphic_context->get_width() - BUTTON_WIDTH - 10)
-
 WorldGUIManager::WorldGUIManager() :
   m_worldview_component(),
   m_run_button(),
@@ -156,7 +150,8 @@ WorldGUIManager::WorldGUIManager() :
   instance_  = this;
 
   m_worldview_component = create<WorldViewComponent>();
-  //create<GUILabel>("Sim:", 10, 50, 10, 10);
+
+  // simulation
   m_run_button = create<GUIRunButton>();
   m_slowmo_button = create<GUISlowMoButton>();
   m_load_button = create<GUILoadButton>();
@@ -170,8 +165,7 @@ WorldGUIManager::WorldGUIManager() :
   m_grid_button = create<GUIGenericButton>("Use Grid", show_grid_callback, show_grid_hfunc);
   m_quit_button = create<GUIQuitButton>();
 
-  //create<GUILabel>("Tools", BUTTON_LX_POS, BUTTON_POS(3)+5, BUTTON_WIDTH, BUTTON_HEIGHT);
-
+  // toolbar
   m_insert_button = create<GUIGenericButton>("Insert", switch_to_insert_mode, insert_mode_hfunc);
   m_select_button = create<GUIGenericButton>("Select", switch_to_select_mode, select_mode_hfunc);
   m_collider_button = create<GUIGenericButton>("Collider", switch_to_collider_mode, collider_mode_hfunc);
@@ -181,7 +175,7 @@ WorldGUIManager::WorldGUIManager() :
   m_zoomin_button = create<GUIGenericButton>("+", zoom_in_callback);
 
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
-  if(0)
+#if 0
   {
     create<GUIGenericButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
     create<GUIGenericButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
@@ -194,6 +188,7 @@ WorldGUIManager::WorldGUIManager() :
     create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);
     create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
   }
+#endif
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);
 
   /*
@@ -214,7 +209,12 @@ void
 WorldGUIManager::resize(int width, int height)
 {
   GUIManager::resize(width, height);
-  std::cout << "WorldGUIManager: " << width << "x" << height << std::endl;
+
+  auto BUTTON_POS = [](int n) { return 80 + n * 30; };
+  auto BUTTON_RPOS = [](int n) { return 50 + n * 30; };
+  int const BUTTON_WIDTH = 75;
+  int const BUTTON_HEIGHT = 25;
+  int const BUTTON_LX_POS = graphic_context->get_width() - BUTTON_WIDTH - 10;
 
   m_worldview_component->set_geometry(0, 0, width, height);
 
