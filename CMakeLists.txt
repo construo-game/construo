@@ -142,8 +142,6 @@ set(CONSTRUO_SOURCES_CXX
   src/system_context.hpp
   src/unix_system.cpp
   src/unix_system.hpp
-  src/vector.cpp
-  src/vector.hpp
   src/vector2d.hpp
   src/world.cpp
   src/world.hpp
