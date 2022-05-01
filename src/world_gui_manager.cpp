@@ -186,6 +186,9 @@ WorldGUIManager::WorldGUIManager ()
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25);
     add (window);
   */
+
+  resize(graphic_context->get_width(),
+         graphic_context->get_height());
 }
 
 WorldGUIManager::~WorldGUIManager ()

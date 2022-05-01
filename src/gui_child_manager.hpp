@@ -17,6 +17,7 @@
 #ifndef HEADER_CONSTRUO_GUI_CHILDMANAGER_HPP
 #define HEADER_CONSTRUO_GUI_CHILDMANAGER_HPP
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "zoom_graphic_context.hpp"
@@ -39,6 +40,14 @@ public:
   void add (GUIComponent*);
   void remove (GUIComponent*);
   void replace(GUIComponent* old_comp, GUIComponent* new_comp);
+
+  template<typename T, typename... Args>
+  T* create(Args&&... args) {
+    std::unique_ptr<T> obj = std::make_unique<T>(std::forward<Args>(args)...);
+    T* ptr = obj.get();
+    add(obj.release()); // FIXME: mem leak
+    return ptr;
+  }
 
   void draw (GraphicContext* gc);
   virtual void draw_overlay (GraphicContext* gc) {}

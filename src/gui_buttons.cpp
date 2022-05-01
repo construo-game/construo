@@ -36,6 +36,14 @@ GUIButton::GUIButton (const std::string& title_,
   m_pressed    = false;
 }
 
+GUIButton::GUIButton (const std::string& title_) :
+  GUIComponent(),
+  m_title (title_)
+{
+  m_mouse_over = false;
+  m_pressed    = false;
+}
+
 void
 GUIButton::on_mouse_enter ()
 {

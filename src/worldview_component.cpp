@@ -27,8 +27,8 @@
 
 WorldViewComponent* WorldViewComponent::instance_;
 
-WorldViewComponent::WorldViewComponent ()
-  : GUIComponent(0, 0, graphic_context->get_width (), graphic_context->get_height ())
+WorldViewComponent::WorldViewComponent () :
+  GUIComponent()
 {
   instance_ = this;
 
@@ -102,35 +102,35 @@ WorldViewComponent::get_grid_size()
 float
 WorldViewComponent::get_snap_size()
 {
-	return get_grid_size() / grid_snap_factor;
+  return get_grid_size() / grid_snap_factor;
 }
 
 void
 WorldViewComponent::draw_grid()
 {
-      Color color = Colors::grid_color;
-      Color color2 = Colors::grid_color2;
+  Color color = Colors::grid_color;
+  Color color2 = Colors::grid_color2;
 
-      float grid_size = get_grid_size();
+  float grid_size = get_grid_size();
 
-      float start_x = Math::round_to_float(gc.screen_to_world_x(0), grid_size) - grid_size;
-      float end_x   = Math::round_to_float(gc.screen_to_world_x(gc.get_width()), grid_size) + grid_size;
+  float start_x = Math::round_to_float(gc.screen_to_world_x(0), grid_size) - grid_size;
+  float end_x   = Math::round_to_float(gc.screen_to_world_x(gc.get_width()), grid_size) + grid_size;
 
-      float start_y = Math::round_to_float(gc.screen_to_world_y(0), grid_size) - grid_size;
-      float end_y   = Math::round_to_float(gc.screen_to_world_y(gc.get_height()), grid_size) + grid_size;
+  float start_y = Math::round_to_float(gc.screen_to_world_y(0), grid_size) - grid_size;
+  float end_y   = Math::round_to_float(gc.screen_to_world_y(gc.get_height()), grid_size) + grid_size;
 
-      gc.push_quick_draw();
-      for(float y = start_y; y < end_y; y += grid_size)
-        gc.draw_line(start_x, y,
-                     end_x, y,
-                     ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
+  gc.push_quick_draw();
+  for(float y = start_y; y < end_y; y += grid_size)
+    gc.draw_line(start_x, y,
+                 end_x, y,
+                 ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
 
-      for(float x = start_x; x < end_x; x += grid_size)
-        gc.draw_line(x, start_y,
-                     x, end_y,
-                     ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
-      gc.pop_quick_draw();
-    }
+  for(float x = start_x; x < end_x; x += grid_size)
+    gc.draw_line(x, start_y,
+                 x, end_y,
+                 ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
+  gc.pop_quick_draw();
+}
 
 void
 WorldViewComponent::draw_ground()

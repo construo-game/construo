@@ -24,6 +24,12 @@ class GUIManager;
 class GUIComponent
 {
 public:
+  GUIComponent() :
+    m_x(0),
+    m_y(0),
+    m_width(0),
+    m_height(0)
+  {}
   GUIComponent (int x_, int y_, int width_, int height_) :
     m_x(x_),
     m_y(y_),
@@ -38,6 +44,12 @@ public:
   /** @return true if the component is present at the given location */
   virtual bool is_at (int x, int y);
 
+  void set_geometry(int x, int y, int width, int height) {
+    m_x = x;
+    m_y = y;
+    m_width = width;
+    m_height = height;
+  }
   void set_position (int x, int y) { m_x = x, m_y = y; }
   void set_width (int w) { m_width = w; }
   void set_height (int h) { m_height = h; }

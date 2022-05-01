@@ -20,11 +20,11 @@
 #include "colors.hpp"
 #include "gui_component.hpp"
 
-/** */
 class GUIButton : public GUIComponent
 {
 public:
   GUIButton (const std::string& title, int x_pos_, int y_pos_, int width_, int height_);
+  GUIButton (const std::string& title);
 
   void draw_border_hover(GraphicContext*);
   void draw_border_pressed(GraphicContext*);
@@ -108,6 +108,13 @@ public:
   GUIGenericButton (const std::string& title, int x, int y, int width, int height,
                     Func func, HighlightFunc hfunc = always_false) :
     GUIButton(title, x, y, width, height),
+    m_func(func),
+    m_hfunc(hfunc)
+  {
+  }
+
+  GUIGenericButton (const std::string& title, Func func, HighlightFunc hfunc = always_false) :
+    GUIButton(title),
     m_func(func),
     m_hfunc(hfunc)
   {

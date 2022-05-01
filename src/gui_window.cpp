@@ -33,9 +33,9 @@ GUIWindow::GUIWindow (const std::string& t, int x, int y, int width, int height)
     title (t)
 {
   mouse_over = true;
-  add (new GUILabel ("Do you really want to quit?", 10, 10, 100, 30));
-  add (new GUIGenericButton("Yes", 10, 50, 80, 25, yes_press));
-  add (new GUIGenericButton("No", 110, 50, 80, 25, no_press));
+  create<GUILabel>("Do you really want to quit?", 10, 10, 100, 30);
+  create<GUIGenericButton>("Yes", 10, 50, 80, 25, yes_press);
+  create<GUIGenericButton>("No", 110, 50, 80, 25, no_press);
 }
 
 GUIWindow::~GUIWindow ()
