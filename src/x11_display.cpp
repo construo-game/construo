@@ -50,9 +50,6 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_cursor_collider_pix(),
   m_cursor_collider_mask(),
   m_doublebuffer(settings.doublebuffer),
-#ifdef HAVE_LIBXXF86VM
-  m_orig_modeline(),
-#endif
   m_orig_viewport_x(),
   m_orig_viewport_y(),
   m_orig_dotclock(),
@@ -69,12 +66,6 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_depth(),
   m_fullscreen (fullscreen_)
 {
-#ifndef HAVE_LIBXXF86VM
-  m_fullscreen = false;
-  std::cout << "X11Display: libXxf86vm missing, fullscreen support not\n"
-            << "            available, please recompile." << std::endl;
-#endif
-
   std::cout << "Using X11 display" << std::endl;
   m_display = XOpenDisplay(NULL);
 
@@ -710,137 +701,10 @@ X11Display::flip ()
 }
 
 void
-X11Display::save_mode()
-{
-#ifdef HAVE_LIBXXF86VM
-  memset(&orig_modeline, 0, sizeof(orig_modeline));
-
-  // Get the current display settings for later restore
-  XF86VidModeGetModeLine(display,
-                         DefaultScreen(display),
-                         &orig_dotclock,
-                         &orig_modeline);
-
-  XF86VidModeGetViewPort(display,
-                         DefaultScreen(display),
-                         &orig_viewport_x,
-                         &orig_viewport_y);
-  std::cout << "save_mode: "
-            << orig_dotclock << " "
-            << orig_viewport_x << ", " << orig_viewport_y << std::endl;
-
-#endif /* HAVE_LIBXXF86VM */
-}
-
-void
 X11Display::enter_fullscreen ()
 {
-#ifndef HAVE_LIBXXF86VM
   std::cout << "X11Display: libXxf86vm missing, fullscreen support not\n"
-            << "            available, please recompile." << std::endl;
-#else
-  int event_base;
-  int error_base;
-
-  if (XF86VidModeQueryExtension(display, &event_base, &error_base) != True)
-    {
-      // No VidMode extension available, bailout
-      std::cout << "X11Display: VidMode extension not available, bailout." << std::endl;
-      return;
-    }
-
-  save_mode();
-
-  XF86VidModeModeInfo **modes;
-  int nmodes;
-  int mode_index = -1;
-  if (XF86VidModeGetAllModeLines(display,
-                                 DefaultScreen(display),
-                                 &nmodes,&modes)) // FIXME: memleak
-    {
-      std::cout << "VideoModes: (searching for " << width << "x" << height << ")" << std::endl;
-      for (int i = 0; i < nmodes; i++)
-        {
-          //std::cout << i << "  " << mode.Width,mode.Height);
-          std::cout << "  " << modes[i]->hdisplay
-                    << "x" << modes[i]->vdisplay;
-
-          if (modes[i]->hdisplay == width && modes[i]->vdisplay == height)
-            {
-              std::cout << " <-";
-              mode_index = i;
-            }
-          std::cout << std::endl;
-        }
-
-      if (mode_index != -1) // Found a good mode
-        {
-          if (0)
-            { // FIXME: doesn't work to change override_redirect after window creation
-              std::cout << "Changing override_redirect" << std::endl;
-              // Switch border away and go to 0,0
-              XSetWindowAttributes attributes;
-              attributes.override_redirect = True;
-              XChangeWindowAttributes(display, window, CWOverrideRedirect, &attributes);
-            }
-
-          std::cout << "Switching to: "
-                    << modes[mode_index]->hdisplay << "x" << modes[mode_index]->vdisplay
-                    << std::endl;
-
-          if(XF86VidModeSwitchToMode(display,
-                                     DefaultScreen(display),
-                                     modes[mode_index]))
-            {
-              fullscreen = true;
-
-              { // Now that we have switched to the correct mode, we
-                // need to position the Viewport correct to the window
-
-                // FIXME: This won't work if the window is partly outside of the screen
-                Window child_window;
-                int x, y;
-                // Get the windows absolute position (aka relative to
-                // the root window)
-                XTranslateCoordinates(display, window, DefaultRootWindow(display),
-                                      0, 0,
-                                      &x, &y, &child_window);
-                XF86VidModeSetViewPort(display, DefaultScreen(display), x, y);
-              }
-
-              // Hijack the focus (works only till the next focus change)
-              XSetInputFocus(display, window, RevertToParent, CurrentTime);
-
-              // Capture the pointer
-              if (XGrabPointer(display, window, True, 0, GrabModeAsync, GrabModeAsync,
-                               window, None, CurrentTime) != GrabSuccess)
-                {
-                  std::cout << "X11Display: Couldn't grab the pointer" << std::endl;
-                }
-            }
-          else
-            {
-              std::cout << "X11Display: Throuble switiching to fullscreen?!" << std::endl;
-            }
-        }
-      else // No mode found
-        {
-          std::cout << "Disabling override redirect" << std::endl;
-          // Fullscreen not possible, switch Window attributes back to windowed mode
-          XSetWindowAttributes attributes;
-          attributes.override_redirect = False;
-          XChangeWindowAttributes(display, window, CWOverrideRedirect, &attributes);
-
-          // Remap the Window to let the allow override to take effect
-          XUnmapWindow(display, window);
-          XMapRaised(display, window);
-        }
-    }
-  else
-    {
-      std::cout << "X11Display: Couldn't get available video modes" << std::endl;
-    }
-#endif
+            << "            available." << std::endl;
 }
 
 void
@@ -876,36 +740,6 @@ X11Display::toggle_fullscreen()
 void
 X11Display::leave_fullscreen()
 {
-#ifdef HAVE_LIBXXF86VM
-  std::cout << "X11Display::restore_mode()" << std::endl;
-
-  XF86VidModeModeInfo modeinfo;
-
-  modeinfo.dotclock   = orig_dotclock;
-
-  // Copy XF86VidModeModeLine struct into XF86VidModeModeInfo
-  modeinfo.hdisplay   = orig_modeline.hdisplay;
-  modeinfo.hsyncstart = orig_modeline.hsyncstart;
-  modeinfo.hsyncend   = orig_modeline.hsyncend;
-  modeinfo.htotal     = orig_modeline.htotal;
-  modeinfo.hskew      = orig_modeline.hskew;
-  modeinfo.vdisplay   = orig_modeline.vdisplay;
-  modeinfo.vsyncstart = orig_modeline.vsyncstart;
-  modeinfo.vsyncend   = orig_modeline.vsyncend;
-  modeinfo.vtotal     = orig_modeline.vtotal;
-  modeinfo.flags      = orig_modeline.flags;
-  modeinfo.privsize   = orig_modeline.privsize;
-  modeinfo.c_private  = orig_modeline.c_private;
-
-  XF86VidModeSwitchToMode(display, DefaultScreen(display),
-                          &modeinfo);
-  XF86VidModeSetViewPort(display, DefaultScreen(display),
-                         orig_viewport_x, orig_viewport_y);
-
-  XUngrabPointer(display, CurrentTime);
-
-  fullscreen = false;
-#endif
 }
 
 void

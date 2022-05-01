@@ -230,11 +230,6 @@ if(X11_FOUND)
     target_link_libraries(construo.x11 ${X11_Xext_LIB})
   endif()
 
-  if(X11_xf86vmode_FOUND)
-    target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_xf86vmode_INCLUDE_PATH})
-    target_link_libraries(construo.x11 ${X11_xf86vm_LIB})
-  endif()
-
   install(TARGETS construo.x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   install(FILES

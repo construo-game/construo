@@ -20,10 +20,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#ifdef HAVE_LIBXXF86VM
-#  include <X11/extensions/xf86vmode.h>
-#endif
-
 #include "math.hpp"
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
@@ -116,9 +112,7 @@ private:
   Pixmap m_cursor_collider_mask;
 
   bool m_doublebuffer;
-#ifdef HAVE_LIBXXF86VM
-  XF86VidModeModeLine m_orig_modeline;
-#endif
+
   int m_orig_viewport_x;
   int m_orig_viewport_y;
   int m_orig_dotclock;
