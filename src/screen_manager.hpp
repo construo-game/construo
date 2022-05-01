@@ -39,6 +39,8 @@ public:
 
   void run_once ();
 
+  void resize(int width, int height);
+
 private:
   bool m_do_quit;
 

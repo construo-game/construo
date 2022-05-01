@@ -42,6 +42,8 @@ public:
 
   virtual void draw_overlay () {}
 
+  virtual void resize(int width, int height) {}
+
   /** Stops the GUIManager */
   void quit();
 

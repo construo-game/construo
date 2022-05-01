@@ -193,6 +193,13 @@ WorldGUIManager::~WorldGUIManager ()
 }
 
 void
+WorldGUIManager::resize(int width, int height)
+{
+  GUIManager::resize(width, height);
+  std::cout << "WorldGUIManager: " << width << "x" << height << std::endl;
+}
+
+void
 WorldGUIManager::update()
 {
   Controller::instance()->update ();

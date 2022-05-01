@@ -412,7 +412,7 @@ X11Display::read_event ()
   XNextEvent (display, &event);
 
   switch (event.type)
-    {
+  {
     case MotionNotify:
       mouse_x = event.xmotion.x;
       mouse_y = event.xmotion.y;
@@ -466,7 +466,7 @@ X11Display::read_event ()
         KeySym sym = XLookupKeysym(&event.xkey,0);
 
         switch (sym)
-          {
+        {
           case XK_F11:
             // FIXME: Shortcut
             //send_button_press(BUTTON_FULLSCREEN);
@@ -592,7 +592,7 @@ X11Display::read_event ()
           default:
             std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_grave << std::endl;
             break;
-          }
+        }
       }
       break;
 
@@ -601,7 +601,7 @@ X11Display::read_event ()
         KeySym sym = XLookupKeysym(&event.xkey,0);
 
         switch (sym)
-          {
+        {
           case XK_Shift_L:
           case XK_Shift_R:
             shift_pressed = false;
@@ -609,7 +609,7 @@ X11Display::read_event ()
           default:
             //std::cout << "X11Display: unhandled keyrelease: " << sym << " " << XK_f << std::endl;
             break;
-          }
+        }
       }
       break;
 
@@ -619,11 +619,16 @@ X11Display::read_event ()
       break;
 
     case ConfigureNotify:
-      std::cout << "X11Display:ConfigureNotify: "
-                << event.xconfigure.width << "x" << event.xconfigure.height
-                << "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+      if ((false)) {
+        std::cout << "X11Display:ConfigureNotify: "
+                  << event.xconfigure.width << "x" << event.xconfigure.height
+                  << "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+      }
+
       width = event.xconfigure.width;
       height = event.xconfigure.height;
+
+      ScreenManager::instance()->resize(width, height);
       break;
 
     case DestroyNotify:
@@ -642,7 +647,7 @@ X11Display::read_event ()
     default:
       //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
       break;
-    }
+  }
   return true;
 }
 

@@ -66,6 +66,12 @@ ScreenManager::set_gui (int gui_id)
   }
 }
 
+void
+ScreenManager::resize(int width, int height)
+{
+  m_current_gui_manager->resize(width, height);
+}
+
 ScreenManager*
 ScreenManager::instance ()
 {
