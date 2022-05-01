@@ -132,7 +132,7 @@ GUIButton::draw_border_normal(GraphicContext* gc)
 }
 
 GUIRunButton::GUIRunButton ()
-  : GUIButton ("Run", 10, BUTTON_POS(0), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Run")
 {
 }
 
@@ -148,15 +148,17 @@ GUIRunButton::draw_content (GraphicContext* gc)
   if ((!m_pressed || !m_mouse_over) && Controller::instance()->is_running ())
     gc->draw_fill_rect (m_x, m_y,
                    m_x + m_width, m_y + m_height, Colors::button_bg_active) ;
+
   /*
   gc->draw_line (m_x, m_y,
-                m_x + width, m_y + height,
+                m_x + m_width, m_y + m_height,
                 Color (0x0000FFFF));
 
-  gc->draw_line (m_x + width, m_y,
-                m_x, m_y + height,
+  gc->draw_line (m_x + m_width, m_y,
+                m_x, m_y + m_height,
                 Color (0x0000FFFF));
   */
+
   GUIButton::draw_content (gc);
 }
 
@@ -168,7 +170,7 @@ GUIRunButton::on_click()
 }
 
 GUISlowMoButton::GUISlowMoButton ()
-  : GUIButton ("SlowMotion", 10, BUTTON_POS(1), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("SlowMotion")
 {
 
 }
@@ -189,31 +191,8 @@ GUISlowMoButton::draw_content (GraphicContext* gc)
   GUIButton::draw_content (gc);
 }
 
-GUIZoomInButton::GUIZoomInButton ()
-  : GUIButton ("Zoom In", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT)
-{
-}
-
-void
-GUIZoomInButton::on_click()
-{
-  WorldViewComponent::instance()->wheel_up (400,300);
-}
-
-
-GUIZoomOutButton::GUIZoomOutButton ()
-  : GUIButton ("Zoom Out", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT)
-{
-}
-
-void
-GUIZoomOutButton::on_click()
-{
-  WorldViewComponent::instance()->wheel_down (400,300);
-}
-
 GUIQuitButton::GUIQuitButton ()
-  : GUIButton ("Quit", 10, BUTTON_POS(12), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Quit")
 {
 }
 
@@ -225,7 +204,7 @@ GUIQuitButton::on_click()
 
 
 GUILoadButton::GUILoadButton ()
-  : GUIButton ("Load", 10, BUTTON_POS(9), BUTTON_WIDTH, BUTTON_HEIGHT)
+  : GUIButton ("Load")
 {
 }
 

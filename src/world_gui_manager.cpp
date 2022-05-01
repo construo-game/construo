@@ -134,51 +134,66 @@ void undo_callback ()
 #define BUTTON_HEIGHT 25
 #define BUTTON_LX_POS (graphic_context->get_width() - BUTTON_WIDTH - 10)
 
-WorldGUIManager::WorldGUIManager ()
+WorldGUIManager::WorldGUIManager() :
+  m_worldview_component(),
+  m_run_button(),
+  m_slowmo_button(),
+  m_load_button(),
+  m_save_button(),
+  m_undo_button(),
+  m_redo_button(),
+  m_actioncam_button(),
+  m_dots_button(),
+  m_grid_button(),
+  m_quit_button(),
+  m_insert_button(),
+  m_select_button(),
+  m_collider_button(),
+  m_zoom_button(),
+  m_zoomout_button(),
+  m_zoomin_button()
 {
   instance_  = this;
 
-  create<WorldViewComponent>();
+  m_worldview_component = create<WorldViewComponent>();
   //create<GUILabel>("Sim:", 10, 50, 10, 10);
-  create<GUIRunButton>();
-  create<GUISlowMoButton>();
-  //create<GUIZoomInButton>();
-  //create<GUIZoomOutButton>();
-  create<GUILoadButton>();
-  create<GUIGenericButton>("Save", 10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT, save_button_callback);
+  m_run_button = create<GUIRunButton>();
+  m_slowmo_button = create<GUISlowMoButton>();
+  m_load_button = create<GUILoadButton>();
+  m_save_button = create<GUIGenericButton>("Save", save_button_callback);
 
-  create<GUIGenericButton>("Undo", 10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT, undo_callback);
-  create<GUIGenericButton>("Redo", 10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT, redo_callback);
+  m_undo_button = create<GUIGenericButton>("Undo", undo_callback);
+  m_redo_button = create<GUIGenericButton>("Redo", redo_callback);
 
-  create<GUIGenericButton>("ActionCam", 10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT, action_cam_callback, action_cam_hfunc);
-  create<GUIGenericButton>("Hide Dots", 10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT, hide_dots_callback, hide_dots_hfunc);
-  create<GUIGenericButton>("Use Grid", 10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT, show_grid_callback, show_grid_hfunc);
-  create<GUIQuitButton>();
+  m_actioncam_button = create<GUIGenericButton>("ActionCam", action_cam_callback, action_cam_hfunc);
+  m_dots_button = create<GUIGenericButton>("Hide Dots", hide_dots_callback, hide_dots_hfunc);
+  m_grid_button = create<GUIGenericButton>("Use Grid", show_grid_callback, show_grid_hfunc);
+  m_quit_button = create<GUIQuitButton>();
 
   //create<GUILabel>("Tools", BUTTON_LX_POS, BUTTON_POS(3)+5, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-  create<GUIGenericButton>("Insert", BUTTON_LX_POS, BUTTON_RPOS(4), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_insert_mode, insert_mode_hfunc);
-  create<GUIGenericButton>("Select", BUTTON_LX_POS, BUTTON_RPOS(5), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_select_mode, select_mode_hfunc);
-  create<GUIGenericButton>("Collider",   BUTTON_LX_POS, BUTTON_RPOS(6), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_collider_mode, collider_mode_hfunc);
-  create<GUIGenericButton>("Zoom",   BUTTON_LX_POS, BUTTON_RPOS(7), BUTTON_WIDTH, BUTTON_HEIGHT, switch_to_zoom_mode, zoom_mode_hfunc);
+  m_insert_button = create<GUIGenericButton>("Insert", switch_to_insert_mode, insert_mode_hfunc);
+  m_select_button = create<GUIGenericButton>("Select", switch_to_select_mode, select_mode_hfunc);
+  m_collider_button = create<GUIGenericButton>("Collider", switch_to_collider_mode, collider_mode_hfunc);
+  m_zoom_button = create<GUIGenericButton>("Zoom", switch_to_zoom_mode, zoom_mode_hfunc);
 
-  create<GUIGenericButton>("-", BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25, zoom_out_callback);
-  create<GUIGenericButton>("+", BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25, zoom_in_callback);
+  m_zoomout_button = create<GUIGenericButton>("-", zoom_out_callback);
+  m_zoomin_button = create<GUIGenericButton>("+", zoom_in_callback);
 
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
   if(0)
-    {
-      create<GUIGenericButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
-      create<GUIGenericButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
+  {
+    create<GUIGenericButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
+    create<GUIGenericButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
 
-      create<GUILabel>("Stiffness",   550, 280, 75, 25);
+    create<GUILabel>("Stiffness",   550, 280, 75, 25);
 
-      create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
-      create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
+    create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
+    create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
 
-      create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);
-      create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
-    }
+    create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);
+    create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
+  }
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);
 
   /*
@@ -200,6 +215,29 @@ WorldGUIManager::resize(int width, int height)
 {
   GUIManager::resize(width, height);
   std::cout << "WorldGUIManager: " << width << "x" << height << std::endl;
+
+  m_worldview_component->set_geometry(0, 0, width, height);
+
+  m_run_button->set_geometry(10, BUTTON_POS(0), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_slowmo_button->set_geometry(10, BUTTON_POS(1), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_load_button->set_geometry(10, BUTTON_POS(9), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_save_button->set_geometry(10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
+
+  m_undo_button->set_geometry(10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_redo_button->set_geometry(10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT);
+
+  m_actioncam_button->set_geometry(10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_dots_button->set_geometry(10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_grid_button->set_geometry(10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_quit_button->set_geometry(10, BUTTON_POS(12), BUTTON_WIDTH, BUTTON_HEIGHT);
+
+  m_insert_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(4), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_select_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(5), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_collider_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(6), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_zoom_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(7), BUTTON_WIDTH, BUTTON_HEIGHT);
+
+  m_zoomout_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25);
+  m_zoomin_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25);
 }
 
 void

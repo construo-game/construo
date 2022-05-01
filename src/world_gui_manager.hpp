@@ -34,6 +34,34 @@ public:
 
   void update();
   void draw_overlay ();
+
+private:
+  GUIComponent* m_worldview_component;
+
+  GUIComponent* m_run_button;
+  GUIComponent* m_slowmo_button;
+  GUIComponent* m_load_button;
+  GUIComponent* m_save_button;
+
+  GUIComponent* m_undo_button;
+  GUIComponent* m_redo_button;
+
+  GUIComponent* m_actioncam_button;
+  GUIComponent* m_dots_button;
+  GUIComponent* m_grid_button;
+  GUIComponent* m_quit_button;
+
+  GUIComponent* m_insert_button;
+  GUIComponent* m_select_button;
+  GUIComponent* m_collider_button;
+  GUIComponent* m_zoom_button;
+
+  GUIComponent* m_zoomout_button;
+  GUIComponent* m_zoomin_button;
+
+public:
+  WorldGUIManager(const WorldGUIManager&) = delete;
+  WorldGUIManager& operator=(const WorldGUIManager&) = delete;
 };
 
 #endif

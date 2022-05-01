@@ -64,21 +64,6 @@ public:
   void on_click();
 };
 
-class GUIZoomInButton : public GUIButton
-{
-public:
-  GUIZoomInButton ();
-  void on_click();
-};
-
-class GUIZoomOutButton : public GUIButton
-{
-public:
-  GUIZoomOutButton ();
-  void on_click();
-};
-
-
 class GUIQuitButton : public GUIButton
 {
 public:
