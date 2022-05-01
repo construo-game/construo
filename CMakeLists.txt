@@ -194,7 +194,6 @@ set_target_properties(libconstruo PROPERTIES
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
-target_compile_options(libconstruo PRIVATE -std=c++11)
 target_link_libraries(libconstruo PUBLIC prio::prio)
 
 if(GLUT_FOUND AND OPENGL_FOUND)
