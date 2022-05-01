@@ -23,12 +23,6 @@
 /** */
 class GUIButton : public GUIComponent
 {
-protected:
-  std::string title;
-
-  bool mouse_over;
-  bool pressed;
-
 public:
   GUIButton (const std::string& title, int x_pos_, int y_pos_, int width_, int height_);
 
@@ -46,6 +40,12 @@ public:
 
   virtual void draw_content (GraphicContext*);
   virtual void on_click ();
+
+protected:
+  std::string m_title;
+
+  bool m_mouse_over;
+  bool m_pressed;
 };
 
 class GUIRunButton : public GUIButton
@@ -100,33 +100,38 @@ inline bool always_false()
 
 class GUIGenericButton : public GUIButton
 {
-private:
+public:
   typedef void (*Func)();
   typedef bool (*HighlightFunc)();
-  Func func;
-  HighlightFunc hfunc;
+
 public:
   GUIGenericButton (const std::string& title, int x, int y, int width, int height,
-                    Func f, HighlightFunc h = always_false)
-    : GUIButton (title, x, y, width, height),
-      func (f),
-      hfunc(h)
+                    Func func, HighlightFunc hfunc = always_false) :
+    GUIButton(title, x, y, width, height),
+    m_func(func),
+    m_hfunc(hfunc)
   {
   }
 
   void on_click ()
   {
-    func ();
+    m_func();
   }
 
   void draw_content (GraphicContext* gc)
   {
-    if (hfunc())
-      gc->draw_fill_rect (x_pos, y_pos,
-                          x_pos + width, y_pos + height, Colors::button_bg_active);
+    if (m_hfunc()) {
+      gc->draw_fill_rect(m_x_pos, m_y_pos,
+                         m_x_pos + m_width, m_y_pos + m_height,
+                         Colors::button_bg_active);
+    }
 
     GUIButton::draw_content (gc);
   }
+
+private:
+  Func m_func;
+  HighlightFunc m_hfunc;
 };
 
 #endif

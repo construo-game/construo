@@ -23,13 +23,14 @@
 /** */
 class GUILabel : public GUIComponent
 {
-private:
-  std::string title;
 public:
   GUILabel (const std::string& title_, int x, int y, int width, int height);
 
   void draw (GraphicContext*);
   bool is_at (int, int) { return false; }
+
+private:
+  std::string m_title;
 };
 
 #endif

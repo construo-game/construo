@@ -30,20 +30,20 @@ void
 GUIDirectoryButton::draw (GraphicContext* parent_gc)
 {
   //std::cout << "GUIDirectoryButton: " << filename << std::endl;
-  parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos +  width, y_pos + height,
+  parent_gc->draw_fill_rect (m_x_pos, m_y_pos,
+                             m_x_pos +  m_width, m_y_pos + m_height,
                              Color (0xBB0000FF));
 
-  parent_gc->draw_string (x_pos + 40, y_pos + 20, "..:: Directory ::..");
-  parent_gc->draw_string (x_pos + 30, y_pos + 40, filename);
+  parent_gc->draw_string (m_x_pos + 40, m_y_pos + 20, "..:: Directory ::..");
+  parent_gc->draw_string (m_x_pos + 30, m_y_pos + 40, filename);
 
   if (mouse_over)
-    parent_gc->draw_rect (x_pos, y_pos,
-                          x_pos +  width, y_pos + height,
+    parent_gc->draw_rect (m_x_pos, m_y_pos,
+                          m_x_pos +  m_width, m_y_pos + m_height,
                           Color (0xFFFFFFFF));
   else
-    parent_gc->draw_rect (x_pos, y_pos,
-                          x_pos +  width, y_pos + height,
+    parent_gc->draw_rect (m_x_pos, m_y_pos,
+                          m_x_pos +  m_width, m_y_pos + m_height,
                           Color (0xFF0000FF));
 }
 

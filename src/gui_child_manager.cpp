@@ -63,21 +63,21 @@ void
 GUIChildManager::draw (GraphicContext* parent_gc)
 {
   gc.set_parent_gc (parent_gc);
-  gc.set_offset (x_pos, y_pos);
+  gc.set_offset (m_x_pos, m_y_pos);
 
-  parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos + height,
+  parent_gc->draw_fill_rect (m_x_pos, m_y_pos,
+                             m_x_pos + m_width, m_y_pos + m_height,
                              Colors::button_bg_passive);
-  parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos + height,
+  parent_gc->draw_rect (m_x_pos, m_y_pos,
+                        m_x_pos + m_width, m_y_pos + m_height,
                         Colors::button_fg_passive);
 
-  parent_gc->draw_fill_rect (x_pos, y_pos,
-                             x_pos + width, y_pos,
+  parent_gc->draw_fill_rect (m_x_pos, m_y_pos,
+                             m_x_pos + m_width, m_y_pos,
                              Colors::button_bg_hover);
 
-  parent_gc->draw_rect (x_pos, y_pos,
-                        x_pos + width, y_pos,
+  parent_gc->draw_rect (m_x_pos, m_y_pos,
+                        m_x_pos + m_width, m_y_pos,
                         Colors::button_fg_passive);
 
   for (ComponentLst::reverse_iterator i = components.rbegin (); i != components.rend (); ++i)
@@ -93,9 +93,9 @@ GUIChildManager::on_primary_button_press (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_primary_button_press (x - x_pos, y - y_pos);
+          (*i)->on_primary_button_press (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -106,9 +106,9 @@ GUIChildManager::on_primary_button_release (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_primary_button_release (x - x_pos, y - y_pos);
+          (*i)->on_primary_button_release (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -119,9 +119,9 @@ GUIChildManager::on_secondary_button_press (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_secondary_button_press (x - x_pos, y - y_pos);
+          (*i)->on_secondary_button_press (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -132,9 +132,9 @@ GUIChildManager::on_secondary_button_release (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_secondary_button_release (x - x_pos, y - y_pos);
+          (*i)->on_secondary_button_release (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -145,9 +145,9 @@ GUIChildManager::on_delete_press (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_delete_press (x - x_pos, y - y_pos);
+          (*i)->on_delete_press (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -158,9 +158,9 @@ GUIChildManager::on_fix_press (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->on_fix_press (x - x_pos, y - y_pos);
+          (*i)->on_fix_press (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -181,9 +181,9 @@ GUIChildManager::wheel_up (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->wheel_up (x - x_pos, y - y_pos);
+          (*i)->wheel_up (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -194,9 +194,9 @@ GUIChildManager::wheel_down (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
-          (*i)->wheel_down (x - x_pos, y - y_pos);
+          (*i)->wheel_down (x - m_x_pos, y - m_y_pos);
           return;
         }
     }
@@ -207,9 +207,9 @@ GUIChildManager::scroll_left ()
 {
   /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
       {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
       {
-      (*i)->scroll_left (x - x_pos, y - y_pos);
+      (*i)->scroll_left (x - m_x_pos, y - m_y_pos);
       return;
       }
       }*/
@@ -221,9 +221,9 @@ GUIChildManager::scroll_right ()
   /*
     for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-    if ((*i)->is_at (x - x_pos, y - y_pos))
+    if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
     {
-    (*i)->scroll_right (x - x_pos, y - y_pos);
+    (*i)->scroll_right (x - m_x_pos, y - m_y_pos);
     return;
     }
     }*/
@@ -234,9 +234,9 @@ GUIChildManager::scroll_up ()
 {
   /*  for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
       {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
       {
-      (*i)->scroll_down (x - x_pos, y - y_pos);
+      (*i)->scroll_down (x - m_x_pos, y - m_y_pos);
       return;
       }
       }*/
@@ -248,9 +248,9 @@ GUIChildManager::scroll_down ()
   /*
     for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-    if ((*i)->is_at (x - x_pos, y - y_pos))
+    if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
     {
-    (*i)->scroll_down (x - x_pos, y - y_pos);
+    (*i)->scroll_down (x - m_x_pos, y - m_y_pos);
     return;
     }
     }*/
@@ -277,7 +277,7 @@ GUIChildManager::find_component_at (int x, int y)
 {
   for (ComponentLst::iterator i = components.begin (); i != components.end (); ++i)
     {
-      if ((*i)->is_at (x - x_pos, y - y_pos))
+      if ((*i)->is_at (x - m_x_pos, y - m_y_pos))
         {
           return *i;
         }

@@ -23,31 +23,28 @@ class GUIManager;
 /** A thing that is under the controll of the GUIManager */
 class GUIComponent
 {
-protected:
-  int x_pos;
-  int y_pos;
-  int width;
-  int height;
-
 public:
-  GUIComponent (int x_, int y_, int width_, int height_)
-    : x_pos (x_), y_pos (y_), width (width_), height (height_)
+  GUIComponent (int x_, int y_, int width_, int height_) :
+    m_x_pos(x_),
+    m_y_pos(y_),
+    m_width (width_),
+    m_height(height_)
   {}
 
   virtual ~GUIComponent () {}
 
-  virtual void draw (GraphicContext* gc) =0;
+  virtual void draw (GraphicContext* gc) = 0;
 
   /** @return true if the component is present at the given location */
   virtual bool is_at (int x, int y);
 
-  void set_position (int x, int y) { x_pos = x, y_pos = y; }
-  void set_width (int w) { width = w; }
-  void set_height (int h) { height = h; }
-  int  get_x_pos () { return x_pos; }
-  int  get_y_pos () { return y_pos; }
-  int  get_width () { return width; }
-  int  get_height () { return height; }
+  void set_position (int x, int y) { m_x_pos = x, m_y_pos = y; }
+  void set_width (int w) { m_width = w; }
+  void set_height (int h) { m_height = h; }
+  int  get_x_pos () { return m_x_pos; }
+  int  get_y_pos () { return m_y_pos; }
+  int  get_width () { return m_width; }
+  int  get_height () { return m_height; }
 
   virtual void on_primary_button_press (int x, int y) {}
   virtual void on_primary_button_release (int x, int y) {}
@@ -81,6 +78,16 @@ public:
   virtual void scroll_down () {}
 
   virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
+
+protected:
+  int m_x_pos;
+  int m_y_pos;
+  int m_width;
+  int m_height;
+
+public:
+  GUIComponent(const GUIComponent&) = delete;
+  GUIComponent& operator=(const GUIComponent&) = delete;
 };
 
 #endif

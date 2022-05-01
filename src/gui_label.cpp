@@ -18,16 +18,16 @@
 #include "colors.hpp"
 #include "gui_label.hpp"
 
-GUILabel::GUILabel (const std::string& title_, int x_, int y_, int width_, int height_)
-  : GUIComponent (x_, y_, width_, height_),
-    title (title_)
+GUILabel::GUILabel (const std::string& title, int x, int y, int width, int height) :
+  GUIComponent (x, y, width, height),
+  m_title(title)
 {
 }
 
 void
 GUILabel::draw (GraphicContext* gc)
 {
-  gc->draw_string (x_pos + 10, y_pos + 15, title);
+  gc->draw_string(m_x_pos + 10, m_y_pos + 15, m_title);
 }
 
 /* EOF */
