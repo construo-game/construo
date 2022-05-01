@@ -87,19 +87,19 @@ Selection::flip ()
   validate();
 
   if (!m_selection.empty())
+  {
+    float midpoint = 0.0f;
+    for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
-      float midpoint = 0.0f;
-      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
-        {
-          midpoint += (*i)->pos.x;
-        }
-      midpoint /= m_selection.size ();
-
-      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
-        {
-          (*i)->pos.x = midpoint - ((*i)->pos.x - midpoint);
-        }
+      midpoint += (*i)->pos.x;
     }
+    midpoint /= static_cast<float>(m_selection.size());
+
+    for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+    {
+      (*i)->pos.x = midpoint - ((*i)->pos.x - midpoint);
+    }
+  }
 }
 
 void

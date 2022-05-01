@@ -35,7 +35,7 @@ GUINewFileButton::draw(GraphicContext* parent_gc)
   parent_gc->draw_string (m_x + 20, m_y + 75, "..:: Save to new file ::..");
   //parent_gc->draw_string (m_x + 30, m_y + 40, filename);
 
-  if (mouse_over)
+  if (m_mouse_over)
     parent_gc->draw_rect (m_x, m_y,
                           m_x +  m_width, m_y + m_height,
                           Color (0xFFFFFFFF));

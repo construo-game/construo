@@ -98,7 +98,7 @@ WorldViewComponent::~WorldViewComponent()
 float
 WorldViewComponent::get_grid_size()
 {
-  return m_grid_base_size / pow(m_grid_constant, Math::get_exp_n(m_gc.get_zoom() * m_grid_scale_factor, m_grid_constant));
+  return m_grid_base_size / powf(m_grid_constant, Math::get_exp_n(m_gc.get_zoom() * m_grid_scale_factor, m_grid_constant));
 }
 
 float

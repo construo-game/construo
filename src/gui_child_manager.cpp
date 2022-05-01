@@ -67,19 +67,19 @@ GUIChildManager::draw (GraphicContext* parent_gc)
   m_gc.set_parent_gc (parent_gc);
   m_gc.set_offset (m_x, m_y);
 
-  parent_gc->draw_fill_rect (m_x, m_y,
-                             m_x + m_width, m_y + m_height,
+  parent_gc->draw_fill_rect (static_cast<float>(m_x), m_y,
+                             static_cast<float>(m_x) + m_width, m_y + m_height,
                              Colors::button_bg_passive);
-  parent_gc->draw_rect (m_x, m_y,
-                        m_x + m_width, m_y + m_height,
+  parent_gc->draw_rect (static_cast<float>(m_x), m_y,
+                        static_cast<float>(m_x) + m_width, static_cast<float>(m_y) + m_height,
                         Colors::button_fg_passive);
 
-  parent_gc->draw_fill_rect (m_x, m_y,
-                             m_x + m_width, m_y,
+  parent_gc->draw_fill_rect (static_cast<float>(m_x), static_cast<float>(m_y),
+                             static_cast<float>(m_x) + m_width, static_cast<float>(m_y),
                              Colors::button_bg_hover);
 
-  parent_gc->draw_rect (m_x, m_y,
-                        m_x + m_width, m_y,
+  parent_gc->draw_rect (static_cast<float>(m_x), static_cast<float>(m_y),
+                        m_x + m_width, static_cast<float>(m_y),
                         Colors::button_fg_passive);
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)

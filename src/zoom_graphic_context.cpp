@@ -78,7 +78,7 @@ ZoomGraphicContext::screen_to_world (const Vector2d& pos)
 Vector2d
 ZoomGraphicContext::world_to_screen (const Vector2d& pos)
 {
-  return Vector2d ((pos.x + m_x_offset) * m_zoom + m_x1,
+  return Vector2d ((pos.x + m_x_offset) * m_zoom + static_cast<float>(m_x1),
                    (pos.y + m_y_offset) * m_zoom + m_y1);
 }
 
@@ -97,7 +97,7 @@ ZoomGraphicContext::screen_to_world_y (float y)
 float
 ZoomGraphicContext::world_to_screen_x (float x)
 {
-  return (x + m_x_offset) * m_zoom + m_x1;
+  return (x + m_x_offset) * m_zoom + static_cast<float>(m_x1);
 }
 
 float

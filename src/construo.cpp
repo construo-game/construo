@@ -23,8 +23,8 @@ InputContext*   g_input_context       = nullptr;
 RootGraphicContext* g_graphic_context = nullptr;
 
 #ifdef CONSTRUO_0_1_0
-const double g_back_force = 500.0;
-const double g_max_stretch = 0.1f;
+const float g_back_force = 500.0f;
+const float g_max_stretch = 0.1f;
 #else
 #endif
 

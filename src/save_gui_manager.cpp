@@ -29,8 +29,9 @@ SaveGUIManager::SaveGUIManager() :
 void
 SaveGUIManager::draw_overlay ()
 {
-  g_graphic_context->draw_string(10, g_graphic_context->get_height() - 10,
-                               "Save Dialog");
+  g_graphic_context->draw_string(10.0f,
+                                 g_graphic_context->get_height() - 10.0f,
+                                 "Save Dialog");
 }
 
 void

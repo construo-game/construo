@@ -16,10 +16,10 @@
 
 #include "gui_file_button.hpp"
 
-GUIFileButton::GUIFileButton (const std::string& arg_filename)
-  : GUIComponent (0, 0, 200, 150),
-    filename (arg_filename),
-    mouse_over (false)
+GUIFileButton::GUIFileButton (const std::string& arg_filename) :
+  GUIComponent (0, 0, 200, 150),
+  m_filename (arg_filename),
+  m_mouse_over (false)
 {
   //std::cout << "FILENAME: " << filename << std::endl;
 }

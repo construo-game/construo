@@ -124,7 +124,7 @@ Particle::update (float delta)
 
   pos += velocity * delta;
 
-  float collision_damp = 0.2;
+  float collision_damp = 0.2f;
 
 #if 0 // FIXME: Replace this with a generic shape collision handling thing
   // Calc collision with screen x border

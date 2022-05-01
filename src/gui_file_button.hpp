@@ -24,9 +24,6 @@
 /** */
 class GUIFileButton : public GUIComponent
 {
-protected:
-  std::string filename;
-  bool mouse_over;
 public:
   GUIFileButton (const std::string& arg_filename);
   ~GUIFileButton ();
@@ -34,11 +31,15 @@ public:
   //virtual void draw (ZoomGraphicContext*) =0;
   virtual void on_click() =0;
 
-  void on_mouse_enter() override { mouse_over = true; }
-  void on_mouse_leave() override { mouse_over = false; }
+  void on_mouse_enter() override { m_mouse_over = true; }
+  void on_mouse_leave() override { m_mouse_over = false; }
 
   void on_primary_button_press(int x, int y) override;
   void on_primary_button_release(int x, int y) override;
+
+protected:
+  std::string m_filename;
+  bool m_mouse_over;
 };
 
 #endif

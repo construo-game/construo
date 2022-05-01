@@ -24,8 +24,8 @@
     @brief A collection of mathematical helper functions */
 namespace Math {
 
-const double pi   = 3.14159265358979323846;	/* pi */
-const double pi_2 = 1.57079632679489661923;	/* pi/2 */
+const float pi   = 3.14159265358979323846f;	/* pi */
+const float pi_2 = 1.57079632679489661923f;	/* pi/2 */
 
 template<class T>
 T min (const T& a, const T& b)

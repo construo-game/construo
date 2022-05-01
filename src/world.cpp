@@ -499,7 +499,7 @@ World::get_num_particles()
 int
 World::get_num_springs()
 {
-  return m_springs.size ();
+  return static_cast<int>(m_springs.size());
 }
 
 void

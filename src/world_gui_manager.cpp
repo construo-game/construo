@@ -303,22 +303,22 @@ WorldGUIManager::draw_overlay ()
     graphic_context->draw_string (BUTTON_LX_POS,  430,
     to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
-  int bottom_line = g_graphic_context->get_height() - 10;
-  g_graphic_context->draw_string (10, bottom_line-20, "FPS: ");
-  g_graphic_context->draw_string (80, bottom_line-20, to_string(get_fps()));
+  float const bottom_line = static_cast<float>(g_graphic_context->get_height() - 10);
+  g_graphic_context->draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
+  g_graphic_context->draw_string(80.0f, bottom_line - 20.0f, to_string(get_fps()));
 
-  g_graphic_context->draw_string (10, bottom_line, "Pos: ");
-  g_graphic_context->draw_string (80, bottom_line,
+  g_graphic_context->draw_string(10.0f, bottom_line, "Pos: ");
+  g_graphic_context->draw_string(80.0f, bottom_line,
                                 to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos())));
 
-  g_graphic_context->draw_string (210, bottom_line-20, "Particles: ");
-  g_graphic_context->draw_string (280, bottom_line-20, to_string(world.get_num_particles()));
+  g_graphic_context->draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
+  g_graphic_context->draw_string(280.0f, bottom_line - 20.0f, to_string(world.get_num_particles()));
 
-  g_graphic_context->draw_string (210, bottom_line, "Springs: ");
-  g_graphic_context->draw_string (280, bottom_line, to_string(world.get_num_springs()));
+  g_graphic_context->draw_string(210.0f, bottom_line, "Springs: ");
+  g_graphic_context->draw_string(280.0f, bottom_line, to_string(world.get_num_springs()));
 
-  g_graphic_context->draw_string (410, bottom_line, "Zoom: ");
-  g_graphic_context->draw_string (480, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
+  g_graphic_context->draw_string(410.0f, bottom_line, "Zoom: ");
+  g_graphic_context->draw_string(480.0f, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
 
   g_graphic_context->draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
   //g_graphic_context->draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));

@@ -55,7 +55,7 @@ public:
   /** Remove a particle by id */
   void remove_particle (int id);
 
-  int size () { return m_particles.size(); }
+  int size () { return static_cast<int>(m_particles.size()); }
   Particle* lookup_particle (int id);
 
   void update (float delta);
