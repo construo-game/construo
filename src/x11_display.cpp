@@ -152,11 +152,12 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
     XSetWMProtocols(m_display, m_window, &wm_delete_window, 1);
   }
 
-  if (m_doublebuffer)
+  if (m_doublebuffer) {
     m_drawable = XCreatePixmap(m_display, m_window, m_width, m_height,
                                DefaultDepth(m_display, screen));
-  else
+  } else {
     m_drawable = m_window;
+  }
 
   XMapRaised(m_display, m_window);
 
@@ -627,6 +628,12 @@ X11Display::read_event ()
 
       m_width = event.xconfigure.width;
       m_height = event.xconfigure.height;
+
+      if (m_doublebuffer) {
+        XFreePixmap(m_display, m_drawable);
+        m_drawable = XCreatePixmap(m_display, m_window, m_width, m_height,
+                                   DefaultDepth(m_display, DefaultScreen(m_display)));
+      }
 
       ScreenManager::instance()->resize(m_width, m_height);
       break;
