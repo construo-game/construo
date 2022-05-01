@@ -17,6 +17,8 @@
 #ifndef HEADER_WORLDVIEW_COMPONENT_HPP
 #define HEADER_WORLDVIEW_COMPONENT_HPP
 
+#include <memory>
+
 #include "input_context.hpp"
 #include "zoom_graphic_context.hpp"
 #include "gui_component.hpp"
@@ -36,57 +38,23 @@ public:
   enum Mode { INSERT_MODE, SELECT_MODE, ZOOM_MODE, COLLIDER_MODE };
 
 private:
-  Mode mode;
-
-  ZoomGraphicContext gc;
-
-  /** If set to true, display a grid and align dots to it */
-  bool use_grid;
-  float grid_base_size;
-  int grid_constant;
-  float grid_scale_factor;
-  float grid_snap_factor;
-
-  /** True if the third button is currently pressed and we are in
-      scroll mode */
-  bool scrolling;
-
-  float scroll_pos_x;
-  float scroll_pos_y;
-
-  float x_offset;
-  float y_offset;
-
-  /** If the user clicks in this component, the tool decides what to
-      do */
-  WorldViewTool*       current_tool;
-  WorldViewSelectTool* select_tool;
-  WorldViewInsertTool* insert_tool;
-  WorldViewZoomTool*   zoom_tool;
-  WorldViewColliderTool*   collider_tool;
-
   static WorldViewComponent* instance_;
 
-  /** Draw the background grid to which new dots align */
-  void draw_grid();
-
-  /** Draw ground, aka the all overspanning collider at the bottem */
-  void draw_ground();
 public:
-  void set_mode (Mode m);
-  Mode get_mode () { return mode; }
-
   WorldViewComponent ();
   ~WorldViewComponent ();
 
   static inline WorldViewComponent* instance() { return instance_; }
 
-  WorldViewInsertTool* get_insert_tool() { return insert_tool; }
+  WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
-  ZoomGraphicContext* get_gc () { return &gc; }
+  ZoomGraphicContext* get_gc () { return &m_gc; }
   void draw (GraphicContext* parent_gc);
 
-  bool uses_grid() const { return  use_grid; }
+  void set_mode (Mode m);
+  Mode get_mode () { return m_mode; }
+
+  bool uses_grid() const { return  m_use_grid; }
   float get_grid_size();
   float get_snap_size();
 
@@ -125,6 +93,43 @@ public:
 
   /** */
   bool is_at (int x, int y) { return true; }
+
+private:
+  /** Draw the background grid to which new dots align */
+  void draw_grid();
+
+  /** Draw ground, aka the all overspanning collider at the bottem */
+  void draw_ground();
+
+private:
+  Mode m_mode;
+
+  ZoomGraphicContext m_gc;
+
+  /** If set to true, display a grid and align dots to it */
+  bool m_use_grid;
+  float m_grid_base_size;
+  int m_grid_constant;
+  float m_grid_scale_factor;
+  float m_grid_snap_factor;
+
+  /** True if the third button is currently pressed and we are in
+      scroll mode */
+  bool m_scrolling;
+
+  float m_scroll_pos_x;
+  float m_scroll_pos_y;
+
+  float m_x_offset;
+  float m_y_offset;
+
+  /** If the user clicks in this component, the tool decides what to
+      do */
+  WorldViewTool*       m_current_tool;
+  std::unique_ptr<WorldViewSelectTool> m_select_tool;
+  std::unique_ptr<WorldViewInsertTool> m_insert_tool;
+  std::unique_ptr<WorldViewZoomTool>   m_zoom_tool;
+  std::unique_ptr<WorldViewColliderTool> m_collider_tool;
 };
 
 #endif
