@@ -43,62 +43,9 @@ struct FlipRect
 class X11Display : public RootGraphicContext,
                    public InputContext
 {
-private:
-  Cursor cursor_scroll;
-  Pixmap cursor_scroll_pix;
-  Pixmap cursor_scroll_mask;
-
-  Cursor cursor_zoom;
-  Pixmap cursor_zoom_pix;
-  Pixmap cursor_zoom_mask;
-
-  Cursor cursor_insert;
-  Pixmap cursor_insert_pix;
-  Pixmap cursor_insert_mask;
-
-  Cursor cursor_select;
-  Pixmap cursor_select_pix;
-  Pixmap cursor_select_mask;
-
-  Cursor cursor_collider;
-  Pixmap cursor_collider_pix;
-  Pixmap cursor_collider_mask;
-
-  bool doublebuffer;
-#ifdef HAVE_LIBXXF86VM
-  XF86VidModeModeLine orig_modeline;
-#endif
-  int orig_viewport_x;
-  int orig_viewport_y;
-  int orig_dotclock;
-
-  int       width;
-  int       height;
-  Display*  display;
-  Window    window;
-  Colormap  colormap;
-  Drawable  drawable;
-  GC        gc;
-
-  bool shift_pressed;
-  int  mouse_x;
-  int  mouse_y;
-
-  /** Color Depth of the Display */
-  int depth;
-
-  /** true if display is in fullscreen mode, false for window mode */
-  bool fullscreen;
-
-  std::vector<FlipRect> flip_rects;
-  std::vector<FlipRect> last_flip_rects;
-
-  /** Save the current visual mode for later restoration after leaving
-      fullscreen */
-  void save_mode();
 public:
-  X11Display (int w, int h, bool fullscreen_);
-  virtual ~X11Display ();
+  X11Display(int w, int h, bool fullscreen_);
+  virtual ~X11Display();
 
   // Graphic Context stuff
   void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
@@ -112,8 +59,8 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  int get_width() override { return width; }
-  int get_height() override { return height; }
+  int get_width() override { return m_width; }
+  int get_height() override { return m_height; }
 
   void toggle_fullscreen();
 
@@ -149,14 +96,70 @@ public:
   XColor get_xcolor(const Color& color);
 
   void set_cursor_real(CursorType cursor) override;
+
 private:
   bool read_event ();
   void send_button_press (int i);
   void send_button_release (int i);
   void send_load_or_save(int n);
 
-  X11Display (const X11Display&);
-  X11Display& operator= (const X11Display&);
+  /** Save the current visual mode for later restoration after leaving
+      fullscreen */
+  void save_mode();
+
+private:
+  Cursor m_cursor_scroll;
+  Pixmap m_cursor_scroll_pix;
+  Pixmap m_cursor_scroll_mask;
+
+  Cursor m_cursor_zoom;
+  Pixmap m_cursor_zoom_pix;
+  Pixmap m_cursor_zoom_mask;
+
+  Cursor m_cursor_insert;
+  Pixmap m_cursor_insert_pix;
+  Pixmap m_cursor_insert_mask;
+
+  Cursor m_cursor_select;
+  Pixmap m_cursor_select_pix;
+  Pixmap m_cursor_select_mask;
+
+  Cursor m_cursor_collider;
+  Pixmap m_cursor_collider_pix;
+  Pixmap m_cursor_collider_mask;
+
+  bool m_doublebuffer;
+#ifdef HAVE_LIBXXF86VM
+  XF86VidModeModeLine m_orig_modeline;
+#endif
+  int m_orig_viewport_x;
+  int m_orig_viewport_y;
+  int m_orig_dotclock;
+
+  int m_width;
+  int m_height;
+  Display* m_display;
+  Window m_window;
+  Colormap m_colormap;
+  Drawable m_drawable;
+  GC m_gc;
+
+  bool m_shift_pressed;
+  int m_mouse_x;
+  int m_mouse_y;
+
+  /** Color Depth of the Display */
+  int m_depth;
+
+  /** true if display is in fullscreen mode, false for window mode */
+  bool m_fullscreen;
+
+  std::vector<FlipRect> m_flip_rects;
+  std::vector<FlipRect> m_last_flip_rects;
+
+public:
+  X11Display(const X11Display&) = delete;
+  X11Display& operator= (const X11Display&) = delete;
 };
 
 #endif
