@@ -74,7 +74,6 @@ public:
 
   void clear () override;
   void flip () override;
-  void flip (int x1, int y1, int x2, int y2) override;
 
   bool get_fullscreen () { return is_fullscreen; }
 

@@ -137,8 +137,6 @@ public:
   /** Convert a coordinate from world units to screen units */
   Vector2d world_to_screen (const Vector2d&);
 
-  void flip (int x1, int y1, int x2, int y2) override;
-
   void push_quick_draw() override { m_parent_gc->push_quick_draw(); }
   void pop_quick_draw() override { m_parent_gc->pop_quick_draw(); }
 

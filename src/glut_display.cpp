@@ -312,13 +312,6 @@ GlutDisplay::flip ()
 }
 
 void
-GlutDisplay::flip (int x1, int y1, int x2, int y2)
-{
-  assert (false);
-}
-
-
-void
 GlutDisplay::reshape_func(int w, int h)
 {
   std::cout << "Reshape: " << w << " " << h << std::endl;

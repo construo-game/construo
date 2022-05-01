@@ -67,9 +67,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_mouse_x(),
   m_mouse_y(),
   m_depth(),
-  m_fullscreen (fullscreen_),
-  m_flip_rects(),
-  m_last_flip_rects()
+  m_fullscreen (fullscreen_)
 {
 #ifndef HAVE_LIBXXF86VM
   m_fullscreen = false;
@@ -687,41 +685,6 @@ X11Display::clear ()
 {
   XSetForeground(m_display, m_gc, 0x000000);
   XFillRectangle(m_display, m_drawable, m_gc, 0, 0, m_width, m_height);
-}
-
-void
-X11Display::flip (int x1, int y1, int x2, int y2)
-{
-  if (m_doublebuffer)
-    {
-      // FlipRect flip_rect;
-
-      // flip_rect.x1 = x1;
-      // flip_rect.y1 = y1;
-      // flip_rect.x2 = x2;
-      // flip_rect.y2 = y2;
-
-      //flip_rects.push_back(flip_rect);
-    }
-}
-
-void
-X11Display::real_flip ()
-{
-  if (m_doublebuffer)
-    {
-      for (std::vector<FlipRect>::iterator i = m_flip_rects.begin ();
-           i != m_flip_rects.end ();
-           ++i)
-        {
-          XCopyArea(m_display, m_drawable, m_window, m_gc,
-                     i->x1, i->y1, // source
-                     i->x2 - i->x1, i->y2 - i->y1, // width/height
-                     i->x1, i->y1 // destination
-                     );
-        }
-      m_flip_rects.clear ();
-    }
 }
 
 void

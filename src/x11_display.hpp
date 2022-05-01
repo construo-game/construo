@@ -31,14 +31,6 @@
 #define X11_FULLSCREEN_MODE true
 #define X11_WINDOW_MODE     false
 
-struct FlipRect
-{
-  int x1;
-  int y1;
-  int x2;
-  int y2;
-};
-
 /** X11Display driver */
 class X11Display : public RootGraphicContext,
                    public InputContext
@@ -71,11 +63,6 @@ public:
 
   void enter_fullscreen() override;
   void leave_fullscreen() override;
-
-  /** perform the real flip, only flip marked reagions */
-  void real_flip() override;
-
-  void flip (int x1, int y1, int x2, int y2) override;
 
   // Input Context stuff
   int get_mouse_x () override;
@@ -153,9 +140,6 @@ private:
 
   /** true if display is in fullscreen mode, false for window mode */
   bool m_fullscreen;
-
-  std::vector<FlipRect> m_flip_rects;
-  std::vector<FlipRect> m_last_flip_rects;
 
 public:
   X11Display(const X11Display&) = delete;
