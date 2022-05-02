@@ -62,29 +62,29 @@ GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
 }
 
 void
-GUIChildManager::draw (GraphicContext* parent_gc)
+GUIChildManager::draw(GraphicContext& parent_gc)
 {
-  m_gc.set_parent_gc (parent_gc);
+  m_gc.set_parent_gc(&parent_gc);
   m_gc.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
 
-  parent_gc->draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+  parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
                             static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
                             Colors::button_bg_passive);
-  parent_gc->draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+  parent_gc.draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
                        static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
                        Colors::button_fg_passive);
 
-  parent_gc->draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+  parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
                             static_cast<float>(m_x + m_width), static_cast<float>(m_y),
                             Colors::button_bg_hover);
 
-  parent_gc->draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+  parent_gc.draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
                        static_cast<float>(m_x + m_width), static_cast<float>(m_y),
                        Colors::button_fg_passive);
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
   {
-    (*i)->draw(&m_gc);
+    (*i)->draw(m_gc);
   }
 
   draw_overlay(parent_gc);

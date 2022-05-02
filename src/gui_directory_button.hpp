@@ -26,7 +26,7 @@ public:
   GUIDirectoryButton (const std::string& pathname);
   ~GUIDirectoryButton ();
 
-  void draw(GraphicContext*) override;
+  void draw(GraphicContext& gc) override;
   void on_click() override;
 };
 

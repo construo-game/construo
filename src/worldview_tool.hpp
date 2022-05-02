@@ -33,8 +33,8 @@ public:
   /** Let the Tool to some deinitialisation */
   virtual void deactivate () {}
 
-  virtual void draw_background (ZoomGraphicContext* gc) =0;
-  virtual void draw_foreground (ZoomGraphicContext* gc) =0;
+  virtual void draw_background (ZoomGraphicContext& gc) =0;
+  virtual void draw_foreground (ZoomGraphicContext& gc) =0;
 
   virtual void on_button_press (int button_id, float x, float y) {}
 

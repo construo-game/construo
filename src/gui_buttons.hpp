@@ -28,9 +28,9 @@ public:
   GUIButton (const std::string& title, float x, float y, float width, float height);
   GUIButton (const std::string& title);
 
-  void draw_border_hover(GraphicContext*);
-  void draw_border_pressed(GraphicContext*);
-  void draw_border_normal(GraphicContext*);
+  void draw_border_hover(GraphicContext& gc);
+  void draw_border_pressed(GraphicContext& gc);
+  void draw_border_normal(GraphicContext& gc);
 
   void on_mouse_enter() override;
   void on_mouse_leave() override;
@@ -38,9 +38,9 @@ public:
   void on_primary_button_press (float x, float y) override;
   void on_primary_button_release (float x, float y) override;
 
-  void draw (GraphicContext*) override;
+  void draw (GraphicContext& gc) override;
 
-  virtual void draw_content (GraphicContext*);
+  virtual void draw_content(GraphicContext& gc);
   virtual void on_click ();
 
 protected:
@@ -53,7 +53,7 @@ class GUIRunButton : public GUIButton
 {
 public:
   GUIRunButton ();
-  void draw_content (GraphicContext*) override;
+  void draw_content(GraphicContext& gc) override;
   void on_click() override;
 };
 
@@ -61,7 +61,7 @@ class GUISlowMoButton : public GUIButton
 {
 public:
   GUISlowMoButton ();
-  void draw_content (GraphicContext*) override;
+  void draw_content(GraphicContext& gc) override;
   void on_click() override;
 };
 
@@ -111,10 +111,10 @@ public:
     m_func();
   }
 
-  void draw_content (GraphicContext* gc) override
+  void draw_content(GraphicContext& gc) override
   {
     if (m_hfunc()) {
-      gc->draw_fill_rect(static_cast<float>(m_x),
+      gc.draw_fill_rect(static_cast<float>(m_x),
                          static_cast<float>(m_y),
                          static_cast<float>(m_x + m_width),
                          static_cast<float>(m_y + m_height),

@@ -55,7 +55,7 @@ public:
   /** FIXME: flip should be handled outsite of GraphicContext */
   void flip () override { m_parent_gc->flip (); }
 
-  void set_parent_gc (GraphicContext* gc);
+  void set_parent_gc(GraphicContext* gc);
 
   /**
    * Zoom Out the GraphicContext by one 'unit', using the x and y

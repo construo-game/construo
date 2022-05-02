@@ -36,7 +36,7 @@ WorldViewInsertTool::~WorldViewInsertTool()
 }
 
 void
-WorldViewInsertTool::draw_background(ZoomGraphicContext* gc)
+WorldViewInsertTool::draw_background(ZoomGraphicContext& gc)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(g_input_context->get_mouse_x());
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(g_input_context->get_mouse_y());
@@ -51,7 +51,7 @@ WorldViewInsertTool::draw_background(ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
+WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
 {
   World& world = *Controller::instance()->get_world();
 
@@ -76,7 +76,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
 
   if (m_current_particle)
     {
-      gc->GraphicContext::draw_line (m_current_particle->pos, new_particle_pos,
+      gc.GraphicContext::draw_line (m_current_particle->pos, new_particle_pos,
                                      Colors::new_spring, 2);
     }
 
@@ -90,7 +90,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
     }
   else
     {
-      gc->draw_fill_circle(new_particle_pos.x,
+      gc.draw_fill_circle(new_particle_pos.x,
                            new_particle_pos.y,
                            3.0f,
                            Colors::highlight);

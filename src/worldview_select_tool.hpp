@@ -32,8 +32,8 @@ public:
   void activate () override;
   void deactivate () override;
 
-  void draw_background (ZoomGraphicContext* gc) override;
-  void draw_foreground (ZoomGraphicContext* gc) override;
+  void draw_background (ZoomGraphicContext& gc) override;
+  void draw_foreground (ZoomGraphicContext& gc) override;
 
   void on_primary_button_press (float x, float y) override;
   void on_primary_button_release (float x, float y) override;

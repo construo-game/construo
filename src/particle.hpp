@@ -79,15 +79,15 @@ public:
   inline float get_mass () const { return mass; }
 
   void update (float delta);
-  void draw (ZoomGraphicContext* gc);
+  void draw (ZoomGraphicContext& gc);
 
   /** draws the particle in highlight mode (aka if mouse is over it) */
-  void draw_highlight (ZoomGraphicContext* gc);
+  void draw_highlight (ZoomGraphicContext& gc);
 
   /** draws additional infos to this stop */
-  void draw_infos (ZoomGraphicContext* gc);
+  void draw_infos (ZoomGraphicContext& gc);
 
-  void draw_velocity_vector (ZoomGraphicContext* gc);
+  void draw_velocity_vector (ZoomGraphicContext& gc);
 
   void serialize(LispWriter& writer);
 

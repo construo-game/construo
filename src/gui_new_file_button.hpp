@@ -29,7 +29,7 @@ private:
 public:
   GUINewFileButton(const std::string& p);
 
-  void draw(GraphicContext* parent_gc) override;
+  void draw(GraphicContext& parent_gc) override;
   void on_click() override;
 };
 

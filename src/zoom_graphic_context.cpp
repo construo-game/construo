@@ -199,7 +199,7 @@ ZoomGraphicContext::draw_string(float x, float y, const std::string& str, Color 
 }
 
 void
-ZoomGraphicContext::set_parent_gc (GraphicContext* gc)
+ZoomGraphicContext::set_parent_gc(GraphicContext* gc)
 {
   m_parent_gc = gc;
 }

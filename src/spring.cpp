@@ -121,7 +121,7 @@ Spring::update (float delta)
 }
 
 void
-Spring::draw (ZoomGraphicContext* gc)
+Spring::draw (ZoomGraphicContext& gc)
 {
   Vector2d dist = particles.first->pos - particles.second->pos;
   float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
@@ -132,7 +132,7 @@ Spring::draw (ZoomGraphicContext* gc)
       ||
       particles.second->pos.y < 598.5f)
     {
-      gc->GraphicContext::draw_line(particles.first->pos,
+      gc.GraphicContext::draw_line(particles.first->pos,
                                     particles.second->pos,
                                     Color(color, 1.0f - color, 0.0f),
                                     2);
@@ -140,9 +140,9 @@ Spring::draw (ZoomGraphicContext* gc)
 }
 
 void
-Spring::draw_highlight (ZoomGraphicContext* gc)
+Spring::draw_highlight (ZoomGraphicContext& gc)
 {
-  gc->GraphicContext::draw_line (particles.first->pos, particles.second->pos,
+  gc.GraphicContext::draw_line (particles.first->pos, particles.second->pos,
                                  Colors::highlight, 4);
 }
 

@@ -28,7 +28,7 @@ public:
   GUIFileButton (const std::string& arg_filename);
   ~GUIFileButton ();
 
-  //virtual void draw (ZoomGraphicContext*) =0;
+  //virtual void draw (ZoomGraphicContext& gc) =0;
   virtual void on_click() =0;
 
   void on_mouse_enter() override { m_mouse_over = true; }

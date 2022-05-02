@@ -39,7 +39,7 @@ public:
 
   virtual ~GUIComponent() {}
 
-  virtual void draw(GraphicContext* gc) = 0;
+  virtual void draw(GraphicContext& gc) = 0;
 
   /** @return true if the component is present at the given location */
   virtual bool is_at(float x, float y);

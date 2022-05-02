@@ -78,9 +78,9 @@ void
 GUIManager::draw ()
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
-    {
-      (*i)->draw (g_graphic_context);
-    }
+  {
+    (*i)->draw(*g_graphic_context);
+  }
 }
 
 GUIComponent*

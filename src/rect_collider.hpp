@@ -32,8 +32,8 @@ public:
 
   bool is_at (const Vector2d& pos) override;
   void bounce() override;
-  void draw (GraphicContext* gc) override;
-  void draw_highlight (GraphicContext* gc) override;
+  void draw (GraphicContext& gc) override;
+  void draw_highlight (GraphicContext& gc) override;
 
   BoundingBox get_bounding_box() const override;
 

@@ -36,12 +36,12 @@ WorldViewColliderTool::~WorldViewColliderTool()
 }
 
 void
-WorldViewColliderTool::draw_background (ZoomGraphicContext* gc)
+WorldViewColliderTool::draw_background (ZoomGraphicContext& gc)
 {
   Vector2d mouse_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());
   if (m_creating_rect)
     {
-      gc->GraphicContext::draw_rect(m_click_pos, mouse_pos, Colors::selection_rect);
+      gc.GraphicContext::draw_rect(m_click_pos, mouse_pos, Colors::selection_rect);
     }
 }
 
@@ -60,7 +60,7 @@ WorldViewColliderTool::get_collider (const Vector2d& pos)
 }
 
 void
-WorldViewColliderTool::draw_foreground (ZoomGraphicContext* gc)
+WorldViewColliderTool::draw_foreground (ZoomGraphicContext& gc)
 {
   Vector2d mouse_pos
     = WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos ());

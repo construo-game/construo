@@ -32,8 +32,8 @@ public:
 
   virtual Collider* duplicate() const =0;
 
-  virtual void draw (GraphicContext*) =0;
-  virtual void draw_highlight (GraphicContext*) =0;
+  virtual void draw (GraphicContext& gc) =0;
+  virtual void draw_highlight (GraphicContext& gc) =0;
 
   virtual Vector2d get_pos() =0;
   virtual void     set_pos(const Vector2d&) =0;

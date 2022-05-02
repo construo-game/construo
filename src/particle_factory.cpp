@@ -146,7 +146,7 @@ ParticleFactory::update (float delta)
 }
 
 void
-ParticleFactory::draw (ZoomGraphicContext* gc)
+ParticleFactory::draw (ZoomGraphicContext& gc)
 {
   for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
     (*i)->draw(gc);

@@ -141,19 +141,22 @@ WorldViewComponent::draw_grid()
 void
 WorldViewComponent::draw_ground()
 {
-  GraphicContext* const parent_gc = m_gc.get_parent_gc();
+  GraphicContext& parent_gc = *m_gc.get_parent_gc();
 
-  if (m_gc.screen_to_world_y(parent_gc->get_height()) >= 599)
+  if (m_gc.screen_to_world_y(parent_gc.get_height()) >= 599)
   {
     m_gc.draw_fill_rect(m_gc.screen_to_world_x(0),
                         599,
-                        m_gc.screen_to_world_x(parent_gc->get_width()),
-                        m_gc.screen_to_world_y(parent_gc->get_height()),
+                        m_gc.screen_to_world_x(parent_gc.get_width()),
+                        m_gc.screen_to_world_y(parent_gc.get_height()),
                         Colors::ground_color);
 
     Color const color = Colors::ground_grid_color;
 
     float const step_size = 100.0f;
+
+
+    std::cout << "Ground: " << m_gc.get_width() << "x" << m_gc.get_height() << std::endl;
 
     float const start_x = Math::round_to_float(m_gc.screen_to_world_x(0), step_size) - step_size;
     float const end_x   = Math::round_to_float(m_gc.screen_to_world_x(m_gc.get_width()), step_size) + step_size;
@@ -177,19 +180,19 @@ WorldViewComponent::draw_ground()
 
     m_gc.draw_rect(m_gc.screen_to_world_x(0),
                    599,
-                   m_gc.screen_to_world_x(parent_gc->get_width()),
-                   m_gc.screen_to_world_y(parent_gc->get_height()),
+                   m_gc.screen_to_world_x(parent_gc.get_width()),
+                   m_gc.screen_to_world_y(parent_gc.get_height()),
                    Colors::rect_collider_bg);
   }
 }
 
 void
-WorldViewComponent::draw(GraphicContext* parent_gc)
+WorldViewComponent::draw(GraphicContext& parent_gc)
 {
   //int x = gc.screen_to_world_x(input_context->get_mouse_x());
   //int y = gc.screen_to_world_y(input_context->get_mouse_y());
 
-  m_gc.set_parent_gc(parent_gc);
+  m_gc.set_parent_gc(&parent_gc);
 
   if (m_use_grid)
     draw_grid();
@@ -212,7 +215,7 @@ WorldViewComponent::draw(GraphicContext* parent_gc)
     m_gc.zoom_out(get_width()/2, get_height()/2);
   }
 
-  m_current_tool->draw_background(&m_gc);
+  m_current_tool->draw_background(m_gc);
 
   if (0) // draw bounding box
   {
@@ -221,29 +224,29 @@ WorldViewComponent::draw(GraphicContext* parent_gc)
                  Color(1.0f, 1.0f, 1.0f));
   }
 
-  world.draw_colliders(&m_gc);
-  world.draw_springs(&m_gc);
+  world.draw_colliders(m_gc);
+  world.draw_springs(m_gc);
   if (!Controller::instance()->get_hide_dots()) {
-    world.draw_particles(&m_gc);
+    world.draw_particles(m_gc);
   }
 
-  m_current_tool->draw_foreground(&m_gc);
+  m_current_tool->draw_foreground(m_gc);
 
   if (0)
   {
     switch (m_mode)
     {
       case ZOOM_MODE:
-        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[  Zoom Mode  ]");
+        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[  Zoom Mode  ]");
         break;
       case INSERT_MODE:
-        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[ Insert Mode ]");
+        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[ Insert Mode ]");
         break;
       case SELECT_MODE:
-        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[ Select Mode ]");
+        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[ Select Mode ]");
         break;
       case COLLIDER_MODE:
-        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[Collider Mode]");
+        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[Collider Mode]");
         break;
     }
   }

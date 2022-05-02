@@ -59,42 +59,42 @@ Particle::serialize(LispWriter& writer)
 }
 
 void
-Particle::draw_highlight (ZoomGraphicContext* gc)
+Particle::draw_highlight (ZoomGraphicContext& gc)
 {
-  gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+  gc.get_parent_gc()->draw_fill_circle (gc.world_to_screen(pos),
                                          Math::max(6.0f, get_mass() + 3),
                                          Colors::highlight);
 }
 
 void
-Particle::draw_infos (ZoomGraphicContext* gc)
+Particle::draw_infos (ZoomGraphicContext& gc)
 {
-  Vector2d p = gc->world_to_screen(pos);
+  Vector2d p = gc.world_to_screen(pos);
   draw_velocity_vector (gc);
-  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 5.0f),
+  gc.get_parent_gc()->draw_string (p + Vector2d(20.0f, 5.0f),
                                     "Particle: " + to_string (pos));
-  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 25.0f),
+  gc.get_parent_gc()->draw_string (p + Vector2d(20.0f, 25.0f),
                                     "Fixed:    " + to_string (fixed));
-  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 45.0f),
+  gc.get_parent_gc()->draw_string (p + Vector2d(20.0f, 45.0f),
                                     "Mass :    " + to_string (get_mass()));
-  gc->get_parent_gc()->draw_string (p + Vector2d(20.0f, 70.0f),
+  gc.get_parent_gc()->draw_string (p + Vector2d(20.0f, 70.0f),
                                     "Links :    " + to_string (spring_links));
 }
 
 void
-Particle::draw (ZoomGraphicContext* gc)
+Particle::draw (ZoomGraphicContext& gc)
 {
   if (pos.y < 598.5f)
     {
       if (fixed)
         {
-          gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+          gc.get_parent_gc()->draw_fill_circle (gc.world_to_screen(pos),
                                                  4,
                                                  Color(0.6f, 0.6f, 0.6f));
         }
       else
         {
-          gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
+          gc.get_parent_gc()->draw_fill_circle (gc.world_to_screen(pos),
                                                  Math::max(3.0f, get_mass()),
                                                  Color(1.0f, 0.0f, 0.0f));
         }
@@ -102,9 +102,9 @@ Particle::draw (ZoomGraphicContext* gc)
 }
 
 void
-Particle::draw_velocity_vector (ZoomGraphicContext* gc)
+Particle::draw_velocity_vector (ZoomGraphicContext& gc)
 {
-  gc->draw_line (int (pos.x), int (pos.y),
+  gc.draw_line (int (pos.x), int (pos.y),
                  int (pos.x + velocity.x), int (pos.y + velocity.y),
                  Color (0.0f, 0.0f, 1.0f));
 }

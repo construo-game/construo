@@ -16,8 +16,8 @@
 
 #include "colors.hpp"
 
-namespace Colors
-{
+namespace Colors {
+
 Color button_fg_pressed (0xFFFFFFFF);
 Color button_fg_hover   (0x009f9fFF);
 Color button_fg_passive (0x007f7fFF);
@@ -37,9 +37,9 @@ Color highlight         (0xEEEEEEFF);
 
 Color grid_color        (0x444444FF);
 Color grid_color2       (0x666666FF);
-Color ground_color      (0x000066FF);
+Color ground_color      (0x000044FF);
 Color ground_grid_color (0x000073FF);
 
-} // namespace
+} // namespace Colors
 
 /* EOF */

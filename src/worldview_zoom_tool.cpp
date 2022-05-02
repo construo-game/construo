@@ -38,14 +38,14 @@ WorldViewZoomTool::activate ()
 }
 
 void
-WorldViewZoomTool::draw_foreground (ZoomGraphicContext* gc)
+WorldViewZoomTool::draw_foreground (ZoomGraphicContext& gc)
 {
   if (m_creating_zoom_rectangle)
     {
       float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (g_input_context->get_mouse_x ());
       float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (g_input_context->get_mouse_y ());
 
-      gc->draw_rect (Math::min(x, m_click_pos.x),
+      gc.draw_rect (Math::min(x, m_click_pos.x),
                      Math::min(y, m_click_pos.y),
                      Math::max(x, m_click_pos.x),
                      Math::max(y, m_click_pos.y),

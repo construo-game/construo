@@ -152,7 +152,7 @@ World::parse_particles(ReaderCollection const& collection)
 }
 
 void
-World::draw (ZoomGraphicContext* gc)
+World::draw (ZoomGraphicContext& gc)
 {
   // FIXME: This is *not* used in the WorldViewComponent!
 
@@ -164,7 +164,7 @@ World::draw (ZoomGraphicContext* gc)
 }
 
 void
-World::draw_springs(ZoomGraphicContext* gc)
+World::draw_springs(ZoomGraphicContext& gc)
 {
 #ifdef NEW_SPRING_CODE
   std::vector<GraphicContext::Line> lines (springs.size());
@@ -181,7 +181,7 @@ World::draw_springs(ZoomGraphicContext* gc)
       lines[i].x2 = springs[i]->particles.second->pos.x;
       lines[i].y2 = springs[i]->particles.second->pos.y;
     }
-  gc->draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
+  gc.draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
 #else
   for (SpringIter i = m_springs.begin(); i != m_springs.end(); ++i)
     {
@@ -191,13 +191,13 @@ World::draw_springs(ZoomGraphicContext* gc)
 }
 
 void
-World::draw_particles(ZoomGraphicContext* gc)
+World::draw_particles(ZoomGraphicContext& gc)
 {
   m_particle_mgr->draw(gc);
 }
 
 void
-World::draw_colliders(ZoomGraphicContext* gc)
+World::draw_colliders(ZoomGraphicContext& gc)
 {
   for (Colliders::iterator i = m_colliders.begin (); i != m_colliders.end (); ++i)
     {

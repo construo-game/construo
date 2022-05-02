@@ -119,7 +119,7 @@ GUIDirectory::place_components ()
 }
 
 void
-GUIDirectory::draw_overlay (GraphicContext* gc)
+GUIDirectory::draw_overlay (GraphicContext& gc)
 {
 }
 

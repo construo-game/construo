@@ -28,7 +28,7 @@ public:
   GUIWindow (const std::string&, float x, float y, float width, float height);
   ~GUIWindow ();
 
-  void draw(GraphicContext*) override;
+  void draw(GraphicContext&) override;
   void on_mouse_enter() override { m_mouse_over = true; }
   void on_mouse_leave() override { m_mouse_over = false; }
 

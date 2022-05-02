@@ -38,7 +38,7 @@ public:
   GUIFileManager(Mode m);
   ~GUIFileManager();
 
-  void draw_overlay(GraphicContext* gc) override;
+  void draw_overlay(GraphicContext& gc) override;
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */

@@ -43,7 +43,7 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 }
 
 void
-WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
+WorldViewSelectTool::draw_background (ZoomGraphicContext& gc)
 {
   for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
     {
@@ -53,14 +53,14 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext* gc)
 }
 
 void
-WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
+WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x(g_input_context->get_mouse_x ());
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y(g_input_context->get_mouse_y ());
 
   if (m_mode == GETTING_SELECTION_MODE)
     {
-      gc->draw_rect (Math::min(x, m_click_pos.x),
+      gc.draw_rect (Math::min(x, m_click_pos.x),
                      Math::min(y, m_click_pos.y),
                      Math::max(x, m_click_pos.x),
                      Math::max(y, m_click_pos.y),
@@ -81,31 +81,31 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext* gc)
           selection_box.y2 = Math::max(selection_box.y2, (*i)->pos.y);
         }
 
-      float border = 20.0f / gc->get_zoom();
-      gc->draw_rect (selection_box.x1 - border, selection_box.y1 - border,
+      float border = 20.0f / gc.get_zoom();
+      gc.draw_rect (selection_box.x1 - border, selection_box.y1 - border,
                      selection_box.x2 + border, selection_box.y2 + border,
                      Colors::new_spring);
 
       if (0) // draw selection rect
         {
-          float rsize = 5.0f / gc->get_zoom();
-          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
+          float rsize = 5.0f / gc.get_zoom();
+          gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
                               selection_box.x1 - border + rsize, selection_box.y1 - border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize,
+          gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize,
                               selection_box.x2 + border + rsize, selection_box.y1 - border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize,
+          gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize,
                               selection_box.x1 - border + rsize, selection_box.y2 + border + rsize,
                               Colors::selection_resizer);
-          gc->draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize,
+          gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize,
                               selection_box.x2 + border + rsize, selection_box.y2 + border + rsize,
                               Colors::selection_resizer);
         }
 
-      gc->get_parent_gc()->draw_circle(gc->world_to_screen(m_selection.get_center ()),
+      gc.get_parent_gc()->draw_circle(gc.world_to_screen(m_selection.get_center ()),
                                        8.0f, Colors::selection_rect);
-      gc->get_parent_gc()->draw_circle(gc->world_to_screen(m_selection.get_center ()),
+      gc.get_parent_gc()->draw_circle(gc.world_to_screen(m_selection.get_center ()),
                                        16.0f, Colors::selection_rect);
     }
 }

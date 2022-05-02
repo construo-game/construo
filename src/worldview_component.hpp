@@ -49,7 +49,7 @@ public:
   WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
   ZoomGraphicContext* get_gc() { return &m_gc; }
-  void draw(GraphicContext* parent_gc) override;
+  void draw(GraphicContext& parent_gc) override;
 
   void set_mode(Mode m);
   Mode get_mode() { return m_mode; }

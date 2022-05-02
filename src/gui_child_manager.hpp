@@ -41,8 +41,8 @@ public:
     return ptr;
   }
 
-  void draw(GraphicContext* gc) override;
-  virtual void draw_overlay(GraphicContext* gc) {}
+  void draw(GraphicContext& gc) override;
+  virtual void draw_overlay(GraphicContext& gc) {}
 
   void on_primary_button_press(float x, float y) override;
   void on_primary_button_release(float x, float y) override;

@@ -59,7 +59,7 @@ public:
   Particle* lookup_particle (int id);
 
   void update (float delta);
-  void draw (ZoomGraphicContext* gc);
+  void draw (ZoomGraphicContext& gc);
 
   typedef std::vector<Particle*>::const_iterator CParticleIter;
   typedef std::vector<Particle*>::iterator ParticleIter;

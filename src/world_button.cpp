@@ -55,18 +55,18 @@ WorldButton::load_world ()
 }
 
 void
-WorldButton::draw (GraphicContext* parent_gc)
+WorldButton::draw (GraphicContext& parent_gc)
 {
   load_world();
 
-  parent_gc->draw_fill_rect(static_cast<float>(m_x),
+  parent_gc.draw_fill_rect(static_cast<float>(m_x),
                             static_cast<float>(m_y),
                             static_cast<float>(m_x + m_width),
                             static_cast<float>(m_y + m_height),
                             Color (0xBB0000FF));
 
   ZoomGraphicContext gc(m_x, m_y, m_x + m_width, m_y + m_height);
-  gc.set_parent_gc(parent_gc);
+  gc.set_parent_gc(&parent_gc);
 
   gc.lock();
 
@@ -76,8 +76,8 @@ WorldButton::draw (GraphicContext* parent_gc)
     const BoundingBox& box = m_world->calc_bounding_box();
     gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
                static_cast<int>(box.x2),  static_cast<int>(box.y2));
-    m_world->draw_colliders (&gc);
-    m_world->draw_springs (&gc);
+    m_world->draw_colliders(gc);
+    m_world->draw_springs(gc);
   }
   else
   {
@@ -89,19 +89,19 @@ WorldButton::draw (GraphicContext* parent_gc)
   gc.unlock();
 
   if (m_mouse_over)
-    parent_gc->draw_rect(static_cast<float>(m_x),
+    parent_gc.draw_rect(static_cast<float>(m_x),
                          static_cast<float>(m_y),
                          static_cast<float>(m_x +  m_width),
                          static_cast<float>(m_y + m_height),
                          Color (0xFFFFFFFF));
   else
-    parent_gc->draw_rect(static_cast<float>(m_x),
+    parent_gc.draw_rect(static_cast<float>(m_x),
                          static_cast<float>(m_y),
                          static_cast<float>(m_x + m_width),
                          static_cast<float>(m_y + m_height),
                          Color (0xFF0000FF));
 
-  parent_gc->draw_string(static_cast<float>(m_x + 20),
+  parent_gc.draw_string(static_cast<float>(m_x + 20),
                          static_cast<float>(m_y + 160),
                          m_filename);
 }
