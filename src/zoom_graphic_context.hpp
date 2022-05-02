@@ -67,7 +67,7 @@ public:
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
    */
-  bool zoom_in (int x, int y);
+  bool zoom_in (float x, float y);
 
   /**
    * Zoom Into the GraphicContext by one 'unit', using the x and y
@@ -79,7 +79,7 @@ public:
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
    */
-  bool zoom_out (int x, int y);
+  bool zoom_out (float x, float y);
 
   /**
    * Zoom into the given area, all coordinates in world units

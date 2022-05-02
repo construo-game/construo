@@ -193,7 +193,7 @@ set_target_properties(libconstruo PROPERTIES
   CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 target_link_libraries(libconstruo PUBLIC prio::prio)
-# target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS})
+target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS})
 
 if(GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})

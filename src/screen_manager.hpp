@@ -40,7 +40,7 @@ public:
   void quit();
   bool is_finished ();
   void run_once ();
-  void resize(int width, int height);
+  void resize(float width, float height);
 
 private:
   bool m_do_quit;

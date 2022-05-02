@@ -42,7 +42,7 @@ public:
 
   virtual void draw_overlay () {}
 
-  virtual void resize(int width, int height) {}
+  virtual void resize(float width, float height) {}
 
   /** Stops the GUIManager */
   void quit();
@@ -67,7 +67,7 @@ private:
 
 private:
   unsigned int m_frame_count;
-  unsigned int m_start_time;
+  unsigned long m_start_time;
   float m_current_fps;
 
   /** component where the mouse is currently over */

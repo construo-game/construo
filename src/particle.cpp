@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <cmath>
+
 #include "colors.hpp"
 #include "math.hpp"
 #include "lisp_reader.hpp"
@@ -60,7 +62,7 @@ void
 Particle::draw_highlight (ZoomGraphicContext* gc)
 {
   gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
-                                         Math::round(Math::max(6.0f, get_mass() + 3)),
+                                         Math::max(6.0f, get_mass() + 3),
                                          Colors::highlight);
 }
 
@@ -93,7 +95,7 @@ Particle::draw (ZoomGraphicContext* gc)
       else
         {
           gc->get_parent_gc()->draw_fill_circle (gc->world_to_screen(pos),
-                                                 Math::round(Math::max(3.0f, get_mass())),
+                                                 Math::max(3.0f, get_mass()),
                                                  Color(1.0f, 0.0f, 0.0f));
         }
     }

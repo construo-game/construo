@@ -40,7 +40,7 @@ public:
 private:
   World* m_world;
   bool m_file_broken;
-  unsigned int m_mtime;
+  unsigned long m_mtime;
   Mode m_mode;
 
 private:

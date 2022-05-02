@@ -54,11 +54,11 @@ GUIManager::run_once ()
 
   if (m_start_time + 3000 < g_system_context->get_time ())
     {
-      float passed_time = (g_system_context->get_time () - m_start_time) / 1000.0f;
+      float passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
 
       //std::cout << "FPS: " << frame_count / passed_time << std::endl;
 
-      m_current_fps = m_frame_count / passed_time;
+      m_current_fps = static_cast<float>(m_frame_count) / passed_time;
 
       m_frame_count = 0;
       m_start_time  = g_system_context->get_time ();

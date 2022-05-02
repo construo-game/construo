@@ -30,7 +30,7 @@ public:
   WorldGUIManager ();
   virtual ~WorldGUIManager ();
 
-  void resize(int width, int height) override;
+  void resize(float width, float height) override;
 
   void update() override;
   void draw_overlay() override;

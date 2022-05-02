@@ -205,7 +205,7 @@ ZoomGraphicContext::set_parent_gc (GraphicContext* gc)
 }
 
 bool
-ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
+ZoomGraphicContext::zoom_in(float screen_x, float screen_y)
 {
   float const x = screen_to_world_x (screen_x);
   float const y = screen_to_world_y (screen_y);
@@ -232,7 +232,7 @@ ZoomGraphicContext::zoom_in (int screen_x, int screen_y)
 }
 
 bool
-ZoomGraphicContext::zoom_out (int screen_x, int screen_y)
+ZoomGraphicContext::zoom_out (float screen_x, float screen_y)
 {
   float const x = screen_to_world_x(screen_x);
   float const y = screen_to_world_y(screen_y);

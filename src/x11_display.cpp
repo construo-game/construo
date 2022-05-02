@@ -626,7 +626,7 @@ X11Display::read_event ()
                                    DefaultDepth(m_display, DefaultScreen(m_display)));
       }
 
-      ScreenManager::instance()->resize(m_width, m_height);
+      ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
       break;
 
     case DestroyNotify:

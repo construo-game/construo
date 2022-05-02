@@ -206,15 +206,15 @@ WorldGUIManager::~WorldGUIManager ()
 }
 
 void
-WorldGUIManager::resize(int width, int height)
+WorldGUIManager::resize(float width, float height)
 {
   GUIManager::resize(width, height);
 
-  auto BUTTON_POS = [](int n) { return 80 + n * 30; };
-  auto BUTTON_RPOS = [](int n) { return 50 + n * 30; };
-  int const BUTTON_WIDTH = 75;
-  int const BUTTON_HEIGHT = 25;
-  int const BUTTON_LX_POS = g_graphic_context->get_width() - BUTTON_WIDTH - 10;
+  auto BUTTON_POS = [](int n) { return 80.0f + static_cast<float>(n) * 30.0f; };
+  auto BUTTON_RPOS = [](int n) { return 50.0f + static_cast<float>(n) * 30.0f; };
+  float const BUTTON_WIDTH = 75.0f;
+  float const BUTTON_HEIGHT = 25.0f;
+  float const BUTTON_LX_POS = g_graphic_context->get_width() - BUTTON_WIDTH - 10.0f;
 
   m_worldview_component->set_geometry(0, 0, width, height);
 
