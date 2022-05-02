@@ -31,103 +31,6 @@ using namespace StringUtils;
 
 WorldGUIManager* WorldGUIManager::instance_ = nullptr;
 
-
-void increase_particle_mass() {
-  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() + 1.0f);
-}
-
-void decrease_particle_mass() {
-  WorldViewInsertTool& wc = *WorldViewComponent::instance()->get_insert_tool();
-  wc.set_particle_mass(wc.get_particle_mass() - 1.0f);
-}
-
-void switch_to_insert_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE);
-}
-
-bool insert_mode_hfunc() {
-  return WorldViewComponent::instance()->get_mode() == WorldViewComponent::INSERT_MODE;
-}
-
-bool zoom_mode_hfunc() {
-  return WorldViewComponent::instance()->get_mode() == WorldViewComponent::ZOOM_MODE;
-}
-
-bool select_mode_hfunc() {
-  return WorldViewComponent::instance()->get_mode() == WorldViewComponent::SELECT_MODE;
-}
-
-bool collider_mode_hfunc() {
-  return WorldViewComponent::instance()->get_mode() == WorldViewComponent::COLLIDER_MODE;
-}
-
-void switch_to_zoom_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE);
-}
-
-void switch_to_collider_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::COLLIDER_MODE);
-}
-
-void switch_to_select_mode() {
-  WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE);
-}
-
-void save_button_callback() {
-  ScreenManager::instance()->set_gui(ScreenManager::SAVE_GUI);
-}
-
-void action_cam_callback() {
-  Controller::instance()->set_action_cam(!Controller::instance()->get_action_cam());
-}
-
-void zoom_in_callback() {
-  WorldViewComponent::instance()->wheel_up (g_graphic_context->get_width()/2,
-                                            g_graphic_context->get_height()/2);
-}
-
-void zoom_out_callback() {
-  WorldViewComponent::instance()->wheel_down (g_graphic_context->get_width()/2,
-                                              g_graphic_context->get_height()/2);
-
-}
-
-void hide_dots_callback() {
-  Controller& c = *Controller::instance();
-  c.set_hide_dots(!c.get_hide_dots());
-}
-
-bool hide_dots_hfunc ()
-{
-  return Controller::instance()->get_hide_dots();
-}
-
-bool action_cam_hfunc ()
-{
-  return Controller::instance()->get_action_cam();
-}
-
-bool show_grid_hfunc()
-{
-  return WorldViewComponent::instance()->uses_grid();
-}
-
-void show_grid_callback()
-{
-  WorldViewComponent::instance()->on_grid_press(0, 0);
-}
-
-void redo_callback ()
-{
-  return Controller::instance()->redo();
-}
-
-void undo_callback ()
-{
-  return Controller::instance()->undo();
-}
-
 WorldGUIManager::WorldGUIManager() :
   m_worldview_component(),
   m_run_button(),
@@ -152,27 +55,79 @@ WorldGUIManager::WorldGUIManager() :
   m_worldview_component = create<WorldViewComponent>();
 
   // simulation
-  m_run_button = create<GUIRunButton>();
-  m_slowmo_button = create<GUISlowMoButton>();
-  m_load_button = create<GUILoadButton>();
-  m_save_button = create<GUIGenericButton>("Save", save_button_callback);
+  m_run_button = create<GUIGenericButton>(
+    "Run",
+    []{ Controller::instance()->start_simulation(); },
+    []{ return Controller::instance()->is_running (); });
 
-  m_undo_button = create<GUIGenericButton>("Undo", undo_callback);
-  m_redo_button = create<GUIGenericButton>("Redo", redo_callback);
+  m_slowmo_button = create<GUIGenericButton>(
+    "SlowMotion",
+    []{ Controller::instance()->set_slow_down(!Controller::instance()->slow_down_active ()); },
+    []{ return Controller::instance()->slow_down_active(); });
 
-  m_actioncam_button = create<GUIGenericButton>("ActionCam", action_cam_callback, action_cam_hfunc);
-  m_dots_button = create<GUIGenericButton>("Hide Dots", hide_dots_callback, hide_dots_hfunc);
-  m_grid_button = create<GUIGenericButton>("Use Grid", show_grid_callback, show_grid_hfunc);
-  m_quit_button = create<GUIQuitButton>();
+  m_load_button = create<GUIGenericButton>(
+    "Load",
+    []{ ScreenManager::instance()->set_gui(ScreenManager::LOAD_GUI); });
+
+  m_save_button = create<GUIGenericButton>(
+    "Save",
+    []{ ScreenManager::instance()->set_gui(ScreenManager::SAVE_GUI); });
+
+  m_undo_button = create<GUIGenericButton>(
+    "Undo",
+    []{ return Controller::instance()->undo(); });
+  m_redo_button = create<GUIGenericButton>(
+    "Redo",
+    []{ return Controller::instance()->redo(); });
+
+  m_actioncam_button = create<GUIGenericButton>(
+    "ActionCam",
+    []{ Controller::instance()->set_action_cam(!Controller::instance()->get_action_cam()); },
+    []{ return Controller::instance()->get_action_cam(); });
+
+  m_dots_button = create<GUIGenericButton>(
+    "Hide Dots",
+    []{ Controller::instance()->set_hide_dots(!Controller::instance()->get_hide_dots()); },
+    []{ return Controller::instance()->get_hide_dots(); });
+
+  m_grid_button = create<GUIGenericButton>(
+    "Use Grid",
+    []{ WorldViewComponent::instance()->on_grid_press(0, 0); },
+    []{ return WorldViewComponent::instance()->uses_grid(); });
+
+  m_quit_button = create<GUIGenericButton>("Quit", []{
+    ScreenManager::instance()->quit();
+  });
 
   // toolbar
-  m_insert_button = create<GUIGenericButton>("Insert", switch_to_insert_mode, insert_mode_hfunc);
-  m_select_button = create<GUIGenericButton>("Select", switch_to_select_mode, select_mode_hfunc);
-  m_collider_button = create<GUIGenericButton>("Collider", switch_to_collider_mode, collider_mode_hfunc);
-  m_zoom_button = create<GUIGenericButton>("Zoom", switch_to_zoom_mode, zoom_mode_hfunc);
+  m_insert_button = create<GUIGenericButton>(
+    "Insert",
+    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE); },
+    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::INSERT_MODE; });
 
-  m_zoomout_button = create<GUIGenericButton>("-", zoom_out_callback);
-  m_zoomin_button = create<GUIGenericButton>("+", zoom_in_callback);
+  m_select_button = create<GUIGenericButton>(
+    "Select",
+    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE); },
+    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::SELECT_MODE; });
+
+  m_collider_button = create<GUIGenericButton>(
+    "Collider",
+    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::COLLIDER_MODE); },
+    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::COLLIDER_MODE; });
+
+  m_zoom_button = create<GUIGenericButton>(
+    "Zoom",
+    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE); },
+    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::ZOOM_MODE; });
+
+  m_zoomout_button = create<GUIGenericButton>(
+    "-",
+    []{ WorldViewComponent::instance()->wheel_up(g_graphic_context->get_width()/2,
+                                                 g_graphic_context->get_height()/2); });
+  m_zoomin_button = create<GUIGenericButton>(
+    "+",
+    []{ WorldViewComponent::instance()->wheel_down(g_graphic_context->get_width()/2,
+                                                   g_graphic_context->get_height()/2); });
 
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
 #if 0
@@ -182,7 +137,10 @@ WorldGUIManager::WorldGUIManager() :
 
     create<GUILabel>("Stiffness",   550, 280, 75, 25);
 
-    create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
+    []{ WorldViewComponent::instance()->get_insert_tool()->set_particle_mass(wc.get_particle_mass() + 1.0f); }
+      []{ WorldViewComponent::instance()->get_insert_tool()->set_particle_mass(wc.get_particle_mass() - 1.0f); }
+
+      create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
     create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
 
     create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);

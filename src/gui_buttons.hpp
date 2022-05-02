@@ -41,7 +41,7 @@ public:
   void draw (GraphicContext& gc) override;
 
   virtual void draw_content(GraphicContext& gc);
-  virtual void on_click ();
+  virtual void on_click() = 0;
 
 protected:
   std::string m_title;
@@ -49,71 +49,40 @@ protected:
   bool m_pressed;
 };
 
-class GUIRunButton : public GUIButton
-{
-public:
-  GUIRunButton ();
-  void draw_content(GraphicContext& gc) override;
-  void on_click() override;
-};
-
-class GUISlowMoButton : public GUIButton
-{
-public:
-  GUISlowMoButton ();
-  void draw_content(GraphicContext& gc) override;
-  void on_click() override;
-};
-
-class GUIQuitButton : public GUIButton
-{
-public:
-  GUIQuitButton ();
-  void on_click() override;
-};
-
-class GUILoadButton : public GUIButton
-{
-public:
-  GUILoadButton ();
-  void on_click() override;
-};
-
-inline bool always_false()
-{
-  return false;
-}
-
 class GUIGenericButton : public GUIButton
 {
 public:
-  using Func = std::function<void ()>;
-  using HighlightFunc = std::function<bool ()>;
+  using OnClickSignal = std::function<void ()>;
+  using HighlightPred = std::function<bool ()>;
 
 public:
-  GUIGenericButton (const std::string& title, float x, float y, float width, float height,
-                    Func func, HighlightFunc hfunc = always_false) :
+  GUIGenericButton(const std::string& title,
+                   float x, float y, float width, float height,
+                   OnClickSignal sig_on_click,
+                   HighlightPred sig_highlight_p = []{ return false; }) :
     GUIButton(title, x, y, width, height),
-    m_func(func),
-    m_hfunc(hfunc)
+    m_sig_on_click(std::move(sig_on_click)),
+    m_sig_highlight_p(std::move(sig_highlight_p))
   {
   }
 
-  GUIGenericButton (const std::string& title, Func func, HighlightFunc hfunc = always_false) :
+  GUIGenericButton(const std::string& title,
+                   OnClickSignal sig_on_click,
+                   HighlightPred sig_highlight_p = []{ return false; }) :
     GUIButton(title),
-    m_func(func),
-    m_hfunc(hfunc)
+    m_sig_on_click(std::move(sig_on_click)),
+    m_sig_highlight_p(std::move(sig_highlight_p))
   {
   }
 
   void on_click() override
   {
-    m_func();
+    m_sig_on_click();
   }
 
   void draw_content(GraphicContext& gc) override
   {
-    if (m_hfunc()) {
+    if (m_sig_highlight_p()) {
       gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
                         Colors::button_bg_active);
     }
@@ -122,8 +91,8 @@ public:
   }
 
 private:
-  Func m_func;
-  HighlightFunc m_hfunc;
+  OnClickSignal m_sig_on_click;
+  HighlightPred m_sig_highlight_p;
 };
 
 #endif
