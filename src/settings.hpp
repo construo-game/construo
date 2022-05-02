@@ -53,7 +53,7 @@ public:
   Settings();
 };
 
-extern Settings settings;
+extern Settings g_settings;
 
 #endif
 

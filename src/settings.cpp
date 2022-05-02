@@ -16,7 +16,7 @@
 
 #include "settings.hpp"
 
-Settings settings;
+Settings g_settings;
 
 Settings::Settings () :
   fullscreen(false),

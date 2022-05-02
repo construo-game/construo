@@ -109,14 +109,14 @@ GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
   glutSpecialFunc(::special_func);
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
-  if (settings.alphablending)
+  if (g_settings.alphablending)
   {
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
 
-  if (settings.antialiasing && settings.alphablending)
+  if (g_settings.antialiasing && g_settings.alphablending)
   {
     glEnable(GL_LINE_SMOOTH);
   }
@@ -150,7 +150,7 @@ GlutDisplay::~GlutDisplay()
 void
 GlutDisplay::draw_lines(std::vector<Line>& lines, Color color, int wide)
 {
-  if (settings.thick_lines) {
+  if (g_settings.thick_lines) {
     glLineWidth(static_cast<float>(wide));
   }
 
@@ -166,7 +166,7 @@ GlutDisplay::draw_lines(std::vector<Line>& lines, Color color, int wide)
 void
 GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
 {
-  if (settings.thick_lines)
+  if (g_settings.thick_lines)
     glLineWidth(static_cast<float>(wide));
 
   glColor4f(color.r, color.g, color.b, color.a);
@@ -179,7 +179,7 @@ GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int 
 void
 GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  if (settings.thick_lines)
+  if (g_settings.thick_lines)
     glLineWidth(2);
 
   glColor4f(color.r, color.g, color.b, color.a);
@@ -195,7 +195,7 @@ GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 void
 GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
-  if (settings.thick_lines)
+  if (g_settings.thick_lines)
     glLineWidth(.5f);
 
   glColor4f(color.r, color.g, color.b, color.a);
@@ -255,7 +255,7 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 void
 GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 {
-  if (settings.thick_lines)
+  if (g_settings.thick_lines)
     glLineWidth(1.0f);
 
   glColor4f(color.r, color.g, color.b, color.a);
@@ -631,7 +631,7 @@ GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
 void
 GlutDisplay::push_quick_draw()
 {
-  if (settings.antialiasing && settings.alphablending)
+  if (g_settings.antialiasing && g_settings.alphablending)
   {
     glDisable(GL_LINE_SMOOTH);
   }
@@ -640,7 +640,7 @@ GlutDisplay::push_quick_draw()
 void
 GlutDisplay::pop_quick_draw()
 {
-  if (settings.antialiasing && settings.alphablending)
+  if (g_settings.antialiasing && g_settings.alphablending)
   {
     glEnable(GL_LINE_SMOOTH);
   }

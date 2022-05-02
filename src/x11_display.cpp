@@ -49,7 +49,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_cursor_collider(),
   m_cursor_collider_pix(),
   m_cursor_collider_mask(),
-  m_doublebuffer(settings.doublebuffer),
+  m_doublebuffer(g_settings.doublebuffer),
   m_orig_viewport_x(),
   m_orig_viewport_y(),
   m_orig_dotclock(),
@@ -156,7 +156,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   gcv.foreground = 0xFFFFFF;
   gcv.background = 0x000000;
 
-  if (settings.thick_lines)
+  if (g_settings.thick_lines)
     gcv.line_width = 2;
   else
     gcv.line_width = 0;

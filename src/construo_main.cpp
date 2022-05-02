@@ -93,10 +93,10 @@ ConstruoMain::init_system()
 
   system = std::make_unique<UnixSystem>();
 #ifdef USE_X11_DISPLAY
-  display = std::make_unique<X11Display>(settings.screen_width, settings.screen_height,
-                                         settings.fullscreen);
+  display = std::make_unique<X11Display>(g_settings.screen_width, g_settings.screen_height,
+                                         g_settings.fullscreen);
 #elif USE_GLUT_DISPLAY
-  display = std::make_unique<GlutDisplay>(settings.screen_width, settings.screen_height, settings.fullscreen);
+  display = std::make_unique<GlutDisplay>(g_settings.screen_width, g_settings.screen_height, g_settings.fullscreen);
 #else
 #  error "No display type defined"
 #endif
@@ -128,8 +128,8 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     std::cout << "If you have throuble with programm startup, delete the file:\n\n"
               << "    " << g_system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
 
-    if (!settings.datadir.empty())
-      path_manager.add_path(settings.datadir);
+    if (!g_settings.datadir.empty())
+      path_manager.add_path(g_settings.datadir);
 
     path_manager.add_path(".");
     path_manager.add_path("..");
@@ -142,9 +142,9 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     gui_manager = std::make_unique<GUIManager>();
 
-    if (!settings.startup_file.empty())
+    if (!g_settings.startup_file.empty())
       {
-        controller  = new Controller (settings.startup_file);
+        controller  = new Controller (g_settings.startup_file);
       }
     else
       {

@@ -42,7 +42,7 @@ CommandLine::parse (int argc, char** argv)
           if (strcmp(argv[i], "--fullscreen") == 0
               || strcmp(argv[i], "-f") == 0)
             {
-              settings.fullscreen = true;
+              g_settings.fullscreen = true;
             }
           else if (strcmp(argv[i], "--version") == 0
                    || strcmp(argv[i], "-v") == 0)
@@ -58,25 +58,25 @@ CommandLine::parse (int argc, char** argv)
             }
           else if (strcmp(argv[i], "--disable-alphablending") == 0)
             {
-              settings.alphablending = false;
+              g_settings.alphablending = false;
             }
           else if (strcmp(argv[i], "--disable-antialiasing") == 0
                    || strcmp(argv[i], "-d") == 0)
             {
-              settings.antialiasing = false;
+              g_settings.antialiasing = false;
             }
           else if (strcmp(argv[i], "--disable-thicklines") == 0
                    || strcmp(argv[i], "-l") == 0)
             {
-              settings.thick_lines = false;
+              g_settings.thick_lines = false;
             }
           else if (strcmp(argv[i], "--disable-doublebuffer") == 0)
             {
-              settings.doublebuffer = false;
+              g_settings.doublebuffer = false;
             }
           else if (strcmp(argv[i], "--datadir") == 0)
             {
-              settings.datadir = argv[++i];
+              g_settings.datadir = argv[++i];
             }
           else if (strcmp(argv[i], "-g") == 0
                    || strcmp(argv[i], "--geometry") == 0)
@@ -85,7 +85,7 @@ CommandLine::parse (int argc, char** argv)
                 {
                   char c;
                   if (sscanf(argv[i], "%d%c%d",
-                             &settings.screen_width, &c, &settings.screen_height) != 3 && c != 'x')
+                             &g_settings.screen_width, &c, &g_settings.screen_height) != 3 && c != 'x')
                     {
                       error ("geometry string must WIDTHxHEIGHT");
                     }
@@ -102,13 +102,13 @@ CommandLine::parse (int argc, char** argv)
         }
       else
         {
-          if (!settings.startup_file.empty())
+          if (!g_settings.startup_file.empty())
             {
               error ("Only one filename can be given");
             }
           else
             {
-              settings.startup_file = argv[i];
+              g_settings.startup_file = argv[i];
             }
         }
     }
