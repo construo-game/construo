@@ -314,14 +314,19 @@ GlutDisplay::flip ()
 void
 GlutDisplay::reshape_func(int w, int h)
 {
-  std::cout << "Reshape: " << w << " " << h << std::endl;
   glViewport (0,0, w, h);
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluOrtho2D (0, w, h, 0);
+
   glMatrixMode(GL_MODELVIEW);
   width  = w;
   height = h;
+
+  glScissor(0, 0, width, height);
+
+  ScreenManager::instance()->resize(static_cast<float>(width), static_cast<float>(height));
 }
 
 void
