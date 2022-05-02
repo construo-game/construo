@@ -27,42 +27,14 @@ class GlutDisplay : public RootGraphicContext,
 private:
   static GlutDisplay* instance_;
 
-  /** X-Position of the glut window, used in fullscreen to allow a
-      restore */
-  int window_x_pos;
-
-  /** Y-Position of the glut window, used in fullscreen to allow a
-      restore */
-  int window_y_pos;
-
-  /** Width of the window, used to restore after fullscreen */
-  int window_width;
-
-  /** height of the window, used to restore after fullscreen */
-  int window_height;
-
-  /** The actual size of the current screen/window */
-  int width;
-
-  /** The actual size of the current screen/window */
-  int height;
-
-  int mouse_x;
-  int mouse_y;
-
-  bool block;
-
-  int update_display;
-
-  bool is_fullscreen;
+public:
+  static GlutDisplay* instance() { return instance_; }
 
 public:
-  static GlutDisplay* instance () { return instance_; }
-
-  GlutDisplay (int w, int h, int fullscreen);
+  GlutDisplay(int w, int h, int fullscreen);
   virtual ~GlutDisplay();
 
-  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
   void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
@@ -72,13 +44,13 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  void clear () override;
-  void flip () override;
+  void clear() override;
+  void flip() override;
 
-  bool get_fullscreen () { return is_fullscreen; }
+  bool get_fullscreen() { return m_is_fullscreen; }
 
-  float get_width() override { return static_cast<float>(width); }
-  float get_height() override { return static_cast<float>(height); }
+  float get_width() override { return static_cast<float>(m_width); }
+  float get_height() override { return static_cast<float>(m_height); }
 
   bool get_key(int key) override;
   float get_mouse_x() override;
@@ -87,14 +59,14 @@ public:
   void run();
   void set_cursor_real(CursorType) override;
   void reshape_func(int w, int h);
-  void display_func ();
-  void mouse_func (int button, int button_state, int x, int y);
-  void idle_func ();
-  void keyboard_func (unsigned char key, int x, int y);
-  void special_func (int key, int x, int y);
-  void mouse_motion_func (int x, int y);
+  void display_func();
+  void mouse_func(int button, int button_state, int x, int y);
+  void idle_func();
+  void keyboard_func(unsigned char key, int x, int y);
+  void special_func(int key, int x, int y);
+  void mouse_motion_func(int x, int y);
 
-  void set_clip_rect (float x1, float y1, float x2, float y2) override;
+  void set_clip_rect(float x1, float y1, float x2, float y2) override;
 
   void push_quick_draw() override;
   void pop_quick_draw() override;
@@ -103,8 +75,38 @@ public:
   void leave_fullscreen() override;
 
 private:
-  GlutDisplay (const GlutDisplay&);
-  GlutDisplay& operator= (const GlutDisplay&);
+  /** X-Position of the glut window, used in fullscreen to allow a
+      restore */
+  int m_window_x_pos;
+
+  /** Y-Position of the glut window, used in fullscreen to allow a
+      restore */
+  int m_window_y_pos;
+
+  /** Width of the window, used to restore after fullscreen */
+  int m_window_width;
+
+  /** height of the window, used to restore after fullscreen */
+  int m_window_height;
+
+  /** The actual size of the current screen/window */
+  int m_width;
+
+  /** The actual size of the current screen/window */
+  int m_height;
+
+  int m_mouse_x;
+  int m_mouse_y;
+
+  bool m_block;
+
+  int m_update_display;
+
+  bool m_is_fullscreen;
+
+public:
+  GlutDisplay(const GlutDisplay&) = delete;
+  GlutDisplay& operator=(const GlutDisplay&) = delete;
 };
 
 #endif

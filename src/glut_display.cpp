@@ -40,54 +40,50 @@ void reshape_func(int w, int h)
   GlutDisplay::instance()->reshape_func(w, h);
 }
 
-void display_func ()
+void display_func()
 {
   GlutDisplay::instance()->display_func();
 }
 
-void mouse_func (int button, int button_state, int x, int y)
+void mouse_func(int button, int button_state, int x, int y)
 {
   GlutDisplay::instance()->mouse_func(button, button_state, x, y);
 }
 
-void idle_func ()
+void idle_func()
 {
   GlutDisplay::instance()->idle_func();
 }
 
-void keyboard_func (unsigned char key, int x, int y)
+void keyboard_func(unsigned char key, int x, int y)
 {
   GlutDisplay::instance()->keyboard_func(key, x, y);
 }
 
-void special_func (int key, int x, int y)
+void special_func(int key, int x, int y)
 {
   GlutDisplay::instance()->special_func(key, x, y);
 }
 
-void mouse_motion_func (int x, int y)
+void mouse_motion_func(int x, int y)
 {
   GlutDisplay::instance()->mouse_motion_func(x, y);
 }
 
-GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
-  window_x_pos(),
-  window_y_pos(),
-  window_width(),
-  window_height(),
-  width(),
-  height(),
-  mouse_x(),
-  mouse_y(),
-  block(),
-  update_display(),
-  is_fullscreen()
+GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
+  m_window_x_pos(),
+  m_window_y_pos(),
+  m_window_width(),
+  m_window_height(),
+  m_width(w),
+  m_height(h),
+  m_mouse_x(),
+  m_mouse_y(),
+  m_block(),
+  m_update_display(0),
+  m_is_fullscreen()
 {
   instance_ = this;
-
-  update_display = 0;
-  width  = w;
-  height = h;
 
   int argc = 1;
   char* argv[2];
@@ -97,7 +93,7 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
   free(argv[0]);
 
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowSize(width, height);
+  glutInitWindowSize(m_width, m_height);
   //glutInitWindowPosition(100, 100); don't care
   glutSetWindow(glutCreateWindow(construo_main->get_title()));
 
@@ -105,17 +101,17 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
   glutReshapeFunc(::reshape_func);
   glutMouseFunc(::mouse_func);
 
-  glutMotionFunc (::mouse_motion_func);
-  glutPassiveMotionFunc (::mouse_motion_func);
+  glutMotionFunc(::mouse_motion_func);
+  glutPassiveMotionFunc(::mouse_motion_func);
 
-  glutIdleFunc (::idle_func);
+  glutIdleFunc(::idle_func);
   glutKeyboardFunc(::keyboard_func);
   glutSpecialFunc(::special_func);
 
-  glClearColor (0.0f, 0.0f, 0.0f, 0.1f);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
   if (settings.alphablending)
   {
-    glShadeModel (GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
@@ -129,13 +125,14 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
 
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
-  window_x_pos = 0;
-  window_y_pos = 0;
-  window_width  = w;
-  window_height = h;
+  m_window_x_pos = 0;
+  m_window_y_pos = 0;
+  m_window_width  = w;
+  m_window_height = h;
 
-  if (fullscreen)
+  if (fullscreen) {
     enter_fullscreen();
+  }
 }
 
 void
@@ -151,18 +148,19 @@ GlutDisplay::~GlutDisplay()
 }
 
 void
-GlutDisplay::draw_lines (std::vector<Line>& lines, Color color, int wide)
+GlutDisplay::draw_lines(std::vector<Line>& lines, Color color, int wide)
 {
-  if (settings.thick_lines)
+  if (settings.thick_lines) {
     glLineWidth(static_cast<float>(wide));
+  }
 
-  glBegin (GL_LINES);
+  glBegin(GL_LINES);
   for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
-    {
-      glVertex2f (i->x1, i->y1);
-      glVertex2f (i->x2, i->y2);
-    }
-  glEnd ();
+  {
+    glVertex2f(i->x1, i->y1);
+    glVertex2f(i->x2, i->y2);
+  }
+  glEnd();
 }
 
 void
@@ -171,105 +169,105 @@ GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int 
   if (settings.thick_lines)
     glLineWidth(static_cast<float>(wide));
 
-  glColor4f (color.r, color.g, color.b, color.a);
-  glBegin (GL_LINES);
-  glVertex2f (x1, y1);
-  glVertex2f (x2, y2);
-  glEnd ();
+  glColor4f(color.r, color.g, color.b, color.a);
+  glBegin(GL_LINES);
+  glVertex2f(x1, y1);
+  glVertex2f(x2, y2);
+  glEnd();
 }
 
 void
 GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   if (settings.thick_lines)
-    glLineWidth (2);
+    glLineWidth(2);
 
-  glColor4f (color.r, color.g, color.b, color.a);
-  glBegin (GL_LINE_STRIP);
-  glVertex2f (x1, y1);
-  glVertex2f (x2, y1);
-  glVertex2f (x2, y2);
-  glVertex2f (x1, y2);
-  glVertex2f (x1, y1);
-  glEnd ();
+  glColor4f(color.r, color.g, color.b, color.a);
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(x1, y1);
+  glVertex2f(x2, y1);
+  glVertex2f(x2, y2);
+  glVertex2f(x1, y2);
+  glVertex2f(x1, y1);
+  glEnd();
 }
 
 void
 GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   if (settings.thick_lines)
-    glLineWidth (.5f);
+    glLineWidth(.5f);
 
-  glColor4f (color.r, color.g, color.b, color.a);
-  glBegin (GL_QUADS);
-  glVertex2f (x1, y1);
-  glVertex2f (x2, y1);
-  glVertex2f (x2, y2);
-  glVertex2f (x1, y2);
-  glEnd ();
+  glColor4f(color.r, color.g, color.b, color.a);
+  glBegin(GL_QUADS);
+  glVertex2f(x1, y1);
+  glVertex2f(x2, y1);
+  glVertex2f(x2, y2);
+  glVertex2f(x1, y2);
+  glEnd();
 }
 
 void
 GlutDisplay::draw_circles(std::vector<Circle>& circles, Color color)
 {
   for (std::vector<Circle>::iterator i = circles.begin(); i != circles.end(); ++i)
-    {
-      draw_circle(i->x, i->y, i->r, color);
-    }
+  {
+    draw_circle(i->x, i->y, i->r, color);
+  }
 }
 
 void
 GlutDisplay::draw_circle(float x, float y, float r, Color color)
 {
-  glColor4f (color.r, color.g, color.b, color.a);
+  glColor4f(color.r, color.g, color.b, color.a);
 
-  GLUquadricObj* qobj = gluNewQuadric ();
+  GLUquadricObj* qobj = gluNewQuadric();
   gluQuadricDrawStyle(qobj, GLU_SILHOUETTE);
-  //gluQuadricNormals (qobj, GLU_FLAT);
+  //gluQuadricNormals(qobj, GLU_FLAT);
   glPushMatrix();
-  glTranslatef (x, y, 0);
-  gluDisk (qobj, 0, r, 8, 1);
-  /*draw_rect (x - r, y - r, x + r, y + r,
+  glTranslatef(x, y, 0);
+  gluDisk(qobj, 0, r, 8, 1);
+  /*draw_rect(x - r, y - r, x + r, y + r,
     color);*/
-  glPopMatrix ();
-  gluDeleteQuadric (qobj);
+  glPopMatrix();
+  gluDeleteQuadric(qobj);
 }
 
 void
 GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 {
-  glColor4f (color.r, color.g, color.b, color.a);
-  //draw_fill_rect (x - r, y - r, x + r, y + r,
+  glColor4f(color.r, color.g, color.b, color.a);
+  //draw_fill_rect(x - r, y - r, x + r, y + r,
   //              color);
 
-  GLUquadricObj* qobj = gluNewQuadric ();
+  GLUquadricObj* qobj = gluNewQuadric();
   gluQuadricDrawStyle(qobj, GLU_FILL);
-  //gluQuadricNormals (qobj, GLU_FLAT);
+  //gluQuadricNormals(qobj, GLU_FLAT);
   glPushMatrix();
-  glTranslatef (x, y, 0);
-  gluDisk (qobj, 0, r, 8, 1);
-  /*draw_rect (x - r, y - r, x + r, y + r,
+  glTranslatef(x, y, 0);
+  gluDisk(qobj, 0, r, 8, 1);
+  /*draw_rect(x - r, y - r, x + r, y + r,
     color);*/
-  glPopMatrix ();
-  gluDeleteQuadric (qobj);
+  glPopMatrix();
+  gluDeleteQuadric(qobj);
 }
 
 void
 GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 {
   if (settings.thick_lines)
-    glLineWidth (1.0f);
+    glLineWidth(1.0f);
 
-  glColor4f (color.r, color.g, color.b, color.a);
+  glColor4f(color.r, color.g, color.b, color.a);
   glPushMatrix();
-  glTranslatef (x , y, 0);
-  glScalef (.07f, -.07f, 0);
+  glTranslatef(x , y, 0);
+  glScalef(.07f, -.07f, 0);
 
-  for (std::string::const_iterator i = str.begin (); i != str.end (); ++i)
-    {
-      glutStrokeCharacter  (GLUT_STROKE_MONO_ROMAN, *i);
-      //glutStrokeWidth (GLUT_STROKE_MONO_ROMAN, *i);
-    }
+  for (std::string::const_iterator i = str.begin(); i != str.end(); ++i)
+  {
+    glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *i);
+    //glutStrokeWidth(GLUT_STROKE_MONO_ROMAN, *i);
+  }
   glPopMatrix();
 }
 
@@ -282,31 +280,31 @@ GlutDisplay::draw_string_centered(float x, float y, const std::string& str, Colo
 }
 
 bool
-GlutDisplay::get_key (int key)
+GlutDisplay::get_key(int key)
 {
   return false;
 }
 
 float
-GlutDisplay::get_mouse_x ()
+GlutDisplay::get_mouse_x()
 {
-  return static_cast<float>(mouse_x);
+  return static_cast<float>(m_mouse_x);
 }
 
 float
-GlutDisplay::get_mouse_y ()
+GlutDisplay::get_mouse_y()
 {
-  return static_cast<float>(mouse_y);
+  return static_cast<float>(m_mouse_y);
 }
 
 void
-GlutDisplay::clear ()
+GlutDisplay::clear()
 {
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void
-GlutDisplay::flip ()
+GlutDisplay::flip()
 {
   glutSwapBuffers();
 }
@@ -314,32 +312,32 @@ GlutDisplay::flip ()
 void
 GlutDisplay::reshape_func(int w, int h)
 {
-  glViewport (0,0, w, h);
+  glViewport(0,0, w, h);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D (0, w, h, 0);
+  gluOrtho2D(0, w, h, 0);
 
   glMatrixMode(GL_MODELVIEW);
-  width  = w;
-  height = h;
+  m_width  = w;
+  m_height = h;
 
-  glScissor(0, 0, width, height);
+  glScissor(0, 0, m_width, m_height);
 
-  ScreenManager::instance()->resize(static_cast<float>(width), static_cast<float>(height));
+  ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
 }
 
 void
-GlutDisplay::display_func ()
+GlutDisplay::display_func()
 {
   ScreenManager::instance()->run_once();
 }
 
 void
-GlutDisplay::mouse_func (int button, int button_state, int x, int y)
+GlutDisplay::mouse_func(int button, int button_state, int x, int y)
 {
-  mouse_x = x;
-  mouse_y = y;
+  m_mouse_x = x;
+  m_mouse_y = y;
 
   Event event;
   event.type = BUTTON_EVENT;
@@ -352,7 +350,7 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
     event.button.pressed = false;
 
   switch (button)
-    {
+  {
     case 0:
       event.button.id = BUTTON_PRIMARY;
       break;
@@ -371,44 +369,44 @@ GlutDisplay::mouse_func (int button, int button_state, int x, int y)
     default:
       std::cout << "GlutDisplay: Unhandle mouse button press: " << button << " " << button_state << std::endl;
       return;
-    }
-  events.push (event);
+  }
+  events.push(event);
 }
 
 void
-GlutDisplay::idle_func ()
+GlutDisplay::idle_func()
 {
   /*  if (Controller::instance()->is_running() || update_display > 0)
       {
-      //system_context->sleep (0); // limit CPU usage via brute force
+      //system_context->sleep(0); // limit CPU usage via brute force
       update_display = 0;
       }*/
-  if (!ScreenManager::instance ()->is_finished())
-    {
-      ScreenManager::instance ()->run_once();
-    }
+  if (!ScreenManager::instance()->is_finished())
+  {
+    ScreenManager::instance()->run_once();
+  }
   else
-    {
-      construo_main->exit();
-    }
+  {
+    construo_main->exit();
+  }
 }
 
 void
-GlutDisplay::special_func (int key, int x, int y)
+GlutDisplay::special_func(int key, int x, int y)
 {
   switch (key)
-    {
+  {
     case GLUT_KEY_F11:
-      if (is_fullscreen)
+      if (m_is_fullscreen)
         leave_fullscreen();
       else
         enter_fullscreen();
       break;
-    }
+  }
 }
 
 void
-GlutDisplay::keyboard_func (unsigned char key, int x, int y)
+GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 {
   //std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
 
@@ -417,7 +415,7 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
   event.button.pressed = true;
 
   switch (key)
-    {
+  {
     case 127: // Delete
       event.button.id = BUTTON_DELETE;
       break;
@@ -566,30 +564,30 @@ GlutDisplay::keyboard_func (unsigned char key, int x, int y)
       //std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: "
       //        << x << ", " << y << std::endl;
       return;
-    }
+  }
 
   events.push(event);
 }
 
 void
-GlutDisplay::mouse_motion_func (int x, int y)
+GlutDisplay::mouse_motion_func(int x, int y)
 {
   //std::cout << "Motion: " << x << " " << y << std::endl;
-  mouse_x = x;
-  mouse_y = y;
+  m_mouse_x = x;
+  m_mouse_y = y;
 }
 
 void
 GlutDisplay::leave_fullscreen()
 {
   std::cout << "GlutDisplay: leaving fullscreen: restoring to: pos: "
-            << window_x_pos << ", " << window_y_pos << " - WxH: "
-            << window_width << ", " << window_height << std::endl;
+            << m_window_x_pos << ", " << m_window_y_pos << " - WxH: "
+            << m_window_width << ", " << m_window_height << std::endl;
 
-  glutReshapeWindow(window_width, window_height);
-  glutPositionWindow(window_x_pos, window_y_pos);
+  glutReshapeWindow(m_window_width, m_window_height);
+  glutPositionWindow(m_window_x_pos, m_window_y_pos);
 
-  is_fullscreen = false;
+  m_is_fullscreen = false;
 }
 
 void
@@ -597,7 +595,7 @@ GlutDisplay::enter_fullscreen()
 {
 #if 0
   char mode[64];
-  snprintf (mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
+  snprintf(mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
   std::cout << "GlutDisplay: switching to: " << mode << std::endl;
   glutGameModeString(mode);
   glutEnterGameMode();
@@ -605,17 +603,17 @@ GlutDisplay::enter_fullscreen()
 #else
   std::cout << "GlutDisplay: Entering fullscreen" << std::endl;
 
-  window_x_pos  = glutGet((GLenum)GLUT_WINDOW_X);
-  window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
-  window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
-  window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
+  m_window_x_pos  = glutGet((GLenum)GLUT_WINDOW_X);
+  m_window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
+  m_window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
+  m_window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
 
-  std::cout << "Saving window: " << window_x_pos << ", " << window_y_pos << " - WxH: "
-            << window_width << ", " << window_height << std::endl;
+  std::cout << "Saving window: " << m_window_x_pos << ", " << m_window_y_pos << " - WxH: "
+            << m_window_width << ", " << m_window_height << std::endl;
 
   glutFullScreen();
 
-  is_fullscreen = true;
+  m_is_fullscreen = true;
 #endif
 }
 
@@ -624,7 +622,7 @@ GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
 {
   glScissor(
     static_cast<int>(x1), // x
-    height - 1 - static_cast<int>(y2), // y
+    m_height - 1 - static_cast<int>(y2), // y
     static_cast<int>(x2 - x1), // weight
     static_cast<int>(y2 - y1) // height
     );
@@ -634,25 +632,25 @@ void
 GlutDisplay::push_quick_draw()
 {
   if (settings.antialiasing && settings.alphablending)
-    {
-      glDisable(GL_LINE_SMOOTH);
-    }
+  {
+    glDisable(GL_LINE_SMOOTH);
+  }
 }
 
 void
 GlutDisplay::pop_quick_draw()
 {
   if (settings.antialiasing && settings.alphablending)
-    {
-      glEnable(GL_LINE_SMOOTH);
-    }
+  {
+    glEnable(GL_LINE_SMOOTH);
+  }
 }
 
 void
 GlutDisplay::set_cursor_real(CursorType cursor)
 {
   switch(cursor)
-    {
+  {
     case CURSOR_INSERT:
       glutSetCursor(GLUT_CURSOR_CROSSHAIR);
       break;
@@ -674,7 +672,7 @@ GlutDisplay::set_cursor_real(CursorType cursor)
     default:
       std::cout << "GlutDisplay: Unhandled cursor type: " << static_cast<int>(cursor) << std::endl;
       break;
-    }
+  }
 
 }
 
