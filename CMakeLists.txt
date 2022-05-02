@@ -52,21 +52,11 @@ build_dependencies()
 
 set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
-  src/bounding_box.hpp
-  src/buttons.hpp
-  src/collider.hpp
-  src/color.hpp
   src/colors.cpp
-  src/colors.hpp
   src/command_line.cpp
-  src/command_line.hpp
   src/config.cpp
-  src/config.hpp
   src/construo.cpp
-  src/construo.hpp
-  src/construo_error.hpp
   src/controller.cpp
-  src/controller.hpp
   src/cursors/cursor_collider.xbm
   src/cursors/cursor_collider_mask.xbm
   src/cursors/cursor_insert.xbm
@@ -77,106 +67,53 @@ set(CONSTRUO_SOURCES_CXX
   src/cursors/cursor_select_mask.xbm
   src/cursors/cursor_zoom.xbm
   src/cursors/cursor_zoom_mask.xbm
-  src/cursors/cursors.hpp
-  src/cursor_type.hpp
-  src/delta_manager.hpp
-  src/events.hpp
-  src/graphic_context.hpp
   src/gui_buttons.cpp
-  src/gui_buttons.hpp
   src/gui_child_manager.cpp
-  src/gui_child_manager.hpp
   src/gui_component.cpp
-  src/gui_component.hpp
   src/gui_directory.cpp
-  src/gui_directory.hpp
   src/gui_directory_button.cpp
-  src/gui_directory_button.hpp
   src/gui_file_button.cpp
-  src/gui_file_button.hpp
   src/gui_file_manager.cpp
-  src/gui_file_manager.hpp
   src/gui_label.cpp
-  src/gui_label.hpp
   src/gui_manager.cpp
-  src/gui_manager.hpp
   src/gui_new_file_button.cpp
-  src/gui_new_file_button.hpp
   src/gui_window.cpp
-  src/gui_window.hpp
   src/input_context.cpp
-  src/input_context.hpp
-  src/keys.hpp
   src/lisp_reader.cpp
-  src/lisp_reader.hpp
   src/lisp_writer.cpp
-  src/lisp_writer.hpp
   src/load_gui_manager.cpp
-  src/load_gui_manager.hpp
-  src/math.hpp
   src/particle.cpp
-  src/particle.hpp
   src/particle_factory.cpp
-  src/particle_factory.hpp
   src/path_manager.cpp
-  src/path_manager.hpp
-  src/rect.hpp
   src/rect_collider.cpp
-  src/rect_collider.hpp
   src/root_graphic_context.cpp
-  src/root_graphic_context.hpp
   src/save_gui_manager.cpp
-  src/save_gui_manager.hpp
   src/screen_manager.cpp
-  src/screen_manager.hpp
   src/selection.cpp
-  src/selection.hpp
   src/settings.cpp
-  src/settings.hpp
   src/spring.cpp
-  src/spring.hpp
-  src/spring_type.hpp
   src/string_utils.cpp
-  src/string_utils.hpp
-  src/system_context.hpp
   src/unix_system.cpp
-  src/unix_system.hpp
-  src/vector2d.hpp
   src/world.cpp
-  src/world.hpp
   src/world_button.cpp
-  src/world_button.hpp
   src/world_gui_manager.cpp
-  src/world_gui_manager.hpp
   src/worldview_collider_tool.cpp
-  src/worldview_collider_tool.hpp
   src/worldview_component.cpp
-  src/worldview_component.hpp
   src/worldview_insert_tool.cpp
-  src/worldview_insert_tool.hpp
   src/worldview_select_tool.cpp
-  src/worldview_select_tool.hpp
   src/worldview_tool.cpp
-  src/worldview_tool.hpp
   src/worldview_zoom_tool.cpp
-  src/worldview_zoom_tool.hpp
   src/zoom_graphic_context.cpp
-  src/zoom_graphic_context.hpp
   src/zoom_state.cpp
-  src/zoom_state.hpp
   )
 
 set(CONSTRUO_GLUT_SOURCES_CXX
   src/construo_main.cpp
-  src/construo_main.hpp
-  src/glut_display.hpp
   src/glut_display.cpp
   )
 
 set(CONSTRUO_X11_SOURCES_CXX
   src/construo_main.cpp
-  src/construo_main.hpp
-  src/x11_display.hpp
   src/x11_display.cpp
   )
 
