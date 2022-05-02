@@ -117,6 +117,8 @@ Selection::select_particles (Vector2d p1, Vector2d p2)
 void
 Selection::duplicate ()
 {
+  if (m_world == nullptr) { return; }
+
   validate();
 
   Controller::instance()->push_undo();
