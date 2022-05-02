@@ -30,21 +30,21 @@ void
 GUIDirectoryButton::draw (GraphicContext& parent_gc)
 {
   //std::cout << "GUIDirectoryButton: " << filename << std::endl;
-  parent_gc.draw_fill_rect (static_cast<float>(m_x), static_cast<float>(m_y),
-                             static_cast<float>(m_x +  m_width), static_cast<float>(m_y + m_height),
-                             Color (0xBB0000FF));
+  parent_gc.draw_fill_rect(m_x, m_y,
+                           m_x +  m_width, m_y + m_height,
+                           Color (0xBB0000FF));
 
-  parent_gc.draw_string (static_cast<float>(m_x + 40), static_cast<float>(m_y + 20), "..:: Directory ::..");
-  parent_gc.draw_string (static_cast<float>(m_x + 30), static_cast<float>(m_y + 40), m_filename);
+  parent_gc.draw_string (m_x + 40, m_y + 20, "..:: Directory ::..");
+  parent_gc.draw_string (m_x + 30, m_y + 40, m_filename);
 
   if (m_mouse_over)
-    parent_gc.draw_rect (static_cast<float>(m_x), static_cast<float>(m_y),
-                          static_cast<float>(m_x +  m_width), static_cast<float>(m_y + m_height),
-                          Color (0xFFFFFFFF));
+    parent_gc.draw_rect (m_x, m_y,
+                         m_x +  m_width, m_y + m_height,
+                         Color (0xFFFFFFFF));
   else
-    parent_gc.draw_rect (static_cast<float>(m_x), static_cast<float>(m_y),
-                          static_cast<float>(m_x +  m_width), static_cast<float>(m_y + m_height),
-                          Color (0xFF0000FF));
+    parent_gc.draw_rect (m_x, m_y,
+                         m_x +  m_width, m_y + m_height,
+                         Color (0xFF0000FF));
 }
 
 void

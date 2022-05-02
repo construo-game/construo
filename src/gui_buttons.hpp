@@ -114,11 +114,8 @@ public:
   void draw_content(GraphicContext& gc) override
   {
     if (m_hfunc()) {
-      gc.draw_fill_rect(static_cast<float>(m_x),
-                         static_cast<float>(m_y),
-                         static_cast<float>(m_x + m_width),
-                         static_cast<float>(m_y + m_height),
-                         Colors::button_bg_active);
+      gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
+                        Colors::button_bg_active);
     }
 
     GUIButton::draw_content (gc);

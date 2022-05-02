@@ -303,7 +303,7 @@ WorldGUIManager::draw_overlay ()
     graphic_context->draw_string (BUTTON_LX_POS,  430,
     to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
   */
-  float const bottom_line = static_cast<float>(g_graphic_context->get_height() - 10);
+  float const bottom_line = g_graphic_context->get_height() - 10;
   g_graphic_context->draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
   g_graphic_context->draw_string(80.0f, bottom_line - 20.0f, to_string(get_fps()));
 

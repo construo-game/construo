@@ -69,9 +69,9 @@ inline int round_to(float x, int n)
 inline float round_to_float(float x, float n)
 {
   if (x > 0.0f)
-    return int((x + (static_cast<float>(n) / 2.0f)) / n) * n;
+    return int((x + (n / 2.0f)) / n) * n;
   else
-    return int((x - (static_cast<float>(n) / 2.0f)) / n) * n;
+    return int((x - (n / 2.0f)) / n) * n;
 }
 
 /** Get exponent of x */

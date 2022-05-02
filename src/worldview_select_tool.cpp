@@ -397,7 +397,7 @@ WorldViewSelectTool::on_scale_press (float x, float y)
       g_graphic_context->push_cursor();
       g_graphic_context->set_cursor(CURSOR_SCALE);
 
-      m_click_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)));
+      m_click_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y));
       WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
       m_mode = SCALING_SELECTION_MODE;
@@ -415,7 +415,7 @@ WorldViewSelectTool::on_duplicate_press (float x, float y)
 void
 WorldViewSelectTool::on_button_press (int button_id, float x, float y)
 {
-  Vector2d pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)));
+  Vector2d pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y));
 
   switch (button_id)
     {

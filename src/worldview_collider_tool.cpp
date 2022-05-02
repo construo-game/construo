@@ -119,7 +119,7 @@ WorldViewColliderTool::on_primary_button_release (float x, float y)
 void
 WorldViewColliderTool::on_mouse_move (float x, float y, float of_x, float of_y)
 {
-  Vector2d current_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)));
+  Vector2d current_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y));
 
   if (m_move_collider)
   {
@@ -130,7 +130,7 @@ WorldViewColliderTool::on_mouse_move (float x, float y, float of_x, float of_y)
 void
 WorldViewColliderTool::on_secondary_button_press (float x, float y)
 {
-  m_to_delete_collider = get_collider(WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y))));
+  m_to_delete_collider = get_collider(WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y)));
 }
 
 void
@@ -139,7 +139,7 @@ WorldViewColliderTool::on_secondary_button_release (float x, float y)
   World& world = *Controller::instance()->get_world();
 
   if (m_to_delete_collider
-      == get_collider(WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)))))
+      == get_collider(WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y))))
     {
       Controller::instance()->push_undo();
       world.remove_collider(m_to_delete_collider);
