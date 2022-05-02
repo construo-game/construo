@@ -125,8 +125,8 @@ GlutDisplay::GlutDisplay (int w, int h, int fullscreen) :
     glEnable(GL_LINE_SMOOTH);
   }
 
-  //glEnable(GL_SCISSOR_TEST);
-  //glScissor(0, 0, settings.screen_width, settings.screen_height);
+  glEnable(GL_SCISSOR_TEST);
+
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
   window_x_pos = 0;
@@ -617,10 +617,12 @@ GlutDisplay::enter_fullscreen()
 void
 GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
 {
-  //std::cout << "Setting cliprect: " << x1<< " " <<y1<< " " <<x2-x1+1<< " " <<y2-y1+1<<std::endl;
-  // FIXME: doesn't really work for some reason
-  //std::cout << "Clip: " <<  x1 << ", " << y1 << " - " <<  x2-x1+1 << "x" << y2-y1+1 << std::endl;
-  //glScissor(x1, y1, x2-x1+1, y2-y1+1);
+  glScissor(
+    static_cast<int>(x1), // x
+    height - 1 - static_cast<int>(y2), // y
+    static_cast<int>(x2 - x1), // weight
+    static_cast<int>(y2 - y1) // height
+    );
 }
 
 void
