@@ -109,7 +109,7 @@ WorldViewComponent::get_snap_size()
 }
 
 void
-WorldViewComponent::draw_grid()
+WorldViewComponent::draw_grid(ZoomGraphicContext& gc)
 {
   Color color = Colors::grid_color;
   Color color2 = Colors::grid_color2;
@@ -139,50 +139,50 @@ WorldViewComponent::draw_grid()
 }
 
 void
-WorldViewComponent::draw_ground()
+WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
 {
-  GraphicContext& parent_gc = *m_gc.get_parent_gc();
+  GraphicContext& parent_gc = *gc.get_parent_gc();
 
-  if (m_gc.screen_to_world_y(parent_gc.get_height()) >= 599)
+  if (gc.screen_to_world_y(parent_gc.get_height()) >= 599)
   {
-    m_gc.draw_fill_rect(m_gc.screen_to_world_x(0),
-                        599,
-                        m_gc.screen_to_world_x(parent_gc.get_width()),
-                        m_gc.screen_to_world_y(parent_gc.get_height()),
-                        Colors::ground_color);
+    gc.draw_fill_rect(gc.screen_to_world_x(0),
+                      599,
+                      gc.screen_to_world_x(parent_gc.get_width()),
+                      gc.screen_to_world_y(parent_gc.get_height()),
+                      Colors::ground_color);
 
     Color const color = Colors::ground_grid_color;
 
     float const step_size = 100.0f;
 
 
-    std::cout << "Ground: " << m_gc.get_width() << "x" << m_gc.get_height() << std::endl;
+    std::cout << "Ground: " << gc.get_width() << "x" << gc.get_height() << std::endl;
 
-    float const start_x = Math::round_to_float(m_gc.screen_to_world_x(0), step_size) - step_size;
-    float const end_x   = Math::round_to_float(m_gc.screen_to_world_x(m_gc.get_width()), step_size) + step_size;
+    float const start_x = Math::round_to_float(gc.screen_to_world_x(0), step_size) - step_size;
+    float const end_x   = Math::round_to_float(gc.screen_to_world_x(gc.get_width()), step_size) + step_size;
 
     float const start_y = 599.0f;
-    float const end_y   = Math::round_to_float(m_gc.screen_to_world_y(m_gc.get_height()), step_size) + step_size;
+    float const end_y   = Math::round_to_float(gc.screen_to_world_y(gc.get_height()), step_size) + step_size;
 
-    m_gc.push_quick_draw();
+    gc.push_quick_draw();
     for(float y = start_y; y < end_y; y += step_size) {
-      m_gc.draw_line(start_x, y,
-                     end_x, y,
-                     color, 1);
+      gc.draw_line(start_x, y,
+                   end_x, y,
+                   color, 1);
     }
 
     for(float x = start_x; x < end_x; x += step_size) {
-      m_gc.draw_line(x, start_y,
-                     x, end_y,
-                     color, 1);
+      gc.draw_line(x, start_y,
+                   x, end_y,
+                   color, 1);
     }
-    m_gc.pop_quick_draw();
+    gc.pop_quick_draw();
 
-    m_gc.draw_rect(m_gc.screen_to_world_x(0),
-                   599,
-                   m_gc.screen_to_world_x(parent_gc.get_width()),
-                   m_gc.screen_to_world_y(parent_gc.get_height()),
-                   Colors::rect_collider_bg);
+    gc.draw_rect(gc.screen_to_world_x(0),
+                 599,
+                 gc.screen_to_world_x(parent_gc.get_width()),
+                 gc.screen_to_world_y(parent_gc.get_height()),
+                 Colors::rect_collider_bg);
   }
 }
 
@@ -194,10 +194,11 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 
   m_gc.set_parent_gc(&parent_gc);
 
-  if (m_use_grid)
-    draw_grid();
+  if (m_use_grid) {
+    draw_grid(m_gc);
+  }
 
-  draw_ground();
+  draw_ground(m_gc);
 
   World& world = *Controller::instance()->get_world();
 

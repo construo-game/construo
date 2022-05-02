@@ -21,7 +21,6 @@
 
 GUIChildManager::GUIChildManager (float x, float y, float width, float height) :
   GUIComponent (x, y, width, height),
-  m_gc(),
   m_components(),
   m_current_component(nullptr)
 {
@@ -64,8 +63,10 @@ GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
 void
 GUIChildManager::draw(GraphicContext& parent_gc)
 {
-  m_gc.set_parent_gc(&parent_gc);
-  m_gc.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
+  ZoomGraphicContext gc;
+
+  gc.set_parent_gc(&parent_gc);
+  gc.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
 
   parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
                             static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
@@ -84,7 +85,7 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
   {
-    (*i)->draw(m_gc);
+    (*i)->draw(gc);
   }
 
   draw_overlay(parent_gc);

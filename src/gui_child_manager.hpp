@@ -71,7 +71,6 @@ private:
   GUIComponent* find_component_at(float x, float y);
 
 private:
-  ZoomGraphicContext m_gc;
   std::vector<GUIComponent*> m_components;
   GUIComponent* m_current_component;
 

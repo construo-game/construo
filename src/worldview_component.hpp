@@ -96,10 +96,10 @@ public:
 
 private:
   /** Draw the background grid to which new dots align */
-  void draw_grid();
+  void draw_grid(ZoomGraphicContext& gc);
 
   /** Draw ground, aka the all overspanning collider at the bottem */
-  void draw_ground();
+  void draw_ground(ZoomGraphicContext& gc);
 
 private:
   ZoomGraphicContext m_gc;
