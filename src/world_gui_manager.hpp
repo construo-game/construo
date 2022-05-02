@@ -32,7 +32,7 @@ public:
   void resize(float width, float height) override;
 
   void update() override;
-  void draw_overlay() override;
+  void draw_overlay(GraphicContext& gc) override;
 
 private:
   GUIComponent* m_worldview_component;

@@ -19,7 +19,7 @@
 
 #include <memory>
 
-class GUIManager;
+#include "fwd.hpp"
 
 class ScreenManager
 {
@@ -38,8 +38,8 @@ private:
 public:
   void set_gui (int gui_id);
   void quit();
-  bool is_finished ();
-  void run_once ();
+  bool is_finished();
+  void run_once(GraphicContext& gc);
   void resize(float width, float height);
 
 private:

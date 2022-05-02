@@ -26,8 +26,8 @@ class LoadGUIManager : public GUIManager
 public:
   LoadGUIManager ();
 
-  void draw_overlay() override;
-  void run_once() override;
+  void draw_overlay(GraphicContext& gc) override;
+  void run_once(GraphicContext& gc) override;
 
 private:
   GUIFileManager* m_file_manager;

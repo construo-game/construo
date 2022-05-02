@@ -31,9 +31,9 @@ ScreenManager::ScreenManager() :
 }
 
 void
-ScreenManager::run_once ()
+ScreenManager::run_once(GraphicContext& gc)
 {
-  m_current_gui_manager->run_once ();
+  m_current_gui_manager->run_once(gc);
 }
 
 bool

@@ -330,7 +330,7 @@ GlutDisplay::reshape_func(int w, int h)
 void
 GlutDisplay::display_func()
 {
-  ScreenManager::instance()->run_once();
+  ScreenManager::instance()->run_once(*this);
 }
 
 void
@@ -383,7 +383,7 @@ GlutDisplay::idle_func()
       }*/
   if (!ScreenManager::instance()->is_finished())
   {
-    ScreenManager::instance()->run_once();
+    ScreenManager::instance()->run_once(*this);
   }
   else
   {

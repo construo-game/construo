@@ -27,17 +27,17 @@ LoadGUIManager::LoadGUIManager() :
 }
 
 void
-LoadGUIManager::draw_overlay ()
+LoadGUIManager::draw_overlay(GraphicContext& gc)
 {
-  g_graphic_context->draw_string(10.0f, g_graphic_context->get_height() - 10.0f,
-                                 "Load Dialog");
+  gc.draw_string(10.0f, gc.get_height() - 10.0f,
+                 "Load Dialog");
 }
 
 void
-LoadGUIManager::run_once ()
+LoadGUIManager::run_once(GraphicContext& gc)
 {
   GUIFileManager::set_instance(m_file_manager);
-  GUIManager::run_once();
+  GUIManager::run_once(gc);
   g_system_context->sleep(1000);
 }
 

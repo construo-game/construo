@@ -48,7 +48,7 @@ GUIManager::~GUIManager ()
 }
 
 void
-GUIManager::run_once ()
+GUIManager::run_once(GraphicContext& gc)
 {
   m_frame_count += 1;
 
@@ -68,18 +68,18 @@ GUIManager::run_once ()
 
   update();
 
-  g_graphic_context->clear ();
-  draw ();
-  draw_overlay ();
-  g_graphic_context->flip ();
+  gc.clear();
+  draw(gc);
+  draw_overlay(gc);
+  gc.flip();
 }
 
 void
-GUIManager::draw ()
+GUIManager::draw(GraphicContext& gc)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
-    (*i)->draw(*g_graphic_context);
+    (*i)->draw(gc);
   }
 }
 

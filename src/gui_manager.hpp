@@ -20,8 +20,7 @@
 #include <memory>
 #include <vector>
 
-class GUIComponent;
-struct ButtonEvent;
+#include "fwd.hpp"
 
 /** The GUIManager is basically the place where the main loop runs */
 class GUIManager
@@ -34,13 +33,13 @@ public:
   float get_fps() const { return m_current_fps; }
 
   /** Launches a single run from the games main loop */
-  virtual void run_once ();
+  virtual void run_once(GraphicContext& gc);
 
   /** Draw all the GUI components */
-  void draw ();
+  void draw(GraphicContext& gc);
   virtual void update() {}
 
-  virtual void draw_overlay () {}
+  virtual void draw_overlay(GraphicContext& gc) {}
 
   virtual void resize(float width, float height) {}
 
