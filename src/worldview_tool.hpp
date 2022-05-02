@@ -19,7 +19,6 @@
 
 class ZoomGraphicContext;
 
-/** */
 class WorldViewTool
 {
 public:

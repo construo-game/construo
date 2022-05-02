@@ -19,7 +19,6 @@
 
 #include "gui_file_button.hpp"
 
-/** */
 class GUINewFileButton : public GUIFileButton
 {
 private:

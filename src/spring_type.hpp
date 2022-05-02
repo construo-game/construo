@@ -17,17 +17,11 @@
 #ifndef HEADER_SPRING_TYPE_HPP
 #define HEADER_SPRING_TYPE_HPP
 
-/** */
 class SpringType
 {
 public:
-  /** */
   float stiffness;
-
-  /** */
   float damping;
-
-  /** */
   float max_stretch;
 };
 

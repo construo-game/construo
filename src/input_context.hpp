@@ -23,7 +23,6 @@
 #include "buttons.hpp"
 #include "events.hpp"
 
-/** */
 class InputContext
 {
 protected:

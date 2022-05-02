@@ -22,7 +22,6 @@
 #include "bounding_box.hpp"
 #include "graphic_context.hpp"
 
-/** */
 class Collider
 {
 private:

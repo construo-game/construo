@@ -22,7 +22,6 @@
 
 class Particle;
 
-/** */
 class WorldViewSelectTool : public WorldViewTool
 {
 public:

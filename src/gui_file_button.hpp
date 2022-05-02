@@ -21,7 +21,6 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_component.hpp"
 
-/** */
 class GUIFileButton : public GUIComponent
 {
 public:

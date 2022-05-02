@@ -21,7 +21,6 @@
 
 class Particle;
 
-/** */
 class WorldViewInsertTool : public WorldViewTool
 {
 public:

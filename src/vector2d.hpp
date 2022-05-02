@@ -20,7 +20,6 @@
 #include <math.h>
 #include <iostream>
 
-/** */
 class Vector2d
 {
 public:

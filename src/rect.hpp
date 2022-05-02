@@ -20,7 +20,6 @@
 #include "math.hpp"
 #include "vector2d.hpp"
 
-/** */
 template<class T>
 class Rect
 {

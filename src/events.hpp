@@ -26,7 +26,6 @@ struct ButtonEvent
   bool pressed;
 };
 
-/** */
 union Event
 {
   int type;

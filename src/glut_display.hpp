@@ -20,7 +20,6 @@
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
 
-/** */
 class GlutDisplay : public RootGraphicContext,
                     public InputContext
 {

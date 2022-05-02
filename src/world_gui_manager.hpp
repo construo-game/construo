@@ -19,7 +19,6 @@
 
 #include "gui_manager.hpp"
 
-/** */
 class WorldGUIManager : public GUIManager
 {
 private:

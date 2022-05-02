@@ -17,7 +17,6 @@
 #ifndef HEADER_CONSTRUO_FORCE_EMITTER_HPP
 #define HEADER_CONSTRUO_FORCE_EMITTER_HPP
 
-/** */
 class ForceEmitter
 {
 
