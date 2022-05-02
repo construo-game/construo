@@ -60,22 +60,26 @@ WorldButton::draw (GraphicContext& parent_gc)
   load_world();
 
   parent_gc.draw_fill_rect(static_cast<float>(m_x),
-                            static_cast<float>(m_y),
-                            static_cast<float>(m_x + m_width),
-                            static_cast<float>(m_y + m_height),
-                            Color (0xBB0000FF));
+                           static_cast<float>(m_y),
+                           static_cast<float>(m_x + m_width),
+                           static_cast<float>(m_y + m_height),
+                           Color (0xBB0000FF));
 
-  ZoomGraphicContext gc(m_x, m_y, m_x + m_width, m_y + m_height);
-  gc.set_parent_gc(&parent_gc);
+  GCZoomState zoom(m_x, m_y, m_x + m_width, m_y + m_height);
+
+  if (m_world) {
+    // FIXME: bounding box should be calculated in construtor
+    const BoundingBox& box = m_world->calc_bounding_box();
+    zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
+                 static_cast<int>(box.x2), static_cast<int>(box.y2));
+  }
+
+  ZoomGraphicContext gc(parent_gc, zoom);
 
   gc.lock();
 
   if (m_world)
   {
-    // FIXME: bounding box should be calculated in construtor
-    const BoundingBox& box = m_world->calc_bounding_box();
-    gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
-               static_cast<int>(box.x2),  static_cast<int>(box.y2));
     m_world->draw_colliders(gc);
     m_world->draw_springs(gc);
   }
@@ -90,20 +94,20 @@ WorldButton::draw (GraphicContext& parent_gc)
 
   if (m_mouse_over)
     parent_gc.draw_rect(static_cast<float>(m_x),
-                         static_cast<float>(m_y),
-                         static_cast<float>(m_x +  m_width),
-                         static_cast<float>(m_y + m_height),
-                         Color (0xFFFFFFFF));
+                        static_cast<float>(m_y),
+                        static_cast<float>(m_x +  m_width),
+                        static_cast<float>(m_y + m_height),
+                        Color (0xFFFFFFFF));
   else
     parent_gc.draw_rect(static_cast<float>(m_x),
-                         static_cast<float>(m_y),
-                         static_cast<float>(m_x + m_width),
-                         static_cast<float>(m_y + m_height),
-                         Color (0xFF0000FF));
+                        static_cast<float>(m_y),
+                        static_cast<float>(m_x + m_width),
+                        static_cast<float>(m_y + m_height),
+                        Color (0xFF0000FF));
 
   parent_gc.draw_string(static_cast<float>(m_x + 20),
-                         static_cast<float>(m_y + 160),
-                         m_filename);
+                        static_cast<float>(m_y + 160),
+                        m_filename);
 }
 
 void

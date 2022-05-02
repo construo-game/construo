@@ -63,25 +63,25 @@ GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
 void
 GUIChildManager::draw(GraphicContext& parent_gc)
 {
-  ZoomGraphicContext gc;
+  GCZoomState zoom(0, 0, parent_gc.get_width(), parent_gc.get_height());
+  zoom.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
 
-  gc.set_parent_gc(&parent_gc);
-  gc.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
-
-  parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
-                            static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
-                            Colors::button_bg_passive);
-  parent_gc.draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
-                       static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
-                       Colors::button_fg_passive);
+  ZoomGraphicContext gc(parent_gc, zoom);
 
   parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
-                            static_cast<float>(m_x + m_width), static_cast<float>(m_y),
-                            Colors::button_bg_hover);
+                           static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
+                           Colors::button_bg_passive);
+  parent_gc.draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                      static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
+                      Colors::button_fg_passive);
+
+  parent_gc.draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                           static_cast<float>(m_x + m_width), static_cast<float>(m_y),
+                           Colors::button_bg_hover);
 
   parent_gc.draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
-                       static_cast<float>(m_x + m_width), static_cast<float>(m_y),
-                       Colors::button_fg_passive);
+                      static_cast<float>(m_x + m_width), static_cast<float>(m_y),
+                      Colors::button_fg_passive);
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
   {

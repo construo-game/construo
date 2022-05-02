@@ -48,7 +48,6 @@ public:
 
   WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
-  ZoomGraphicContext* get_gc() { return &m_gc; }
   void draw(GraphicContext& parent_gc) override;
 
   void set_mode(Mode m);
@@ -94,6 +93,8 @@ public:
   /** */
   bool is_at(float x, float y) override { return true; }
 
+  GCZoomState& zoom() { return m_zoom; }
+
 private:
   /** Draw the background grid to which new dots align */
   void draw_grid(ZoomGraphicContext& gc);
@@ -102,7 +103,7 @@ private:
   void draw_ground(ZoomGraphicContext& gc);
 
 private:
-  ZoomGraphicContext m_gc;
+  GCZoomState m_zoom;
 
   /** If set to true, display a grid and align dots to it */
   bool m_use_grid;

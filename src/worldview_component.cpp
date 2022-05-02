@@ -29,7 +29,7 @@ WorldViewComponent* WorldViewComponent::instance_;
 
 WorldViewComponent::WorldViewComponent() :
   GUIComponent(),
-  m_gc(),
+  m_zoom(0, 0, g_graphic_context->get_width(), g_graphic_context->get_height()),
   m_use_grid(false),
   m_grid_base_size(10),
   m_grid_constant(5),
@@ -99,7 +99,7 @@ float
 WorldViewComponent::get_grid_size()
 {
   return m_grid_base_size / powf(static_cast<float>(m_grid_constant),
-                                 static_cast<float>(Math::get_exp_n(m_gc.get_zoom() * m_grid_scale_factor, m_grid_constant)));
+                                 static_cast<float>(Math::get_exp_n(m_zoom.get_zoom() * m_grid_scale_factor, m_grid_constant)));
 }
 
 float
@@ -116,39 +116,39 @@ WorldViewComponent::draw_grid(ZoomGraphicContext& gc)
 
   float grid_size = get_grid_size();
 
-  float start_x = Math::round_to_float(m_gc.screen_to_world_x(0), grid_size) - grid_size;
-  float end_x   = Math::round_to_float(m_gc.screen_to_world_x(m_gc.get_width()), grid_size) + grid_size;
+  float start_x = Math::round_to_float(m_zoom.screen_to_world_x(0), grid_size) - grid_size;
+  float end_x   = Math::round_to_float(m_zoom.screen_to_world_x(m_zoom.bounding_width()), grid_size) + grid_size;
 
-  float start_y = Math::round_to_float(m_gc.screen_to_world_y(0), grid_size) - grid_size;
-  float end_y   = Math::round_to_float(m_gc.screen_to_world_y(m_gc.get_height()), grid_size) + grid_size;
+  float start_y = Math::round_to_float(m_zoom.screen_to_world_y(0), grid_size) - grid_size;
+  float end_y   = Math::round_to_float(m_zoom.screen_to_world_y(m_zoom.bounding_height()), grid_size) + grid_size;
 
-  m_gc.push_quick_draw();
+  gc.push_quick_draw();
   for(float y = start_y; y < end_y; y += grid_size) {
-    m_gc.draw_line(start_x, y,
+    gc.draw_line(start_x, y,
                  end_x, y,
                  ((int(y / grid_size) % m_grid_constant) == 0) ? color2 : color, 1);
   }
 
   for(float x = start_x; x < end_x; x += grid_size) {
-    m_gc.draw_line(x, start_y,
+    gc.draw_line(x, start_y,
                  x, end_y,
                  ((int(x / grid_size) % m_grid_constant) == 0) ? color2 : color, 1);
   }
 
-  m_gc.pop_quick_draw();
+  gc.pop_quick_draw();
 }
 
 void
 WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
 {
-  GraphicContext& parent_gc = *gc.get_parent_gc();
+  GraphicContext& parent_gc = gc.get_parent_gc();
 
-  if (gc.screen_to_world_y(parent_gc.get_height()) >= 599)
+  if (gc.zoom().screen_to_world_y(parent_gc.get_height()) >= 599)
   {
-    gc.draw_fill_rect(gc.screen_to_world_x(0),
+    gc.draw_fill_rect(gc.zoom().screen_to_world_x(0),
                       599,
-                      gc.screen_to_world_x(parent_gc.get_width()),
-                      gc.screen_to_world_y(parent_gc.get_height()),
+                      gc.zoom().screen_to_world_x(parent_gc.get_width()),
+                      gc.zoom().screen_to_world_y(parent_gc.get_height()),
                       Colors::ground_color);
 
     Color const color = Colors::ground_grid_color;
@@ -158,11 +158,11 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
 
     std::cout << "Ground: " << gc.get_width() << "x" << gc.get_height() << std::endl;
 
-    float const start_x = Math::round_to_float(gc.screen_to_world_x(0), step_size) - step_size;
-    float const end_x   = Math::round_to_float(gc.screen_to_world_x(gc.get_width()), step_size) + step_size;
+    float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(0), step_size) - step_size;
+    float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.get_width()), step_size) + step_size;
 
     float const start_y = 599.0f;
-    float const end_y   = Math::round_to_float(gc.screen_to_world_y(gc.get_height()), step_size) + step_size;
+    float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.get_height()), step_size) + step_size;
 
     gc.push_quick_draw();
     for(float y = start_y; y < end_y; y += step_size) {
@@ -178,10 +178,10 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
     }
     gc.pop_quick_draw();
 
-    gc.draw_rect(gc.screen_to_world_x(0),
+    gc.draw_rect(gc.zoom().screen_to_world_x(0),
                  599,
-                 gc.screen_to_world_x(parent_gc.get_width()),
-                 gc.screen_to_world_y(parent_gc.get_height()),
+                 gc.zoom().screen_to_world_x(parent_gc.get_width()),
+                 gc.zoom().screen_to_world_y(parent_gc.get_height()),
                  Colors::rect_collider_bg);
   }
 }
@@ -192,13 +192,13 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
   //int x = gc.screen_to_world_x(input_context->get_mouse_x());
   //int y = gc.screen_to_world_y(input_context->get_mouse_y());
 
-  m_gc.set_parent_gc(&parent_gc);
+  ZoomGraphicContext gc(parent_gc, m_zoom);
 
   if (m_use_grid) {
-    draw_grid(m_gc);
+    draw_grid(gc);
   }
 
-  draw_ground(m_gc);
+  draw_ground(gc);
 
   World& world = *Controller::instance()->get_world();
 
@@ -208,30 +208,30 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
     // Live Action Cam
     const BoundingBox& box = world.calc_bounding_box();
     // Zoom to the bounding box
-    m_gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
+    m_zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
                  static_cast<int>(box.x2), static_cast<int>(box.y2));
     // Zoom out two times so that the area isn't covered up by the
     // GUI
-    m_gc.zoom_out(get_width()/2, get_height()/2);
-    m_gc.zoom_out(get_width()/2, get_height()/2);
+    m_zoom.zoom_out(get_width()/2, get_height()/2);
+    m_zoom.zoom_out(get_width()/2, get_height()/2);
   }
 
-  m_current_tool->draw_background(m_gc);
+  m_current_tool->draw_background(gc);
 
   if (0) // draw bounding box
   {
     const BoundingBox& box = world.calc_bounding_box();
-    m_gc.draw_rect(box.x1, box.y1, box.x2, box.y2,
+    gc.draw_rect(box.x1, box.y1, box.x2, box.y2,
                  Color(1.0f, 1.0f, 1.0f));
   }
 
-  world.draw_colliders(m_gc);
-  world.draw_springs(m_gc);
+  world.draw_colliders(gc);
+  world.draw_springs(gc);
   if (!Controller::instance()->get_hide_dots()) {
-    world.draw_particles(m_gc);
+    world.draw_particles(gc);
   }
 
-  m_current_tool->draw_foreground(m_gc);
+  m_current_tool->draw_foreground(gc);
 
   if (0)
   {
@@ -259,13 +259,13 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 void
 WorldViewComponent::wheel_up(float x, float y)
 {
-  m_gc.zoom_in(x, y);
+  m_zoom.zoom_in(x, y);
 }
 
 void
 WorldViewComponent::wheel_down(float x, float y)
 {
-  m_gc.zoom_out(x, y);
+  m_zoom.zoom_out(x, y);
 }
 
 void
@@ -325,25 +325,25 @@ WorldViewComponent::on_fix_press(float screen_x, float screen_y)
 void
 WorldViewComponent::scroll_left()
 {
-  m_gc.translate_offset(-20, 0);
+  m_zoom.translate_offset(-20, 0);
 }
 
 void
 WorldViewComponent::scroll_right()
 {
-  m_gc.translate_offset(20, 0);
+  m_zoom.translate_offset(20, 0);
 }
 
 void
 WorldViewComponent::scroll_up()
 {
-  m_gc.translate_offset(0, -20);
+  m_zoom.translate_offset(0, -20);
 }
 
 void
 WorldViewComponent::scroll_down()
 {
-  m_gc.translate_offset(0, 20);
+  m_zoom.translate_offset(0, 20);
 }
 
 void
@@ -353,12 +353,12 @@ WorldViewComponent::on_tertiary_button_press(float x, float y)
   g_graphic_context->push_cursor();
   g_graphic_context->set_cursor(CURSOR_SCROLL);
 
-  m_x_offset = m_gc.get_x_offset();
-  m_y_offset = m_gc.get_y_offset();
+  m_x_offset = m_zoom.get_x_offset();
+  m_y_offset = m_zoom.get_y_offset();
   WorldGUIManager::instance()->grab_mouse(this);
 
-  m_scroll_pos_x = m_gc.screen_to_world_x(x);
-  m_scroll_pos_y = m_gc.screen_to_world_y(y);
+  m_scroll_pos_x = m_zoom.screen_to_world_x(x);
+  m_scroll_pos_y = m_zoom.screen_to_world_y(y);
 }
 
 void
@@ -374,11 +374,11 @@ WorldViewComponent::on_mouse_move(float x, float y, float of_x, float of_y)
 {
   if (m_scrolling)
   {
-    float const new_scroll_pos_x = x / m_gc.get_zoom() - m_x_offset;
-    float const new_scroll_pos_y = y / m_gc.get_zoom() - m_y_offset;
+    float const new_scroll_pos_x = x / m_zoom.get_zoom() - m_x_offset;
+    float const new_scroll_pos_y = y / m_zoom.get_zoom() - m_y_offset;
 
-    m_gc.set_offset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
-                    m_y_offset + (new_scroll_pos_y - m_scroll_pos_y));
+    m_zoom.set_offset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
+                      m_y_offset + (new_scroll_pos_y - m_scroll_pos_y));
 
   }
   else
@@ -402,7 +402,7 @@ WorldViewComponent::on_grid_press(float x, float y)
 float
 WorldViewComponent::get_zoom ()
 {
-  return m_gc.get_zoom ();
+  return m_zoom.get_zoom();
 }
 
 void
@@ -412,12 +412,12 @@ WorldViewComponent::on_world_change()
 
   const BoundingBox& box = world.calc_bounding_box();
   // Zoom to the bounding box
-  m_gc.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
+  m_zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
                static_cast<int>(box.x2), static_cast<int>(box.y2));
   // Zoom out two times so that the area isn't covered up by the
   // GUI
-  m_gc.zoom_out(get_width()/2, get_height()/2);
-  m_gc.zoom_out(get_width()/2, get_height()/2);
+  m_zoom.zoom_out(get_width()/2, get_height()/2);
+  m_zoom.zoom_out(get_width()/2, get_height()/2);
 }
 
 /* EOF */

@@ -163,6 +163,8 @@ set(CONSTRUO_SOURCES_CXX
   src/worldview_zoom_tool.hpp
   src/zoom_graphic_context.cpp
   src/zoom_graphic_context.hpp
+  src/zoom_state.cpp
+  src/zoom_state.hpp
   )
 
 set(CONSTRUO_GLUT_SOURCES_CXX

@@ -309,7 +309,7 @@ WorldGUIManager::draw_overlay ()
 
   g_graphic_context->draw_string(10.0f, bottom_line, "Pos: ");
   g_graphic_context->draw_string(80.0f, bottom_line,
-                                to_string(WorldViewComponent::instance()->get_gc()->screen_to_world(g_input_context->get_mouse_pos())));
+                                to_string(WorldViewComponent::instance()->zoom().screen_to_world(g_input_context->get_mouse_pos())));
 
   g_graphic_context->draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
   g_graphic_context->draw_string(280.0f, bottom_line - 20.0f, to_string(world.get_num_particles()));
