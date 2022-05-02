@@ -108,6 +108,13 @@ public:
   float bounding_width() const { return m_x2 - m_x1; }
   float bounding_height() const { return m_y2 - m_y1; }
 
+  void set_bounding_box(float x, float y, float width, float height) {
+    m_x1 = x;
+    m_y1 = y;
+    m_x2 = x + width;
+    m_y2 = y + height;
+  }
+
 private:
   // bounding box
   float m_x1;

@@ -151,32 +151,31 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
                       gc.zoom().screen_to_world_y(parent_gc.get_height()),
                       Colors::ground_color);
 
-    Color const color = Colors::ground_grid_color;
+    // draw grid
+    {
+      gc.push_quick_draw();
 
-    float const step_size = 100.0f;
+      float const step_size = 100.0f;
 
+      float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x1()), step_size) - step_size;
+      float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x2()), step_size) + step_size;
 
-    std::cout << "Ground: " << gc.get_width() << "x" << gc.get_height() << std::endl;
+      float const start_y = 599;
+      float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_y2()), step_size) + step_size;
 
-    float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(0), step_size) - step_size;
-    float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.get_width()), step_size) + step_size;
+      for(float y = start_y; y < end_y; y += step_size) {
+        gc.draw_line(start_x, y,
+                     end_x, y,
+                     Colors::ground_grid_color, 1);
+      }
 
-    float const start_y = 599.0f;
-    float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.get_height()), step_size) + step_size;
-
-    gc.push_quick_draw();
-    for(float y = start_y; y < end_y; y += step_size) {
-      gc.draw_line(start_x, y,
-                   end_x, y,
-                   color, 1);
+      for(float x = start_x; x < end_x; x += step_size) {
+        gc.draw_line(x, start_y,
+                     x, end_y,
+                     Colors::ground_grid_color, 1);
+      }
+      gc.pop_quick_draw();
     }
-
-    for(float x = start_x; x < end_x; x += step_size) {
-      gc.draw_line(x, start_y,
-                   x, end_y,
-                   color, 1);
-    }
-    gc.pop_quick_draw();
 
     gc.draw_rect(gc.zoom().screen_to_world_x(0),
                  599,
@@ -189,9 +188,7 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
 void
 WorldViewComponent::draw(GraphicContext& parent_gc)
 {
-  //int x = gc.screen_to_world_x(input_context->get_mouse_x());
-  //int y = gc.screen_to_world_y(input_context->get_mouse_y());
-
+  m_zoom.set_bounding_box(m_x, m_y, m_width, m_height);
   ZoomGraphicContext gc(parent_gc, m_zoom);
 
   if (m_use_grid) {
