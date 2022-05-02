@@ -30,20 +30,20 @@ public:
   enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };
 
 public:
-  GUIDirectory (const std::string& pathname, Mode m);
-  ~GUIDirectory ();
+  GUIDirectory(const std::string& pathname, Mode m);
+  ~GUIDirectory();
 
-  void draw_overlay (GraphicContext* gc) override;
+  void draw_overlay(GraphicContext* gc) override;
 
   std::string get_path() { return m_pathname; }
 
   /** Move the shown directory content up */
-  void move_up ();
+  void move_up();
   /** Move the shown directory content down */
-  void move_down ();
+  void move_down();
 
-  void wheel_up (int x, int y) override;
-  void wheel_down (int x, int y) override;
+  void wheel_up(float x, float y) override;
+  void wheel_down(float x, float y) override;
 
 private:
   void place_components();
@@ -52,7 +52,7 @@ private:
   std::string m_pathname;
   std::vector<GUIFileButton*> m_files;
   int m_offset;
-  unsigned int m_mtime;
+  unsigned long m_mtime;
   Mode m_mode;
 
 public:

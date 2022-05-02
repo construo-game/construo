@@ -53,9 +53,9 @@ WorldViewComponent::WorldViewComponent() :
 }
 
 void
-WorldViewComponent::set_mode (Mode m)
+WorldViewComponent::set_mode(Mode m)
 {
-  m_current_tool->deactivate ();
+  m_current_tool->deactivate();
 
   if (m == INSERT_MODE)
   {
@@ -84,7 +84,7 @@ WorldViewComponent::set_mode (Mode m)
   else
   {
     std::cout << "Unknown Mode" << std::endl;
-    assert (false);
+    assert(false);
   }
 
   m_current_tool->activate ();
@@ -152,22 +152,22 @@ WorldViewComponent::draw_ground()
 
     Color const color = Colors::ground_grid_color;
 
-    int const step_size = 100;
+    float const step_size = 100.0f;
 
-    int const start_x = Math::round_to(m_gc.screen_to_world_x(0), step_size) - step_size;
-    int const end_x   = Math::round_to(m_gc.screen_to_world_x(m_gc.get_width()), step_size) + step_size;
+    float const start_x = Math::round_to_float(m_gc.screen_to_world_x(0), step_size) - step_size;
+    float const end_x   = Math::round_to_float(m_gc.screen_to_world_x(m_gc.get_width()), step_size) + step_size;
 
-    int const start_y = 599;
-    int const end_y   = Math::round_to(m_gc.screen_to_world_y(m_gc.get_height()), step_size) + step_size;
+    float const start_y = 599.0f;
+    float const end_y   = Math::round_to_float(m_gc.screen_to_world_y(m_gc.get_height()), step_size) + step_size;
 
     m_gc.push_quick_draw();
-    for(int y = start_y; y < end_y; y += step_size) {
+    for(float y = start_y; y < end_y; y += step_size) {
       m_gc.draw_line(start_x, y,
                      end_x, y,
                      color, 1);
     }
 
-    for(int x = start_x; x < end_x; x += step_size) {
+    for(float x = start_x; x < end_x; x += step_size) {
       m_gc.draw_line(x, start_y,
                      x, end_y,
                      color, 1);
@@ -183,10 +183,10 @@ WorldViewComponent::draw_ground()
 }
 
 void
-WorldViewComponent::draw (GraphicContext* parent_gc)
+WorldViewComponent::draw(GraphicContext* parent_gc)
 {
-  //int x = gc.screen_to_world_x (input_context->get_mouse_x ());
-  //int y = gc.screen_to_world_y (input_context->get_mouse_y ());
+  //int x = gc.screen_to_world_x(input_context->get_mouse_x());
+  //int y = gc.screen_to_world_y(input_context->get_mouse_y());
 
   m_gc.set_parent_gc(parent_gc);
 
@@ -207,11 +207,11 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
                  static_cast<int>(box.x2), static_cast<int>(box.y2));
     // Zoom out two times so that the area isn't covered up by the
     // GUI
-    m_gc.zoom_out (get_width()/2, get_height()/2);
-    m_gc.zoom_out (get_width()/2, get_height()/2);
+    m_gc.zoom_out(get_width()/2, get_height()/2);
+    m_gc.zoom_out(get_width()/2, get_height()/2);
   }
 
-  m_current_tool->draw_background (&m_gc);
+  m_current_tool->draw_background(&m_gc);
 
   if (0) // draw bounding box
   {
@@ -220,129 +220,129 @@ WorldViewComponent::draw (GraphicContext* parent_gc)
                  Color(1.0f, 1.0f, 1.0f));
   }
 
-  world.draw_colliders (&m_gc);
-  world.draw_springs (&m_gc);
+  world.draw_colliders(&m_gc);
+  world.draw_springs(&m_gc);
   if (!Controller::instance()->get_hide_dots()) {
-    world.draw_particles (&m_gc);
+    world.draw_particles(&m_gc);
   }
 
-  m_current_tool->draw_foreground (&m_gc);
+  m_current_tool->draw_foreground(&m_gc);
 
   if (0)
   {
     switch (m_mode)
     {
       case ZOOM_MODE:
-        parent_gc->draw_string (10, parent_gc->get_height () - 15, "[  Zoom Mode  ]");
+        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[  Zoom Mode  ]");
         break;
       case INSERT_MODE:
-        parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Insert Mode ]");
+        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[ Insert Mode ]");
         break;
       case SELECT_MODE:
-        parent_gc->draw_string (10, parent_gc->get_height () - 15, "[ Select Mode ]");
+        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[ Select Mode ]");
         break;
       case COLLIDER_MODE:
-        parent_gc->draw_string (10, parent_gc->get_height () - 15, "[Collider Mode]");
+        parent_gc->draw_string(10, parent_gc->get_height() - 15, "[Collider Mode]");
         break;
     }
   }
 
   //const WorldBoundingBox& box = world.calc_bounding_box();
-  //gc.flip (int(box.x1), int(box.y1), int(box.x2), int(box.y2));
+  //gc.flip(int(box.x1), int(box.y1), int(box.x2), int(box.y2));
 }
 
 void
-WorldViewComponent::wheel_up (int x, int y)
+WorldViewComponent::wheel_up(float x, float y)
 {
-  m_gc.zoom_in (x, y);
+  m_gc.zoom_in(x, y);
 }
 
 void
-WorldViewComponent::wheel_down (int x, int y)
+WorldViewComponent::wheel_down(float x, float y)
 {
-  m_gc.zoom_out (x, y);
+  m_gc.zoom_out(x, y);
 }
 
 void
-WorldViewComponent::on_button_press (int button_id, int x, int y)
+WorldViewComponent::on_button_press(int button_id, float x, float y)
 {
-  m_current_tool->on_button_press (button_id, x, y);
+  m_current_tool->on_button_press(button_id, x, y);
 }
 
 void
-WorldViewComponent::on_primary_button_press (int screen_x, int screen_y)
+WorldViewComponent::on_primary_button_press(float screen_x, float screen_y)
 {
-  m_current_tool->on_primary_button_press (screen_x, screen_y);
+  m_current_tool->on_primary_button_press(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_primary_button_release (int screen_x, int screen_y)
+WorldViewComponent::on_primary_button_release(float screen_x, float screen_y)
 {
-  m_current_tool->on_primary_button_release (screen_x, screen_y);
+  m_current_tool->on_primary_button_release(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_secondary_button_press (int screen_x, int screen_y)
+WorldViewComponent::on_secondary_button_press(float screen_x, float screen_y)
 {
-  m_current_tool->on_secondary_button_press (screen_x, screen_y);
+  m_current_tool->on_secondary_button_press(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_secondary_button_release (int screen_x, int screen_y)
+WorldViewComponent::on_secondary_button_release(float screen_x, float screen_y)
 {
-  m_current_tool->on_secondary_button_release (screen_x, screen_y);
+  m_current_tool->on_secondary_button_release(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_delete_press (int screen_x, int screen_y)
+WorldViewComponent::on_delete_press(float screen_x, float screen_y)
 {
-  m_current_tool->on_delete_press (screen_x, screen_y);
+  m_current_tool->on_delete_press(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_duplicate_press (int screen_x, int screen_y)
+WorldViewComponent::on_duplicate_press(float screen_x, float screen_y)
 {
-  m_current_tool->on_duplicate_press (screen_x, screen_y);
+  m_current_tool->on_duplicate_press(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::on_join_press (int x, int y)
+WorldViewComponent::on_join_press(float x, float y)
 {
-  m_current_tool->on_join_press (x, y);
+  m_current_tool->on_join_press(x, y);
 }
 
 void
-WorldViewComponent::on_fix_press (int screen_x, int screen_y)
+WorldViewComponent::on_fix_press(float screen_x, float screen_y)
 {
-  m_current_tool->on_fix_press (screen_x, screen_y);
+  m_current_tool->on_fix_press(screen_x, screen_y);
 }
 
 void
-WorldViewComponent::scroll_left ()
+WorldViewComponent::scroll_left()
 {
-  m_gc.translate_offset (-20, 0);
+  m_gc.translate_offset(-20, 0);
 }
 
 void
-WorldViewComponent::scroll_right ()
+WorldViewComponent::scroll_right()
 {
-  m_gc.translate_offset (20, 0);
+  m_gc.translate_offset(20, 0);
 }
 
 void
-WorldViewComponent::scroll_up ()
+WorldViewComponent::scroll_up()
 {
-  m_gc.translate_offset (0, -20);
+  m_gc.translate_offset(0, -20);
 }
 
 void
-WorldViewComponent::scroll_down ()
+WorldViewComponent::scroll_down()
 {
-  m_gc.translate_offset (0, 20);
+  m_gc.translate_offset(0, 20);
 }
 
 void
-WorldViewComponent::on_tertiary_button_press (int x, int y)
+WorldViewComponent::on_tertiary_button_press(float x, float y)
 {
   m_scrolling = true;
   g_graphic_context->push_cursor();
@@ -350,22 +350,22 @@ WorldViewComponent::on_tertiary_button_press (int x, int y)
 
   m_x_offset = m_gc.get_x_offset();
   m_y_offset = m_gc.get_y_offset();
-  WorldGUIManager::instance()->grab_mouse (this);
+  WorldGUIManager::instance()->grab_mouse(this);
 
   m_scroll_pos_x = m_gc.screen_to_world_x(x);
   m_scroll_pos_y = m_gc.screen_to_world_y(y);
 }
 
 void
-WorldViewComponent::on_tertiary_button_release (int x, int y)
+WorldViewComponent::on_tertiary_button_release(float x, float y)
 {
   g_graphic_context->pop_cursor();
   m_scrolling = false;
-  WorldGUIManager::instance()->ungrab_mouse (this);
+  WorldGUIManager::instance()->ungrab_mouse(this);
 }
 
 void
-WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
+WorldViewComponent::on_mouse_move(float x, float y, float of_x, float of_y)
 {
   if (m_scrolling)
   {
@@ -383,13 +383,13 @@ WorldViewComponent::on_mouse_move (int x, int y, int of_x, int of_y)
 }
 
 void
-WorldViewComponent::on_scale_press(int x, int y)
+WorldViewComponent::on_scale_press(float x, float y)
 {
   m_current_tool->on_scale_press(x,y);
 }
 
 void
-WorldViewComponent::on_grid_press(int x, int y)
+WorldViewComponent::on_grid_press(float x, float y)
 {
   m_use_grid = !m_use_grid;
 }

@@ -28,8 +28,8 @@ public:
   UnixSystem ();
   virtual ~UnixSystem ();
 
-  unsigned int get_time () override;
-  void sleep (unsigned long) override;
+  unsigned long get_time () override;
+  void sleep (unsigned int msec) override;
   std::string get_construo_rc_path() override;
   std::string get_user_realname() override;
   std::string get_user_email() override;
@@ -37,7 +37,7 @@ public:
   FILE* open_input_file(const std::string& filename) override;
   FILE* open_output_file(const std::string& filename) override;
 
-  unsigned int get_mtime (const std::string& filename) override;
+  unsigned long get_mtime (const std::string& filename) override;
 
   FileType get_file_type(const std::string& filename) override;
   std::vector<std::string> read_directory(const std::string& pathname) override;
@@ -45,7 +45,7 @@ public:
   std::string translate_filename(const std::string&) override;
 
 private:
-  unsigned int start_time;
+  unsigned long start_time;
 
   /** The location of the users construo directory, aka ~/.construo/,
       the name contains a trailing slash */

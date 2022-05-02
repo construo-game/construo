@@ -35,22 +35,22 @@ public:
   void draw_background (ZoomGraphicContext* gc) override;
   void draw_foreground (ZoomGraphicContext* gc) override;
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press (float x, float y) override;
+  void on_primary_button_release (float x, float y) override;
 
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_press (float x, float y) override;
+  void on_secondary_button_release (float x, float y) override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y) override;
+  void on_mouse_move (float x, float y, float of_x, float of_y) override;
 
-  void on_button_press (int button_id, int x, int y) override;
+  void on_button_press (int button_id, float x, float y) override;
 
-  void on_scale_press (int x, int y) override;
-  void on_flip_press (int x, int y);
-  void on_duplicate_press (int x, int y) override;
-  void on_delete_press (int x, int y) override;
-  void on_fix_press (int x, int y) override;
-  void on_join_press (int x, int y) override;
+  void on_scale_press (float x, float y) override;
+  void on_flip_press (float x, float y);
+  void on_duplicate_press (float x, float y) override;
+  void on_delete_press (float x, float y) override;
+  void on_fix_press (float x, float y) override;
+  void on_join_press (float x, float y) override;
 
 private:
   enum Mode {

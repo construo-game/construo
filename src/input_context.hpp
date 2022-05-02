@@ -39,13 +39,12 @@ public:
   virtual bool get_key (int key) =0;
 
   /** @return mouse x coordinate */
-  virtual int  get_mouse_x () =0;
+  virtual float get_mouse_x () =0;
 
   /** @return mouse y coordinate */
-  virtual int  get_mouse_y () =0;
+  virtual float get_mouse_y () =0;
 
-  Vector2d get_mouse_pos() { return Vector2d(static_cast<float>(get_mouse_x()),
-                                             static_cast<float>(get_mouse_y())); }
+  Vector2d get_mouse_pos() { return Vector2d(get_mouse_x(), get_mouse_y()); }
 
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */

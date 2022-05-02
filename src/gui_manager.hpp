@@ -63,7 +63,7 @@ public:
 private:
   void process_events ();
   void process_button_events (ButtonEvent&);
-  GUIComponent* find_component_at (int, int);
+  GUIComponent* find_component_at(float x, float y);
 
 private:
   unsigned int m_frame_count;
@@ -76,8 +76,8 @@ private:
 
   GUIComponent* m_grabbing_component;
 
-  int m_last_x;
-  int m_last_y;
+  float m_last_x;
+  float m_last_y;
 
   /** A collection of GUI components aka widgets */
   std::vector<std::unique_ptr<GUIComponent> > m_components;

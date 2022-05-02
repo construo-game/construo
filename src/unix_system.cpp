@@ -85,21 +85,21 @@ UnixSystem::~UnixSystem ()
 {
 }
 
-unsigned int
+unsigned long
 UnixSystem::get_time ()
 { // riped out of ClanLib-0.7
   timeval tv;
   gettimeofday(&tv, NULL);
 
-  long tid = static_cast<long>(tv.tv_sec) * static_cast<long>(1000) + static_cast<long>(tv.tv_usec) / static_cast<long>(1000) - start_time;
+  unsigned long tid = tv.tv_sec * 1000 + tv.tv_usec / 1000 - start_time;
 
   return tid;
 }
 
 void
-UnixSystem::sleep (unsigned long t)
+UnixSystem::sleep(unsigned int msec)
 {
-  usleep (t);
+  usleep(msec);
 }
 
 std::string
@@ -136,20 +136,20 @@ UnixSystem::get_user_email()
     return "";
 }
 
-unsigned int
-UnixSystem::get_mtime (const std::string& filename)
+unsigned long
+UnixSystem::get_mtime(const std::string& filename)
 {
   std::string sys_name = translate_filename(filename);
 
   struct stat buf;
   if (stat(sys_name.c_str(), &buf) != 0)
-    {
-      return 0;
-    }
+  {
+    return 0;
+  }
   else
-    {
-      return buf.st_mtime;
-    }
+  {
+    return static_cast<unsigned long>(buf.st_mtime);
+  }
 }
 
 FileType

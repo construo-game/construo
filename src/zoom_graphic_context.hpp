@@ -26,10 +26,10 @@ class ZoomGraphicContext : public GraphicContext
 {
 public:
   ZoomGraphicContext();
-  ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_);
+  ZoomGraphicContext(float x1_, float y1_, float x2_, float y2_);
   virtual ~ZoomGraphicContext();
 
-  void set_clip_rect (int x1_, int y1_, int x2_, int y2_) override;
+  void set_clip_rect (float x1_, float y1_, float x2_, float y2_) override;
 
   /** Sets the clipping rectangles needed for the GC */
   void lock ();
@@ -47,8 +47,8 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) override;
 
-  int get_width() override;
-  int get_height() override;
+  float get_width() override;
+  float get_height() override;
 
   void clear () override { m_parent_gc->clear (); }
 
@@ -89,7 +89,7 @@ public:
    * @param x2 right border in world coordinates
    * @param y2 bottom border in world coordinates
    */
-  void zoom_to (int x1, int y1, int x2, int y2);
+  void zoom_to (float x1, float y1, float x2, float y2);
 
   /** Move to the given x and y world coordinates to the center of the
       screen */
@@ -100,7 +100,7 @@ public:
   GraphicContext* get_parent_gc () { return m_parent_gc; }
 
   /** Move the current position relativly x/y width */
-  void translate_offset (int x, int y);
+  void translate_offset (float x, float y);
 
  /** FIXME: What exactly is an offset?! */
   void set_offset (float x, float y);
@@ -141,14 +141,14 @@ public:
   void pop_quick_draw() override { m_parent_gc->pop_quick_draw(); }
 
 private:
-  int translate_x (int);
-  int translate_y (int);
+  float translate_x (float x);
+  float translate_y (float y);
 
 private:
-  int m_x1;
-  int m_y1;
-  int m_x2;
-  int m_y2;
+  float m_x1;
+  float m_y1;
+  float m_x2;
+  float m_y2;
 
   float m_x_offset;
   float m_y_offset;

@@ -98,7 +98,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext* gc)
 }
 
 void
-WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
+WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 {
   World& world = *Controller::instance()->get_world();
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
@@ -176,23 +176,23 @@ WorldViewInsertTool::on_primary_button_press(int screen_x, int screen_y)
 }
 
 void
-WorldViewInsertTool::on_primary_button_release (int x, int y)
+WorldViewInsertTool::on_primary_button_release (float x, float y)
 {
 }
 
 void
-WorldViewInsertTool::on_secondary_button_press (int screen_x, int screen_y)
+WorldViewInsertTool::on_secondary_button_press (float screen_x, float screen_y)
 {
   on_delete_press (screen_x, screen_y);
 }
 
 void
-WorldViewInsertTool::on_secondary_button_release (int screen_x, int screen_y)
+WorldViewInsertTool::on_secondary_button_release (float screen_x, float screen_y)
 {
 }
 
 void
-WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
+WorldViewInsertTool::on_delete_press (float screen_x, float screen_y)
 {
   World& world = *Controller::instance()->get_world ();
 
@@ -224,7 +224,7 @@ WorldViewInsertTool::on_delete_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewInsertTool::on_fix_press (int screen_x, int screen_y)
+WorldViewInsertTool::on_fix_press (float screen_x, float screen_y)
 {
   float x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
   float y = WorldViewComponent::instance()->get_gc()->screen_to_world_y (screen_y);

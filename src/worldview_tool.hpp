@@ -36,21 +36,21 @@ public:
   virtual void draw_background (ZoomGraphicContext* gc) =0;
   virtual void draw_foreground (ZoomGraphicContext* gc) =0;
 
-  virtual void on_button_press (int button_id, int x, int y) {}
+  virtual void on_button_press (int button_id, float x, float y) {}
 
-  virtual void on_primary_button_press (int x, int y) {}
-  virtual void on_primary_button_release (int x, int y) {}
+  virtual void on_primary_button_press (float x, float y) {}
+  virtual void on_primary_button_release (float x, float y) {}
 
-  virtual void on_secondary_button_press (int x, int y) {}
-  virtual void on_secondary_button_release (int x, int y) {}
+  virtual void on_secondary_button_press (float x, float y) {}
+  virtual void on_secondary_button_release (float x, float y) {}
 
-  virtual void on_scale_press (int x, int y) {}
-  virtual void on_duplicate_press (int x, int y) {}
-  virtual void on_delete_press (int x, int y) {}
-  virtual void on_fix_press (int x, int y) {}
-  virtual void on_join_press (int x, int y) {}
+  virtual void on_scale_press (float x, float y) {}
+  virtual void on_duplicate_press (float x, float y) {}
+  virtual void on_delete_press (float x, float y) {}
+  virtual void on_fix_press (float x, float y) {}
+  virtual void on_join_press (float x, float y) {}
 
-  virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
+  virtual void on_mouse_move (float x, float y, float of_x, float of_y) {}
 };
 
 #endif

@@ -19,7 +19,7 @@
 #include "colors.hpp"
 #include "gui_child_manager.hpp"
 
-GUIChildManager::GUIChildManager (int x, int y, int width, int height) :
+GUIChildManager::GUIChildManager (float x, float y, float width, float height) :
   GUIComponent (x, y, width, height),
   m_gc(),
   m_components(),
@@ -65,22 +65,22 @@ void
 GUIChildManager::draw (GraphicContext* parent_gc)
 {
   m_gc.set_parent_gc (parent_gc);
-  m_gc.set_offset (m_x, m_y);
+  m_gc.set_offset(static_cast<float>(m_x), static_cast<float>(m_y));
 
-  parent_gc->draw_fill_rect (static_cast<float>(m_x), m_y,
-                             static_cast<float>(m_x) + m_width, m_y + m_height,
-                             Colors::button_bg_passive);
-  parent_gc->draw_rect (static_cast<float>(m_x), m_y,
-                        static_cast<float>(m_x) + m_width, static_cast<float>(m_y) + m_height,
-                        Colors::button_fg_passive);
+  parent_gc->draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                            static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
+                            Colors::button_bg_passive);
+  parent_gc->draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                       static_cast<float>(m_x + m_width), static_cast<float>(m_y + m_height),
+                       Colors::button_fg_passive);
 
-  parent_gc->draw_fill_rect (static_cast<float>(m_x), static_cast<float>(m_y),
-                             static_cast<float>(m_x) + m_width, static_cast<float>(m_y),
-                             Colors::button_bg_hover);
+  parent_gc->draw_fill_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                            static_cast<float>(m_x + m_width), static_cast<float>(m_y),
+                            Colors::button_bg_hover);
 
-  parent_gc->draw_rect (static_cast<float>(m_x), static_cast<float>(m_y),
-                        m_x + m_width, static_cast<float>(m_y),
-                        Colors::button_fg_passive);
+  parent_gc->draw_rect(static_cast<float>(m_x), static_cast<float>(m_y),
+                       static_cast<float>(m_x + m_width), static_cast<float>(m_y),
+                       Colors::button_fg_passive);
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
   {
@@ -91,7 +91,7 @@ GUIChildManager::draw (GraphicContext* parent_gc)
 }
 
 void
-GUIChildManager::on_primary_button_press (int x, int y)
+GUIChildManager::on_primary_button_press (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -104,7 +104,7 @@ GUIChildManager::on_primary_button_press (int x, int y)
 }
 
 void
-GUIChildManager::on_primary_button_release (int x, int y)
+GUIChildManager::on_primary_button_release (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -117,7 +117,7 @@ GUIChildManager::on_primary_button_release (int x, int y)
 }
 
 void
-GUIChildManager::on_secondary_button_press (int x, int y)
+GUIChildManager::on_secondary_button_press (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -130,7 +130,7 @@ GUIChildManager::on_secondary_button_press (int x, int y)
 }
 
 void
-GUIChildManager::on_secondary_button_release (int x, int y)
+GUIChildManager::on_secondary_button_release (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -143,7 +143,7 @@ GUIChildManager::on_secondary_button_release (int x, int y)
 }
 
 void
-GUIChildManager::on_delete_press (int x, int y)
+GUIChildManager::on_delete_press (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -156,7 +156,7 @@ GUIChildManager::on_delete_press (int x, int y)
 }
 
 void
-GUIChildManager::on_fix_press (int x, int y)
+GUIChildManager::on_fix_press (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -179,7 +179,7 @@ GUIChildManager::on_mouse_leave ()
 }
 
 void
-GUIChildManager::wheel_up (int x, int y)
+GUIChildManager::wheel_up (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -192,7 +192,7 @@ GUIChildManager::wheel_up (int x, int y)
 }
 
 void
-GUIChildManager::wheel_down (int x, int y)
+GUIChildManager::wheel_down (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
@@ -259,7 +259,7 @@ GUIChildManager::scroll_down ()
 }
 
 void
-GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
+GUIChildManager::on_mouse_move (float x, float y, float of_x, float of_y)
 {
   GUIComponent* const comp = find_component_at (x, y);
   //std::cout << " MouseMove: " << x << " " << y << " " << comp << std::endl;
@@ -281,7 +281,7 @@ GUIChildManager::on_mouse_move (int x, int y, int of_x, int of_y)
 }
 
 GUIComponent*
-GUIChildManager::find_component_at (int x, int y)
+GUIChildManager::find_component_at (float x, float y)
 {
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {

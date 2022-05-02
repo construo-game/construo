@@ -26,11 +26,11 @@
 class GUIChildManager : public GUIComponent
 {
 public:
-  GUIChildManager (int x, int y, int width, int height);
-  ~GUIChildManager ();
+  GUIChildManager(float x, float y, float width, float height);
+  ~GUIChildManager();
 
-  void add (GUIComponent*);
-  void remove (GUIComponent*);
+  void add(GUIComponent*);
+  void remove(GUIComponent*);
   void replace(GUIComponent* old_comp, GUIComponent* new_comp);
 
   template<typename T, typename... Args>
@@ -42,33 +42,33 @@ public:
   }
 
   void draw(GraphicContext* gc) override;
-  virtual void draw_overlay (GraphicContext* gc) {}
+  virtual void draw_overlay(GraphicContext* gc) {}
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press(float x, float y) override;
+  void on_primary_button_release(float x, float y) override;
 
-  void on_secondary_button_click (int x, int y);
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_click(float x, float y);
+  void on_secondary_button_press(float x, float y) override;
+  void on_secondary_button_release(float x, float y) override;
 
-  void on_delete_press (int x, int y) override;
-  void on_fix_press (int x, int y) override;
+  void on_delete_press(float x, float y) override;
+  void on_fix_press(float x, float y) override;
 
-  virtual void on_mouse_enter () override;
-  virtual void on_mouse_leave () override;
+  virtual void on_mouse_enter() override;
+  virtual void on_mouse_leave() override;
 
-  void wheel_up (int x, int y) override;
-  void wheel_down (int x, int y) override;
+  void wheel_up(float x, float y) override;
+  void wheel_down(float x, float y) override;
 
-  void scroll_left () override;
-  void scroll_right () override;
-  void scroll_up () override;
-  void scroll_down () override;
+  void scroll_left() override;
+  void scroll_right() override;
+  void scroll_up() override;
+  void scroll_down() override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y) override;
+  void on_mouse_move(float x, float y, float of_x, float of_y) override;
 
 private:
-  GUIComponent* find_component_at (int, int);
+  GUIComponent* find_component_at(float x, float y);
 
 private:
   ZoomGraphicContext m_gc;

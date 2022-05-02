@@ -101,8 +101,8 @@ GUIDirectory::place_components ()
       i < m_files.size() && count < 9;
       ++i)
     {
-      m_files[i]->set_position(column * (200 + 50) + 50,
-                             row * (150 + 37) + 30);
+      m_files[i]->set_position(static_cast<float>(column) * (200.0f + 50.0f) + 50.0f,
+                               static_cast<float>(row) * (150.0f + 37.0f) + 30.0f);
       add(m_files[i]);
 
       column += 1;
@@ -144,13 +144,13 @@ GUIDirectory::move_down ()
 }
 
 void
-GUIDirectory::wheel_up (int x, int y)
+GUIDirectory::wheel_up (float x, float y)
 {
   move_up();
 }
 
 void
-GUIDirectory::wheel_down (int x, int y)
+GUIDirectory::wheel_down (float x, float y)
 {
   move_down();
 }

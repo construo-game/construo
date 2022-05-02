@@ -77,12 +77,12 @@ public:
 
   bool get_fullscreen () { return is_fullscreen; }
 
-  int get_width() override { return width; }
-  int get_height() override { return height; }
+  float get_width() override { return static_cast<float>(width); }
+  float get_height() override { return static_cast<float>(height); }
 
   bool get_key(int key) override;
-  int  get_mouse_x() override;
-  int  get_mouse_y() override;
+  float get_mouse_x() override;
+  float get_mouse_y() override;
 
   void run();
   void set_cursor_real(CursorType) override;
@@ -94,7 +94,7 @@ public:
   void special_func (int key, int x, int y);
   void mouse_motion_func (int x, int y);
 
-  void set_clip_rect (int x1, int y1, int x2, int y2) override;
+  void set_clip_rect (float x1, float y1, float x2, float y2) override;
 
   void push_quick_draw() override;
   void pop_quick_draw() override;

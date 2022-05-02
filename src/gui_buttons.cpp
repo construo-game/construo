@@ -27,10 +27,10 @@
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
 
-GUIButton::GUIButton (const std::string& title_,
-                      int x_pos_, int y_pos_, int width_, int height_) :
-  GUIComponent(x_pos_, y_pos_, width_, height_),
-  m_title (title_),
+GUIButton::GUIButton (const std::string& title,
+                      float x, float y, float width, float height) :
+  GUIComponent(x, y, width, height),
+  m_title(title),
   m_mouse_over(false),
   m_pressed(false)
 {
@@ -57,14 +57,14 @@ GUIButton::on_mouse_leave ()
 }
 
 void
-GUIButton::on_primary_button_press (int x, int y)
+GUIButton::on_primary_button_press (float x, float y)
 {
   WorldGUIManager::instance()->grab_mouse (this);
   m_pressed = true;
 }
 
 void
-GUIButton::on_primary_button_release (int x, int y)
+GUIButton::on_primary_button_release (float x, float y)
 {
   WorldGUIManager::instance()->ungrab_mouse (this);
   if (is_at (x, y))

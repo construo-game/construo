@@ -54,7 +54,7 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext* gc)
 }
 
 void
-WorldViewZoomTool::on_primary_button_press (int screen_x, int screen_y)
+WorldViewZoomTool::on_primary_button_press (float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = true;
   m_click_pos.x = WorldViewComponent::instance()->get_gc()->screen_to_world_x (screen_x);
@@ -62,7 +62,7 @@ WorldViewZoomTool::on_primary_button_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
+WorldViewZoomTool::on_primary_button_release (float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = false;
 
@@ -76,13 +76,13 @@ WorldViewZoomTool::on_primary_button_release (int screen_x, int screen_y)
 }
 
 void
-WorldViewZoomTool::on_secondary_button_press (int x, int y)
+WorldViewZoomTool::on_secondary_button_press (float x, float y)
 {
   WorldViewComponent::instance()->get_gc()->zoom_out(x, y);
 }
 
 void
-WorldViewZoomTool::on_secondary_button_release (int x, int y)
+WorldViewZoomTool::on_secondary_button_release (float x, float y)
 {
 
 }

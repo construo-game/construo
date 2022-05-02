@@ -41,58 +41,58 @@ private:
   static WorldViewComponent* instance_;
 
 public:
-  WorldViewComponent ();
-  ~WorldViewComponent ();
+  WorldViewComponent();
+  ~WorldViewComponent();
 
   static inline WorldViewComponent* instance() { return instance_; }
 
   WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
-  ZoomGraphicContext* get_gc () { return &m_gc; }
-  void draw (GraphicContext* parent_gc) override;
+  ZoomGraphicContext* get_gc() { return &m_gc; }
+  void draw(GraphicContext* parent_gc) override;
 
-  void set_mode (Mode m);
-  Mode get_mode () { return m_mode; }
+  void set_mode(Mode m);
+  Mode get_mode() { return m_mode; }
 
   bool uses_grid() const { return  m_use_grid; }
   float get_grid_size();
   float get_snap_size();
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press(float x, float y) override;
+  void on_primary_button_release(float x, float y) override;
 
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_press(float x, float y) override;
+  void on_secondary_button_release(float x, float y) override;
 
-  void on_tertiary_button_press (int x, int y) override;
-  void on_tertiary_button_release (int x, int y) override;
+  void on_tertiary_button_press(float x, float y) override;
+  void on_tertiary_button_release(float x, float y) override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y) override;
+  void on_mouse_move(float x, float y, float of_x, float of_y) override;
 
-  void on_scale_press(int x, int y) override;
-  void on_grid_press(int x, int y) override;
-  void on_duplicate_press (int x, int y) override;
-  void on_delete_press (int x, int y) override;
-  void on_fix_press (int x, int y) override;
-  void on_join_press (int x, int y) override;
+  void on_scale_press(float x, float y) override;
+  void on_grid_press(float x, float y) override;
+  void on_duplicate_press(float x, float y) override;
+  void on_delete_press(float x, float y) override;
+  void on_fix_press(float x, float y) override;
+  void on_join_press(float x, float y) override;
 
-  void on_button_press (int button_id, int x, int y) override;
+  void on_button_press(int button_id, float x, float y) override;
 
-  void wheel_up (int x, int y) override;
-  void wheel_down (int x, int y) override;
+  void wheel_up(float x, float y) override;
+  void wheel_down(float x, float y) override;
 
-  void scroll_left () override;
-  void scroll_right () override;
-  void scroll_up () override;
-  void scroll_down () override;
+  void scroll_left() override;
+  void scroll_right() override;
+  void scroll_up() override;
+  void scroll_down() override;
 
-  float get_zoom ();
+  float get_zoom();
 
   /** Called once the world has changed, aka a new world got loaded */
   void on_world_change();
 
   /** */
-  bool is_at (int x, int y) override { return true; }
+  bool is_at(float x, float y) override { return true; }
 
 private:
   /** Draw the background grid to which new dots align */

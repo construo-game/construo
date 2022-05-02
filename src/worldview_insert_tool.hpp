@@ -31,14 +31,14 @@ public:
   void draw_background (ZoomGraphicContext* gc) override;
   void draw_foreground (ZoomGraphicContext* gc) override;
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press (float x, float y) override;
+  void on_primary_button_release (float x, float y) override;
 
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_press (float x, float y) override;
+  void on_secondary_button_release (float x, float y) override;
 
-  void on_delete_press (int x, int y) override;
-  void on_fix_press (int x, int y) override;
+  void on_delete_press (float x, float y) override;
+  void on_fix_press (float x, float y) override;
 
   void  set_particle_mass (float p) { m_particle_mass = p; }
   float get_particle_mass () { return m_particle_mass; }

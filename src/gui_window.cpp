@@ -28,8 +28,8 @@ void no_press()
 {
 }
 
-GUIWindow::GUIWindow (const std::string& t, int x, int y, int width, int height) :
-  GUIChildManager (x, y, width, height),
+GUIWindow::GUIWindow (const std::string& t, float x, float y, float width, float height) :
+  GUIChildManager(x, y, width, height),
   m_title(t),
   m_mouse_over(true)
 {

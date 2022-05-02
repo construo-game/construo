@@ -20,14 +20,13 @@
 #include <string>
 #include "gui_component.hpp"
 
-/** */
 class GUILabel : public GUIComponent
 {
 public:
-  GUILabel (const std::string& title_, int x, int y, int width, int height);
+  GUILabel (const std::string& title_, float x, float y, float width, float height);
 
   void draw(GraphicContext*) override;
-  bool is_at(int, int) override { return false; }
+  bool is_at(float x, float y) override { return false; }
 
 private:
   std::string m_title;

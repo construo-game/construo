@@ -287,16 +287,16 @@ GlutDisplay::get_key (int key)
   return false;
 }
 
-int
+float
 GlutDisplay::get_mouse_x ()
 {
-  return mouse_x;
+  return static_cast<float>(mouse_x);
 }
 
-int
+float
 GlutDisplay::get_mouse_y ()
 {
-  return mouse_y;
+  return static_cast<float>(mouse_y);
 }
 
 void
@@ -615,7 +615,7 @@ GlutDisplay::enter_fullscreen()
 }
 
 void
-GlutDisplay::set_clip_rect (int x1, int y1, int x2, int y2)
+GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
 {
   //std::cout << "Setting cliprect: " << x1<< " " <<y1<< " " <<x2-x1+1<< " " <<y2-y1+1<<std::endl;
   // FIXME: doesn't really work for some reason

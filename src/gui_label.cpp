@@ -18,8 +18,8 @@
 #include "colors.hpp"
 #include "gui_label.hpp"
 
-GUILabel::GUILabel (const std::string& title, int x, int y, int width, int height) :
-  GUIComponent (x, y, width, height),
+GUILabel::GUILabel (const std::string& title, float x, float y, float width, float height) :
+  GUIComponent(x, y, width, height),
   m_title(title)
 {
 }

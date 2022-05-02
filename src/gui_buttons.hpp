@@ -25,7 +25,7 @@
 class GUIButton : public GUIComponent
 {
 public:
-  GUIButton (const std::string& title, int x_pos_, int y_pos_, int width_, int height_);
+  GUIButton (const std::string& title, float x, float y, float width, float height);
   GUIButton (const std::string& title);
 
   void draw_border_hover(GraphicContext*);
@@ -35,8 +35,8 @@ public:
   void on_mouse_enter() override;
   void on_mouse_leave() override;
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press (float x, float y) override;
+  void on_primary_button_release (float x, float y) override;
 
   void draw (GraphicContext*) override;
 
@@ -91,7 +91,7 @@ public:
   using HighlightFunc = std::function<bool ()>;
 
 public:
-  GUIGenericButton (const std::string& title, int x, int y, int width, int height,
+  GUIGenericButton (const std::string& title, float x, float y, float width, float height,
                     Func func, HighlightFunc hfunc = always_false) :
     GUIButton(title, x, y, width, height),
     m_func(func),

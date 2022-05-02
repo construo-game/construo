@@ -47,8 +47,8 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  int get_width() override { return m_width; }
-  int get_height() override { return m_height; }
+  float get_width() override { return static_cast<float>(m_width); }
+  float get_height() override { return static_cast<float>(m_height); }
 
   void toggle_fullscreen();
 
@@ -61,8 +61,8 @@ public:
   void leave_fullscreen() override;
 
   // Input Context stuff
-  int get_mouse_x () override;
-  int get_mouse_y () override;
+  float get_mouse_x () override;
+  float get_mouse_y () override;
 
   bool get_key (int key) override;
 
@@ -73,7 +73,7 @@ public:
 
   void run();
 
-  void set_clip_rect (int x1_, int y1_, int x2_, int y2_) override;
+  void set_clip_rect (float x1_, float y1_, float x2_, float y2_) override;
 
   unsigned int get_color_value(const Color& color);
   XColor get_xcolor(const Color& color);

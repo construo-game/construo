@@ -23,7 +23,8 @@
 class DeltaManager
 {
 private:
-  unsigned int last_time;
+  unsigned long last_time;
+
 public:
   DeltaManager ()
     : last_time (g_system_context->get_time ())

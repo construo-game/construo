@@ -22,8 +22,8 @@
 #include "zoom_graphic_context.hpp"
 
 ZoomGraphicContext::ZoomGraphicContext() :
-  m_x1(0),
-  m_y1(0),
+  m_x1(0.0f),
+  m_y1(0.0f),
   // FIXME: should use parent gc
   m_x2(g_graphic_context->get_width()),
   m_y2(g_graphic_context->get_height()),
@@ -34,7 +34,7 @@ ZoomGraphicContext::ZoomGraphicContext() :
 {
 }
 
-ZoomGraphicContext::ZoomGraphicContext(int x1_, int y1_, int x2_, int y2_) :
+ZoomGraphicContext::ZoomGraphicContext(float x1_, float y1_, float x2_, float y2_) :
   m_x1(x1_),
   m_y1(y1_),
   m_x2(x2_),
@@ -51,7 +51,7 @@ ZoomGraphicContext::~ZoomGraphicContext()
 }
 
 void
-ZoomGraphicContext::set_clip_rect (int x1_, int y1_, int x2_, int y2_)
+ZoomGraphicContext::set_clip_rect (float x1_, float y1_, float x2_, float y2_)
 {
   m_parent_gc->set_clip_rect(x1_, y1_, x2_, y2_);
 }
@@ -263,7 +263,7 @@ ZoomGraphicContext::move_to (float x, float y)
 }
 
 void
-ZoomGraphicContext::translate_offset (int x, int y)
+ZoomGraphicContext::translate_offset (float x, float y)
 {
   m_x_offset -= x;
   m_y_offset -= y;
@@ -300,7 +300,7 @@ ZoomGraphicContext::set_zoom (const float& z)
 }
 
 void
-ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
+ZoomGraphicContext::zoom_to(float x1, float y1, float x2, float y2)
 {
   float const center_x = (x1 + x2) / 2.0f;
   float const center_y = (y1 + y2) / 2.0f;
@@ -324,14 +324,14 @@ ZoomGraphicContext::zoom_to (int x1, int y1, int x2, int y2)
   m_y_offset = (get_height() / (2 * m_zoom)) - center_y;
 }
 
-int
-ZoomGraphicContext::get_width ()
+float
+ZoomGraphicContext::get_width()
 {
   return m_x2 - m_x1;
 }
 
-int
-ZoomGraphicContext::get_height ()
+float
+ZoomGraphicContext::get_height()
 {
   return m_y2 - m_y1;
 }

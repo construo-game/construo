@@ -32,7 +32,7 @@ using namespace StringUtils;
 
 GUIManager::GUIManager() :
   m_frame_count(0),
-  m_start_time(g_system_context->get_time ()),
+  m_start_time(g_system_context->get_time()),
   m_current_fps(0.0f),
   m_last_component(nullptr),
   m_current_component(nullptr),
@@ -84,7 +84,7 @@ GUIManager::draw ()
 }
 
 GUIComponent*
-GUIManager::find_component_at (int x, int y)
+GUIManager::find_component_at(float x, float y)
 {
   GUIComponent* component = nullptr;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
@@ -98,8 +98,8 @@ GUIManager::find_component_at (int x, int y)
 void
 GUIManager::process_button_events (ButtonEvent& button)
 {
-  int x = g_input_context->get_mouse_x();
-  int y = g_input_context->get_mouse_y();
+  float const x = g_input_context->get_mouse_x();
+  float const y = g_input_context->get_mouse_y();
 
   if (button.pressed)
     {
@@ -275,8 +275,8 @@ GUIManager::process_button_events (ButtonEvent& button)
 void
 GUIManager::process_events ()
 {
-  int x = g_input_context->get_mouse_x();
-  int y = g_input_context->get_mouse_y();
+  float const x = g_input_context->get_mouse_x();
+  float const y = g_input_context->get_mouse_y();
 
   if (m_grabbing_component && (m_last_x != x || m_last_y != y))
     {
@@ -284,7 +284,7 @@ GUIManager::process_events ()
     }
   if (m_current_component != m_grabbing_component)
     {
-      m_current_component->on_mouse_move (x, y, x - m_last_x, y - m_last_y);
+      m_current_component->on_mouse_move(x, y, x - m_last_x, y - m_last_y);
     }
 
   if (!m_grabbing_component)

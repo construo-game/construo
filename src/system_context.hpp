@@ -37,10 +37,10 @@ private:
 public:
   virtual ~SystemContext() {}
 
-  virtual unsigned int get_time () =0;
+  virtual unsigned long get_time () =0;
 
   /** sleep for the given number of milisec */
-  virtual void sleep (unsigned long) =0;
+  virtual void sleep (unsigned int msec) =0;
 
   /** @return '$HOME/.construo/' */
   virtual std::string get_construo_rc_path () =0;
@@ -57,7 +57,7 @@ public:
   virtual FILE* open_input_file(const std::string& filename) =0;
   virtual FILE* open_output_file(const std::string& filename) =0;
 
-  virtual unsigned int get_mtime (const std::string& filename) =0;
+  virtual unsigned long get_mtime(const std::string& filename) =0;
 
   /** @return a list of files available in the given directory */
   virtual std::vector<std::string> read_directory(const std::string& pathname) =0;

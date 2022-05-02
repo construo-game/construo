@@ -20,23 +20,22 @@
 #include "vector2d.hpp"
 #include "worldview_tool.hpp"
 
-/** */
 class WorldViewZoomTool : public WorldViewTool
 {
 public:
-  WorldViewZoomTool ();
-  ~WorldViewZoomTool ();
+  WorldViewZoomTool();
+  ~WorldViewZoomTool();
 
   void activate() override;
 
-  void draw_foreground (ZoomGraphicContext* gc) override;
-  void draw_background (ZoomGraphicContext* gc) override {}
+  void draw_foreground(ZoomGraphicContext* gc) override;
+  void draw_background(ZoomGraphicContext* gc) override {}
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press(float x, float y) override;
+  void on_primary_button_release(float x, float y) override;
 
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_press(float x, float y) override;
+  void on_secondary_button_release(float x, float y) override;
 
 private:
   /** Position of the mouse click, click_pos and the button_release

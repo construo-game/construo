@@ -17,7 +17,7 @@
 #include "gui_component.hpp"
 
 bool
-GUIComponent::is_at (int x, int y)
+GUIComponent::is_at(float x, float y)
 {
   return (x    >= m_x
           && y >= m_y

@@ -25,7 +25,7 @@
 class GUIWindow : public GUIChildManager
 {
 public:
-  GUIWindow (const std::string&, int x, int y, int width, int height);
+  GUIWindow (const std::string&, float x, float y, float width, float height);
   ~GUIWindow ();
 
   void draw(GraphicContext*) override;

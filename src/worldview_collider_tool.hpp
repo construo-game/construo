@@ -31,13 +31,13 @@ public:
   void draw_background (ZoomGraphicContext* gc) override;
   void draw_foreground (ZoomGraphicContext* gc) override;
 
-  void on_primary_button_press (int x, int y) override;
-  void on_primary_button_release (int x, int y) override;
+  void on_primary_button_press (float x, float y) override;
+  void on_primary_button_release (float x, float y) override;
 
-  void on_secondary_button_press (int x, int y) override;
-  void on_secondary_button_release (int x, int y) override;
+  void on_secondary_button_press (float x, float y) override;
+  void on_secondary_button_release (float x, float y) override;
 
-  void on_mouse_move (int x, int y, int of_x, int of_y) override;
+  void on_mouse_move (float x, float y, float of_x, float of_y) override;
 
 private:
   /** Get the collider on the given world cooridnates */

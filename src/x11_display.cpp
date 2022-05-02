@@ -360,16 +360,16 @@ X11Display::draw_string_centered(float x, float y, const std::string& str, Color
                str.c_str (), static_cast<int>(str.length()));
 }
 
-int
+float
 X11Display::get_mouse_x ()
 {
-  return m_mouse_x;
+  return static_cast<float>(m_mouse_x);
 }
 
-int
+float
 X11Display::get_mouse_y ()
 {
-  return m_mouse_y;
+  return static_cast<float>(m_mouse_y);
 }
 
 bool
@@ -716,7 +716,7 @@ X11Display::run()
 
       if (Controller::instance()->is_running())
         {
-          g_system_context->sleep (0); // FIXME: limit CPU usage via brute force
+          g_system_context->sleep(0); // FIXME: limit CPU usage via brute force
           wait_for_events();
         }
       else
@@ -743,7 +743,7 @@ X11Display::leave_fullscreen()
 }
 
 void
-X11Display::set_clip_rect (int x1, int y1, int x2, int y2)
+X11Display::set_clip_rect(float x1, float y1, float x2, float y2)
 {
   XRectangle rect[1];
 

@@ -30,72 +30,72 @@ public:
     m_width(0),
     m_height(0)
   {}
-  GUIComponent (int x_, int y_, int width_, int height_) :
+  GUIComponent (float x_, float y_, float width_, float height_) :
     m_x(x_),
     m_y(y_),
     m_width (width_),
     m_height(height_)
   {}
 
-  virtual ~GUIComponent () {}
+  virtual ~GUIComponent() {}
 
-  virtual void draw (GraphicContext* gc) = 0;
+  virtual void draw(GraphicContext* gc) = 0;
 
   /** @return true if the component is present at the given location */
-  virtual bool is_at (int x, int y);
+  virtual bool is_at(float x, float y);
 
-  void set_geometry(int x, int y, int width, int height) {
+  void set_geometry(float x, float y, float width, float height) {
     m_x = x;
     m_y = y;
     m_width = width;
     m_height = height;
   }
-  void set_position (int x, int y) { m_x = x, m_y = y; }
-  void set_width (int w) { m_width = w; }
-  void set_height (int h) { m_height = h; }
-  int  get_x_pos () { return m_x; }
-  int  get_y_pos () { return m_y; }
-  int  get_width () { return m_width; }
-  int  get_height () { return m_height; }
+  void set_position(float x, float y) { m_x = x, m_y = y; }
+  void set_width(float w) { m_width = w; }
+  void set_height(float h) { m_height = h; }
+  float get_x_pos() { return m_x; }
+  float get_y_pos() { return m_y; }
+  float get_width() { return m_width; }
+  float get_height() { return m_height; }
 
-  virtual void on_primary_button_press (int x, int y) {}
-  virtual void on_primary_button_release (int x, int y) {}
+  virtual void on_primary_button_press(float x, float y) {}
+  virtual void on_primary_button_release(float x, float y) {}
 
-  virtual void on_secondary_button_press (int x, int y) {}
-  virtual void on_secondary_button_release (int x, int y) {}
+  virtual void on_secondary_button_press(float x, float y) {}
+  virtual void on_secondary_button_release(float x, float y) {}
 
-  virtual void on_tertiary_button_press (int x, int y) {}
-  virtual void on_tertiary_button_release (int x, int y) {}
+  virtual void on_tertiary_button_press(float x, float y) {}
+  virtual void on_tertiary_button_release(float x, float y) {}
 
   // FIXME: Join these under some generic event handling, like:
   // void on_button_press(int button_id, int x, int y);
-  virtual void on_scale_press(int x, int y) {}
-  virtual void on_grid_press(int x, int y) {}
-  virtual void on_duplicate_press (int x, int y) {}
-  virtual void on_delete_press (int x, int y) {}
-  virtual void on_fix_press (int x, int y) {}
-  virtual void on_join_press (int x, int y) {}
+  virtual void on_scale_press(float x, float y) {}
+  virtual void on_grid_press(float x, float y) {}
+  virtual void on_duplicate_press(float x, float y) {}
+  virtual void on_delete_press(float x, float y) {}
+  virtual void on_fix_press(float x, float y) {}
+  virtual void on_join_press(float x, float y) {}
 
-  virtual void on_mouse_enter () {}
-  virtual void on_mouse_leave () {}
+  virtual void on_mouse_enter() {}
+  virtual void on_mouse_leave() {}
 
-  virtual void wheel_up (int x, int y) {}
-  virtual void wheel_down (int x, int y) {}
+  virtual void wheel_up(float x, float y) {}
+  virtual void wheel_down(float x, float y) {}
 
-  virtual void on_button_press (int button_id, int x, int y) {}
+  virtual void on_button_press(int button_id, float x, float y) {}
 
-  virtual void scroll_left () {}
-  virtual void scroll_right () {}
-  virtual void scroll_up () {}
-  virtual void scroll_down () {}
+  virtual void scroll_left() {}
+  virtual void scroll_right() {}
+  virtual void scroll_up() {}
+  virtual void scroll_down() {}
 
-  virtual void on_mouse_move (int x, int y, int of_x, int of_y) {}
+  virtual void on_mouse_move(float x, float y, float of_x, float of_y) {}
 
 protected:
-  int m_x;
-  int m_y;
-  int m_width;
-  int m_height;
+  float m_x;
+  float m_y;
+  float m_width;
+  float m_height;
 
 public:
   GUIComponent(const GUIComponent&) = delete;

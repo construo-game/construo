@@ -122,7 +122,7 @@ WorldViewSelectTool::deactivate ()
 }
 
 void
-WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
+WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
 {
   switch (m_mode)
     {
@@ -178,7 +178,7 @@ WorldViewSelectTool::on_primary_button_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewSelectTool::on_primary_button_release (int x, int y)
+WorldViewSelectTool::on_primary_button_release (float x, float y)
 {
   WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
 
@@ -210,7 +210,7 @@ WorldViewSelectTool::on_primary_button_release (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
+WorldViewSelectTool::on_secondary_button_press (float screen_x, float screen_y)
 {
   switch (m_mode)
     {
@@ -247,7 +247,7 @@ WorldViewSelectTool::on_secondary_button_press (int screen_x, int screen_y)
 }
 
 void
-WorldViewSelectTool::on_secondary_button_release (int x, int y)
+WorldViewSelectTool::on_secondary_button_release (float x, float y)
 {
   switch (m_mode)
     {
@@ -263,7 +263,7 @@ WorldViewSelectTool::on_secondary_button_release (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_delete_press (int x, int y)
+WorldViewSelectTool::on_delete_press (float x, float y)
 {
   Controller::instance()->push_undo();
 
@@ -277,7 +277,7 @@ WorldViewSelectTool::on_delete_press (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_fix_press (int x, int y)
+WorldViewSelectTool::on_fix_press (float x, float y)
 {
   bool mark_all = false;
   for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
@@ -305,7 +305,7 @@ WorldViewSelectTool::on_fix_press (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of_y)
+WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, float of_y)
 {
   World& world = *Controller::instance()->get_world ();
 
@@ -388,7 +388,7 @@ WorldViewSelectTool::on_mouse_move (int screen_x, int screen_y, int of_x, int of
 }
 
 void
-WorldViewSelectTool::on_scale_press (int x, int y)
+WorldViewSelectTool::on_scale_press (float x, float y)
 {
   if (!m_selection.empty())
     {
@@ -397,7 +397,7 @@ WorldViewSelectTool::on_scale_press (int x, int y)
       g_graphic_context->push_cursor();
       g_graphic_context->set_cursor(CURSOR_SCALE);
 
-      m_click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y));
+      m_click_pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)));
       WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
 
       m_mode = SCALING_SELECTION_MODE;
@@ -407,15 +407,15 @@ WorldViewSelectTool::on_scale_press (int x, int y)
 }
 
 void
-WorldViewSelectTool::on_duplicate_press (int x, int y)
+WorldViewSelectTool::on_duplicate_press (float x, float y)
 {
   m_selection.duplicate ();
 }
 
 void
-WorldViewSelectTool::on_button_press (int button_id, int x, int y)
+WorldViewSelectTool::on_button_press (int button_id, float x, float y)
 {
-  Vector2d pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(x, y));
+  Vector2d pos = WorldViewComponent::instance()->get_gc()->screen_to_world(Vector2d(static_cast<float>(x), static_cast<float>(y)));
 
   switch (button_id)
     {
@@ -433,7 +433,7 @@ WorldViewSelectTool::on_button_press (int button_id, int x, int y)
 }
 
 void
-WorldViewSelectTool::on_join_press (int x, int y)
+WorldViewSelectTool::on_join_press (float x, float y)
 {
   std::cout << "Join pressed" << std::endl;
   m_selection.join_doubles(5.0f);
