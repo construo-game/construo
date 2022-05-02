@@ -81,7 +81,6 @@ set(CONSTRUO_SOURCES_CXX
   src/cursor_type.hpp
   src/delta_manager.hpp
   src/events.hpp
-  src/force_emitter.hpp
   src/graphic_context.hpp
   src/gui_buttons.cpp
   src/gui_buttons.hpp
