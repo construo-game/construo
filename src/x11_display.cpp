@@ -18,7 +18,9 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
+#include <X11/Xatom.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "cursors/cursors.hpp"
 
@@ -32,6 +34,10 @@
 
 extern ConstruoMain* construo_main;
 Atom wm_delete_window;
+
+constexpr long _NET_WM_STATE_REMOVE = 0; /* remove/unset property */
+constexpr long _NET_WM_STATE_ADD = 1;    /* add/set property */
+constexpr long _NET_WM_STATE_TOGGLE = 2; /* toggle property  */
 
 X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_cursor_scroll(),
@@ -64,25 +70,24 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_mouse_x(),
   m_mouse_y(),
   m_depth(),
-  m_fullscreen (fullscreen_)
+  m_fullscreen(fullscreen_)
 {
   std::cout << "Using X11 display" << std::endl;
   m_display = XOpenDisplay(NULL);
-
   if (!m_display) {
     throw ConstruoError("X11Display: Couldn't conncet to X server");
   }
+
+  XSetErrorHandler([](Display* display, XErrorEvent* error_event){
+    std::cerr << "X11 Error" << std::endl;
+    return 0;
+  });
 
   int screen = DefaultScreen(m_display);
   XSetWindowAttributes attributes;
 
   attributes.background_pixel  = BlackPixel(m_display, screen);
   attributes.border_pixel      = WhitePixel(m_display, screen);
-
-  if (m_fullscreen)
-    attributes.override_redirect = True;
-  else
-    attributes.override_redirect = False;
 
   attributes.event_mask =
     KeyPressMask         |
@@ -103,14 +108,30 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
                            CopyFromParent, // depth
                            InputOutput, // class
                            nullptr /*CopyFromParent*/, // visual
-                           CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
+                           CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
                            &attributes);
 
   { // Communicate a bit with the window manager
-    char *title = const_cast<char*>(construo_main->get_title());
+    char* title = const_cast<char*>(construo_main->get_title());
 
     XTextProperty text_property;
     XStringListToTextProperty(&title, 1, &text_property);
+
+    Atom wm_name = XInternAtom(m_display, "_NET_WM_NAME", False);
+    XChangeProperty(m_display, m_window, wm_name, XInternAtom(m_display, "UTF8_STRING", false), 8, PropModeReplace,
+                    reinterpret_cast<unsigned char const*>(title), static_cast<int>(strlen(title)));
+
+    Atom wm_pid = XInternAtom(m_display, "_NET_WM_PID", False);
+    pid_t pid = getpid();
+    XChangeProperty(m_display, m_window, wm_pid, XA_CARDINAL, 32, PropModeReplace,
+                    reinterpret_cast<unsigned char const*>(&pid), 1);
+
+    if (m_fullscreen) {
+      Atom wm_state = XInternAtom(m_display, "_NET_WM_STATE", False);
+      Atom wm_fullscreen = XInternAtom(m_display, "_NET_WM_STATE_FULLSCREEN", False);
+      XChangeProperty(m_display, m_window, wm_state, XA_ATOM, 32, PropModeReplace,
+                      reinterpret_cast<unsigned char*>(&wm_fullscreen), 1);
+    }
 
     XSizeHints size_hints;
     size_hints.x = 0;
@@ -164,9 +185,6 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_gc = XCreateGC(m_display, m_window,
                    GCLineWidth | GCForeground | GCBackground,
                    &gcv);
-
-  if (m_fullscreen)
-    enter_fullscreen();
 
   {
     // Visual* visual = XDefaultVisual(display, DefaultScreen(display));
@@ -224,16 +242,9 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
 
 X11Display::~X11Display()
 {
-  //std::cout << "Closing X11 display" << std::endl;
-
-  if (m_fullscreen)
-    {
-      //std::cout << "X11Display: Restoring video mode" << std::endl;
-      leave_fullscreen ();
-    }
-
-  if (m_doublebuffer)
+  if (m_doublebuffer) {
     XFreePixmap(m_display, m_drawable);
+  }
 
   XDestroyWindow(m_display, m_window);
   XCloseDisplay(m_display);
@@ -701,13 +712,6 @@ X11Display::flip ()
 }
 
 void
-X11Display::enter_fullscreen ()
-{
-  std::cout << "X11Display: libXxf86vm missing, fullscreen support not\n"
-            << "            available." << std::endl;
-}
-
-void
 X11Display::run()
 {
   while (!ScreenManager::instance ()->is_finished ())
@@ -729,17 +733,61 @@ X11Display::run()
 void
 X11Display::toggle_fullscreen()
 {
-  //std::cout << "Fullscreen state: " << fullscreen << std::endl;
-
-  if (m_fullscreen)
+  if (m_fullscreen) {
     leave_fullscreen();
-  else
+  } else {
     enter_fullscreen();
+  }
+}
+
+void
+X11Display::enter_fullscreen ()
+{
+  // Mapped windows must use XSendEvent, not XChangeProperty
+  XEvent event;
+
+  event.xclient.type = ClientMessage;
+  event.xclient.serial = 0;
+  event.xclient.send_event = True;
+  event.xclient.message_type = XInternAtom(m_display, "_NET_WM_STATE", False);
+  event.xclient.window = m_window;
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = _NET_WM_STATE_ADD;
+  event.xclient.data.l[1] = XInternAtom(m_display, "_NET_WM_STATE_FULLSCREEN", False);
+  event.xclient.data.l[2] = 0;
+  event.xclient.data.l[3] = 0;
+  event.xclient.data.l[4] = 0;
+
+  if (!XSendEvent(m_display, DefaultRootWindow(m_display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event)) {
+    std::cerr << "XSendEvent failure" << std::endl;
+  }
+
+  m_fullscreen = true;
 }
 
 void
 X11Display::leave_fullscreen()
 {
+  // Mapped windows must use XSendEvent, not XChangeProperty
+  XEvent event;
+
+  event.xclient.type = ClientMessage;
+  event.xclient.serial = 0;
+  event.xclient.send_event = True;
+  event.xclient.message_type = XInternAtom(m_display, "_NET_WM_STATE", False);
+  event.xclient.window = m_window;
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = _NET_WM_STATE_REMOVE;
+  event.xclient.data.l[1] = XInternAtom(m_display, "_NET_WM_STATE_FULLSCREEN", False);
+  event.xclient.data.l[2] = 0;
+  event.xclient.data.l[3] = 0;
+  event.xclient.data.l[4] = 0;
+
+  if (!XSendEvent(m_display, DefaultRootWindow(m_display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event)) {
+    std::cerr << "XSendEvent failure" << std::endl;
+  }
+
+  m_fullscreen = false;
 }
 
 void
