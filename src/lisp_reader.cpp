@@ -30,7 +30,7 @@ bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d&
     return false;
   }
 
-  if (v.size() != 2) {
+  if (v.size() < 2) {
     return false;
   }
 
