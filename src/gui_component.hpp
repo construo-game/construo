@@ -51,8 +51,6 @@ public:
     m_height = height;
   }
   void set_position(float x, float y) { m_x = x, m_y = y; }
-  void set_width(float w) { m_width = w; }
-  void set_height(float h) { m_height = h; }
   float get_x_pos() { return m_x; }
   float get_y_pos() { return m_y; }
   float get_width() { return m_width; }
