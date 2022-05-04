@@ -154,7 +154,8 @@ RectCollider::serialize(LispWriter& writer)
 {
   writer.begin_object("rect")
     .write("pos1", Vector2d(x1, y1))
-    .write("pos2", Vector2d(x2, y2));
+    .write("pos2", Vector2d(x2, y2))
+    .end_object();
 }
 
 /* EOF */
