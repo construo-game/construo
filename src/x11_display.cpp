@@ -638,6 +638,7 @@ X11Display::read_event ()
       }
 
       ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
+      ScreenManager::instance()->draw(*this);
       break;
 
     case DestroyNotify:

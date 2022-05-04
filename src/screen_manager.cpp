@@ -36,6 +36,12 @@ ScreenManager::run_once(GraphicContext& gc)
   m_current_gui_manager->run_once(gc);
 }
 
+void
+ScreenManager::draw(GraphicContext& gc)
+{
+  m_current_gui_manager->draw(gc);
+}
+
 bool
 ScreenManager::is_finished ()
 {

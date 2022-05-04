@@ -68,19 +68,20 @@ GUIManager::run_once(GraphicContext& gc)
 
   update();
 
-  gc.clear();
   draw(gc);
-  draw_overlay(gc);
-  gc.flip();
 }
 
 void
 GUIManager::draw(GraphicContext& gc)
 {
+  gc.clear();
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
   {
     (*i)->draw(gc);
   }
+
+  draw_overlay(gc);
+  gc.flip();
 }
 
 GUIComponent*

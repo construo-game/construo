@@ -40,6 +40,7 @@ public:
   void quit();
   bool is_finished();
   void run_once(GraphicContext& gc);
+  void draw(GraphicContext& gc);
   void resize(float width, float height);
 
 private:
