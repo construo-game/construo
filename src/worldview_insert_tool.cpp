@@ -77,7 +77,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
   if (m_current_particle)
     {
       gc.GraphicContext::draw_line (m_current_particle->pos, new_particle_pos,
-                                     Colors::new_spring, 2);
+                                     g_style.new_spring, 2);
     }
 
   float x = WorldViewComponent::instance()->zoom().screen_to_world_x(g_input_context->get_mouse_x ());
@@ -93,7 +93,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
       gc.draw_fill_circle(new_particle_pos.x,
                            new_particle_pos.y,
                            3.0f,
-                           Colors::highlight);
+                           g_style.highlight);
     }
 }
 

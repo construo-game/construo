@@ -16,30 +16,31 @@
 
 #include "colors.hpp"
 
-namespace Colors {
+GUIStyle const g_style = {
+  .button_fg_pressed = Color(0xFFFFFFFF),
+  .button_fg_hover   = Color(0x009f9fFF),
+  .button_fg_passive = Color(0x007f7fFF),
 
-Color button_fg_pressed (0xFFFFFFFF);
-Color button_fg_hover   (0x009f9fFF);
-Color button_fg_passive (0x007f7fFF);
+  .button_bg_pressed = Color(0x000000FF),
+  .button_bg_hover   = Color(0x006060EE),
+  .button_bg_passive = Color(0x004f4fAA),
+  .button_bg_active  = Color(0x00AAAAAA),
 
-Color button_bg_pressed (0x000000FF);
-Color button_bg_hover   (0x006060EE);
-Color button_bg_passive (0x004f4fAA);
-Color button_bg_active  (0x00AAAAAA);
+  .new_spring        = Color(0xAAAAAAFF),
 
-Color new_spring        (0xAAAAAAFF);
-Color selection_rect    (0xFFFFFFFF);
-Color selection_resizer (0xFFFF00FF);
+  .selection_rect    = Color(0xFFFFFFFF),
+  .selection_resizer = Color(0xFFFF00FF),
 
-Color rect_collider_fg  (0x0000FFFF);
-Color rect_collider_bg  (0x0000AAFF);
-Color highlight         (0xEEEEEEFF);
+  .rect_collider_fg  = Color(0x0000FFFF),
+  .rect_collider_bg  = Color(0x0000AAFF),
+  .ground_color      = Color(0x000044FF),
+  .ground_grid_color = Color(0x000073FF),
 
-Color grid_color        (0x444444FF);
-Color grid_color2       (0x666666FF);
-Color ground_color      (0x000044FF);
-Color ground_grid_color (0x000073FF);
+  .highlight         = Color(0xEEEEEEFF),
 
-} // namespace Colors
+  .grid_color        = Color(0x444444FF),
+  .grid_color2       = Color(0x666666FF),
+
+};
 
 /* EOF */

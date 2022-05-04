@@ -77,18 +77,18 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 
   parent_gc.draw_fill_rect(m_x, m_y,
                            m_x + m_width, m_y + m_height,
-                           Colors::button_bg_passive);
+                           g_style.button_bg_passive);
   parent_gc.draw_rect(m_x, m_y,
                       m_x + m_width, m_y + m_height,
-                      Colors::button_fg_passive);
+                      g_style.button_fg_passive);
 
   parent_gc.draw_fill_rect(m_x, m_y,
                            m_x + m_width, m_y,
-                           Colors::button_bg_hover);
+                           g_style.button_bg_hover);
 
   parent_gc.draw_rect(m_x, m_y,
                       m_x + m_width, m_y,
-                      Colors::button_fg_passive);
+                      g_style.button_fg_passive);
 
   for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
   {

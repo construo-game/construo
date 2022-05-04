@@ -26,6 +26,10 @@ struct Color
   float b;
   float a;
 
+  Color() :
+    r(0.0f), g(0.0f), b(0.0f), a(0.0f)
+  {}
+
   Color (uint32_t i) :
     r(static_cast<float>((i & 0xFF000000) >> 24) / 255.0f),
     g(static_cast<float>((i & 0x00FF0000) >> 16) / 255.0f),

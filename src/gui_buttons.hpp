@@ -84,7 +84,7 @@ public:
   {
     if (m_sig_highlight_p()) {
       gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
-                        Colors::button_bg_active);
+                        g_style.button_bg_active);
     }
 
     GUIButton::draw_content (gc);

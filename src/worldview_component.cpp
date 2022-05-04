@@ -111,8 +111,8 @@ WorldViewComponent::get_snap_size()
 void
 WorldViewComponent::draw_grid(ZoomGraphicContext& gc)
 {
-  Color color = Colors::grid_color;
-  Color color2 = Colors::grid_color2;
+  Color color = g_style.grid_color;
+  Color color2 = g_style.grid_color2;
 
   float grid_size = get_grid_size();
 
@@ -149,7 +149,7 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
                       599,
                       gc.zoom().screen_to_world_x(parent_gc.get_width()),
                       gc.zoom().screen_to_world_y(parent_gc.get_height()),
-                      Colors::ground_color);
+                      g_style.ground_color);
 
     // draw grid
     {
@@ -166,13 +166,13 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
       for(float y = start_y; y < end_y; y += step_size) {
         gc.draw_line(start_x, y,
                      end_x, y,
-                     Colors::ground_grid_color, 1);
+                     g_style.ground_grid_color, 1);
       }
 
       for(float x = start_x; x < end_x; x += step_size) {
         gc.draw_line(x, start_y,
                      x, end_y,
-                     Colors::ground_grid_color, 1);
+                     g_style.ground_grid_color, 1);
       }
       gc.pop_quick_draw();
     }
@@ -181,7 +181,7 @@ WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
                  599,
                  gc.zoom().screen_to_world_x(parent_gc.get_width()),
                  gc.zoom().screen_to_world_y(parent_gc.get_height()),
-                 Colors::rect_collider_bg);
+                 g_style.rect_collider_bg);
   }
 }
 

@@ -63,7 +63,7 @@ Particle::draw_highlight (ZoomGraphicContext& gc)
 {
   gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(pos),
                                        Math::max(6.0f, get_mass() + 3),
-                                       Colors::highlight);
+                                       g_style.highlight);
 }
 
 void

@@ -49,7 +49,7 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext& gc)
                  Math::min(y, m_click_pos.y),
                  Math::max(x, m_click_pos.x),
                  Math::max(y, m_click_pos.y),
-                 Colors::new_spring);
+                 g_style.new_spring);
   }
 }
 

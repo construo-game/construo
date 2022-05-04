@@ -41,7 +41,7 @@ WorldViewColliderTool::draw_background (ZoomGraphicContext& gc)
   Vector2d mouse_pos = WorldViewComponent::instance()->zoom().screen_to_world(g_input_context->get_mouse_pos ());
   if (m_creating_rect)
     {
-      gc.GraphicContext::draw_rect(m_click_pos, mouse_pos, Colors::selection_rect);
+      gc.GraphicContext::draw_rect(m_click_pos, mouse_pos, g_style.selection_rect);
     }
 }
 

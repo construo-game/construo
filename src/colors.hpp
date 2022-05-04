@@ -19,37 +19,38 @@
 
 #include "color.hpp"
 
-namespace Colors {
+struct GUIStyle
+{
+  Color button_fg_pressed;
+  Color button_fg_hover;
+  Color button_fg_passive;
 
-extern Color button_fg_pressed;
-extern Color button_fg_hover;
-extern Color button_fg_passive;
+  Color button_bg_pressed;
+  Color button_bg_hover;
+  Color button_bg_passive;
+  Color button_bg_active;
 
-extern Color button_bg_pressed;
-extern Color button_bg_hover;
-extern Color button_bg_passive;
-extern Color button_bg_active;
+  /** Color for new springs and other helper lines */
+  Color new_spring;
 
-/** Color for new springs and other helper lines */
-extern Color new_spring;
+  Color selection_rect;
+  Color selection_resizer;
 
-extern Color selection_rect;
-extern Color selection_resizer;
+  /** Color for collidables */
+  Color rect_collider_fg;
+  Color rect_collider_bg;
+  Color ground_color;
+  Color ground_grid_color;
 
-/** Color for collidables */
-extern Color rect_collider_fg;
-extern Color rect_collider_bg;
-extern Color ground_color;
-extern Color ground_grid_color;
+  /** Color for highlighted particles or springs */
+  Color highlight;
 
-/** Color for highlighted particles or springs */
-extern Color highlight;
+  /** Color of the background grid */
+  Color grid_color;
+  Color grid_color2;
+};
 
-/** Color of the background grid */
-extern Color grid_color;
-extern Color grid_color2;
-
-} // namespace Colors
+extern GUIStyle const g_style;
 
 #endif
 

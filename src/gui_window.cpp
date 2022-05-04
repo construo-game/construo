@@ -49,14 +49,14 @@ GUIWindow::draw(GraphicContext& gc)
   /*if (mouse_over)
     {
       std::cout << "MOUSEOVER" << std::endl;
-      gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_bg_hover);
-      gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_fg_hover);
+      gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_bg_hover);
+      gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_fg_hover);
     }
   else
     {
       std::cout << "MOUSEOVER NOT OVER" << std::endl;
-      gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_bg_passive);
-      gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, Colors::button_fg_passive);
+      gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_bg_passive);
+      gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_fg_passive);
     }*/
 
   GUIChildManager::draw(gc);

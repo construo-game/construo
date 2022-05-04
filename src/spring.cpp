@@ -143,7 +143,7 @@ void
 Spring::draw_highlight (ZoomGraphicContext& gc)
 {
   gc.GraphicContext::draw_line (particles.first->pos, particles.second->pos,
-                                 Colors::highlight, 4);
+                                 g_style.highlight, 4);
 }
 
 void

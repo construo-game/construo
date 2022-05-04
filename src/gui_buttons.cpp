@@ -77,15 +77,15 @@ GUIButton::draw (GraphicContext& gc)
 {
   if (m_pressed && m_mouse_over)
     {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_pressed);
+      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_pressed);
     }
   else if (m_mouse_over)
     {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_hover);
+      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_hover);
     }
   else
     {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, Colors::button_bg_passive);
+      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_passive);
     }
 
   draw_content (gc);
@@ -114,21 +114,21 @@ void
 GUIButton::draw_border_hover(GraphicContext& gc)
 {
   gc.draw_rect (m_x, m_y,
-                 m_x + m_width, m_y + m_height, Colors::button_fg_hover);
+                 m_x + m_width, m_y + m_height, g_style.button_fg_hover);
 }
 
 void
 GUIButton::draw_border_pressed(GraphicContext& gc)
 {
   gc.draw_rect (m_x, m_y,
-                 m_x + m_width, m_y + m_height, Colors::button_fg_pressed);
+                 m_x + m_width, m_y + m_height, g_style.button_fg_pressed);
 }
 
 void
 GUIButton::draw_border_normal(GraphicContext& gc)
 {
   gc.draw_rect (m_x, m_y,
-                 m_x + m_width, m_y + m_height, Colors::button_fg_passive);
+                 m_x + m_width, m_y + m_height, g_style.button_fg_passive);
 }
 
 /* EOF */

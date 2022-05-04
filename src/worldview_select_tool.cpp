@@ -64,7 +64,7 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
                   Math::min(y, m_click_pos.y),
                   Math::max(x, m_click_pos.x),
                   Math::max(y, m_click_pos.y),
-                  Colors::selection_rect);
+                  g_style.selection_rect);
   }
 
   if (!m_selection.empty())
@@ -84,29 +84,29 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
     float border = 20.0f / gc.zoom().get_zoom();
     gc.draw_rect (selection_box.x1 - border, selection_box.y1 - border,
                   selection_box.x2 + border, selection_box.y2 + border,
-                  Colors::new_spring);
+                  g_style.new_spring);
 
     if (0) // draw selection rect
     {
       float rsize = 5.0f / gc.zoom().get_zoom();
       gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
                          selection_box.x1 - border + rsize, selection_box.y1 - border + rsize,
-                         Colors::selection_resizer);
+                         g_style.selection_resizer);
       gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize,
                          selection_box.x2 + border + rsize, selection_box.y1 - border + rsize,
-                         Colors::selection_resizer);
+                         g_style.selection_resizer);
       gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize,
                          selection_box.x1 - border + rsize, selection_box.y2 + border + rsize,
-                         Colors::selection_resizer);
+                         g_style.selection_resizer);
       gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize,
                          selection_box.x2 + border + rsize, selection_box.y2 + border + rsize,
-                         Colors::selection_resizer);
+                         g_style.selection_resizer);
     }
 
     gc.get_parent_gc().draw_circle(gc.zoom().world_to_screen(m_selection.get_center ()),
-                                   8.0f, Colors::selection_rect);
+                                   8.0f, g_style.selection_rect);
     gc.get_parent_gc().draw_circle(gc.zoom().world_to_screen(m_selection.get_center ()),
-                                   16.0f, Colors::selection_rect);
+                                   16.0f, g_style.selection_rect);
   }
 }
 
