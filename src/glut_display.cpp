@@ -121,8 +121,6 @@ GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
     glEnable(GL_LINE_SMOOTH);
   }
 
-  glEnable(GL_SCISSOR_TEST);
-
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
   m_window_x_pos = 0;
@@ -620,12 +618,19 @@ GlutDisplay::enter_fullscreen()
 void
 GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
 {
+  glEnable(GL_SCISSOR_TEST);
   glScissor(
     static_cast<int>(x1), // x
     m_height - 1 - static_cast<int>(y2), // y
     static_cast<int>(x2 - x1), // weight
     static_cast<int>(y2 - y1) // height
     );
+}
+
+void
+GlutDisplay::clear_clip_rect()
+{
+  glDisable(GL_SCISSOR_TEST);
 }
 
 void

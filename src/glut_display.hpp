@@ -66,6 +66,7 @@ public:
   void mouse_motion_func(int x, int y);
 
   void set_clip_rect(float x1, float y1, float x2, float y2) override;
+  void clear_clip_rect() override;
 
   void push_quick_draw() override;
   void pop_quick_draw() override;

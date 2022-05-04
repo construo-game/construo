@@ -30,6 +30,7 @@ public:
   virtual ~ZoomGraphicContext();
 
   void set_clip_rect(float x1_, float y1_, float x2_, float y2_) override;
+  void clear_clip_rect() override;
 
   void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;

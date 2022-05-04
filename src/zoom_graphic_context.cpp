@@ -38,6 +38,12 @@ ZoomGraphicContext::set_clip_rect(float x1_, float y1_, float x2_, float y2_)
 }
 
 void
+ZoomGraphicContext::clear_clip_rect()
+{
+  m_parent_gc.clear_clip_rect();
+}
+
+void
 ZoomGraphicContext::lock()
 {
   m_parent_gc.set_clip_rect(m_zoom.bounding_x1(), m_zoom.bounding_y1(),
@@ -47,7 +53,7 @@ ZoomGraphicContext::lock()
 void
 ZoomGraphicContext::unlock()
 {
-  m_parent_gc.set_clip_rect(0, 0, m_parent_gc.get_width() - 1, m_parent_gc.get_height() - 1);
+  m_parent_gc.clear_clip_rect();
 }
 
 void

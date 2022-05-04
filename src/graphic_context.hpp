@@ -87,7 +87,8 @@ public:
 
   virtual void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
 
-  virtual void set_clip_rect (float x1_, float y1_, float x2_, float y2_) =0;
+  virtual void set_clip_rect(float x1_, float y1_, float x2_, float y2_) =0;
+  virtual void clear_clip_rect() = 0;
 
   virtual float get_width ()  =0;
   virtual float get_height () =0;

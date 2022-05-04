@@ -794,17 +794,23 @@ X11Display::leave_fullscreen()
 void
 X11Display::set_clip_rect(float x1, float y1, float x2, float y2)
 {
-  XRectangle rect[1];
+  XRectangle rect;
 
-  rect[0].x = static_cast<short int>(x1);
-  rect[0].y = static_cast<short int>(y1);
-  rect[0].width  = static_cast<short int>(x2 - x1 + 1);
-  rect[0].height = static_cast<short int>(y2 - y1 + 1);
+  rect.x = static_cast<short int>(x1);
+  rect.y = static_cast<short int>(y1);
+  rect.width  = static_cast<short int>(x2 - x1 + 1);
+  rect.height = static_cast<short int>(y2 - y1 + 1);
 
   XSetClipRectangles(m_display, m_gc,
-                      0, 0, // clip origin
-                      rect, 1,
-                      Unsorted);
+                     0, 0, // clip origin
+                     &rect, 1,
+                     Unsorted);
+}
+
+void
+X11Display::clear_clip_rect()
+{
+  XSetClipMask(m_display, m_gc, None);
 }
 
 unsigned int

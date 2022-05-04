@@ -73,7 +73,8 @@ public:
 
   void run();
 
-  void set_clip_rect (float x1_, float y1_, float x2_, float y2_) override;
+  void set_clip_rect(float x1_, float y1_, float x2_, float y2_) override;
+  void clear_clip_rect() override;
 
   unsigned int get_color_value(const Color& color);
   XColor get_xcolor(const Color& color);
