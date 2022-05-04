@@ -17,6 +17,7 @@
 #ifndef HEADER_SYSTEM_CONTEXT_HPP
 #define HEADER_SYSTEM_CONTEXT_HPP
 
+#include <filesystem>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -43,7 +44,7 @@ public:
   virtual void sleep (unsigned int msec) =0;
 
   /** @return '$HOME/.construo/' */
-  virtual std::string get_construo_rc_path () =0;
+  virtual std::filesystem::path get_construo_rc_path() =0;
 
   /** @return the realname of the current user */
   virtual std::string get_user_realname() =0;

@@ -17,7 +17,6 @@
 #ifndef HEADER_CONSTRUO_UNIX_SYSTEM_HPP
 #define HEADER_CONSTRUO_UNIX_SYSTEM_HPP
 
-#include <string>
 #include "system_context.hpp"
 
 /** This class wraps a bunch of unix functions to provide file-io and
@@ -30,7 +29,7 @@ public:
 
   unsigned long get_time () override;
   void sleep (unsigned int msec) override;
-  std::string get_construo_rc_path() override;
+  std::filesystem::path get_construo_rc_path() override;
   std::string get_user_realname() override;
   std::string get_user_email() override;
 
@@ -49,7 +48,7 @@ private:
 
   /** The location of the users construo directory, aka ~/.construo/,
       the name contains a trailing slash */
-  std::string construo_rc_path;
+  std::filesystem::path m_construo_rc_path;
 };
 
 #endif

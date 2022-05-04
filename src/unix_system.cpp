@@ -14,20 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <stdio.h>
+#include <algorithm>
 #include <assert.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <time.h>
-#include <string>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <dirent.h>
-#include <pwd.h>
 #include <errno.h>
 #include <iostream>
-#include <algorithm>
+#include <pwd.h>
+#include <stdio.h>
+#include <string.h>
+#include <string>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
+
+#include <xdg.h>
+
 #include "construo_error.hpp"
 #include "string_utils.hpp"
 #include "construo.hpp"
@@ -38,7 +41,7 @@ using namespace StringUtils;
 
 UnixSystem::UnixSystem () :
   start_time(0),
-  construo_rc_path()
+  m_construo_rc_path()
 {
   // riped out of ClanLib-0.7
   timeval tv;
@@ -46,39 +49,28 @@ UnixSystem::UnixSystem () :
   start_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
 
   char* home = getenv("HOME");
-  if (home)
-    {
-      construo_rc_path = std::string(home) + std::string("/.construo/");
+  if (!home) {
+    std::cout << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
+    throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
+  }
+
+  {
+    std::filesystem::path const legacy_path = std::filesystem::path(home) / std::filesystem::path(".construo");
+    std::filesystem::path const xdg_path = xdg::config().home() / PACKAGE;
+
+    if (std::filesystem::is_directory(xdg_path)) {
+      m_construo_rc_path = xdg_path;
+    } else if (std::filesystem::is_directory(legacy_path)) {
+      m_construo_rc_path = legacy_path;
+    } else {
+      m_construo_rc_path = xdg_path;
     }
-  else
-    {
-      std::cout << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
-      throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
-    }
+  }
 
   // create $HOME directory if not already there
-  struct stat buf;
-
-  if (stat(construo_rc_path.c_str(), &buf) != 0) // Couldn't find directory, create it
-    {
-      if (mkdir(construo_rc_path.c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP) != 0)
-        {
-          throw ConstruoError(std::string("UnixSystem: ") + construo_rc_path + ": "
-                              + strerror(errno));
-        }
-    }
-  else
-    {
-      if (S_ISDIR(buf.st_rdev)) // Is not a directory
-        {
-          throw ConstruoError("Error: " + construo_rc_path + " is not a directory!");
-        }
-
-      if (access(construo_rc_path.c_str (), R_OK | W_OK | X_OK) != 0) // not readable/writeable
-        {
-          throw ConstruoError("Error: " + construo_rc_path + " is not read or writeable!");
-        }
-    }
+  if (!std::filesystem::is_directory(m_construo_rc_path)) {
+    std::filesystem::create_directory(m_construo_rc_path);
+  }
 }
 
 UnixSystem::~UnixSystem ()
@@ -102,10 +94,10 @@ UnixSystem::sleep(unsigned int msec)
   usleep(msec);
 }
 
-std::string
+std::filesystem::path
 UnixSystem::get_construo_rc_path()
 {
-  return construo_rc_path;
+  return m_construo_rc_path;
 }
 
 std::string
@@ -199,7 +191,7 @@ UnixSystem::translate_filename (const std::string& filename)
     }
   else if (has_prefix(filename, "/user/"))
     {
-      return construo_rc_path + filename.substr(6);
+      return m_construo_rc_path / filename.substr(6);
     }
   else if (has_prefix(filename, "/examples/"))
     {

@@ -125,7 +125,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
 
     std::cout << PACKAGE_STRING"\n" << std::endl;
     std::cout << "If you have throuble with programm startup, delete the file:\n\n"
-              << "    " << g_system_context->get_construo_rc_path() << "laststate.construo\n" << std::endl;
+              << "    " << (g_system_context->get_construo_rc_path() / "laststate.construo") << "\n" << std::endl;
 
     if (!g_settings.datadir.empty())
       path_manager.add_path(g_settings.datadir);
