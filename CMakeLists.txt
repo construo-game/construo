@@ -24,9 +24,11 @@ list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 
 option(BUILD_TESTS "Build test cases" OFF)
 
+include(GetProjectVersion)
+message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
+
 include(GNUInstallDirs)
 include(MaximumWarnings)
-include(GetProjectVersion)
 
 set(OpenGL_GL_PREFERENCE "LEGACY")
 find_package(OpenGL)

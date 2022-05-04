@@ -37,8 +37,9 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         version_file = pkgs.lib.fileContents ./VERSION;
-        construo_version = if (((builtins.substring 0 1) version_file) != "v")
-                           then ("0.2.4-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
+        construo_has_version = ((builtins.substring 0 1) version_file) == "v";
+        construo_version = if !construo_has_version
+                           then ("0.2.3-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
        in rec {
          packages = flake-utils.lib.flattenTree rec {
@@ -46,6 +47,11 @@
              pname = "construo";
              version = construo_version;
              src = nixpkgs.lib.cleanSource ./.;
+             postPatch = ''
+                if ${if construo_has_version then "false" else "true"}; then
+                  echo "${version}" > VERSION
+                fi
+             '';
              cmakeFlags = [
                "-DWARNINGS=ON"
                # "-DWERROR=ON"
