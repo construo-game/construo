@@ -96,7 +96,8 @@
         "nixpkgs": "nixpkgs",
         "priocpp": "priocpp",
         "sexpcpp": "sexpcpp",
-        "tinycmmc": "tinycmmc"
+        "tinycmmc": "tinycmmc",
+        "xdgcpp": "xdgcpp"
       }
     },
     "sexpcpp": {
@@ -145,6 +146,29 @@
       "original": {
         "owner": "grumbel",
         "repo": "cmake-modules",
+        "type": "gitlab"
+      }
+    },
+    "xdgcpp": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1646074656,
+        "narHash": "sha256-dOZ4ERQwtU37pIGnhzXst7C9avBacJzGacS9aYhP8Ig=",
+        "owner": "grumbel",
+        "repo": "xdgcpp",
+        "rev": "47b94da0739cec5793984ca8e02615969cbf8bf3",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "grumbel",
+        "repo": "xdgcpp",
         "type": "gitlab"
       }
     }

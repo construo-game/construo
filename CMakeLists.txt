@@ -47,6 +47,16 @@ function(build_dependencies)
   if(NOT TARGET prio::prio)
     add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
   endif()
+
+  find_package(prio QUIET)
+  if(NOT TARGET prio::prio)
+    add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+  endif()
+
+  find_package(xdgcpp QUIET)
+  if(NOT TARGET xdgcpp)
+    add_subdirectory(external/xdgcpp/ EXCLUDE_FROM_ALL)
+  endif()
 endfunction()
 build_dependencies()
 
@@ -130,7 +140,7 @@ set_target_properties(libconstruo PROPERTIES
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
-target_link_libraries(libconstruo PUBLIC prio::prio)
+target_link_libraries(libconstruo PUBLIC prio::prio xdgcpp)
 target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS} -Wuseless-cast)
 
 if(GLUT_FOUND AND OPENGL_FOUND)

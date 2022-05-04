@@ -4,3 +4,6 @@
 [submodule "external/cmake-modules"]
 	path = external/cmake-modules
 	url = https://gitlab.com/grumbel/cmake-modules.git
+[submodule "external/xdgcpp"]
+	path = external/xdgcpp
+	url = https://gitlab.com/grumbel/xdgcpp.git

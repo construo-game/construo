@@ -25,9 +25,14 @@
     priocpp.inputs.sexpcpp.follows = "sexpcpp";
     priocpp.inputs.tinycmmc.follows = "tinycmmc";
     priocpp.inputs.logmich.follows = "logmich";
+
+    xdgcpp.url = "gitlab:grumbel/xdgcpp";
+    xdgcpp.inputs.nixpkgs.follows = "nixpkgs";
+    xdgcpp.inputs.flake-utils.follows = "flake-utils";
+    xdgcpp.inputs.tinycmmc.follows = "tinycmmc";
   };
 
-  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp }:
+  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, xdgcpp }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -66,6 +71,7 @@
              ] ++ [
                tinycmmc.defaultPackage.${system}
                priocpp.defaultPackage.${system}
+               xdgcpp.defaultPackage.${system}
              ];
            };
         };
