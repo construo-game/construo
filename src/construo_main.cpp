@@ -45,7 +45,6 @@ ConstruoMain::ConstruoMain () :
   display(),
   system(),
   do_quit(false),
-  config(),
   gui_manager()
 {
 }

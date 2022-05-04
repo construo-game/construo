@@ -64,7 +64,6 @@ set(CONSTRUO_SOURCES_CXX
   src/bounding_box.cpp
   src/colors.cpp
   src/command_line.cpp
-  src/config.cpp
   src/construo.cpp
   src/controller.cpp
   src/cursors/cursor_collider.xbm

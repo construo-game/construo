@@ -21,7 +21,6 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#include "config.hpp"
 
 class GUIManager;
 class World;
@@ -40,7 +39,6 @@ private:
   std::unique_ptr<UnixSystem> system;
 
   bool do_quit;
-  Config config;
   std::unique_ptr<GUIManager> gui_manager;
 
 public:
