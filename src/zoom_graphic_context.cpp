@@ -59,7 +59,7 @@ ZoomGraphicContext::unlock()
 void
 ZoomGraphicContext::draw_lines(std::vector<Line>& lines, Color color, int wide)
 {
-  for (std::vector<Line>::iterator i = lines.begin(); i != lines.end(); ++i)
+  for (auto i = lines.begin(); i != lines.end(); ++i)
   {
     i->x1 = m_zoom.world_to_screen_x(i->x1);
     i->y1 = m_zoom.world_to_screen_y(i->y1);
@@ -92,7 +92,7 @@ ZoomGraphicContext::draw_rect(float x1, float y1, float x2, float y2, Color colo
 void
 ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
 {
-  for (std::vector<Circle>::iterator i = circles.begin(); i != circles.end(); ++i)
+  for (auto i = circles.begin(); i != circles.end(); ++i)
   {
     i->x = m_zoom.world_to_screen_x(i->x);
     i->y = m_zoom.world_to_screen_x(i->y);

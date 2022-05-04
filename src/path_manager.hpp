@@ -47,7 +47,6 @@ public:
   std::string complete (const std::string& relative_path);
 
 private:
-  typedef std::list<std::string>::const_iterator PathIter;
   std::list<std::string> path_list;
   bool path_found;
   std::string base_path;

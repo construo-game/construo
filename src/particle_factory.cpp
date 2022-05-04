@@ -71,7 +71,7 @@ ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr) :
   m_particles(),
   m_particle_id_count(pmgr.m_particle_id_count)
 {
-  for (CParticleIter i = pmgr.m_particles.begin (); i != pmgr.m_particles.end (); ++i)
+  for (auto i = pmgr.m_particles.begin (); i != pmgr.m_particles.end (); ++i)
     m_particles.push_back(new Particle(**i));
 }
 
@@ -79,7 +79,7 @@ ParticleFactory&
 ParticleFactory::operator= (const ParticleFactory& pmgr)
 {
   ConstruoAssert (0, "Don't use this");
-  for (CParticleIter i = pmgr.m_particles.begin ();
+  for (auto i = pmgr.m_particles.begin ();
        i != pmgr.m_particles.end ();
        ++i)
     {
@@ -111,7 +111,7 @@ void
 ParticleFactory::remove_particle (Particle* p)
 {
   // Remove the particle itself
-  for (ParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
+  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
     {
       if (*i == p)
         {
@@ -135,7 +135,7 @@ struct particle_obsolete
 void
 ParticleFactory::update (float delta)
 {
-  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
+  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
     (*i)->update(delta);
 
   // FIXME: There is no need to do this on any update, doing it only
@@ -148,7 +148,7 @@ ParticleFactory::update (float delta)
 void
 ParticleFactory::draw (ZoomGraphicContext& gc)
 {
-  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
+  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
     (*i)->draw(gc);
 }
 
@@ -156,9 +156,7 @@ Particle*
 ParticleFactory::lookup_particle (int id)
 {
   // FIXME: Could need optimization
-  for (ParticleIter i = m_particles.begin ();
-       i != m_particles.end ();
-       ++i)
+  for (auto i = m_particles.begin(); i != m_particles.end(); ++i)
     {
       if ((*i)->get_id () == id)
         return *i;
@@ -169,7 +167,7 @@ ParticleFactory::lookup_particle (int id)
 void
 ParticleFactory::clear ()
 {
-  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i)
+  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
     delete *i;
   m_particles.clear ();
 }
@@ -178,7 +176,7 @@ void
 ParticleFactory::write_lisp(LispWriter& writer)
 {
   writer.begin_collection("particles");
-  for (CParticleIter i = m_particles.begin (); i != m_particles.end (); ++i) {
+  for (auto i = m_particles.begin (); i != m_particles.end (); ++i) {
     (*i)->serialize(writer);
   }
   writer.end_collection();

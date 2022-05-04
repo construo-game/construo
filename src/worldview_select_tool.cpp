@@ -45,7 +45,7 @@ WorldViewSelectTool::~WorldViewSelectTool ()
 void
 WorldViewSelectTool::draw_background (ZoomGraphicContext& gc)
 {
-  for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       (*i)->draw_velocity_vector (gc);
       (*i)->draw_highlight (gc);
@@ -72,7 +72,7 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
     Particle& p = **m_selection.begin();
     Rect<float> selection_box (p.pos.x, p.pos.y, p.pos.x, p.pos.y);
 
-    for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+    for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       selection_box.x1 = Math::min(selection_box.x1, (*i)->pos.x);
       selection_box.y1 = Math::min(selection_box.y1, (*i)->pos.y);
@@ -142,7 +142,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
 
         // If the mouse clicks on a particle from the selection, we move the selection
         Particle* new_current_particle = world.get_particle (x, y);
-        for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+        for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
           {
             if (new_current_particle == *i)
               {
@@ -268,7 +268,7 @@ WorldViewSelectTool::on_delete_press (float x, float y)
   Controller::instance()->push_undo();
 
   World& world = *Controller::instance()->get_world ();
-  for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       world.remove_particle(*i);
     }
@@ -280,7 +280,7 @@ void
 WorldViewSelectTool::on_fix_press (float x, float y)
 {
   bool mark_all = false;
-  for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       if (!(*i)->get_fixed())
         {
@@ -290,14 +290,14 @@ WorldViewSelectTool::on_fix_press (float x, float y)
 
   if (mark_all)
     {
-      for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+      for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           (*i)->set_fixed (true);
         }
     }
   else
     {
-      for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+      for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           (*i)->set_fixed (!(*i)->get_fixed());
         }
@@ -319,7 +319,7 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
         Vector2d diff = new_pos - m_click_pos;
 
         // Undo the last move (FIXME: Potential round errors)
-        for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+        for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
           {
             (*i)->pos -= m_move_diff;
           }
@@ -337,7 +337,7 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
 
         m_move_diff = diff;
 
-        for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+        for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
           {
             (*i)->pos += diff;
 

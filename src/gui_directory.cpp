@@ -36,7 +36,7 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
   if (m_mode == SAVE_DIRECTORY && m_pathname != "/")
     m_files.push_back(new GUINewFileButton(m_pathname));
 
-  for (std::vector<std::string>::iterator i = dir.begin(); i != dir.end(); ++i)
+  for (auto i = dir.begin(); i != dir.end(); ++i)
     {
       std::string filename = m_pathname + *i;
 
@@ -72,8 +72,7 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
 
 GUIDirectory::~GUIDirectory ()
 {
-  for(std::vector<GUIFileButton*>::iterator i = m_files.begin();
-      i != m_files.end(); ++i)
+  for(auto i = m_files.begin(); i != m_files.end(); ++i)
     {
       // FIXME: Very ugly, we remove all components from the manager so that he doesn't delete them twice
       remove(*i);
@@ -85,8 +84,7 @@ void
 GUIDirectory::place_components()
 {
   // Remove all file components
-  for(std::vector<GUIFileButton*>::iterator i = m_files.begin();
-      i != m_files.end(); ++i)
+  for(auto i = m_files.begin(); i != m_files.end(); ++i)
   {
     remove(*i);
   }

@@ -84,7 +84,7 @@ World::World(const World& old_world) :
   // FIXME: Could need optimizations
   m_particle_mgr = new ParticleFactory (this, *old_world.m_particle_mgr);
 
-  for (CSpringIter i = old_world.m_springs.begin (); i != old_world.m_springs.end (); ++i)
+  for (auto i = old_world.m_springs.begin (); i != old_world.m_springs.end (); ++i)
   {
     Particle* first  = m_particle_mgr->lookup_particle((*i)->particles.first->get_id());
     Particle* second = m_particle_mgr->lookup_particle((*i)->particles.second->get_id());
@@ -183,7 +183,7 @@ World::draw_springs(ZoomGraphicContext& gc)
     }
   gc.draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
 #else
-  for (SpringIter i = m_springs.begin(); i != m_springs.end(); ++i)
+  for (auto i = m_springs.begin(); i != m_springs.end(); ++i)
     {
       (*i)->draw (gc);
     }
@@ -199,7 +199,7 @@ World::draw_particles(ZoomGraphicContext& gc)
 void
 World::draw_colliders(ZoomGraphicContext& gc)
 {
-  for (Colliders::iterator i = m_colliders.begin (); i != m_colliders.end (); ++i)
+  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i)
     {
       (*i)->draw(gc);
     }
@@ -214,7 +214,7 @@ World::update (float delta)
 
   // Main Movement and Forces
   // FIXME: Hardcoded Force Emitters
-  for (ParticleFactory::ParticleIter i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       // Gravity
       (*i)->add_force (Vector2d (0.0, 15.0f) * (*i)->get_mass ());
@@ -226,7 +226,7 @@ World::update (float delta)
       */
 
       /*
-        for (ParticleIter j = particles.begin (); j != particles.end (); ++j)
+        for (auto j = particles.begin (); j != particles.end (); ++j)
         {
         Vector2d diff = (*j)->pos - (*i)->pos;
         if (diff.norm () != 0.0f)
@@ -234,18 +234,18 @@ World::update (float delta)
         }	    */
     }
 
-  for (SpringIter i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
     (*i)->update (delta);
 
   m_particle_mgr->update(delta);
 
   //std::cout << "Colliders: " << colliders.size () << std::endl;
-  for (Colliders::iterator i = m_colliders.begin (); i != m_colliders.end (); ++i)
+  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i)
     (*i)->bounce ();
 
   // Spring splitting
   std::vector<Spring*> new_springs;
-  for (SpringIter i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
     {
       if ((*i)->destroyed)
         {
@@ -292,7 +292,7 @@ World::get_spring (float x, float y)
 
   float capture_threshold = 15;
 
-  for (SpringIter i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
     {
       float x0 = x;
       float y0 = y;
@@ -327,7 +327,7 @@ World::get_particle (float x, float y)
   float min_dist = 25.0f; // FIXME: Make this configurable
   Vector2d mouse_pos (x, y);
 
-  for (ParticleFactory::ParticleIter i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       Vector2d diff = mouse_pos - (*i)->pos;
       if (diff.norm () < min_dist)
@@ -349,7 +349,7 @@ World::get_particles (float x1_, float y1_, float x2_, float y2_)
   float y2 = Math::max(y1_, y2_);
 
   std::vector<Particle*> caputred_particles;
-  for (ParticleFactory::ParticleIter i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       if ((*i)->pos.x >= x1 && (*i)->pos.x < x2
           && (*i)->pos.y >= y1 && (*i)->pos.y < y2)
@@ -362,7 +362,7 @@ void
 World::zero_out_velocity ()
 {
   std::cout << "Setting velocity to zero" << std::endl;
-  for (ParticleFactory::ParticleIter i = get_particle_mgr()->begin();
+  for (auto i = get_particle_mgr()->begin();
        i != get_particle_mgr()->end (); ++i)
     {
       (*i)->velocity = Vector2d ();
@@ -380,7 +380,7 @@ void
 World::remove_particle (Particle* p)
 {
   // Remove everyting that references the particle
-  for (SpringIter i = m_springs.begin (); i != m_springs.end ();)
+  for (auto i = m_springs.begin (); i != m_springs.end ();)
     {
       if ((*i)->particles.first == p || (*i)->particles.second == p)
         {
@@ -422,7 +422,7 @@ World::clear ()
 {
   m_particle_mgr->clear();
 
-  for (SpringIter i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
     delete *i;
 
   m_springs.clear();
@@ -445,13 +445,13 @@ World::write_lisp (const std::string& filename)
   m_particle_mgr->write_lisp(writer);
 
   writer.begin_collection("springs");
-  for (CSpringIter i = m_springs.begin (); i != m_springs.end (); ++i) {
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i) {
     (*i)->serialize(writer);
   }
   writer.end_collection();
 
   writer.begin_collection("colliders");
-  for (Colliders::iterator i = m_colliders.begin(); i != m_colliders.end(); ++i) {
+  for (auto i = m_colliders.begin(); i != m_colliders.end(); ++i) {
     (*i)->serialize (writer);
   }
   writer.end_collection();
@@ -477,12 +477,12 @@ World::calc_bounding_box()
       bbox.y2 = 600;
     }
 
-  for (ParticleFactory::ParticleIter i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       bbox.join((*i)->pos);
     }
 
-  for (Colliders::iterator i = m_colliders.begin(); i != m_colliders.end(); ++i)
+  for (auto i = m_colliders.begin(); i != m_colliders.end(); ++i)
     {
       bbox.join((*i)->get_bounding_box());
     }

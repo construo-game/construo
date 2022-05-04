@@ -75,8 +75,6 @@ public:
   SelectionLst::iterator begin() { return m_selection.begin(); };
   SelectionLst::iterator end()   { return m_selection.end(); };
 
-  typedef SelectionLst::iterator iterator;
-
 private:
   /** Collection of particles */
   SelectionLst m_selection;

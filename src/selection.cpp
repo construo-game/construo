@@ -39,7 +39,7 @@ Selection::get_center ()
                       (*m_selection.begin ())->pos.x,
                       (*m_selection.begin ())->pos.y);
 
-  for (Selection::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
     {
       rot_box.x1 = Math::min(rot_box.x1, (*i)->pos.x);
       rot_box.y1 = Math::min(rot_box.y1, (*i)->pos.y);
@@ -58,12 +58,12 @@ Selection::scale (float factor, Vector2d center)
 
   if (!m_selection.empty())
     {
-      for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
         {
           (*i)->pos = center + (((*i)->pos - center) * factor);
 
           std::vector<Spring*>& springs = m_world->get_spring_mgr ();
-          for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
+    for (auto s = springs.begin(); s != springs.end(); ++s)
             {
               if ((*s)->particles.first == (*i) || ((*s)->particles.second == (*i)))
                 {
@@ -89,13 +89,13 @@ Selection::flip ()
   if (!m_selection.empty())
   {
     float midpoint = 0.0f;
-    for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       midpoint += (*i)->pos.x;
     }
     midpoint /= static_cast<float>(m_selection.size());
 
-    for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       (*i)->pos.x = midpoint - ((*i)->pos.x - midpoint);
     }
@@ -129,7 +129,7 @@ Selection::duplicate ()
   SelectionLst new_selection;
 
   std::cout << "Trying to duplicate the selection" << std::endl;
-  for (SelectionLst::iterator i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       Particle* p = m_world->get_particle_mgr()->add_particle(**i);
       p->pos += Vector2d (50,50);
@@ -225,7 +225,7 @@ Selection::join_doubles(float toleranz)
                 // which should get removed, needs to get connected to
                 // 'j'
                 std::vector<Spring*>& springs = world.get_spring_mgr ();
-                for (std::vector<Spring*>::iterator s = springs.begin(); s != springs.end(); ++s)
+          for (auto s = springs.begin(); s != springs.end(); ++s)
                   {
                     if ((*s)->particles.first == (*i))
                       (*s)->particles.first = (*j);

@@ -208,7 +208,7 @@ GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 void
 GlutDisplay::draw_circles(std::vector<Circle>& circles, Color color)
 {
-  for (std::vector<Circle>::iterator i = circles.begin(); i != circles.end(); ++i)
+  for (auto i = circles.begin(); i != circles.end(); ++i)
   {
     draw_circle(i->x, i->y, i->r, color);
   }

@@ -48,10 +48,10 @@ PathManager::complete (const std::string& relative_path)
 bool
 PathManager::find_path (const std::list<std::string>& file_list)
 {
-  for (PathIter i = path_list.begin (); !path_found && i != path_list.end (); ++i)
+  for (auto i = path_list.begin (); !path_found && i != path_list.end (); ++i)
     {
       bool found_file = true;
-      for (PathIter f = file_list.begin (); found_file && f != file_list.end (); ++f)
+      for (auto f = file_list.begin (); found_file && f != file_list.end (); ++f)
 	{
           if (!(access((*i + "/" + *f).c_str(), R_OK) == 0))
               found_file = false;
@@ -76,7 +76,7 @@ PathManager::find_path (const std::list<std::string>& file_list)
 bool
 PathManager::find_path (const std::string& file)
 {
-  for (PathIter i = path_list.begin (); !path_found && i != path_list.end (); ++i)
+  for (auto i = path_list.begin (); !path_found && i != path_list.end (); ++i)
     {
       if ((access((*i + "/" + file).c_str(), R_OK) == 0))
 	{
