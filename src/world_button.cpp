@@ -94,7 +94,7 @@ WorldButton::draw (GraphicContext& parent_gc)
   else
     parent_gc.draw_rect(m_x, m_y, m_x + m_width, m_y + m_height, Color (0xFF0000FF));
 
-  parent_gc.draw_string(m_x + 20, m_y + 160,m_filename);
+  parent_gc.draw_string(m_x + 8, m_y + m_height + 14.0f, m_filename);
 }
 
 void

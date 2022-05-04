@@ -19,6 +19,8 @@
 
 #include <map>
 #include <string>
+
+#include "fwd.hpp"
 #include "gui_child_manager.hpp"
 #include "gui_directory.hpp"
 
@@ -39,6 +41,7 @@ public:
   ~GUIFileManager();
 
   void draw_overlay(GraphicContext& gc) override;
+  void set_geometry(float x, float y, float width, float height) override;
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */
@@ -57,6 +60,12 @@ private:
   GUIDirectory* get_directory(const std::string& pathname);
 
 private:
+  GUIGenericButton* m_btn_up_directory;
+  GUIGenericButton* m_btn_close;
+  GUIGenericButton* m_btn_scroll_up;
+  GUIGenericButton* m_btn_scroll_down;
+  GUIGenericButton* m_btn_update_directory;
+
   /** Cache for directories */
   std::map<std::string, GUIDirectory*> m_directories;
   GUIDirectory* m_current_directory;

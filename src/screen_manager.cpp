@@ -49,7 +49,7 @@ ScreenManager::quit()
 }
 
 void
-ScreenManager::set_gui (int gui_id)
+ScreenManager::set_gui(int gui_id)
 {
   switch (gui_id)
   {
@@ -68,7 +68,9 @@ ScreenManager::set_gui (int gui_id)
 void
 ScreenManager::resize(float width, float height)
 {
-  m_current_gui_manager->resize(width, height);
+  m_load_gui_manager->resize(width, height);
+  m_save_gui_manager->resize(width, height);
+  m_world_gui_manager->resize(width, height);
 }
 
 ScreenManager*

@@ -26,6 +26,13 @@ GUIChildManager::GUIChildManager (float x, float y, float width, float height) :
 {
 }
 
+GUIChildManager::GUIChildManager() :
+  GUIComponent(),
+  m_components(),
+  m_current_component(nullptr)
+{
+}
+
 GUIChildManager::~GUIChildManager ()
 {
   for (auto i = m_components.begin(); i != m_components.end (); ++i)

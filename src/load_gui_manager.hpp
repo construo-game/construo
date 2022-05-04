@@ -26,6 +26,7 @@ class LoadGUIManager : public GUIManager
 public:
   LoadGUIManager ();
 
+  void resize(float width, float height) override;
   void draw_overlay(GraphicContext& gc) override;
   void run_once(GraphicContext& gc) override;
 

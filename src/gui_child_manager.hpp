@@ -27,6 +27,7 @@ class GUIChildManager : public GUIComponent
 {
 public:
   GUIChildManager(float x, float y, float width, float height);
+  GUIChildManager();
   ~GUIChildManager();
 
   void add(GUIComponent*);

@@ -44,13 +44,13 @@ public:
   /** @return true if the component is present at the given location */
   virtual bool is_at(float x, float y);
 
-  void set_geometry(float x, float y, float width, float height) {
+  virtual void set_geometry(float x, float y, float width, float height) {
     m_x = x;
     m_y = y;
     m_width = width;
     m_height = height;
   }
-  void set_position(float x, float y) { m_x = x, m_y = y; }
+
   float get_x_pos() { return m_x; }
   float get_y_pos() { return m_y; }
   float get_width() { return m_width; }

@@ -33,6 +33,7 @@ public:
   GUIDirectory(const std::string& pathname, Mode m);
   ~GUIDirectory();
 
+  void set_geometry(float x, float y, float width, float height) override;
   void draw_overlay(GraphicContext& gc) override;
 
   std::string get_path() { return m_pathname; }

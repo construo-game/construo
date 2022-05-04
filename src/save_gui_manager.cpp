@@ -27,6 +27,13 @@ SaveGUIManager::SaveGUIManager() :
 }
 
 void
+SaveGUIManager::resize(float width, float height)
+{
+  GUIManager::resize(width, height);
+  m_file_manager->set_geometry(0, 0, width, height);
+}
+
+void
 SaveGUIManager::draw_overlay(GraphicContext& gc)
 {
   gc.draw_string(10.0f, gc.get_height() - 10.0f,

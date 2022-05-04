@@ -21,6 +21,7 @@ class GUIComponent;
 class GUIManager;
 class GraphicContext;
 struct ButtonEvent;
+class GUIGenericButton;
 
 #endif
 

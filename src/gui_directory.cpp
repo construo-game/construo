@@ -23,7 +23,7 @@
 #include "gui_directory.hpp"
 
 GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
-  GUIChildManager (0, 0, 800, 600),
+  GUIChildManager(),
   m_pathname (arg_pathname),
   m_files(),
   m_offset(),
@@ -82,40 +82,53 @@ GUIDirectory::~GUIDirectory ()
 }
 
 void
-GUIDirectory::place_components ()
+GUIDirectory::place_components()
 {
   // Remove all file components
   for(std::vector<GUIFileButton*>::iterator i = m_files.begin();
       i != m_files.end(); ++i)
-    {
-      remove(*i);
-    }
+  {
+    remove(*i);
+  }
+
+  int const rows = 3;
+  int const columns = 3;
+
+  float const spacing = 40.0f;
+  float const padding = 50.0f;
+  float const thumb_width = (m_width - (2.0f * padding) - (spacing * static_cast<float>(columns - 1))) / static_cast<float>(columns);
+  float const thumb_height = (m_height - (2.0f * padding) - (spacing * static_cast<float>(rows - 1))) / static_cast<float>(rows);
 
   int row = 0;
   int column = 0;
   int count = 0;
-
-  //std::cout << "OFFSET: " << offset << std::endl;
-
   for(std::vector<GUIFileButton*>::size_type i = 0 + m_offset;
       i < m_files.size() && count < 9;
       ++i)
+  {
+    m_files[i]->set_geometry(static_cast<float>(column) * (thumb_width + spacing) + padding,
+                             static_cast<float>(row) * (thumb_height + spacing) + padding,
+                             thumb_width, thumb_height);
+    add(m_files[i]);
+
+    column += 1;
+    if (column >= columns) // row is full
     {
-      m_files[i]->set_position(static_cast<float>(column) * (200.0f + 50.0f) + 50.0f,
-                               static_cast<float>(row) * (150.0f + 37.0f) + 30.0f);
-      add(m_files[i]);
-
-      column += 1;
-      if (column >= 3) // row is full
-        {
-          column = 0;
-          row += 1;
-        }
-      if (row >= 3)
-        return;
-
-      ++count;
+      column = 0;
+      row += 1;
     }
+    if (row >= rows)
+      return;
+
+    ++count;
+  }
+}
+
+void
+GUIDirectory::set_geometry(float x, float y, float width, float height)
+{
+  GUIChildManager::set_geometry(x, y, width, height);
+  place_components();
 }
 
 void

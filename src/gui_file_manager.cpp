@@ -49,8 +49,13 @@ void CloseFileManager ()
 
 GUIFileManager* GUIFileManager::instance_ = nullptr;
 
-GUIFileManager::GUIFileManager (Mode m) :
-  GUIChildManager (0, 0, 800, 600),
+GUIFileManager::GUIFileManager(Mode m) :
+  GUIChildManager(),
+  m_btn_up_directory(),
+  m_btn_close(),
+  m_btn_scroll_up(),
+  m_btn_scroll_down(),
+  m_btn_update_directory(),
   m_directories(),
   m_current_directory(nullptr),
   m_mode(m)
@@ -62,13 +67,13 @@ GUIFileManager::GUIFileManager (Mode m) :
 
   m_directories["/"] = m_current_directory;
 
-  add (new GUIGenericButton("Up", 0,0, 100, 25, DirectoryUp));
-  add (new GUIGenericButton("Close", 700, 0, 100, 25, CloseFileManager));
+  m_btn_up_directory = create<GUIGenericButton>("Up", DirectoryUp);
+  m_btn_close = create<GUIGenericButton>("Close", CloseFileManager);
 
-  add (new GUIGenericButton("^", 770, 200, 25, 50, ScrollUp));
-  add (new GUIGenericButton("V", 770, 300, 25, 50, ScrollDown));
+  m_btn_scroll_up = create<GUIGenericButton>("^", ScrollUp);
+  m_btn_scroll_down = create<GUIGenericButton>("V", ScrollDown);
 
-  add (new GUIGenericButton("Update Directory", 650, 575, 150, 25, ReReadCurrentDir));
+  m_btn_update_directory = create<GUIGenericButton>("Update Directory", ReReadCurrentDir);
 
   add(m_current_directory);
 
@@ -81,28 +86,48 @@ GUIFileManager::~GUIFileManager ()
 }
 
 void
+GUIFileManager::set_geometry(float x, float y, float width, float height)
+{
+  GUIChildManager::set_geometry(x, y, width, height);
+
+  m_btn_up_directory->set_geometry(0.0f, 0.0f, 100.0f, 25.0f);
+  m_btn_close->set_geometry(width - 100.0f, 0.0f, 100.0f, 25.0f);
+
+  m_btn_scroll_up->set_geometry(width - 30.0f, height / 2.0f - 100.0f, 25.0f, 50.0f);
+  m_btn_scroll_down->set_geometry(width - 30.0f, height / 2.0f, 25.0f, 50.0f);
+
+  m_btn_update_directory->set_geometry(width - 150.0f, height - 25.0f, 150.0f, 25.0f);
+
+  for(auto& directory : m_directories) {
+    directory.second->set_geometry(x, y, width, height);
+  }
+}
+
+void
 GUIFileManager::open_directory (const std::string& pathname)
 {
   std::cout << "GUIFileManager::open_directory: " << pathname << std::endl;
   GUIDirectory* old_directory = m_current_directory;
 
   if (m_directories[pathname] == nullptr)
+  {
+    if (m_mode == SAVE_MANAGER)
     {
-      if (m_mode == SAVE_MANAGER)
-        {
-          m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
+      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
                                                                        GUIDirectory::SAVE_DIRECTORY);
-        }
-      else
-        {
-          m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                       GUIDirectory::LOAD_DIRECTORY);
-        }
     }
-  else
+    else
     {
-      m_current_directory = m_directories[pathname];
+      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
+                                                                       GUIDirectory::LOAD_DIRECTORY);
     }
+  }
+  else
+  {
+    m_current_directory = m_directories[pathname];
+  }
+
+  m_current_directory->set_geometry(m_x, m_y, m_width, m_height);
 
   std::cout << "Replace: " << old_directory << " " << m_current_directory << std::endl;
   replace (old_directory, m_current_directory);
