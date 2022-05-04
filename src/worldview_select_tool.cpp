@@ -420,7 +420,9 @@ WorldViewSelectTool::on_button_press (int button_id, float x, float y)
   switch (button_id)
     {
     case BUTTON_SETVELOCITY:
-      m_selection.set_velocity (pos - m_selection.get_center());
+      if (!m_selection.empty()) {
+        m_selection.set_velocity (pos - m_selection.get_center());
+      }
       break;
 
     case BUTTON_FLIP:
