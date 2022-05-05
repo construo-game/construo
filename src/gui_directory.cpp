@@ -26,11 +26,11 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
   GUIChildManager(),
   m_pathname (arg_pathname),
   m_files(),
-  m_offset(),
-  m_mtime(),
+  m_last_row(0),
+  m_row_offset(0),
+  m_mtime(g_system_context->get_mtime(m_pathname)),
   m_mode(m)
 {
-  m_mtime = g_system_context->get_mtime(m_pathname);
   std::vector<std::string> dir = g_system_context->read_directory(m_pathname);
 
   if (m_mode == SAVE_DIRECTORY && m_pathname != "/")
@@ -66,7 +66,6 @@ GUIDirectory::GUIDirectory (const std::string& arg_pathname, Mode m) :
         }
     }
 
-  m_offset = 0;
   place_components ();
 }
 
@@ -83,14 +82,21 @@ GUIDirectory::~GUIDirectory ()
 void
 GUIDirectory::place_components()
 {
+  if (m_files.empty()) { return; }
+
   // Remove all file components
-  for(auto i = m_files.begin(); i != m_files.end(); ++i)
-  {
+  for(auto i = m_files.begin(); i != m_files.end(); ++i) {
     remove(*i);
   }
 
-  int const rows = 3;
-  int const columns = 3;
+  int const columns = static_cast<int>(m_width / 320.0f) + 1;
+  int const rows = static_cast<int>(m_height / 240.0f) + 1;
+
+  // calculate how far down scrolling is allowed
+  m_last_row = std::max((((static_cast<int>(m_files.size()) + columns - 1) + columns) / columns - 1) - rows, 0);
+
+  // clamp scroll offset to new limits
+  m_row_offset = std::clamp(m_row_offset, 0, m_last_row);
 
   float const spacing = 40.0f;
   float const padding = 50.0f;
@@ -100,8 +106,8 @@ GUIDirectory::place_components()
   int row = 0;
   int column = 0;
   int count = 0;
-  for(std::vector<GUIFileButton*>::size_type i = 0 + m_offset;
-      i < m_files.size() && count < 9;
+  for(std::vector<GUIFileButton*>::size_type i = m_row_offset * columns;
+      i < m_files.size() && count < (columns * rows);
       ++i)
   {
     m_files[i]->set_geometry(static_cast<float>(column) * (thumb_width + spacing) + padding,
@@ -130,27 +136,16 @@ GUIDirectory::set_geometry(float x, float y, float width, float height)
 }
 
 void
-GUIDirectory::draw_overlay(GraphicContext& gc)
-{
-}
-
-void
 GUIDirectory::move_up ()
 {
-  if (m_offset >= 3)
-    m_offset -= 3;
-
+  m_row_offset = std::clamp(m_row_offset - 1, 0, m_last_row);
   place_components ();
 }
 
 void
 GUIDirectory::move_down ()
 {
-  m_offset += 3;
-
-  if (m_offset >= int(m_files.size()))
-    m_offset -= 3;
-
+  m_row_offset = std::clamp(m_row_offset + 1, 0, m_last_row);
   place_components ();
 }
 

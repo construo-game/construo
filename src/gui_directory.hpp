@@ -34,17 +34,14 @@ public:
   ~GUIDirectory();
 
   void set_geometry(float x, float y, float width, float height) override;
-  void draw_overlay(GraphicContext& gc) override;
-
-  std::string get_path() { return m_pathname; }
-
-  /** Move the shown directory content up */
-  void move_up();
-  /** Move the shown directory content down */
-  void move_down();
 
   void wheel_up(float x, float y) override;
   void wheel_down(float x, float y) override;
+
+  std::string get_path() const { return m_pathname; }
+
+  void move_up();
+  void move_down();
 
 private:
   void place_components();
@@ -52,7 +49,8 @@ private:
 private:
   std::string m_pathname;
   std::vector<GUIFileButton*> m_files;
-  int m_offset;
+  int m_last_row;
+  int m_row_offset;
   unsigned long m_mtime;
   Mode m_mode;
 
