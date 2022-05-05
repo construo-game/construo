@@ -21,32 +21,6 @@
 #include "screen_manager.hpp"
 #include "gui_buttons.hpp"
 
-void DirectoryUp ()
-{
-  GUIFileManager::instance()->directory_up();
-}
-
-void ScrollUp ()
-{
-  GUIFileManager::instance()->scroll_up();
-}
-
-void ScrollDown ()
-{
-  GUIFileManager::instance()->scroll_down();
-}
-
-void ReReadCurrentDir ()
-{
-  GUIFileManager::instance()->update_current_directory();
-}
-
-
-void CloseFileManager ()
-{
-  ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
-}
-
 GUIFileManager* GUIFileManager::instance_ = nullptr;
 
 GUIFileManager::GUIFileManager(Mode m) :
@@ -67,13 +41,25 @@ GUIFileManager::GUIFileManager(Mode m) :
 
   m_directories["/"] = m_current_directory;
 
-  m_btn_up_directory = create<GUIGenericButton>("Up", DirectoryUp);
-  m_btn_close = create<GUIGenericButton>("Close", CloseFileManager);
+  m_btn_up_directory = create<GUIGenericButton>("Up", []{
+    GUIFileManager::instance()->directory_up();
+  });
 
-  m_btn_scroll_up = create<GUIGenericButton>("^", ScrollUp);
-  m_btn_scroll_down = create<GUIGenericButton>("V", ScrollDown);
+  m_btn_close = create<GUIGenericButton>("Close", []{
+    ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+  });
 
-  m_btn_update_directory = create<GUIGenericButton>("Update Directory", ReReadCurrentDir);
+  m_btn_scroll_up = create<GUIGenericButton>("^", []{
+    GUIFileManager::instance()->scroll_up();
+  });
+
+  m_btn_scroll_down = create<GUIGenericButton>("V", []{
+    GUIFileManager::instance()->scroll_down();
+  });
+
+  m_btn_update_directory = create<GUIGenericButton>("Update Directory", []{
+    GUIFileManager::instance()->update_current_directory();
+  });
 
   add(m_current_directory);
 
@@ -189,15 +175,15 @@ GUIFileManager::update_current_directory()
   GUIDirectory* old_directory = m_current_directory;
 
   if (m_mode == SAVE_MANAGER)
-    {
-      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                   GUIDirectory::SAVE_DIRECTORY);
-    }
+  {
+    m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
+                                                                     GUIDirectory::SAVE_DIRECTORY);
+  }
   else
-    {
-      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                   GUIDirectory::LOAD_DIRECTORY);
-    }
+  {
+    m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
+                                                                     GUIDirectory::LOAD_DIRECTORY);
+  }
 
   replace (old_directory, m_current_directory);
   delete old_directory;
