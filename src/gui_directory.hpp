@@ -17,8 +17,12 @@
 #ifndef HEADER_CONSTRUO_GUI_DIRECTORY_HPP
 #define HEADER_CONSTRUO_GUI_DIRECTORY_HPP
 
+#include <functional>
 #include <vector>
+
+#include "fwd.hpp"
 #include "gui_child_manager.hpp"
+#include "world_cache.hpp"
 
 class ZoomGraphicContext;
 class GUIFileButton;
@@ -44,11 +48,13 @@ public:
   void move_down();
 
 private:
+  void read_directory();
   void place_components();
 
 private:
   std::string m_pathname;
-  std::vector<GUIFileButton*> m_files;
+  WorldCache m_world_cache;
+  std::vector<std::function<std::unique_ptr<GUIComponent>()>> m_items;
   int m_last_row;
   int m_row_offset;
   unsigned long m_mtime;

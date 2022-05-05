@@ -55,7 +55,7 @@ GUINewFileButton::generate_filename()
   loctime = localtime(&curtime);
   strftime(buffer, 32, "%Y%m%d-%H%M%S", loctime);
 
-  return pathname + "/" + std::string(buffer) + ".construo";
+  return pathname + std::string(buffer) + ".construo";
 }
 
 void

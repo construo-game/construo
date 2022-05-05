@@ -30,8 +30,6 @@
 #include "rect_collider.hpp"
 #include "string_utils.hpp"
 
-World* World::current_world = nullptr;
-
 World::World() :
   m_file_version(0),
   m_has_been_run(false),
@@ -152,19 +150,15 @@ World::parse_particles(ReaderCollection const& collection)
 }
 
 void
-World::draw (ZoomGraphicContext& gc)
+World::draw(ZoomGraphicContext& gc) const
 {
-  // FIXME: This is *not* used in the WorldViewComponent!
-
-  current_world = this;
-
   draw_colliders(gc);
   draw_springs(gc);
   draw_particles(gc);
 }
 
 void
-World::draw_springs(ZoomGraphicContext& gc)
+World::draw_springs(ZoomGraphicContext& gc) const
 {
 #ifdef NEW_SPRING_CODE
   std::vector<GraphicContext::Line> lines (springs.size());
@@ -191,13 +185,13 @@ World::draw_springs(ZoomGraphicContext& gc)
 }
 
 void
-World::draw_particles(ZoomGraphicContext& gc)
+World::draw_particles(ZoomGraphicContext& gc) const
 {
   m_particle_mgr->draw(gc);
 }
 
 void
-World::draw_colliders(ZoomGraphicContext& gc)
+World::draw_colliders(ZoomGraphicContext& gc) const
 {
   for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i)
     {
@@ -208,8 +202,6 @@ World::draw_colliders(ZoomGraphicContext& gc)
 void
 World::update (float delta)
 {
-  current_world = this;
-
   m_has_been_run = true;
 
   // Main Movement and Forces
@@ -218,7 +210,7 @@ World::update (float delta)
     {
       // Gravity
       (*i)->add_force (Vector2d (0.0, 15.0f) * (*i)->get_mass ());
-		
+
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
         if (direction.norm () != 0.0f)
@@ -459,33 +451,33 @@ World::write_lisp (const std::string& filename)
 }
 
 BoundingBox
-World::calc_bounding_box()
+World::calc_bounding_box() const
 {
   BoundingBox bbox;
 
   if (m_particle_mgr->size() > 0)
-    {
-      bbox.x1 = bbox.x2 = (*m_particle_mgr->begin ())->pos.x;
-      bbox.y1 = bbox.y2 = (*m_particle_mgr->begin ())->pos.y;
-    }
+  {
+    bbox.x1 = bbox.x2 = (*m_particle_mgr->begin())->pos.x;
+    bbox.y1 = bbox.y2 = (*m_particle_mgr->begin())->pos.y;
+  }
   else
-    {
-      bbox.x1 = 0;
-      bbox.y1 = 0;
+  {
+    bbox.x1 = 0;
+    bbox.y1 = 0;
 
-      bbox.x2 = 800;
-      bbox.y2 = 600;
-    }
+    bbox.x2 = 800;
+    bbox.y2 = 600;
+  }
 
-  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
-    {
-      bbox.join((*i)->pos);
-    }
+  for (auto i = m_particle_mgr->begin(); i != m_particle_mgr->end(); ++i)
+  {
+    bbox.join((*i)->pos);
+  }
 
   for (auto i = m_colliders.begin(); i != m_colliders.end(); ++i)
-    {
-      bbox.join((*i)->get_bounding_box());
-    }
+  {
+    bbox.join((*i)->get_bounding_box());
+  }
 
   return bbox;
 }

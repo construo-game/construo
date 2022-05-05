@@ -22,6 +22,8 @@ class GUIManager;
 class GraphicContext;
 struct ButtonEvent;
 class GUIGenericButton;
+class World;
+class WorldCache;
 
 #endif
 

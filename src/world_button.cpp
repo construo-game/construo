@@ -14,59 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "world.hpp"
+#include "world_button.hpp"
+
+#include "construo_error.hpp"
 #include "controller.hpp"
 #include "screen_manager.hpp"
-#include "world_button.hpp"
-#include "construo_error.hpp"
+#include "world.hpp"
+#include "world_cache.hpp"
 
-WorldButton::WorldButton (const std::string& arg_filename, Mode m) :
-  GUIFileButton(arg_filename),
-  m_world(nullptr),
-  m_file_broken(false),
-  m_mtime(),
+WorldButton::WorldButton (WorldCache& world_cache, const std::string& filename, Mode m) :
+  GUIFileButton(filename),
+  m_world_cache(world_cache),
   m_mode(m)
 {
 }
 
 WorldButton::~WorldButton ()
 {
-  delete m_world;
 }
 
 void
-WorldButton::load_world ()
+WorldButton::draw(GraphicContext& parent_gc)
 {
-  if ((m_world == nullptr
-       && !m_file_broken)
-      || m_mtime != g_system_context->get_mtime(m_filename))
-    {
-      try {
-        delete m_world;
-        m_world = new World(m_filename);
-        m_mtime = g_system_context->get_mtime(m_filename);
-      } catch (std::exception const& err) {
-        print_exception(err);
-        std::cout << "ERROR: WorldButton: Somthing went wrong loading " << m_filename << std::endl;
-        m_world = nullptr;
-        m_file_broken = true;
-      }
-    }
-}
-
-void
-WorldButton::draw (GraphicContext& parent_gc)
-{
-  load_world();
+  World const* world = m_world_cache.get(m_filename);
 
   parent_gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
                            Color(0xBB0000FF));
 
   GCZoomState zoom(m_x, m_y, m_x + m_width, m_y + m_height);
 
-  if (m_world) {
-    // FIXME: bounding box should be calculated in construtor
-    const BoundingBox& box = m_world->calc_bounding_box();
+  if (world) {
+    BoundingBox const& box = world->calc_bounding_box();
     zoom.zoom_to(box.x1, box.y1,
                  box.x2, box.y2);
   }
@@ -75,10 +53,10 @@ WorldButton::draw (GraphicContext& parent_gc)
 
   gc.lock();
 
-  if (m_world)
+  if (world)
   {
-    m_world->draw_colliders(gc);
-    m_world->draw_springs(gc);
+    world->draw_colliders(gc);
+    world->draw_springs(gc);
   }
   else
   {
@@ -89,10 +67,11 @@ WorldButton::draw (GraphicContext& parent_gc)
 
   gc.unlock();
 
-  if (m_mouse_over)
+  if (m_mouse_over) {
     parent_gc.draw_rect(m_x, m_y, m_x +  m_width, m_y + m_height, Color (0xFFFFFFFF));
-  else
+  } else {
     parent_gc.draw_rect(m_x, m_y, m_x + m_width, m_y + m_height, Color (0xFF0000FF));
+  }
 
   parent_gc.draw_string(m_x + 8, m_y + m_height + 14.0f, m_filename);
 }
@@ -100,17 +79,16 @@ WorldButton::draw (GraphicContext& parent_gc)
 void
 WorldButton::on_click ()
 {
-  //std::cout << "WorldButton: detected click on: " << filename << std::endl;
   if (m_mode == SAVE_BUTTON)
-    {
-      Controller::instance()->save_world(m_filename);
-      ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
-    }
+  {
+    Controller::instance()->save_world(m_filename);
+    ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+  }
   else // LOAD BUTTON
-    {
-      Controller::instance()->load_world(m_filename);
-      ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
-    }
+  {
+    Controller::instance()->load_world(m_filename);
+    ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
+  }
 }
 
 /* EOF */

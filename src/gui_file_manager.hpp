@@ -57,19 +57,15 @@ public:
   void scroll_down() override;
 
 private:
-  GUIDirectory* get_directory(const std::string& pathname);
+  Mode m_mode;
 
-private:
   GUIGenericButton* m_btn_up_directory;
   GUIGenericButton* m_btn_close;
   GUIGenericButton* m_btn_scroll_up;
   GUIGenericButton* m_btn_scroll_down;
   GUIGenericButton* m_btn_update_directory;
 
-  /** Cache for directories */
-  std::map<std::string, GUIDirectory*> m_directories;
-  GUIDirectory* m_current_directory;
-  Mode m_mode;
+  GUIDirectory* m_directory;
 
 public:
   GUIFileManager(const GUIFileManager&) = delete;

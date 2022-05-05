@@ -18,10 +18,11 @@
 #define HEADER_CONSTRUO_GUI_CHILDMANAGER_HPP
 
 #include <memory>
-#include <vector>
 #include <string>
-#include "zoom_graphic_context.hpp"
+#include <vector>
+
 #include "gui_component.hpp"
+#include "zoom_graphic_context.hpp"
 
 class GUIChildManager : public GUIComponent
 {
@@ -30,15 +31,15 @@ public:
   GUIChildManager();
   ~GUIChildManager();
 
-  void add(GUIComponent*);
+  void add(std::unique_ptr<GUIComponent>);
   void remove(GUIComponent*);
-  void replace(GUIComponent* old_comp, GUIComponent* new_comp);
+  void clear();
 
   template<typename T, typename... Args>
   T* create(Args&&... args) {
     std::unique_ptr<T> obj = std::make_unique<T>(std::forward<Args>(args)...);
     T* ptr = obj.get();
-    add(obj.release()); // FIXME: mem leak
+    add(std::move(obj));
     return ptr;
   }
 
@@ -72,7 +73,7 @@ private:
   GUIComponent* find_component_at(float x, float y);
 
 private:
-  std::vector<GUIComponent*> m_components;
+  std::vector<std::unique_ptr<GUIComponent>> m_components;
   GUIComponent* m_current_component;
 
 public:

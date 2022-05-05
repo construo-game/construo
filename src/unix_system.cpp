@@ -191,7 +191,11 @@ UnixSystem::translate_filename (const std::string& filename)
     }
   else if (has_prefix(filename, "/user/"))
     {
-      return m_construo_rc_path / filename.substr(6);
+      if (filename.size() == 6) {
+        return m_construo_rc_path;
+      } else {
+        return m_construo_rc_path / filename.substr(6);
+      }
     }
   else if (has_prefix(filename, "/examples/"))
     {

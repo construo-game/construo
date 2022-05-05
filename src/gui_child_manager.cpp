@@ -35,36 +35,31 @@ GUIChildManager::GUIChildManager() :
 
 GUIChildManager::~GUIChildManager ()
 {
-  for (auto i = m_components.begin(); i != m_components.end (); ++i)
-  {
-    delete *i;
+}
+
+void
+GUIChildManager::add(std::unique_ptr<GUIComponent> comp)
+{
+  m_components.push_back(std::move(comp));
+}
+
+void
+GUIChildManager::remove(GUIComponent* comp)
+{
+  std::erase_if(m_components, [comp](auto&& item){
+    return item.get() == comp;
+  });
+
+  if (m_current_component == comp) {
+    m_current_component = nullptr;
   }
 }
 
 void
-GUIChildManager::add (GUIComponent* comp)
+GUIChildManager::clear()
 {
-  m_components.push_back(comp);
-}
-
-void
-GUIChildManager::remove (GUIComponent* comp)
-{
-  // FIXME: Memory leak
-  m_components.erase(std::remove(m_components.begin(), m_components.end(), comp), m_components.end());
-}
-
-void
-GUIChildManager::replace(GUIComponent* old_comp, GUIComponent* new_comp)
-{
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
-  {
-    if (*i == old_comp)
-    {
-      *i = new_comp;
-      return;
-    }
-  }
+  m_components.clear();
+  m_current_component = nullptr;
 }
 
 void
@@ -90,7 +85,7 @@ GUIChildManager::draw(GraphicContext& parent_gc)
                       m_x + m_width, m_y,
                       g_style.button_fg_passive);
 
-  for (auto i = m_components.rbegin (); i != m_components.rend (); ++i)
+  for (auto i = m_components.rbegin(); i != m_components.rend(); ++i)
   {
     (*i)->draw(gc);
   }
@@ -99,177 +94,177 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 }
 
 void
-GUIChildManager::on_primary_button_press (float x, float y)
+GUIChildManager::on_primary_button_press(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_primary_button_press (x - m_x, y - m_y);
+      (*i)->on_primary_button_press(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_primary_button_release (float x, float y)
+GUIChildManager::on_primary_button_release(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_primary_button_release (x - m_x, y - m_y);
+      (*i)->on_primary_button_release(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_secondary_button_press (float x, float y)
+GUIChildManager::on_secondary_button_press(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_secondary_button_press (x - m_x, y - m_y);
+      (*i)->on_secondary_button_press(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_secondary_button_release (float x, float y)
+GUIChildManager::on_secondary_button_release(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_secondary_button_release (x - m_x, y - m_y);
+      (*i)->on_secondary_button_release(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_delete_press (float x, float y)
+GUIChildManager::on_delete_press(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_delete_press (x - m_x, y - m_y);
+      (*i)->on_delete_press(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_fix_press (float x, float y)
+GUIChildManager::on_fix_press(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->on_fix_press (x - m_x, y - m_y);
+      (*i)->on_fix_press(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_mouse_enter ()
+GUIChildManager::on_mouse_enter()
 {
 }
 
 void
-GUIChildManager::on_mouse_leave ()
+GUIChildManager::on_mouse_leave()
 {
 }
 
 void
-GUIChildManager::wheel_up (float x, float y)
+GUIChildManager::wheel_up(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->wheel_up (x - m_x, y - m_y);
+      (*i)->wheel_up(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::wheel_down (float x, float y)
+GUIChildManager::wheel_down(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-      (*i)->wheel_down (x - m_x, y - m_y);
+      (*i)->wheel_down(x - m_x, y - m_y);
       return;
     }
   }
 }
 
 void
-GUIChildManager::scroll_left ()
+GUIChildManager::scroll_left()
 {
-  /*  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
       {
-      if ((*i)->is_at (x - m_x, y - m_y))
+      if ((*i)->is_at(x - m_x, y - m_y))
       {
-      (*i)->scroll_left (x - m_x, y - m_y);
+      (*i)->scroll_left(x - m_x, y - m_y);
       return;
       }
       }*/
 }
 
 void
-GUIChildManager::scroll_right ()
+GUIChildManager::scroll_right()
 {
   /*
-    for (auto i = m_components.begin (); i != m_components.end (); ++i)
+    for (auto i = m_components.begin(); i != m_components.end(); ++i)
     {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-    (*i)->scroll_right (x - m_x, y - m_y);
+    (*i)->scroll_right(x - m_x, y - m_y);
     return;
     }
     }*/
 }
 
 void
-GUIChildManager::scroll_up ()
+GUIChildManager::scroll_up()
 {
-  /*  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
       {
-      if ((*i)->is_at (x - m_x, y - m_y))
+      if ((*i)->is_at(x - m_x, y - m_y))
       {
-      (*i)->scroll_down (x - m_x, y - m_y);
+      (*i)->scroll_down(x - m_x, y - m_y);
       return;
       }
       }*/
 }
 
 void
-GUIChildManager::scroll_down ()
+GUIChildManager::scroll_down()
 {
   /*
-    for (auto i = m_components.begin (); i != m_components.end (); ++i)
+    for (auto i = m_components.begin(); i != m_components.end(); ++i)
     {
-    if ((*i)->is_at (x - m_x, y - m_y))
+    if ((*i)->is_at(x - m_x, y - m_y))
     {
-    (*i)->scroll_down (x - m_x, y - m_y);
+    (*i)->scroll_down(x - m_x, y - m_y);
     return;
     }
     }*/
 }
 
 void
-GUIChildManager::on_mouse_move (float x, float y, float of_x, float of_y)
+GUIChildManager::on_mouse_move(float x, float y, float of_x, float of_y)
 {
-  GUIComponent* const comp = find_component_at (x, y);
+  GUIComponent* const comp = find_component_at(x, y);
   //std::cout << " MouseMove: " << x << " " << y << " " << comp << std::endl;
 
   if (comp != m_current_component)
@@ -289,13 +284,12 @@ GUIChildManager::on_mouse_move (float x, float y, float of_x, float of_y)
 }
 
 GUIComponent*
-GUIChildManager::find_component_at (float x, float y)
+GUIChildManager::find_component_at(float x, float y)
 {
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto& component : m_components)
   {
-    if ((*i)->is_at (x - m_x, y - m_y))
-    {
-      return *i;
+    if (component->is_at(x - m_x, y - m_y)) {
+      return component.get();
     }
   }
   return nullptr;

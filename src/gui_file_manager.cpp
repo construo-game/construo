@@ -25,50 +25,45 @@ GUIFileManager* GUIFileManager::instance_ = nullptr;
 
 GUIFileManager::GUIFileManager(Mode m) :
   GUIChildManager(),
+  m_mode(m),
   m_btn_up_directory(),
   m_btn_close(),
   m_btn_scroll_up(),
   m_btn_scroll_down(),
   m_btn_update_directory(),
-  m_directories(),
-  m_current_directory(nullptr),
-  m_mode(m)
+  m_directory()
 {
-  if (m_mode == SAVE_MANAGER)
-    m_current_directory = new GUIDirectory ("/", GUIDirectory::SAVE_DIRECTORY);
-  else
-    m_current_directory = new GUIDirectory ("/", GUIDirectory::LOAD_DIRECTORY);
+  instance_ = this;
 
-  m_directories["/"] = m_current_directory;
+  if (m_mode == SAVE_MANAGER) {
+    m_directory = create<GUIDirectory>("/", GUIDirectory::SAVE_DIRECTORY);
+  } else {
+    m_directory = create<GUIDirectory>("/", GUIDirectory::LOAD_DIRECTORY);
+  }
 
-  m_btn_up_directory = create<GUIGenericButton>("Up", []{
-    GUIFileManager::instance()->directory_up();
+  m_btn_up_directory = create<GUIGenericButton>("Up", [this]{
+    directory_up();
   });
 
   m_btn_close = create<GUIGenericButton>("Close", []{
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   });
 
-  m_btn_scroll_up = create<GUIGenericButton>("^", []{
-    GUIFileManager::instance()->scroll_up();
+  m_btn_scroll_up = create<GUIGenericButton>("^", [this]{
+    scroll_up();
   });
 
-  m_btn_scroll_down = create<GUIGenericButton>("V", []{
-    GUIFileManager::instance()->scroll_down();
+  m_btn_scroll_down = create<GUIGenericButton>("V", [this]{
+    scroll_down();
   });
 
-  m_btn_update_directory = create<GUIGenericButton>("Update Directory", []{
-    GUIFileManager::instance()->update_current_directory();
+  m_btn_update_directory = create<GUIGenericButton>("Update Directory", [this]{
+    update_current_directory();
   });
-
-  add(m_current_directory);
-
-  instance_ = this;
 }
 
 GUIFileManager::~GUIFileManager ()
 {
-
 }
 
 void
@@ -84,45 +79,28 @@ GUIFileManager::set_geometry(float x, float y, float width, float height)
 
   m_btn_update_directory->set_geometry(width - 150.0f, height - 25.0f, 150.0f, 25.0f);
 
-  for(auto& directory : m_directories) {
-    directory.second->set_geometry(x, y, width, height);
-  }
+  m_directory->set_geometry(x, y, width, height);
 }
 
 void
 GUIFileManager::open_directory (const std::string& pathname)
 {
-  std::cout << "GUIFileManager::open_directory: " << pathname << std::endl;
-  GUIDirectory* old_directory = m_current_directory;
-
-  if (m_directories[pathname] == nullptr)
-  {
-    if (m_mode == SAVE_MANAGER)
-    {
-      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                       GUIDirectory::SAVE_DIRECTORY);
-    }
-    else
-    {
-      m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                       GUIDirectory::LOAD_DIRECTORY);
-    }
+  GUIDirectory* old_directory = m_directory;
+  std::unique_ptr<GUIDirectory> new_directory;
+  if (m_mode == SAVE_MANAGER) {
+    m_directory = create<GUIDirectory>(pathname, GUIDirectory::SAVE_DIRECTORY);
+  } else {
+    m_directory = create<GUIDirectory>(pathname, GUIDirectory::LOAD_DIRECTORY);
   }
-  else
-  {
-    m_current_directory = m_directories[pathname];
-  }
+  m_directory->set_geometry(m_x, m_y, m_width, m_height);
 
-  m_current_directory->set_geometry(m_x, m_y, m_width, m_height);
-
-  std::cout << "Replace: " << old_directory << " " << m_current_directory << std::endl;
-  replace (old_directory, m_current_directory);
+  remove(old_directory);
 }
 
 void
 GUIFileManager::directory_up()
 {
-  std::string pathname = m_current_directory->get_path ();
+  std::string pathname = m_directory->get_path ();
 
   // FIXME: UGLY code
   if (pathname == "/")
@@ -143,7 +121,7 @@ GUIFileManager::directory_up()
             }
         }
 
-      std::cout << "Directory Up: " << m_current_directory->get_path () << " -> " << pathname << std::endl;
+      std::cout << "Directory Up: " << m_directory->get_path () << " -> " << pathname << std::endl;
       open_directory (pathname);
     }
 }
@@ -151,42 +129,25 @@ GUIFileManager::directory_up()
 void
 GUIFileManager::draw_overlay(GraphicContext& gc)
 {
-  gc.draw_string(200, 16, m_current_directory->get_path());
+  gc.draw_string(200, 16, m_directory->get_path());
 }
 
 void
 GUIFileManager::scroll_up ()
 {
-  m_current_directory->move_up();
+  m_directory->move_up();
 }
 
 void
 GUIFileManager::scroll_down ()
 {
-  m_current_directory->move_down();
+  m_directory->move_down();
 }
 
 void
 GUIFileManager::update_current_directory()
 {
-  // Force a reread of the whole directory
-  std::string pathname = m_current_directory->get_path();
-
-  GUIDirectory* old_directory = m_current_directory;
-
-  if (m_mode == SAVE_MANAGER)
-  {
-    m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                     GUIDirectory::SAVE_DIRECTORY);
-  }
-  else
-  {
-    m_current_directory = m_directories[pathname] = new GUIDirectory(pathname,
-                                                                     GUIDirectory::LOAD_DIRECTORY);
-  }
-
-  replace (old_directory, m_current_directory);
-  delete old_directory;
+  open_directory(m_directory->get_path());
 }
 
 /* EOF */

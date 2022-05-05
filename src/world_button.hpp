@@ -18,8 +18,7 @@
 #define HEADER_CONSTRUO_WORLD_BUTTON_HPP
 
 #include "gui_file_button.hpp"
-
-class World;
+#include "fwd.hpp"
 
 /** button in the load/save dialog */
 class WorldButton : public GUIFileButton
@@ -28,19 +27,14 @@ public:
   enum Mode { LOAD_BUTTON, SAVE_BUTTON};
 
 public:
-  WorldButton (const std::string& arg_filename, Mode m);
-  ~WorldButton ();
+  WorldButton(WorldCache& world_cache, std::string const& filename, Mode m);
+  ~WorldButton();
 
   void draw (GraphicContext& gc) override;
   void on_click() override;
 
-  /** Load the given world, if not called it will be loaded on demand */
-  void load_world ();
-
 private:
-  World* m_world;
-  bool m_file_broken;
-  unsigned long m_mtime;
+  WorldCache& m_world_cache;
   Mode m_mode;
 
 private:

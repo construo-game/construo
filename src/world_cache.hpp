@@ -1,5 +1,5 @@
 // Construo - A wire-frame construction gamee
-// Copyright (C) 2002 Ingo Ruhnke <grumbel@gmail.com>
+// Copyright (C) 2022 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,30 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_CONSTRUO_GUI_FILE_BUTTON_HPP
-#define HEADER_CONSTRUO_GUI_FILE_BUTTON_HPP
+#ifndef HEADER_CONSTRUO_WORLD_CACHE_HPP
+#define HEADER_CONSTRUO_WORLD_CACHE_HPP
 
+#include <memory>
 #include <string>
-#include "zoom_graphic_context.hpp"
-#include "gui_component.hpp"
+#include <unordered_map>
 
-class GUIFileButton : public GUIComponent
+#include "fwd.hpp"
+
+class WorldCache
 {
 public:
-  GUIFileButton(const std::string& arg_filename);
-  ~GUIFileButton();
+  WorldCache();
 
-  virtual void on_click() =0;
+  /** Return either a World or nullptr in case of failure to load the World */
+  World const* get(std::string const& filename);
 
-  void on_mouse_enter() override { m_mouse_over = true; }
-  void on_mouse_leave() override { m_mouse_over = false; }
+private:
+  std::unordered_map<std::string, std::unique_ptr<World>> m_worlds;
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
-
-protected:
-  std::string m_filename;
-  bool m_mouse_over;
+private:
+  WorldCache(const WorldCache&) = delete;
+  WorldCache& operator=(const WorldCache&) = delete;
 };
 
 #endif

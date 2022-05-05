@@ -30,12 +30,6 @@ class Spring;
 /** This class holds all particles and springs */
 class World
 {
-private:
-  static World* current_world;
-public:
-  /** @return pointer to the current world */
-  static World* current() { return current_world; }
-
   friend class ParticleFactory;
 
 public:
@@ -54,10 +48,10 @@ public:
   World (const std::string& filename);
   ~World ();
 
-  void draw (ZoomGraphicContext& gc);
-  void draw_springs (ZoomGraphicContext& gc);
-  void draw_colliders (ZoomGraphicContext& gc);
-  void draw_particles (ZoomGraphicContext& gc);
+  void draw(ZoomGraphicContext& gc) const;
+  void draw_springs(ZoomGraphicContext& gc) const;
+  void draw_colliders(ZoomGraphicContext& gc) const;
+  void draw_particles(ZoomGraphicContext& gc) const;
 
   void update (float delta);
 
@@ -107,7 +101,7 @@ public:
 
   /** Callculate the bounding box of the world from the particle and
    *  collider it contains. */
-  BoundingBox calc_bounding_box();
+  BoundingBox calc_bounding_box() const;
 
 private:
   void parse_scene(ReaderMapping const& reader);

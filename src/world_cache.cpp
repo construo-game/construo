@@ -1,5 +1,5 @@
 // Construo - A wire-frame construction gamee
-// Copyright (C) 2002 Ingo Ruhnke <grumbel@gmail.com>
+// Copyright (C) 2022 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,32 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_CONSTRUO_GUI_FILE_BUTTON_HPP
-#define HEADER_CONSTRUO_GUI_FILE_BUTTON_HPP
+#include "world_cache.hpp"
 
-#include <string>
-#include "zoom_graphic_context.hpp"
-#include "gui_component.hpp"
+#include <iostream>
 
-class GUIFileButton : public GUIComponent
+#include "world.hpp"
+
+WorldCache::WorldCache() :
+  m_worlds()
 {
-public:
-  GUIFileButton(const std::string& arg_filename);
-  ~GUIFileButton();
+}
 
-  virtual void on_click() =0;
-
-  void on_mouse_enter() override { m_mouse_over = true; }
-  void on_mouse_leave() override { m_mouse_over = false; }
-
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
-
-protected:
-  std::string m_filename;
-  bool m_mouse_over;
-};
-
-#endif
+World const*
+WorldCache::get(std::string const& filename)
+{
+  if (auto it = m_worlds.find(filename); it != m_worlds.end()) {
+    return it->second.get();
+  } else {
+    try {
+      auto world = std::make_unique<World>(filename);
+      World const* tmp = world.get();
+      m_worlds[filename] = std::move(world);
+      return tmp;
+    } catch (std::exception const& err) {
+      std::cerr << filename << ": failed to load World: " << err.what() << std::endl;
+      m_worlds[filename] = {};
+      return nullptr;
+    }
+  }
+}
 
 /* EOF */
