@@ -51,12 +51,15 @@
                 if ${if construo_has_version then "false" else "true"}; then
                   echo "${version}" > VERSION
                 fi
+                substituteInPlace CMakeLists.txt \
+                  --replace "appstream-util" "appstream-util --nonet"
              '';
              cmakeFlags = [
                "-DWARNINGS=ON"
                # "-DWERROR=ON"
                "-DBUILD_TESTS=ON"
              ];
+             doCheck = true;
              postFixup = ''
                wrapProgram $out/bin/construo.glut \
                   --prefix LIBGL_DRIVERS_PATH ":" "${pkgs.mesa.drivers}/lib/dri" \
@@ -67,6 +70,9 @@
                cmake
                makeWrapper
                pkgconfig
+             ];
+             checkInputs = with pkgs; [
+               appstream-glib
              ];
              buildInputs = with pkgs; [
                zlib
