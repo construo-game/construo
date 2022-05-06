@@ -95,6 +95,7 @@ set(CONSTRUO_SOURCES_CXX
   src/load_gui_manager.cpp
   src/particle.cpp
   src/particle_factory.cpp
+  src/path.cpp
   src/path_manager.cpp
   src/rect_collider.cpp
   src/root_graphic_context.cpp
