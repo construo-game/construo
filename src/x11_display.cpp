@@ -109,7 +109,7 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
                            CopyFromParent, // depth
                            InputOutput, // class
                            nullptr /*CopyFromParent*/, // visual
-                           CWBackPixel | CWBorderPixel | CWEventMask | CWColormap,
+                           /*CWBackPixel | CWBorderPixel |*/ CWEventMask | CWColormap,
                            &attributes);
 
   { // Communicate a bit with the window manager
@@ -442,7 +442,6 @@ X11Display::process_pending_events()
     m_height = m_pending_configure_event->height;
 
     ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
-    //ScreenManager::instance()->draw(*this);
 
     m_pending_configure_event = std::nullopt;
   }
