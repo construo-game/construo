@@ -47,7 +47,7 @@ Particle::Particle (const Particle& p)
 }
 
 void
-Particle::serialize(LispWriter& writer)
+Particle::serialize(prio::Writer& writer)
 {
   writer.begin_object("particle")
     .write("id", id)

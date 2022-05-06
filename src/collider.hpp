@@ -46,7 +46,7 @@ public:
 
   virtual BoundingBox get_bounding_box() const =0;
 
-  virtual void serialize(LispWriter& writer) =0;
+  virtual void serialize(prio::Writer& writer) =0;
 };
 
 #endif

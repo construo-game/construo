@@ -42,7 +42,7 @@ public:
   /** Forces the recalculation of the springs length */
   void recalc_length ();
 
-  void serialize(LispWriter& writer);
+  void serialize(prio::Writer& writer);
 
 public:
   /** Pointers to the two particles to which the Spring is

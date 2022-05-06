@@ -37,7 +37,7 @@ public:
 
   BoundingBox get_bounding_box() const override;
 
-  void serialize(LispWriter& writer) override;
+  void serialize(prio::Writer& writer) override;
 
 private:
   // FIXME: Use the Rect class here

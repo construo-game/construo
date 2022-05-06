@@ -170,7 +170,7 @@ ParticleFactory::clear ()
 }
 
 void
-ParticleFactory::write_lisp(LispWriter& writer)
+ParticleFactory::write_lisp(prio::Writer& writer)
 {
   writer.begin_collection("particles");
   for (auto i = m_particles.begin (); i != m_particles.end (); ++i) {

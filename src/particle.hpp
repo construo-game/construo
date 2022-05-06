@@ -89,7 +89,7 @@ public:
 
   void draw_velocity_vector (ZoomGraphicContext& gc);
 
-  void serialize(LispWriter& writer);
+  void serialize(prio::Writer& writer);
 
   friend class ParticleFactory;
 

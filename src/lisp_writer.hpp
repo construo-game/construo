@@ -23,8 +23,6 @@
 
 #include <prio/writer.hpp>
 
-using LispWriter = prio::Writer;
-
 namespace prio {
 
 template<> void write_custom(prio::Writer& writer, std::string_view key, Vector2d const& value);

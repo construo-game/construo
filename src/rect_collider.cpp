@@ -150,7 +150,7 @@ RectCollider::get_bounding_box() const
 }
 
 void
-RectCollider::serialize(LispWriter& writer)
+RectCollider::serialize(prio::Writer& writer)
 {
   writer.begin_object("rect")
     .write("pos1", Vector2d(x1, y1))

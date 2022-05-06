@@ -423,7 +423,7 @@ World::write_lisp (const std::string& filename)
 {
   std::cout << "World: Writing to: " << filename << std::endl;
 
-  LispWriter writer = LispWriter::from_file(g_system_context->translate_filename(filename));
+  prio::Writer writer = prio::Writer::from_file(g_system_context->translate_filename(filename));
 
   writer.write_comment("Written by " PACKAGE_STRING);
   writer.begin_object("construo-scene");

@@ -147,7 +147,7 @@ Spring::draw_highlight (ZoomGraphicContext& gc)
 }
 
 void
-Spring::serialize(LispWriter& writer)
+Spring::serialize(prio::Writer& writer)
 {
   writer.begin_object("spring")
     .write("first", particles.first->get_id())

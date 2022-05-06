@@ -65,7 +65,7 @@ public:
   ParticleIter end () { return m_particles.end(); }
 
   void clear ();
-  void write_lisp(LispWriter& writer);
+  void write_lisp(prio::Writer& writer);
 
 private:
   std::vector<Particle*> m_particles;
