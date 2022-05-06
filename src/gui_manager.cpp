@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "gui_manager.hpp"
+
+#include <assert.h>
+
 #include "string_utils.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
@@ -22,7 +26,6 @@
 #include "controller.hpp"
 #include "events.hpp"
 #include "gui_component.hpp"
-#include "gui_manager.hpp"
 #include "worldview_component.hpp"
 #include "worldview_insert_tool.hpp"
 #include "root_graphic_context.hpp"
@@ -339,15 +342,16 @@ GUIManager::process_events ()
 }
 
 void
-GUIManager::grab_mouse (GUIComponent* comp)
+GUIManager::grab_mouse(GUIComponent& component)
 {
-  m_grabbing_component = comp;
-  m_current_component  = comp;
+  m_grabbing_component = &component;
+  m_current_component  = &component;
 }
 
 void
-GUIManager::ungrab_mouse (GUIComponent* comp)
+GUIManager::ungrab_mouse(GUIComponent& component)
 {
+  assert(m_grabbing_component == &component);
   m_grabbing_component = nullptr;
 }
 

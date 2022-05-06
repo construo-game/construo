@@ -59,14 +59,14 @@ GUIButton::on_mouse_leave ()
 void
 GUIButton::on_primary_button_press (float x, float y)
 {
-  WorldGUIManager::instance()->grab_mouse (this);
+  WorldGUIManager::instance()->grab_mouse(*this);
   m_pressed = true;
 }
 
 void
 GUIButton::on_primary_button_release (float x, float y)
 {
-  WorldGUIManager::instance()->ungrab_mouse (this);
+  WorldGUIManager::instance()->ungrab_mouse(*this);
   if (is_at (x, y))
     on_click ();
   m_pressed = false;

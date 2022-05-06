@@ -40,10 +40,10 @@ WorldViewComponent::WorldViewComponent() :
   m_scroll_pos_y(0.0f),
   m_x_offset(0.0f),
   m_y_offset(0.0f),
-  m_select_tool(std::make_unique<WorldViewSelectTool>()),
-  m_insert_tool(std::make_unique<WorldViewInsertTool>()),
-  m_zoom_tool(std::make_unique<WorldViewZoomTool>()),
-  m_collider_tool(std::make_unique<WorldViewColliderTool>()),
+  m_select_tool(std::make_unique<WorldViewSelectTool>(*this)),
+  m_insert_tool(std::make_unique<WorldViewInsertTool>(*this)),
+  m_zoom_tool(std::make_unique<WorldViewZoomTool>(*this)),
+  m_collider_tool(std::make_unique<WorldViewColliderTool>(*this)),
   m_current_tool(m_insert_tool.get()),
   m_mode(INSERT_MODE)
 {
@@ -352,7 +352,7 @@ WorldViewComponent::on_tertiary_button_press(float x, float y)
 
   m_x_offset = m_zoom.get_x_offset();
   m_y_offset = m_zoom.get_y_offset();
-  WorldGUIManager::instance()->grab_mouse(this);
+  WorldGUIManager::instance()->grab_mouse(*this);
 
   m_scroll_pos_x = m_zoom.screen_to_world_x(x);
   m_scroll_pos_y = m_zoom.screen_to_world_y(y);
@@ -363,7 +363,7 @@ WorldViewComponent::on_tertiary_button_release(float x, float y)
 {
   g_graphic_context->pop_cursor();
   m_scrolling = false;
-  WorldGUIManager::instance()->ungrab_mouse(this);
+  WorldGUIManager::instance()->ungrab_mouse(*this);
 }
 
 void

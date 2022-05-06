@@ -18,12 +18,14 @@
 #define HEADER_CONSTRUO_FWD_HPP
 
 class GUIComponent;
+class GUIGenericButton;
 class GUIManager;
 class GraphicContext;
-struct ButtonEvent;
-class GUIGenericButton;
 class World;
 class WorldCache;
+class WorldViewComponent;
+class ZoomGraphicContext;
+struct ButtonEvent;
 
 #endif
 

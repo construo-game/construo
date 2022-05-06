@@ -25,31 +25,30 @@ class Particle;
 class WorldViewSelectTool : public WorldViewTool
 {
 public:
-  WorldViewSelectTool ();
-  ~WorldViewSelectTool ();
+  WorldViewSelectTool(WorldViewComponent& worldview);
+  ~WorldViewSelectTool();
 
-  void activate () override;
-  void deactivate () override;
+  void deactivate() override;
 
-  void draw_background (ZoomGraphicContext& gc) override;
-  void draw_foreground (ZoomGraphicContext& gc) override;
+  void draw_background(ZoomGraphicContext& gc) override;
+  void draw_foreground(ZoomGraphicContext& gc) override;
 
-  void on_primary_button_press (float x, float y) override;
-  void on_primary_button_release (float x, float y) override;
+  void on_primary_button_press(float x, float y) override;
+  void on_primary_button_release(float x, float y) override;
 
-  void on_secondary_button_press (float x, float y) override;
-  void on_secondary_button_release (float x, float y) override;
+  void on_secondary_button_press(float x, float y) override;
+  void on_secondary_button_release(float x, float y) override;
 
-  void on_mouse_move (float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(float x, float y, float of_x, float of_y) override;
 
-  void on_button_press (int button_id, float x, float y) override;
+  void on_button_press(int button_id, float x, float y) override;
 
-  void on_scale_press (float x, float y) override;
-  void on_flip_press (float x, float y);
-  void on_duplicate_press (float x, float y) override;
-  void on_delete_press (float x, float y) override;
-  void on_fix_press (float x, float y) override;
-  void on_join_press (float x, float y) override;
+  void on_scale_press(float x, float y) override;
+  void on_flip_press(float x, float y);
+  void on_duplicate_press(float x, float y) override;
+  void on_delete_press(float x, float y) override;
+  void on_fix_press(float x, float y) override;
+  void on_join_press(float x, float y) override;
 
 private:
   enum Mode {

@@ -26,7 +26,8 @@
 #include "root_graphic_context.hpp"
 #include "worldview_select_tool.hpp"
 
-WorldViewSelectTool::WorldViewSelectTool () :
+WorldViewSelectTool::WorldViewSelectTool(WorldViewComponent& worldview) :
+  WorldViewTool(worldview),
   m_selection(),
   m_mode(IDLE_MODE),
   m_click_pos(),
@@ -111,11 +112,6 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 }
 
 void
-WorldViewSelectTool::activate ()
-{
-}
-
-void
 WorldViewSelectTool::deactivate ()
 {
   m_selection.clear ();
@@ -128,12 +124,12 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
     {
     case IDLE_MODE:
       {
-        float x = WorldViewComponent::instance()->zoom().screen_to_world_x (screen_x);
-        float y = WorldViewComponent::instance()->zoom().screen_to_world_y (screen_y);
+        float x = m_worldview.zoom().screen_to_world_x (screen_x);
+        float y = m_worldview.zoom().screen_to_world_y (screen_y);
 
         World& world = *Controller::instance()->get_world ();
 
-        WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+        WorldGUIManager::instance()->grab_mouse(*WorldViewComponent::instance());
 
         m_mode = GETTING_SELECTION_MODE;
 
@@ -165,7 +161,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
     case SCALING_SELECTION_MODE:
       {
         g_graphic_context->pop_cursor();
-        WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+        WorldGUIManager::instance()->ungrab_mouse(*WorldViewComponent::instance());
         m_mode = IDLE_MODE;
         g_graphic_context->pop_cursor();
         m_old_scale_factor = 1.0f;
@@ -180,14 +176,14 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
 void
 WorldViewSelectTool::on_primary_button_release (float x, float y)
 {
-  WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+  WorldGUIManager::instance()->ungrab_mouse(*WorldViewComponent::instance());
 
   switch(m_mode)
   {
     case GETTING_SELECTION_MODE:
       {
         m_selection.select_particles(m_click_pos,
-                                   WorldViewComponent::instance()->zoom().screen_to_world (Vector2d(x,y)));
+                                     m_worldview.zoom().screen_to_world (Vector2d(x,y)));
         m_mode = IDLE_MODE;
       }
       break;
@@ -202,38 +198,38 @@ WorldViewSelectTool::on_primary_button_release (float x, float y)
       break;
 
     case ROTATING_SELECTION_MODE:
-        break;
+      break;
 
     case IDLE_MODE:
-        break;
-    }
+      break;
+  }
 }
 
 void
 WorldViewSelectTool::on_secondary_button_press (float screen_x, float screen_y)
 {
   switch (m_mode)
-    {
+  {
     case IDLE_MODE:
       if (!m_selection.empty())
-        {
-          Controller::instance()->push_undo();
-          g_graphic_context->push_cursor();
-          g_graphic_context->set_cursor(CURSOR_ROTATE);
+      {
+        Controller::instance()->push_undo();
+        g_graphic_context->push_cursor();
+        g_graphic_context->set_cursor(CURSOR_ROTATE);
 
-          m_mode = ROTATING_SELECTION_MODE;
-          WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+        m_mode = ROTATING_SELECTION_MODE;
+        WorldGUIManager::instance()->grab_mouse(*WorldViewComponent::instance());
 
-          m_click_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(screen_x, screen_y));
+        m_click_pos = m_worldview.zoom().screen_to_world(Vector2d(screen_x, screen_y));
 
-          m_rotate_center = m_selection.get_center();
-        }
+        m_rotate_center = m_selection.get_center();
+      }
       break;
 
     case SCALING_SELECTION_MODE:
       {
         g_graphic_context->pop_cursor();
-        WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+        WorldGUIManager::instance()->ungrab_mouse(*WorldViewComponent::instance());
         m_mode = IDLE_MODE;
         g_graphic_context->pop_cursor();
         m_selection.scale(1.0f / m_old_scale_factor, m_scale_center);
@@ -243,23 +239,23 @@ WorldViewSelectTool::on_secondary_button_press (float screen_x, float screen_y)
 
     default:
       break;
-    }
+  }
 }
 
 void
 WorldViewSelectTool::on_secondary_button_release (float x, float y)
 {
   switch (m_mode)
-    {
+  {
     case ROTATING_SELECTION_MODE:
       g_graphic_context->pop_cursor();
-      WorldGUIManager::instance()->ungrab_mouse (WorldViewComponent::instance());
+      WorldGUIManager::instance()->ungrab_mouse(*WorldViewComponent::instance());
       m_mode = IDLE_MODE;
       break;
 
     default:
       break;
-    }
+  }
 }
 
 void
@@ -273,14 +269,14 @@ WorldViewSelectTool::on_delete_press (float x, float y)
       world.remove_particle(*i);
     }
 
-  m_selection.clear ();
+  m_selection.clear();
 }
 
 void
-WorldViewSelectTool::on_fix_press (float x, float y)
+WorldViewSelectTool::on_fix_press(float x, float y)
 {
   bool mark_all = false;
-  for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+  for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
     {
       if (!(*i)->get_fixed())
         {
@@ -290,44 +286,44 @@ WorldViewSelectTool::on_fix_press (float x, float y)
 
   if (mark_all)
     {
-      for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+      for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
         {
-          (*i)->set_fixed (true);
+          (*i)->set_fixed(true);
         }
     }
   else
     {
-      for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+      for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
         {
-          (*i)->set_fixed (!(*i)->get_fixed());
+          (*i)->set_fixed(!(*i)->get_fixed());
         }
     }
 }
 
 void
-WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, float of_y)
+WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, float of_y)
 {
-  World& world = *Controller::instance()->get_world ();
+  World& world = *Controller::instance()->get_world();
 
   switch (m_mode)
     {
     case MOVING_SELECTION_MODE:
       {
-        Vector2d new_pos(WorldViewComponent::instance()->zoom().screen_to_world_x (screen_x),
-                         WorldViewComponent::instance()->zoom().screen_to_world_y (screen_y));
+        Vector2d new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
+                         m_worldview.zoom().screen_to_world_y(screen_y));
 
         Vector2d diff = new_pos - m_click_pos;
 
         // Undo the last move (FIXME: Potential round errors)
-        for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+        for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
           {
             (*i)->pos -= m_move_diff;
           }
 
-        if (WorldViewComponent::instance()->uses_grid())
+        if (m_worldview.uses_grid())
           {
 
-            float grid_size = WorldViewComponent::instance()->get_snap_size();
+            float grid_size = m_worldview.get_snap_size();
 
             diff.x = Math::round_to_float(diff.x, grid_size);
             diff.y = Math::round_to_float(diff.y, grid_size);
@@ -337,20 +333,20 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
 
         m_move_diff = diff;
 
-        for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+        for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
           {
             (*i)->pos += diff;
 
             // Recalculate all springs that are attached to the
             // selection, but not fully in it.
             std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
-            for (std::vector<Spring*>::iterator j = spring_mgr.begin ();
-                 j != spring_mgr.end (); ++j)
+            for (std::vector<Spring*>::iterator j = spring_mgr.begin();
+                 j != spring_mgr.end(); ++j)
               {
                 if ((*j)->particles.first == *i
                     || (*j)->particles.second == *i)
                   {
-                    (*j)->recalc_length ();
+                    (*j)->recalc_length();
                   }
               }
           }
@@ -359,7 +355,7 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
 
     case SCALING_SELECTION_MODE:
       {
-        Vector2d const new_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(screen_x, screen_y));
+        Vector2d const new_pos = m_worldview.zoom().screen_to_world(Vector2d(screen_x, screen_y));
         float const scale_factor = fabsf((m_scale_center - new_pos).norm() / (m_scale_center - m_click_pos).norm());
         m_selection.scale(1.0f / m_old_scale_factor, m_scale_center);
         m_selection.scale(scale_factor, m_scale_center);
@@ -368,8 +364,8 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
       break;
     case ROTATING_SELECTION_MODE:
       {
-        Vector2d new_pos(WorldViewComponent::instance()->zoom().screen_to_world_x (screen_x),
-                         WorldViewComponent::instance()->zoom().screen_to_world_y (screen_y));
+        Vector2d new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
+                         m_worldview.zoom().screen_to_world_y(screen_y));
 
         float new_angle = atan2(new_pos.y - m_rotate_center.y,
                                 new_pos.x - m_rotate_center.x);
@@ -388,7 +384,7 @@ WorldViewSelectTool::on_mouse_move (float screen_x, float screen_y, float of_x, 
 }
 
 void
-WorldViewSelectTool::on_scale_press (float x, float y)
+WorldViewSelectTool::on_scale_press(float x, float y)
 {
   if (!m_selection.empty())
     {
@@ -397,8 +393,8 @@ WorldViewSelectTool::on_scale_press (float x, float y)
       g_graphic_context->push_cursor();
       g_graphic_context->set_cursor(CURSOR_SCALE);
 
-      m_click_pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y));
-      WorldGUIManager::instance()->grab_mouse (WorldViewComponent::instance());
+      m_click_pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
+      WorldGUIManager::instance()->grab_mouse(*WorldViewComponent::instance());
 
       m_mode = SCALING_SELECTION_MODE;
 
@@ -407,21 +403,21 @@ WorldViewSelectTool::on_scale_press (float x, float y)
 }
 
 void
-WorldViewSelectTool::on_duplicate_press (float x, float y)
+WorldViewSelectTool::on_duplicate_press(float x, float y)
 {
-  m_selection.duplicate ();
+  m_selection.duplicate();
 }
 
 void
-WorldViewSelectTool::on_button_press (int button_id, float x, float y)
+WorldViewSelectTool::on_button_press(int button_id, float x, float y)
 {
-  Vector2d pos = WorldViewComponent::instance()->zoom().screen_to_world(Vector2d(x, y));
+  Vector2d pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
 
-  switch (button_id)
+  switch(button_id)
     {
     case BUTTON_SETVELOCITY:
       if (!m_selection.empty()) {
-        m_selection.set_velocity (pos - m_selection.get_center());
+        m_selection.set_velocity(pos - m_selection.get_center());
       }
       break;
 
@@ -435,7 +431,7 @@ WorldViewSelectTool::on_button_press (int button_id, float x, float y)
 }
 
 void
-WorldViewSelectTool::on_join_press (float x, float y)
+WorldViewSelectTool::on_join_press(float x, float y)
 {
   std::cout << "Join pressed" << std::endl;
   m_selection.join_doubles(5.0f);

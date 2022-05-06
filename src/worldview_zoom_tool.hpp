@@ -23,7 +23,7 @@
 class WorldViewZoomTool : public WorldViewTool
 {
 public:
-  WorldViewZoomTool();
+  WorldViewZoomTool(WorldViewComponent& worldview);
   ~WorldViewZoomTool();
 
   void activate() override;

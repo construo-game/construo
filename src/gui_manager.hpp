@@ -56,8 +56,8 @@ public:
     return ptr;
   }
 
-  void grab_mouse (GUIComponent*);
-  void ungrab_mouse (GUIComponent*);
+  void grab_mouse(GUIComponent& component);
+  void ungrab_mouse(GUIComponent& component);
 
 private:
   void process_events ();

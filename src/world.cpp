@@ -277,12 +277,10 @@ World::update (float delta)
 }
 
 Spring*
-World::get_spring (float x, float y)
+World::get_spring(float x, float y, float capture_distance) const
 {
   Spring* spring = nullptr;
   float min_distance = 0.0f;
-
-  float capture_threshold = 15;
 
   for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
     {
@@ -302,7 +300,7 @@ World::get_spring (float x, float y)
 
       if (u >= 0 && u <= 1.0f
           && ((spring && min_distance > distance)
-              || (!spring && distance <= capture_threshold))) // FIXME: threashold is dependend on view
+              || (!spring && distance <= capture_distance)))
         {
           spring = *i;
           min_distance = distance;
@@ -313,7 +311,7 @@ World::get_spring (float x, float y)
 }
 
 Particle*
-World::get_particle (float x, float y)
+World::get_particle(float x, float y) const
 {
   Particle* particle = nullptr;
   float min_dist = 25.0f; // FIXME: Make this configurable
@@ -333,12 +331,12 @@ World::get_particle (float x, float y)
 }
 
 std::vector<Particle*>
-World::get_particles (float x1_, float y1_, float x2_, float y2_)
+World::get_particles (float x1_, float y1_, float x2_, float y2_) const
 {
-  float x1 = Math::min(x1_, x2_);
-  float x2 = Math::max(x1_, x2_);
-  float y1 = Math::min(y1_, y2_);
-  float y2 = Math::max(y1_, y2_);
+  float const x1 = Math::min(x1_, x2_);
+  float const x2 = Math::max(x1_, x2_);
+  float const y1 = Math::min(y1_, y2_);
+  float const y2 = Math::max(y1_, y2_);
 
   std::vector<Particle*> caputred_particles;
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)

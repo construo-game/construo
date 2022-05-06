@@ -21,7 +21,8 @@
 #include "worldview_component.hpp"
 #include "worldview_zoom_tool.hpp"
 
-WorldViewZoomTool::WorldViewZoomTool() :
+WorldViewZoomTool::WorldViewZoomTool(WorldViewComponent& worldview) :
+  WorldViewTool(worldview),
   m_click_pos(),
   m_creating_zoom_rectangle(false)
 {
@@ -42,8 +43,8 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext& gc)
 {
   if (m_creating_zoom_rectangle)
   {
-    float x = WorldViewComponent::instance()->zoom().screen_to_world_x(g_input_context->get_mouse_x());
-    float y = WorldViewComponent::instance()->zoom().screen_to_world_y(g_input_context->get_mouse_y());
+    float x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x());
+    float y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y());
 
     gc.draw_rect(Math::min(x, m_click_pos.x),
                  Math::min(y, m_click_pos.y),
@@ -57,8 +58,8 @@ void
 WorldViewZoomTool::on_primary_button_press (float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = true;
-  m_click_pos.x = WorldViewComponent::instance()->zoom().screen_to_world_x (screen_x);
-  m_click_pos.y = WorldViewComponent::instance()->zoom().screen_to_world_y (screen_y);
+  m_click_pos.x = m_worldview.zoom().screen_to_world_x (screen_x);
+  m_click_pos.y = m_worldview.zoom().screen_to_world_y (screen_y);
 }
 
 void
@@ -66,10 +67,10 @@ WorldViewZoomTool::on_primary_button_release (float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = false;
 
-  float x = WorldViewComponent::instance()->zoom().screen_to_world_x (screen_x);
-  float y = WorldViewComponent::instance()->zoom().screen_to_world_y (screen_y);
+  float x = m_worldview.zoom().screen_to_world_x (screen_x);
+  float y = m_worldview.zoom().screen_to_world_y (screen_y);
 
-  WorldViewComponent::instance()->zoom().zoom_to(static_cast<int>(Math::min(x, m_click_pos.x)),
+  m_worldview.zoom().zoom_to(static_cast<int>(Math::min(x, m_click_pos.x)),
                                                  static_cast<int>(Math::min(y, m_click_pos.y)),
                                                  static_cast<int>(Math::max(x, m_click_pos.x)),
                                                  static_cast<int>(Math::max(y, m_click_pos.y)));
@@ -78,7 +79,7 @@ WorldViewZoomTool::on_primary_button_release (float screen_x, float screen_y)
 void
 WorldViewZoomTool::on_secondary_button_press (float x, float y)
 {
-  WorldViewComponent::instance()->zoom().zoom_out(x, y);
+  m_worldview.zoom().zoom_out(x, y);
 }
 
 void
