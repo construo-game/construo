@@ -49,15 +49,15 @@ GUIFileManager::GUIFileManager(Mode m) :
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   });
 
-  m_btn_scroll_up = create<GUIGenericButton>("^", [this]{
+  m_btn_scroll_up = create<GUIGenericButton>("/\\", [this]{
     scroll_up();
   });
 
-  m_btn_scroll_down = create<GUIGenericButton>("V", [this]{
+  m_btn_scroll_down = create<GUIGenericButton>("\\/", [this]{
     scroll_down();
   });
 
-  m_btn_update_directory = create<GUIGenericButton>("Update Directory", [this]{
+  m_btn_update_directory = create<GUIGenericButton>("Reload", [this]{
     update_current_directory();
   });
 }
