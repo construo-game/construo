@@ -64,8 +64,8 @@ Spring::Spring(World* world, ReaderMapping const& reader) :
   reader.read("damping", damping);
   reader.read("maxstretch", max_stretch);
 
-  particles.first  = world->get_particle_mgr()->lookup_particle (first_id);
-  particles.second = world->get_particle_mgr()->lookup_particle (second_id);
+  particles.first  = world->get_particle_mgr().lookup_particle(first_id);
+  particles.second = world->get_particle_mgr().lookup_particle(second_id);
 
   if (particles.first == nullptr || particles.second == nullptr)
     {

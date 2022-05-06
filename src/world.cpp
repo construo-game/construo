@@ -33,7 +33,7 @@
 World::World() :
   m_file_version(0),
   m_has_been_run(false),
-  m_particle_mgr(new ParticleFactory),
+  m_particle_mgr(std::make_unique<ParticleFactory>()),
   m_springs(),
   m_colliders()
 {
@@ -80,7 +80,7 @@ World::World(const World& old_world) :
   }
 
   // FIXME: Could need optimizations
-  m_particle_mgr = new ParticleFactory(*old_world.m_particle_mgr);
+  m_particle_mgr = std::make_unique<ParticleFactory>(*old_world.m_particle_mgr);
 
   for (auto i = old_world.m_springs.begin (); i != old_world.m_springs.end (); ++i)
   {
@@ -146,7 +146,7 @@ World::parse_colliders(ReaderCollection const& collection)
 void
 World::parse_particles(ReaderCollection const& collection)
 {
-  m_particle_mgr = new ParticleFactory(m_file_version, collection);
+  m_particle_mgr = std::make_unique<ParticleFactory>(m_file_version, collection);
 }
 
 void
@@ -252,8 +252,8 @@ World::update (float delta)
               Particle* p2 = m_particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f, .1f);
 
               // FIXME: Insert a more sofistikated string splitter here
-              new_springs.push_back (new Spring ((*i)->particles.first, p1, (*i)->length/2));
-              new_springs.push_back (new Spring ((*i)->particles.second, p2, (*i)->length/2));
+              new_springs.push_back(new Spring ((*i)->particles.first, p1, (*i)->length/2));
+              new_springs.push_back(new Spring ((*i)->particles.second, p2, (*i)->length/2));
             }
         }
     }
@@ -352,8 +352,8 @@ void
 World::zero_out_velocity ()
 {
   std::cout << "Setting velocity to zero" << std::endl;
-  for (auto i = get_particle_mgr()->begin();
-       i != get_particle_mgr()->end (); ++i)
+  for (auto i = get_particle_mgr().begin();
+       i != get_particle_mgr().end(); ++i)
     {
       (*i)->velocity = Vector2d ();
     }

@@ -130,9 +130,9 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
         else
           new_particle_pos = Vector2d(x, y);
 
-        new_current_particle = world.get_particle_mgr()->add_particle(new_particle_pos,
-                                                                      Vector2d(),
-                                                                      m_particle_mass);
+        new_current_particle = world.get_particle_mgr().add_particle(new_particle_pos,
+                                                                     Vector2d(),
+                                                                     m_particle_mass);
         world.add_spring (m_current_particle, new_current_particle);
       }
       // Lower the spring links count, since we have increased it
@@ -168,9 +168,9 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
         new_particle_pos = Vector2d(x, y);
       }
 
-      Particle* p = world.get_particle_mgr()->add_particle(new_particle_pos,
-                                                           Vector2d(),
-                                                           m_particle_mass);
+      Particle* p = world.get_particle_mgr().add_particle(new_particle_pos,
+                                                          Vector2d(),
+                                                          m_particle_mass);
       m_current_particle = p;
       // Increase the spring count so that the particle isn't cleaned up
       m_current_particle->spring_links += 1;

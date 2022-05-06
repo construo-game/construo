@@ -130,7 +130,7 @@ Selection::duplicate ()
   std::cout << "Trying to duplicate the selection" << std::endl;
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
   {
-    Particle* p = m_world->get_particle_mgr()->add_particle(**i);
+    Particle* p = m_world->get_particle_mgr().add_particle(**i);
     p->pos += Vector2d (50,50);
     new_selection.push_back(p);
     p_trans_table[*i] = p;

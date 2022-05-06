@@ -17,7 +17,9 @@
 #ifndef HEADER_CONSTRUO_WORLD_HPP
 #define HEADER_CONSTRUO_WORLD_HPP
 
+#include <memory>
 #include <vector>
+
 #include "spring.hpp"
 #include "particle.hpp"
 #include "collider.hpp"
@@ -76,7 +78,7 @@ public:
   /** Remove the gives collider from the world */
   void remove_collider (Collider*);
 
-  ParticleFactory* get_particle_mgr() { return m_particle_mgr; }
+  ParticleFactory& get_particle_mgr() { return *m_particle_mgr; }
   std::vector<Spring*>& get_spring_mgr () { return m_springs; }
   Colliders& get_colliders() { return m_colliders; }
 
@@ -113,7 +115,7 @@ private:
   /** Version number of the file, used to ensure backward compability */
   int m_file_version;
   bool m_has_been_run;
-  ParticleFactory* m_particle_mgr;
+  std::unique_ptr<ParticleFactory> m_particle_mgr;
   std::vector<Spring*> m_springs;
   Colliders m_colliders;
 
