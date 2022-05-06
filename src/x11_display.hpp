@@ -19,6 +19,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <optional>
 
 #include "math.hpp"
 #include "root_graphic_context.hpp"
@@ -82,7 +83,8 @@ public:
   void set_cursor_real(CursorType cursor) override;
 
 private:
-  bool read_event ();
+  void process_event(XEvent& event);
+  void process_pending_events();
   void send_button_press (int i);
   void send_button_release (int i);
   void send_load_or_save(int n);
@@ -135,6 +137,8 @@ private:
 
   /** true if display is in fullscreen mode, false for window mode */
   bool m_fullscreen;
+
+  std::optional<XConfigureEvent> m_pending_configure_event;
 
 public:
   X11Display(const X11Display&) = delete;

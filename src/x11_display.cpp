@@ -70,7 +70,8 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
   m_mouse_x(),
   m_mouse_y(),
   m_depth(),
-  m_fullscreen(fullscreen_)
+  m_fullscreen(fullscreen_),
+  m_pending_configure_event()
 {
   std::cout << "Using X11 display" << std::endl;
   m_display = XOpenDisplay(NULL);
@@ -390,29 +391,66 @@ X11Display::get_key (int key)
 }
 
 void
-X11Display::wait_for_events_blocking ()
+X11Display::wait_for_events_blocking()
 {
   do {
-    while (read_event() == false);
+    XEvent event;
+
+    do { // Ignore NoExpose events, as otherwise this won't block
+      XNextEvent(m_display, &event);
+    } while (event.type == NoExpose);
+
+    process_event(event);
   } while (XPending(m_display) > 0);
+
+  process_pending_events();
 }
 
 void
 X11Display::wait_for_events ()
 {
-  while (XPending(m_display) > 0)
-    {
-      read_event ();
-    }
+  while (XPending(m_display) > 0) {
+    XEvent event;
+    XNextEvent(m_display, &event);
+    process_event(event);
+  }
+  process_pending_events();
 }
 
-bool
-X11Display::read_event ()
+void
+X11Display::process_pending_events()
 {
-  XEvent event;
+  if (m_pending_configure_event) {
+    // Only process one ConfigureNotify per loop, otherwise the queue
+    // will get filled with ever more ConfigureNotify events and cause
+    // huge delays.
 
-  XNextEvent(m_display, &event);
+    if (m_doublebuffer) {
+      if (m_width < m_pending_configure_event->width ||
+          m_height < m_pending_configure_event->height)
+      {
+        // enlarge the pixmap when necessary
+        XFreePixmap(m_display, m_drawable);
+        m_drawable = XCreatePixmap(m_display, m_window,
+                                   m_pending_configure_event->width,
+                                   m_pending_configure_event->height,
+                                   DefaultDepth(m_display, DefaultScreen(m_display)));
+      }
+    }
 
+    m_width = m_pending_configure_event->width;
+    m_height = m_pending_configure_event->height;
+
+    ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
+    //ScreenManager::instance()->draw(*this);
+
+    m_pending_configure_event = std::nullopt;
+  }
+}
+
+void
+X11Display::process_event(XEvent& event)
+{
   switch (event.type)
   {
     case MotionNotify:
@@ -427,14 +465,11 @@ X11Display::read_event ()
       break;
 
     case NoExpose:
-      //std::cout << "NoExpose" << std::endl;
-      return false; // FIXME: Hack, no idea how to handle NoExpose
       break;
 
     case ButtonPress:
       {
         //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
-
         if (event.xbutton.button == 1)
           send_button_press(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)
@@ -601,7 +636,7 @@ X11Display::read_event ()
 
     case KeyRelease:
       {
-        KeySym sym = XLookupKeysym(&event.xkey,0);
+        KeySym sym = XLookupKeysym(&event.xkey, 0);
 
         switch (sym)
         {
@@ -628,17 +663,7 @@ X11Display::read_event ()
                   << "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
       }
 
-      m_width = event.xconfigure.width;
-      m_height = event.xconfigure.height;
-
-      if (m_doublebuffer) {
-        XFreePixmap(m_display, m_drawable);
-        m_drawable = XCreatePixmap(m_display, m_window, m_width, m_height,
-                                   DefaultDepth(m_display, DefaultScreen(m_display)));
-      }
-
-      ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
-      ScreenManager::instance()->draw(*this);
+      m_pending_configure_event = event.xconfigure;
       break;
 
     case DestroyNotify:
@@ -658,7 +683,6 @@ X11Display::read_event ()
       //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
       break;
   }
-  return true;
 }
 
 void
@@ -698,37 +722,37 @@ X11Display::clear ()
 }
 
 void
-X11Display::flip ()
+X11Display::flip()
 {
   if (m_doublebuffer)
-    {
-      // FIXME: Use another gc here
-      XCopyArea(m_display, m_drawable, m_window, m_gc,
-                 0, 0, // source
-                 m_width, m_height,
-                 0, 0 // destination
-                 );
-      //XFlush(m_display);
-    }
+  {
+    // FIXME: Use another gc here
+    XCopyArea(m_display, m_drawable, m_window, m_gc,
+              0, 0, // source
+              m_width, m_height,
+              0, 0 // destination
+      );
+    //XFlush(m_display);
+  }
 }
 
 void
 X11Display::run()
 {
   while (!ScreenManager::instance ()->is_finished ())
-    {
-      ScreenManager::instance ()->run_once(*this);
+  {
+    ScreenManager::instance ()->run_once(*this);
 
-      if (Controller::instance()->is_running())
-        {
-          g_system_context->sleep(0); // FIXME: limit CPU usage via brute force
-          wait_for_events();
-        }
-      else
-        {
-          wait_for_events_blocking();
-        }
+    if (Controller::instance()->is_running())
+    {
+      g_system_context->sleep(0); // FIXME: limit CPU usage via brute force
+      wait_for_events();
     }
+    else
+    {
+      wait_for_events_blocking();
+    }
+  }
 }
 
 void
