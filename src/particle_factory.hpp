@@ -20,8 +20,8 @@
 #include <vector>
 
 #include "fwd.hpp"
-#include "lisp_reader.hpp"
-#include "lisp_writer.hpp"
+#include "reader.hpp"
+#include "writer.hpp"
 #include "vector2d.hpp"
 
 /** id of a particle, uniq only for a single ParticleFactory */

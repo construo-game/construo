@@ -90,13 +90,12 @@ set(CONSTRUO_SOURCES_CXX
   src/gui_new_file_button.cpp
   src/gui_window.cpp
   src/input_context.cpp
-  src/lisp_reader.cpp
-  src/lisp_writer.cpp
   src/load_gui_manager.cpp
   src/particle.cpp
   src/particle_factory.cpp
   src/path.cpp
   src/path_manager.cpp
+  src/reader.cpp
   src/rect_collider.cpp
   src/root_graphic_context.cpp
   src/save_gui_manager.cpp
@@ -116,6 +115,7 @@ set(CONSTRUO_SOURCES_CXX
   src/worldview_select_tool.cpp
   src/worldview_tool.cpp
   src/worldview_zoom_tool.cpp
+  src/writer.cpp
   src/zoom_graphic_context.cpp
   src/zoom_state.cpp
   )

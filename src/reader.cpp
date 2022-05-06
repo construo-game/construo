@@ -18,7 +18,7 @@
 #include <span>
 
 #include "construo_error.hpp"
-#include "lisp_reader.hpp"
+#include "reader.hpp"
 
 namespace prio {
 
