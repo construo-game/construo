@@ -311,10 +311,10 @@ World::get_spring(float x, float y, float capture_distance) const
 }
 
 Particle*
-World::get_particle(float x, float y) const
+World::get_particle(float x, float y, float capture_distance) const
 {
   Particle* particle = nullptr;
-  float min_dist = 25.0f; // FIXME: Make this configurable
+  float min_dist = capture_distance;
   Vector2d mouse_pos (x, y);
 
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
@@ -331,7 +331,7 @@ World::get_particle(float x, float y) const
 }
 
 std::vector<Particle*>
-World::get_particles (float x1_, float y1_, float x2_, float y2_) const
+World::get_particles(float x1_, float y1_, float x2_, float y2_) const
 {
   float const x1 = Math::min(x1_, x2_);
   float const x2 = Math::max(x1_, x2_);

@@ -16,8 +16,6 @@
 
 #include "gui_manager.hpp"
 
-#include <assert.h>
-
 #include "string_utils.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
@@ -351,7 +349,10 @@ GUIManager::grab_mouse(GUIComponent& component)
 void
 GUIManager::ungrab_mouse(GUIComponent& component)
 {
-  assert(m_grabbing_component == &component);
+  if (m_grabbing_component != &component) {
+    std::cerr << "GUIManager: ungrab mismatch: " << m_grabbing_component << " != " << &component << std::endl;
+  }
+
   m_grabbing_component = nullptr;
 }
 

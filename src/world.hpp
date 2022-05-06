@@ -58,10 +58,10 @@ public:
   World* duplicate () { return new World (*this); }
 
   /** @return the particles closed to the given coordinates */
-  Particle* get_particle (float x, float y) const;
+  Particle* get_particle(float x, float y, float capture_distance = 20.0f) const;
   /** All particles inside the given rectangle */
-  std::vector<Particle*> get_particles (float x1, float y1, float x2, float y2) const;
-  Spring* get_spring(float x, float y, float capture_threshold = 15.0f) const;
+  std::vector<Particle*> get_particles(float x1, float y1, float x2, float y2) const;
+  Spring* get_spring(float x, float y, float capture_threshold = 20.0f) const;
 
   void add_rect_collider(const Vector2d&, const Vector2d&);
   void add_spring (Particle*, Particle*);

@@ -30,6 +30,8 @@ public:
   void draw_background(ZoomGraphicContext& gc) override;
   void draw_foreground(ZoomGraphicContext& gc) override;
 
+  void on_mouse_move(float x, float y, float of_x, float of_y) override;
+
   void on_primary_button_press(float x, float y) override;
   void on_primary_button_release(float x, float y) override;
 
@@ -49,6 +51,9 @@ private:
 
   /** mass of the particles that are inserted on a primary press */
   float m_particle_mass;
+
+  Spring* m_hover_spring;
+  Particle* m_hover_particle;
 
 public:
   WorldViewInsertTool(const WorldViewInsertTool&) = delete;
