@@ -18,14 +18,11 @@
 #define HEADER_CONSTRUO_PARTICLE_FACTORY_HPP
 
 #include <vector>
-#include "vector2d.hpp"
 
+#include "fwd.hpp"
 #include "lisp_reader.hpp"
 #include "lisp_writer.hpp"
-
-class ZoomGraphicContext;
-class Particle;
-class World;
+#include "vector2d.hpp"
 
 /** id of a particle, uniq only for a single ParticleFactory */
 typedef int ParticleId;
@@ -35,13 +32,13 @@ class ParticleFactory
 {
 public:
   /** Create an empty particle manager */
-  ParticleFactory (World*);
+  ParticleFactory();
 
   /** Create a particle manager from the data in a .construo file */
-  ParticleFactory (World*, ReaderCollection const& particles_collection);
+  ParticleFactory(int version, ReaderCollection const& particles_collection);
 
   /** Copy a particle manager, the id's will be keep */
-  ParticleFactory (World*, const ParticleFactory&);
+  ParticleFactory(const ParticleFactory&);
 
   Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity,
                           float m, bool f = false);
@@ -71,17 +68,13 @@ public:
   void write_lisp(LispWriter& writer);
 
 private:
-  /** Pointer to the world holding this ParticleManager */
-  World* m_world;
-
   std::vector<Particle*> m_particles;
 
   /** the id of next particle that will get created */
   int m_particle_id_count;
 
 private:
-  ParticleFactory (const ParticleFactory&);
-  ParticleFactory& operator= (const ParticleFactory&);
+  ParticleFactory& operator=(const ParticleFactory&);
 };
 
 #endif

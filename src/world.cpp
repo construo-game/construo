@@ -33,7 +33,7 @@
 World::World() :
   m_file_version(0),
   m_has_been_run(false),
-  m_particle_mgr(new ParticleFactory(this)),
+  m_particle_mgr(new ParticleFactory),
   m_springs(),
   m_colliders()
 {
@@ -80,7 +80,7 @@ World::World(const World& old_world) :
   }
 
   // FIXME: Could need optimizations
-  m_particle_mgr = new ParticleFactory (this, *old_world.m_particle_mgr);
+  m_particle_mgr = new ParticleFactory(*old_world.m_particle_mgr);
 
   for (auto i = old_world.m_springs.begin (); i != old_world.m_springs.end (); ++i)
   {
@@ -146,7 +146,7 @@ World::parse_colliders(ReaderCollection const& collection)
 void
 World::parse_particles(ReaderCollection const& collection)
 {
-  m_particle_mgr = new ParticleFactory(this, collection);
+  m_particle_mgr = new ParticleFactory(m_file_version, collection);
 }
 
 void

@@ -23,15 +23,13 @@
 #include "world.hpp"
 #include "particle_factory.hpp"
 
-ParticleFactory::ParticleFactory (World* w) :
-  m_world (w),
+ParticleFactory::ParticleFactory() :
   m_particles(),
   m_particle_id_count(0)
 {
 }
 
-ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection) :
-  m_world(w),
+ParticleFactory::ParticleFactory(int version, ReaderCollection const& collection) :
   m_particles(),
   m_particle_id_count(0)
 {
@@ -50,7 +48,7 @@ ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection) 
     reader.read("fixed", fixed);
     reader.read("id", id);
 
-    switch (m_world->m_file_version) {
+    switch (version) {
       case 0:
       case 1:
       case 2:
@@ -66,8 +64,7 @@ ParticleFactory::ParticleFactory (World* w, ReaderCollection const& collection) 
   }
 }
 
-ParticleFactory::ParticleFactory (World* w, const ParticleFactory& pmgr) :
-  m_world (w),
+ParticleFactory::ParticleFactory(const ParticleFactory& pmgr) :
   m_particles(),
   m_particle_id_count(pmgr.m_particle_id_count)
 {

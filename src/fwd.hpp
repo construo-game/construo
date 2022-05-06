@@ -21,9 +21,11 @@ class GUIComponent;
 class GUIGenericButton;
 class GUIManager;
 class GraphicContext;
+class Particle;
 class World;
 class WorldCache;
 class WorldViewComponent;
+class ZoomGraphicContext;
 class ZoomGraphicContext;
 struct ButtonEvent;
 
