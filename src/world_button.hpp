@@ -36,6 +36,7 @@ public:
 private:
   WorldCache& m_world_cache;
   Mode m_mode;
+  std::string m_basename;
 
 private:
   WorldButton (const WorldButton&);

@@ -41,7 +41,7 @@ public:
   FileType get_file_type(const std::string& filename) override;
   std::vector<std::string> read_directory(const std::string& pathname) override;
 
-  std::string translate_filename(const std::string&) override;
+  std::filesystem::path translate_filename(const std::string&) override;
 
 private:
   unsigned long start_time;

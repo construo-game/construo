@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <time.h>
-#include "controller.hpp"
-#include "screen_manager.hpp"
 #include "gui_new_file_button.hpp"
 
-GUINewFileButton::GUINewFileButton(const std::string& p)
-  : GUIFileButton (p), pathname (p)
-{
+#include <time.h>
 
+#include "controller.hpp"
+#include "screen_manager.hpp"
+#include "path.hpp"
+
+GUINewFileButton::GUINewFileButton(const std::string& filename) :
+  GUIFileButton(filename)
+{
 }
 
 void
@@ -55,7 +57,7 @@ GUINewFileButton::generate_filename()
   loctime = localtime(&curtime);
   strftime(buffer, 32, "%Y%m%d-%H%M%S", loctime);
 
-  return pathname + std::string(buffer) + ".construo";
+  return path_join(m_path, std::string(buffer) + ".construo");
 }
 
 void

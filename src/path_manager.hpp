@@ -17,6 +17,7 @@
 #ifndef HEADER_PINGUS_PATH_MANAGER_HPP
 #define HEADER_PINGUS_PATH_MANAGER_HPP
 
+#include <filesystem>
 #include <string>
 #include <list>
 
@@ -28,28 +29,28 @@ public:
 
   /** Search for a path which contains all the files given in
       file_list */
-  bool find_path (const std::list<std::string>& file_list);
+  bool find_path(std::list<std::filesystem::path> const& file_list);
 
   /** Search for a path which contains the file 'file' */
-  bool find_path (const std::string& file);
+  bool find_path(std::filesystem::path const& path);
 
   /** Set the path directly without using find_path/add_path
       Must include trailing slash */
-  void set_path (const std::string& path);
+  void set_path(std::string const& path);
 
   /** Add a path to the search list */
-  void add_path (const std::string& path);
+  void add_path(std::string const& path);
 
-  std::string get_base_path () { return base_path; }
+  std::filesystem::path get_base_path() const { return m_base_path; }
 
   /** Complete a releative path to the absolute path, the returned
       path contains a trailing slash */
-  std::string complete (const std::string& relative_path);
+  std::filesystem::path complete(std::filesystem::path const& relative_path);
 
 private:
-  std::list<std::string> path_list;
-  bool path_found;
-  std::string base_path;
+  std::list<std::string> m_path_list;
+  bool m_path_found;
+  std::filesystem::path m_base_path;
 
 private:
   PathManager (const PathManager&);

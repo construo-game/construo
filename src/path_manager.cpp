@@ -21,9 +21,9 @@
 PathManager path_manager;
 
 PathManager::PathManager () :
-  path_list(),
-  path_found (false),
-  base_path()
+  m_path_list(),
+  m_path_found(false),
+  m_base_path()
 {
 }
 
@@ -32,40 +32,38 @@ PathManager::~PathManager ()
 }
 
 void
-PathManager::add_path (const std::string& path)
+PathManager::add_path(std::string const& path)
 {
-  path_list.push_back (path);
+  m_path_list.push_back(path);
 }
 
-std::string
-PathManager::complete (const std::string& relative_path)
+std::filesystem::path
+PathManager::complete(std::filesystem::path const& relative_path)
 {
-  std::string comp_path = base_path + "/" + relative_path;
-
-  return comp_path;
+  return m_base_path / relative_path;
 }
 
 bool
-PathManager::find_path (const std::list<std::string>& file_list)
+PathManager::find_path(const std::list<std::filesystem::path>& file_list)
 {
-  for (auto i = path_list.begin (); !path_found && i != path_list.end (); ++i)
+  for (auto i = m_path_list.begin (); !m_path_found && i != m_path_list.end (); ++i)
+  {
+    bool found_file = true;
+    for (auto f = file_list.begin (); found_file && f != file_list.end (); ++f)
     {
-      bool found_file = true;
-      for (auto f = file_list.begin (); found_file && f != file_list.end (); ++f)
-	{
-          if (!(access((*i + "/" + *f).c_str(), R_OK) == 0))
-              found_file = false;
-	}
-      if (found_file)
-	{
-	  path_found = true;
-	  base_path = *i;
-
-	  std::cout << "PathManager: Using base_path: " << base_path << std::endl;
-
-	  return true;
-	}
+      if (!(access((*i / *f).c_str(), R_OK) == 0))
+        found_file = false;
     }
+    if (found_file)
+    {
+      m_path_found = true;
+      m_base_path = *i;
+
+      std::cout << "PathManager: Using base_path: " << m_base_path << std::endl;
+
+      return true;
+    }
+  }
 
   std::cout << "PathManager: No base path found" << std::endl;
 
@@ -74,20 +72,20 @@ PathManager::find_path (const std::list<std::string>& file_list)
 
 /** Search for a path which contains the file 'file' */
 bool
-PathManager::find_path (const std::string& file)
+PathManager::find_path(const std::filesystem::path& file)
 {
-  for (auto i = path_list.begin (); !path_found && i != path_list.end (); ++i)
+  for (auto i = m_path_list.begin (); !m_path_found && i != m_path_list.end (); ++i)
+  {
+    if ((access((*i / file).c_str(), R_OK) == 0))
     {
-      if ((access((*i + "/" + file).c_str(), R_OK) == 0))
-	{
-	  path_found = true;
-	  base_path = *i;
+      m_path_found = true;
+      m_base_path = *i;
 
-	  std::cout << "PathManager: Using base_path: " << base_path << std::endl;
+      std::cout << "PathManager: Using base_path: " << m_base_path << std::endl;
 
-	  return true;
-	}
+      return true;
     }
+  }
 
   std::cout << "PathManager: No base path found" << std::endl;
 
@@ -95,9 +93,9 @@ PathManager::find_path (const std::string& file)
 }
 
 void
-PathManager::set_path (const std::string& path)
+PathManager::set_path(const std::string& path)
 {
-  base_path = path;
+  m_base_path = path;
 }
 
 /* EOF */

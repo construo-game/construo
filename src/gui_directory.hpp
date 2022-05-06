@@ -34,7 +34,7 @@ public:
   enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };
 
 public:
-  GUIDirectory(const std::string& pathname, Mode m);
+  GUIDirectory(const std::string& pathname, Mode mode);
   ~GUIDirectory();
 
   void set_geometry(float x, float y, float width, float height) override;
@@ -53,12 +53,11 @@ private:
 
 private:
   std::string m_pathname;
+  Mode m_mode;
   WorldCache m_world_cache;
   std::vector<std::function<std::unique_ptr<GUIComponent>()>> m_items;
   int m_last_row;
   int m_row_offset;
-  unsigned long m_mtime;
-  Mode m_mode;
 
 public:
   GUIDirectory(const GUIDirectory&) = delete;

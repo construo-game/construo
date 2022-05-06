@@ -133,7 +133,7 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
     path_manager.add_path(".");
     path_manager.add_path("..");
     path_manager.add_path(CONSTRUO_DATADIR);
-    if (!path_manager.find_path("examples/"))
+    if (!path_manager.find_path("examples"))
       {
         std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
         ::exit(EXIT_FAILURE);

@@ -35,7 +35,7 @@ GUIDirectoryButton::draw (GraphicContext& parent_gc)
                            Color (0xBB0000FF));
 
   parent_gc.draw_string (m_x + 40, m_y + 20, "..:: Directory ::..");
-  parent_gc.draw_string (m_x + 30, m_y + 40, m_filename);
+  parent_gc.draw_string (m_x + 30, m_y + 40, m_path);
 
   if (m_mouse_over)
     parent_gc.draw_rect (m_x, m_y,
@@ -51,7 +51,7 @@ void
 GUIDirectoryButton::on_click()
 {
   std::cout << "Click on GUIDirectoryButton detected" << std::endl;
-  GUIFileManager::instance()->open_directory(m_filename);
+  GUIFileManager::instance()->open_directory(m_path);
 }
 
 /* EOF */

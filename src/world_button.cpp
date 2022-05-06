@@ -18,6 +18,7 @@
 
 #include "construo_error.hpp"
 #include "controller.hpp"
+#include "path.hpp"
 #include "screen_manager.hpp"
 #include "world.hpp"
 #include "world_cache.hpp"
@@ -25,7 +26,8 @@
 WorldButton::WorldButton (WorldCache& world_cache, const std::string& filename, Mode m) :
   GUIFileButton(filename),
   m_world_cache(world_cache),
-  m_mode(m)
+  m_mode(m),
+  m_basename(path_basename(filename))
 {
 }
 
@@ -36,7 +38,7 @@ WorldButton::~WorldButton ()
 void
 WorldButton::draw(GraphicContext& parent_gc)
 {
-  World const* world = m_world_cache.get(m_filename);
+  World const* world = m_world_cache.get(m_path);
 
   parent_gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
                            Color(0xBB0000FF));
@@ -73,7 +75,7 @@ WorldButton::draw(GraphicContext& parent_gc)
     parent_gc.draw_rect(m_x, m_y, m_x + m_width, m_y + m_height, Color (0xFF0000FF));
   }
 
-  parent_gc.draw_string(m_x + 8, m_y + m_height + 14.0f, m_filename);
+  parent_gc.draw_string(m_x + 8, m_y + m_height + 14.0f, m_basename);
 }
 
 void
@@ -81,12 +83,12 @@ WorldButton::on_click ()
 {
   if (m_mode == SAVE_BUTTON)
   {
-    Controller::instance()->save_world(m_filename);
+    Controller::instance()->save_world(m_path);
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   }
   else // LOAD BUTTON
   {
-    Controller::instance()->load_world(m_filename);
+    Controller::instance()->load_world(m_path);
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   }
 }

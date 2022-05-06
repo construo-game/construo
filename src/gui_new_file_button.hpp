@@ -21,15 +21,18 @@
 
 class GUINewFileButton : public GUIFileButton
 {
-private:
-  std::string pathname;
-
-  std::string generate_filename();
 public:
   GUINewFileButton(const std::string& p);
 
   void draw(GraphicContext& parent_gc) override;
   void on_click() override;
+
+private:
+  std::string generate_filename();
+
+public:
+  GUINewFileButton(const GUINewFileButton&) = delete;
+  GUINewFileButton& operator=(const GUINewFileButton&) = delete;
 };
 
 #endif

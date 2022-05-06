@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "unix_system.hpp"
+
 #include <algorithm>
 #include <assert.h>
 #include <dirent.h>
@@ -31,11 +33,11 @@
 
 #include <xdg.h>
 
-#include "construo_error.hpp"
-#include "string_utils.hpp"
 #include "construo.hpp"
+#include "construo_error.hpp"
+#include "path.hpp"
 #include "path_manager.hpp"
-#include "unix_system.hpp"
+#include "string_utils.hpp"
 
 using namespace StringUtils;
 
@@ -147,62 +149,73 @@ UnixSystem::get_mtime(const std::string& filename)
 FileType
 UnixSystem::get_file_type(const std::string& filename)
 {
-  if (filename == "/examples/"
-      || filename == "/user/")
+  if (filename == "/examples" ||
+      filename == "/user") {
     return FT_DIRECTORY;
+  }
 
-  std::string sys_name = translate_filename(filename);
+  std::filesystem::path sys_name = translate_filename(filename);
 
   struct stat buf;
   if (stat(sys_name.c_str(), &buf) != 0)
-    {
-      std::cout << "UnixSystem: ERROR: Couldn't stat: '" << sys_name << "'" << std::endl;
-      return FT_UNKNOWN_FILE;
-    }
+  {
+    std::cout << "UnixSystem: ERROR: Couldn't stat: '" << sys_name << "'" << std::endl;
+    return FT_UNKNOWN_FILE;
+  }
   else
+  {
+    if (S_ISDIR(buf.st_mode))
     {
-      if (S_ISDIR(buf.st_mode))
-        {
-          return FT_DIRECTORY;
-        }
-      else if (S_ISREG(buf.st_mode))
-        {
-          if (has_suffix(filename, ".construo") || has_suffix(filename, ".construo.gz"))
-            return FT_CONSTRUO_FILE;
-          else
-            {
-              return FT_UNKNOWN_FILE;
-            }
-        }
+      return FT_DIRECTORY;
+    }
+    else if (S_ISREG(buf.st_mode))
+    {
+      if (has_suffix(filename, ".construo") || has_suffix(filename, ".construo.gz"))
+        return FT_CONSTRUO_FILE;
       else
-        {
-          return FT_UNKNOWN_FILE;
-        }
-    }
-}
-
-std::string
-UnixSystem::translate_filename (const std::string& filename)
-{
-  if (filename == "/")
-    {
-      assert("root directory is not translatable");
-      return "";
-    }
-  else if (has_prefix(filename, "/user/"))
-    {
-      if (filename.size() == 6) {
-        return m_construo_rc_path;
-      } else {
-        return m_construo_rc_path / filename.substr(6);
+      {
+        return FT_UNKNOWN_FILE;
       }
     }
-  else if (has_prefix(filename, "/examples/"))
+    else
     {
-      return path_manager.complete("examples/") + filename.substr(10);
+      return FT_UNKNOWN_FILE;
     }
+  }
+}
+
+std::filesystem::path
+UnixSystem::translate_filename(const std::string& filename)
+{
+  if (filename == "/")
+  {
+    assert(false && "root directory is not translatable");
+    return "";
+  }
+  else if (filename == "/user")
+  {
+    return m_construo_rc_path;
+  }
+  else if (filename == "/examples")
+  {
+    return path_manager.complete("examples");
+  }
+  else if (filename == "/examples")
+  {
+    return m_construo_rc_path;
+  }
+  else if (has_prefix(filename, "/user/"))
+  {
+    return m_construo_rc_path / filename.substr(6);
+  }
+  else if (has_prefix(filename, "/examples/"))
+  {
+    return path_manager.complete("examples") / filename.substr(10);
+  }
   else
+  {
     return filename;
+  }
 }
 
 FILE*
@@ -226,30 +239,25 @@ struct DirectorySorter
 {
   std::string pathname;
 
-  DirectorySorter(const std::string& p)
-    : pathname(p)
+  DirectorySorter(const std::string& p) :
+    pathname(p)
   {
   }
 
   bool operator()(const std::string& lhs, const std::string& rhs)
   {
-    FileType lhs_type = g_system_context->get_file_type(pathname + "/" + lhs);
-    FileType rhs_type = g_system_context->get_file_type(pathname + "/" + rhs);
+    FileType const lhs_type = g_system_context->get_file_type(path_join(pathname, lhs));
+    FileType const rhs_type = g_system_context->get_file_type(path_join(pathname, rhs));
 
-    if (lhs_type == rhs_type)
+    if (lhs_type == rhs_type) {
       return (lhs < rhs);
-    else if (lhs_type == FT_DIRECTORY)
-      {
-        return true;
-      }
-    else if (rhs_type == FT_DIRECTORY)
-      {
-        return false;
-      }
-    else
-      {
-        return (lhs < rhs);
-      }
+    } else if (lhs_type == FT_DIRECTORY) {
+      return true;
+    } else if (rhs_type == FT_DIRECTORY) {
+      return false;
+    } else {
+      return (lhs < rhs);
+    }
   }
 };
 
@@ -257,45 +265,28 @@ std::vector<std::string>
 UnixSystem::read_directory(const std::string& arg_pathname)
 {
   if (arg_pathname == "/")
-    {
-      std::vector<std::string> ret;
-      ret.push_back("examples/");
-      ret.push_back("user/");
-      return ret;
-    }
+  {
+    return {"examples", "user" };
+  }
   else
+  {
+    std::vector<std::string> dir_lst;
+    std::filesystem::path pathname = translate_filename(arg_pathname);
+
+    for (std::filesystem::directory_entry const& entry : std::filesystem::directory_iterator{pathname})
     {
-      std::vector<std::string> dir_lst;
-      std::string pathname = translate_filename (arg_pathname);
-
-      DIR* dir = ::opendir (pathname.c_str());
-
-      if (!dir)
-        {
-          std::cout << "UnixSystem: Error couldn't open: '" << pathname << "', ignoring\n"
-                    << "            error and continuing with an empty directory" << std::endl;
-        }
-      else
-        {
-          struct dirent* entry;
-
-          while ((entry = readdir(dir)) != nullptr)
-            {
-              if (strcmp(entry->d_name, ".") != 0
-                  && strcmp(entry->d_name, "..") != 0
-                  && strcmp(entry->d_name, "CVS") != 0)
-                { // We ignore unusefull directories
-                  dir_lst.push_back(entry->d_name);
-                }
-            }
-
-          closedir (dir);
-        }
-
-      std::sort(dir_lst.begin(), dir_lst.end(), DirectorySorter(pathname));
-
-      return dir_lst;
+      std::cout << entry.path().filename() << std::endl;
+      if (entry.path().filename() != "." &&
+          entry.path().filename() != "..")
+      { // We ignore unusefull directories
+        dir_lst.push_back(entry.path().filename());
+      }
     }
+
+    std::sort(dir_lst.begin(), dir_lst.end(), DirectorySorter(pathname));
+
+    return dir_lst;
+  }
 }
 
 /* EOF */

@@ -16,31 +16,26 @@
 
 #include "gui_file_button.hpp"
 
-GUIFileButton::GUIFileButton(const std::string& arg_filename) :
+GUIFileButton::GUIFileButton(const std::string& path) :
   GUIComponent(0, 0, 200, 150),
-  m_filename(arg_filename),
+  m_path(path),
   m_mouse_over(false)
 {
-  //std::cout << "FILENAME: " << filename << std::endl;
 }
 
 GUIFileButton::~GUIFileButton()
 {
-
 }
-
 
 void
 GUIFileButton::on_primary_button_press(float x, float y)
 {
-  //std::cout << "GUIFileButton::on_primary_button_press(float x, float y)" << std::endl;
   on_click();
 }
 
 void
 GUIFileButton::on_primary_button_release(float x, float y)
 {
-  //std::cout << "GUIFileButton::on_primary_button_release(float x, float y)" << std::endl;
 }
 
 /* EOF */

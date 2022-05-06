@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "gui_directory.hpp"
+
 #include "construo.hpp"
 #include "system_context.hpp"
 #include "world.hpp"
@@ -21,17 +23,16 @@
 #include "gui_directory_button.hpp"
 #include "gui_file_manager.hpp"
 #include "gui_new_file_button.hpp"
-#include "gui_directory.hpp"
+#include "path.hpp"
 
-GUIDirectory::GUIDirectory (const std::string& pathname, Mode m) :
+GUIDirectory::GUIDirectory (const std::string& pathname, Mode mode) :
   GUIChildManager(),
   m_pathname(pathname),
+  m_mode(mode),
   m_world_cache(),
   m_items(),
   m_last_row(0),
-  m_row_offset(0),
-  m_mtime(g_system_context->get_mtime(m_pathname)),
-  m_mode(m)
+  m_row_offset(0)
 {
   read_directory();
   place_components();
@@ -52,17 +53,12 @@ GUIDirectory::read_directory()
 
   for (auto const& entry : g_system_context->read_directory(m_pathname))
   {
-    std::string const filename = m_pathname + entry;
-
-    FileType type = g_system_context->get_file_type(filename);
+    std::string const filename = path_join(m_pathname, entry);
+    FileType const type = g_system_context->get_file_type(filename);
 
     if (type == FT_DIRECTORY)
     {
-      if (*(filename.end()-1) == '/') { // FIXME: Hack
-        m_items.emplace_back([filename]{ return std::make_unique<GUIDirectoryButton>(filename); });
-      } else {
-        m_items.emplace_back([filename]{ return std::make_unique<GUIDirectoryButton>(filename + "/"); });
-      }
+      m_items.emplace_back([filename]{ return std::make_unique<GUIDirectoryButton>(filename); });
     }
     else if (type == FT_CONSTRUO_FILE)
     {

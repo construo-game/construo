@@ -24,7 +24,7 @@
 class GUIFileButton : public GUIComponent
 {
 public:
-  GUIFileButton(const std::string& arg_filename);
+  GUIFileButton(std::string const& path);
   ~GUIFileButton();
 
   virtual void on_click() =0;
@@ -36,7 +36,7 @@ public:
   void on_primary_button_release(float x, float y) override;
 
 protected:
-  std::string m_filename;
+  std::string m_path;
   bool m_mouse_over;
 };
 

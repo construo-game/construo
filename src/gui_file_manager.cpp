@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <assert.h>
-#include "construo.hpp"
-#include "zoom_graphic_context.hpp"
 #include "gui_file_manager.hpp"
-#include "screen_manager.hpp"
+
+#include <assert.h>
+
+#include "construo.hpp"
 #include "gui_buttons.hpp"
+#include "path.hpp"
+#include "screen_manager.hpp"
+#include "zoom_graphic_context.hpp"
 
 GUIFileManager* GUIFileManager::instance_ = nullptr;
 
@@ -100,30 +103,8 @@ GUIFileManager::open_directory (const std::string& pathname)
 void
 GUIFileManager::directory_up()
 {
-  std::string pathname = m_directory->get_path ();
-
-  // FIXME: UGLY code
-  if (pathname == "/")
-    {
-      // already at the top most directory
-      return;
-    }
-  else
-    {
-      assert(*(pathname.end()-1) == '/');
-
-      for (int i = static_cast<int>(pathname.size()) - 2; i >= 0; --i)
-        {
-          if (pathname[i] == '/') // Found second '/'
-            {
-              pathname = pathname.substr(0, i+1);
-              break;
-            }
-        }
-
-      std::cout << "Directory Up: " << m_directory->get_path () << " -> " << pathname << std::endl;
-      open_directory (pathname);
-    }
+  std::string const path = m_directory->get_path();
+  open_directory(path_dirname(path));
 }
 
 void
