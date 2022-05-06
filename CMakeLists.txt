@@ -200,6 +200,24 @@ if (BUILD_TESTS)
   add_test(NAME construo.appdata.xml
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMAND appstream-util validate-relax ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
-endif(BUILD_TESTS)
+
+  # compile tests
+  find_package(GTest REQUIRED)
+
+  # build automatic tests
+  file(GLOB TEST_CONSTRUO_SOURCES test/*_test.cpp)
+  add_executable(test_construo ${TEST_CONSTRUO_SOURCES})
+  target_compile_options(test_construo PRIVATE ${WARNINGS_CXX_FLAGS})
+  target_link_libraries(test_construo
+    GTest::GTest
+    GTest::Main
+    libconstruo)
+
+  # add 'make test' target, use 'make test ARGS="-V"' or 'ctest -V' for verbose
+  enable_testing()
+  add_test(NAME test_construo
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND test_construo)
+endif()
 
 # EOF #

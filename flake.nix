@@ -56,7 +56,7 @@
              '';
              cmakeFlags = [
                "-DWARNINGS=ON"
-               # "-DWERROR=ON"
+               "-DWERROR=ON"
                "-DBUILD_TESTS=ON"
              ];
              doCheck = true;
@@ -75,6 +75,7 @@
                appstream-glib
              ];
              buildInputs = with pkgs; [
+               gtest
                zlib
                xorg.libX11
                freeglut
