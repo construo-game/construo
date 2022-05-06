@@ -99,7 +99,7 @@ float
 WorldViewComponent::get_grid_size()
 {
   return m_grid_base_size / powf(static_cast<float>(m_grid_constant),
-                                 static_cast<float>(Math::get_exp_n(m_zoom.get_zoom() * m_grid_scale_factor, m_grid_constant)));
+                                 static_cast<float>(Math::get_exp_n(m_zoom.get_scale() * m_grid_scale_factor, m_grid_constant)));
 }
 
 float
@@ -371,8 +371,8 @@ WorldViewComponent::on_mouse_move(float x, float y, float of_x, float of_y)
 {
   if (m_scrolling)
   {
-    float const new_scroll_pos_x = x / m_zoom.get_zoom() - m_x_offset;
-    float const new_scroll_pos_y = y / m_zoom.get_zoom() - m_y_offset;
+    float const new_scroll_pos_x = x / m_zoom.get_scale() - m_x_offset;
+    float const new_scroll_pos_y = y / m_zoom.get_scale() - m_y_offset;
 
     m_zoom.set_offset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
                       m_y_offset + (new_scroll_pos_y - m_scroll_pos_y));
@@ -397,9 +397,9 @@ WorldViewComponent::on_grid_press(float x, float y)
 }
 
 float
-WorldViewComponent::get_zoom ()
+WorldViewComponent::get_scale ()
 {
-  return m_zoom.get_zoom();
+  return m_zoom.get_scale();
 }
 
 void

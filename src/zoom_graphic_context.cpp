@@ -96,7 +96,7 @@ ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
   {
     i->x = m_zoom.world_to_screen_x(i->x);
     i->y = m_zoom.world_to_screen_x(i->y);
-    i->r = Math::max(2.0f, i->r * m_zoom.get_zoom());
+    i->r = Math::max(2.0f, i->r * m_zoom.get_scale());
   }
 
   m_parent_gc.draw_circles(circles, color);
@@ -107,7 +107,7 @@ ZoomGraphicContext::draw_circle(float x, float y, float r, Color color)
 {
   m_parent_gc.draw_circle(m_zoom.world_to_screen_x(x),
                           m_zoom.world_to_screen_y(y),
-                          Math::max(2.0f, r * m_zoom.get_zoom()),
+                          Math::max(2.0f, r * m_zoom.get_scale()),
                           color);
 }
 
@@ -116,7 +116,7 @@ ZoomGraphicContext::draw_fill_circle(float x, float y, float r, Color color)
 {
   m_parent_gc.draw_fill_circle(m_zoom.world_to_screen_x(x),
                                m_zoom.world_to_screen_y(y),
-                               Math::max(2.0f, r * m_zoom.get_zoom()),
+                               Math::max(2.0f, r * m_zoom.get_scale()),
                                color);
 }
 

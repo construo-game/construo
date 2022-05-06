@@ -76,7 +76,7 @@ public:
   float get_y_offset() { return m_y_offset; }
 
   /** @return current zoom factor in use */
-  float get_zoom() const { return m_zoom; }
+  float get_scale() const { return m_scale; }
 
   /** Set the zoom factor, if zoom is to large/small false will
       returned and zoom will be set to lowest/highest possible
@@ -125,7 +125,7 @@ private:
   // zoom state
   float m_x_offset;
   float m_y_offset;
-  float m_zoom;
+  float m_scale;
 };
 
 #endif

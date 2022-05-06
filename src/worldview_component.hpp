@@ -85,7 +85,7 @@ public:
   void scroll_up() override;
   void scroll_down() override;
 
-  float get_zoom();
+  float get_scale();
 
   /** Called once the world has changed, aka a new world got loaded */
   void on_world_change();

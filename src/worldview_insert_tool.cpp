@@ -81,7 +81,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
       { // draw where new particle would be inserted
         gc.draw_fill_circle(new_particle_pos.x,
                             new_particle_pos.y,
-                            3.0f / m_worldview.zoom().get_zoom(),
+                            3.0f / m_worldview.zoom().get_scale(),
                             g_style.highlight);
       }
     }
@@ -94,7 +94,7 @@ WorldViewInsertTool::on_mouse_move(float x, float y, float of_x, float of_y)
   World const& world = *Controller::instance()->get_world();
   Vector2d const pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
 
-  float const capture_distance = 20.0f / m_worldview.zoom().get_zoom();
+  float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
   m_hover_particle = world.get_particle(pos.x, pos.y, capture_distance);
   m_hover_spring = world.get_spring(pos.x, pos.y, capture_distance);

@@ -82,14 +82,14 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
       selection_box.y2 = Math::max(selection_box.y2, (*i)->pos.y);
     }
 
-    float border = 20.0f / gc.zoom().get_zoom();
+    float border = 20.0f / gc.zoom().get_scale();
     gc.draw_rect (selection_box.x1 - border, selection_box.y1 - border,
                   selection_box.x2 + border, selection_box.y2 + border,
                   g_style.new_spring);
 
     if (0) // draw selection rect
     {
-      float rsize = 5.0f / gc.zoom().get_zoom();
+      float rsize = 5.0f / gc.zoom().get_scale();
       gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
                          selection_box.x1 - border + rsize, selection_box.y1 - border + rsize,
                          g_style.selection_resizer);

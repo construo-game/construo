@@ -23,7 +23,7 @@ GCZoomState::GCZoomState(float x1, float y1, float x2, float y2) :
   m_y2(y2),
   m_x_offset(0.0f),
   m_y_offset(0.0f),
-  m_zoom(1.0f)
+  m_scale(1.0f)
 {
 }
 
@@ -38,17 +38,17 @@ GCZoomState::zoom_in(float screen_x, float screen_y)
 
   if ((true))
   {
-    float old_zoom = m_zoom;
-    set_zoom(m_zoom * 1.2f);
-    m_x_offset = screen_x / m_zoom - screen_x/old_zoom + m_x_offset;
-    m_y_offset = screen_y / m_zoom - screen_y/old_zoom + m_y_offset;
+    float old_zoom = m_scale;
+    set_zoom(m_scale * 1.2f);
+    m_x_offset = screen_x / m_scale - screen_x/old_zoom + m_x_offset;
+    m_y_offset = screen_y / m_scale - screen_y/old_zoom + m_y_offset;
 
   }
   else
   {
     m_x_offset = (x + m_x_offset)/1.2f - x;
     m_y_offset = (y + m_y_offset)/1.2f - y;
-    m_zoom *= 1.2f;
+    m_scale *= 1.2f;
   }
 
   return true;
@@ -62,17 +62,17 @@ GCZoomState::zoom_out(float screen_x, float screen_y)
 
   if ((true))
   {
-    float const old_zoom = m_zoom;
-    set_zoom(m_zoom / 1.2f);
-    m_x_offset = screen_x / m_zoom - screen_x/old_zoom + m_x_offset;
-    m_y_offset = screen_y / m_zoom - screen_y/old_zoom + m_y_offset;
+    float const old_zoom = m_scale;
+    set_zoom(m_scale / 1.2f);
+    m_x_offset = screen_x / m_scale - screen_x/old_zoom + m_x_offset;
+    m_y_offset = screen_y / m_scale - screen_y/old_zoom + m_y_offset;
   }
   else
   {
     m_x_offset = (x + m_x_offset) * 1.2f - x;
     m_y_offset = (y + m_y_offset) * 1.2f - y;
 
-    m_zoom *= (1.0f/1.2f);
+    m_scale *= (1.0f/1.2f);
   }
 
   return true;
@@ -81,46 +81,46 @@ GCZoomState::zoom_out(float screen_x, float screen_y)
 Vector2d
 GCZoomState::screen_to_world(const Vector2d& pos) const
 {
-  return Vector2d((pos.x / m_zoom) - m_x_offset,
-                  (pos.y / m_zoom) - m_y_offset);
+  return Vector2d((pos.x / m_scale) - m_x_offset,
+                  (pos.y / m_scale) - m_y_offset);
 }
 
 Vector2d
 GCZoomState::world_to_screen(const Vector2d& pos) const
 {
-  return Vector2d((pos.x + m_x_offset) * m_zoom + static_cast<float>(m_x1),
-                  (pos.y + m_y_offset) * m_zoom + m_y1);
+  return Vector2d((pos.x + m_x_offset) * m_scale + static_cast<float>(m_x1),
+                  (pos.y + m_y_offset) * m_scale + m_y1);
 }
 
 float
 GCZoomState::screen_to_world_x(float x) const
 {
-  return (x / m_zoom) - m_x_offset;
+  return (x / m_scale) - m_x_offset;
 }
 
 float
 GCZoomState::screen_to_world_y(float y) const
 {
-  return (y / m_zoom) - m_y_offset;
+  return (y / m_scale) - m_y_offset;
 }
 
 float
 GCZoomState::world_to_screen_x(float x) const
 {
-  return (x + m_x_offset) * m_zoom + static_cast<float>(m_x1);
+  return (x + m_x_offset) * m_scale + static_cast<float>(m_x1);
 }
 
 float
 GCZoomState::world_to_screen_y(float y) const
 {
-  return (y + m_y_offset) * m_zoom + m_y1;
+  return (y + m_y_offset) * m_scale + m_y1;
 }
 
 void
 GCZoomState::move_to(float x, float y)
 {
-  m_x_offset = (bounding_width()  / (2 * m_zoom)) + x;
-  m_y_offset = (bounding_height() / (2 * m_zoom)) + y;
+  m_x_offset = (bounding_width()  / (2 * m_scale)) + x;
+  m_y_offset = (bounding_height() / (2 * m_scale)) + y;
 }
 
 void
@@ -145,17 +145,17 @@ GCZoomState::set_zoom(const float& z)
 
   if (z > max_zoom)
   {
-    m_zoom = max_zoom;
+    m_scale = max_zoom;
     return false;
   }
   else if (z < min_zoom)
   {
-    m_zoom = min_zoom;
+    m_scale = min_zoom;
     return false;
   }
   else
   {
-    m_zoom = z;
+    m_scale = z;
     return true;
   }
 }
@@ -181,8 +181,8 @@ GCZoomState::zoom_to(float x1, float y1, float x2, float y2)
     set_zoom(bounding_height()/height);
   }
 
-  m_x_offset = (bounding_width()  / (2 * m_zoom)) - center_x;
-  m_y_offset = (bounding_height() / (2 * m_zoom)) - center_y;
+  m_x_offset = (bounding_width()  / (2 * m_scale)) - center_x;
+  m_y_offset = (bounding_height() / (2 * m_scale)) - center_y;
 }
 
 /* EOF */

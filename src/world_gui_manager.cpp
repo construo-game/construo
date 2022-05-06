@@ -276,10 +276,10 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(280.0f, bottom_line, to_string(world.get_num_springs()));
 
   gc.draw_string(410.0f, bottom_line, "Zoom: ");
-  gc.draw_string(480.0f, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
+  gc.draw_string(480.0f, bottom_line, to_string(WorldViewComponent::instance()->get_scale()));
 
   gc.draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
-  //gc.draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_zoom()));
+  //gc.draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_scale()));
 }
 
 /* EOF */
