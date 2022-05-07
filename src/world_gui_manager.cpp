@@ -92,8 +92,8 @@ WorldGUIManager::WorldGUIManager() :
 
   m_grid_button = create<GUIGenericButton>(
     "Use Grid",
-    []{ WorldViewComponent::instance()->on_grid_press(0, 0); },
-    []{ return WorldViewComponent::instance()->uses_grid(); });
+    [this]{ m_worldview_component->on_grid_press(0, 0); },
+    [this]{ return m_worldview_component->uses_grid(); });
 
   m_quit_button = create<GUIGenericButton>("Quit", []{
     ScreenManager::instance()->quit();
@@ -102,31 +102,31 @@ WorldGUIManager::WorldGUIManager() :
   // toolbar
   m_insert_button = create<GUIGenericButton>(
     "Insert",
-    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::INSERT_MODE); },
-    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::INSERT_MODE; });
+    [this]{ m_worldview_component->set_mode (WorldViewComponent::INSERT_MODE); },
+    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::INSERT_MODE; });
 
   m_select_button = create<GUIGenericButton>(
     "Select",
-    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::SELECT_MODE); },
-    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::SELECT_MODE; });
+    [this]{ m_worldview_component->set_mode (WorldViewComponent::SELECT_MODE); },
+    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::SELECT_MODE; });
 
   m_collider_button = create<GUIGenericButton>(
     "Collider",
-    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::COLLIDER_MODE); },
-    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::COLLIDER_MODE; });
+    [this]{ m_worldview_component->set_mode (WorldViewComponent::COLLIDER_MODE); },
+    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::COLLIDER_MODE; });
 
   m_zoom_button = create<GUIGenericButton>(
     "Zoom",
-    []{ WorldViewComponent::instance()->set_mode (WorldViewComponent::ZOOM_MODE); },
-    []{ return WorldViewComponent::instance()->get_mode() == WorldViewComponent::ZOOM_MODE; });
+    [this]{ m_worldview_component->set_mode (WorldViewComponent::ZOOM_MODE); },
+    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::ZOOM_MODE; });
 
   m_zoomout_button = create<GUIGenericButton>(
     "-",
-    []{ WorldViewComponent::instance()->wheel_up(g_graphic_context->get_width()/2,
+    [this]{ m_worldview_component->wheel_up(g_graphic_context->get_width()/2,
                                                  g_graphic_context->get_height()/2); });
   m_zoomin_button = create<GUIGenericButton>(
     "+",
-    []{ WorldViewComponent::instance()->wheel_down(g_graphic_context->get_width()/2,
+    [this]{ m_worldview_component->wheel_down(g_graphic_context->get_width()/2,
                                                    g_graphic_context->get_height()/2); });
 
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
@@ -137,8 +137,8 @@ WorldGUIManager::WorldGUIManager() :
 
     create<GUILabel>("Stiffness",   550, 280, 75, 25);
 
-    []{ WorldViewComponent::instance()->get_insert_tool()->set_particle_mass(wc.get_particle_mass() + 1.0f); }
-      []{ WorldViewComponent::instance()->get_insert_tool()->set_particle_mass(wc.get_particle_mass() - 1.0f); }
+    [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() + 1.0f); }
+      [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() - 1.0f); }
 
       create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
     create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
@@ -221,7 +221,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   gc.draw_string (600,  32, "[middle] - scroll");
 
-  switch (WorldViewComponent::instance()->get_mode())
+  switch (m_worldview_component->get_mode())
     {
     case WorldViewComponent::INSERT_MODE:
       gc.draw_string (600,  20, "  [left] - insert/connect spots");
@@ -259,7 +259,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   /*graphic_context->draw_string (600,  430, "Particles Mass: ");
     graphic_context->draw_string (BUTTON_LX_POS,  430,
-    to_string(WorldViewComponent::instance()->get_insert_tool()->get_particle_mass ()));
+    to_string(m_worldview_component->get_insert_tool()->get_particle_mass ()));
   */
   float const bottom_line = gc.get_height() - 10;
   gc.draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
@@ -267,7 +267,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   gc.draw_string(10.0f, bottom_line, "Pos: ");
   gc.draw_string(80.0f, bottom_line,
-                                to_string(WorldViewComponent::instance()->zoom().screen_to_world(g_input_context->get_mouse_pos())));
+                                to_string(m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos())));
 
   gc.draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
   gc.draw_string(280.0f, bottom_line - 20.0f, to_string(world.get_num_particles()));
@@ -276,10 +276,10 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(280.0f, bottom_line, to_string(world.get_num_springs()));
 
   gc.draw_string(410.0f, bottom_line, "Zoom: ");
-  gc.draw_string(480.0f, bottom_line, to_string(WorldViewComponent::instance()->get_scale()));
+  gc.draw_string(480.0f, bottom_line, to_string(m_worldview_component->get_scale()));
 
   gc.draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
-  //gc.draw_string (680, bottom_line, to_string(WorldViewComponent::instance()->get_scale()));
+  //gc.draw_string (680, bottom_line, to_string(m_worldview_component->get_scale()));
 }
 
 /* EOF */

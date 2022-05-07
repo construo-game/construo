@@ -35,7 +35,7 @@ public:
   void draw_overlay(GraphicContext& gc) override;
 
 private:
-  GUIComponent* m_worldview_component;
+  WorldViewComponent* m_worldview_component;
 
   GUIComponent* m_run_button;
   GUIComponent* m_slowmo_button;

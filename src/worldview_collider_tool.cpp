@@ -74,7 +74,7 @@ WorldViewColliderTool::draw_foreground (ZoomGraphicContext& gc)
 void
 WorldViewColliderTool::on_primary_button_press (float x, float y)
 {
-  WorldGUIManager::instance()->grab_mouse(*WorldViewComponent::instance());
+  WorldGUIManager::instance()->grab_mouse(m_worldview);
 
   m_click_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos ());
 
@@ -95,7 +95,7 @@ WorldViewColliderTool::on_primary_button_press (float x, float y)
 void
 WorldViewColliderTool::on_primary_button_release (float x, float y)
 {
-  WorldGUIManager::instance()->ungrab_mouse(*WorldViewComponent::instance());
+  WorldGUIManager::instance()->ungrab_mouse(m_worldview);
 
   if (m_creating_rect)
     {
