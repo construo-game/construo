@@ -38,34 +38,18 @@
 
 #include "construo_main.hpp"
 
-ConstruoMain* construo_main;
 Controller*   controller;
 
 ConstruoMain::ConstruoMain () :
-  display(),
-  system(),
-  do_quit(false),
-  gui_manager()
+  m_display(),
+  m_system(),
+  m_do_quit(false),
+  m_gui_manager()
 {
 }
 
 ConstruoMain::~ConstruoMain ()
 {
-}
-
-const char*
-ConstruoMain::get_title ()
-{
-  return "Construo " VERSION;
-}
-
-void
-ConstruoMain::exit()
-{
-  on_exit();
-  gui_manager.reset();
-  deinit_system();
-  ::exit(EXIT_SUCCESS);
 }
 
 void
@@ -90,32 +74,34 @@ ConstruoMain::init_system()
 {
   //std::cout << "ConstruoMain::init_system()" << std::endl;
 
-  system = std::make_unique<UnixSystem>();
+  std::string const title = "Construo " VERSION;
+
+  m_system = std::make_unique<UnixSystem>();
 #ifdef USE_X11_DISPLAY
-  display = std::make_unique<X11Display>(g_settings.screen_width, g_settings.screen_height,
+  m_display = std::make_unique<X11Display>(title, g_settings.screen_width, g_settings.screen_height,
                                          g_settings.fullscreen);
 #elif USE_GLUT_DISPLAY
-  display = std::make_unique<GlutDisplay>(g_settings.screen_width, g_settings.screen_height, g_settings.fullscreen);
+  m_display = std::make_unique<GlutDisplay>(title, g_settings.screen_width, g_settings.screen_height, g_settings.fullscreen);
 #else
 #  error "No display type defined"
 #endif
 
   // Init the display, input systems
-  g_graphic_context = display.get();
-  g_input_context   = display.get();
-  g_system_context  = system.get();
+  g_graphic_context = m_display.get();
+  g_input_context   = m_display.get();
+  g_system_context  = m_system.get();
 }
 
 void
 ConstruoMain::deinit_system()
 {
   //std::cout << "ConstruoMain::deinit_system()" << std::endl;
-  display.reset();
-  system.reset();
+  m_display.reset();
+  m_system.reset();
 }
 
 int
-ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
+ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
 {
   CommandLine::parse(argc, argv);
 
@@ -139,11 +125,11 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
         ::exit(EXIT_FAILURE);
       }
 
-    gui_manager = std::make_unique<GUIManager>();
+    m_gui_manager = std::make_unique<GUIManager>();
 
     if (!g_settings.startup_file.empty())
       {
-        controller  = new Controller (g_settings.startup_file);
+        controller = new Controller (g_settings.startup_file);
       }
     else
       {
@@ -159,10 +145,12 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
       }
 
     // For some targets this will never return
-    display->run();
+    m_display->run();
 
     // Shutdown the system and exit
-    exit();
+    on_exit();
+    m_gui_manager.reset();
+    deinit_system();
   } catch (std::exception const& err) {
     print_exception(err);
     return EXIT_FAILURE;
@@ -171,14 +159,10 @@ ConstruoMain::main (int argc, char* argv[]) // FIXME: pass an option class, inst
   return 0;
 }
 
-////////////////////////
-// Real Main Function //
-////////////////////////
 int main (int argc, char** argv)
 {
   ConstruoMain app;
-  construo_main = &app;
-  return app.main (argc, argv);
+  return app.main(argc, argv);
 }
 
 /* EOF */

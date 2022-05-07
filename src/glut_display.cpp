@@ -24,11 +24,10 @@
 #include "buttons.hpp"
 #include "events.hpp"
 #include "settings.hpp"
-#include "construo_main.hpp"
 #include "screen_manager.hpp"
 #include "glut_display.hpp"
 
-GlutDisplay::GlutDisplay(int width, int height, int fullscreen) :
+GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fullscreen) :
   m_window_x_pos(),
   m_window_y_pos(),
   m_window_width(),
@@ -51,7 +50,7 @@ GlutDisplay::GlutDisplay(int width, int height, int fullscreen) :
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(m_width, m_height);
   //glutInitWindowPosition(100, 100); don't care
-  glutSetWindow(glutCreateWindow(construo_main->get_title()));
+  glutSetWindow(glutCreateWindow(title.c_str()));
 
   glutDisplayFuncUcall([](void* userdata) {
      static_cast<GlutDisplay*>(userdata)->display_func();
@@ -106,16 +105,16 @@ GlutDisplay::GlutDisplay(int width, int height, int fullscreen) :
   }
 }
 
+GlutDisplay::~GlutDisplay()
+{
+}
+
 void
 GlutDisplay::run()
 {
   std::cout << "Starting glut mainloop" << std::endl;
   glutMainLoop();
   std::cout << "Ending glut mainloop" << std::endl;
-}
-
-GlutDisplay::~GlutDisplay()
-{
 }
 
 void
@@ -358,7 +357,7 @@ GlutDisplay::idle_func()
   }
   else
   {
-    construo_main->exit();
+    glutLeaveMainLoop();
   }
 }
 

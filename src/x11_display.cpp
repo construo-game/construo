@@ -27,19 +27,17 @@
 #include "construo_error.hpp"
 #include "x11_display.hpp"
 #include "settings.hpp"
-#include "construo_main.hpp"
 
 #include "controller.hpp"
 #include "screen_manager.hpp"
 
-extern ConstruoMain* construo_main;
 Atom wm_delete_window;
 
 constexpr long _NET_WM_STATE_REMOVE = 0; /* remove/unset property */
 constexpr long _NET_WM_STATE_ADD = 1;    /* add/set property */
 constexpr long _NET_WM_STATE_TOGGLE = 2; /* toggle property  */
 
-X11Display::X11Display(int w, int h, bool fullscreen_) :
+X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_) :
   m_cursor_scroll(),
   m_cursor_scroll_pix(),
   m_cursor_scroll_mask(),
@@ -113,14 +111,14 @@ X11Display::X11Display(int w, int h, bool fullscreen_) :
                            &attributes);
 
   { // Communicate a bit with the window manager
-    char* title = const_cast<char*>(construo_main->get_title());
-
+    char* title_arr[] = { const_cast<char*>(title.c_str()) };
     XTextProperty text_property;
-    XStringListToTextProperty(&title, 1, &text_property);
+    XStringListToTextProperty(title_arr, 1, &text_property);
 
     Atom wm_name = XInternAtom(m_display, "_NET_WM_NAME", False);
     XChangeProperty(m_display, m_window, wm_name, XInternAtom(m_display, "UTF8_STRING", false), 8, PropModeReplace,
-                    reinterpret_cast<unsigned char const*>(title), static_cast<int>(strlen(title)));
+                    const_cast<unsigned char*>(reinterpret_cast<unsigned char const*>(title.c_str())),
+                    static_cast<int>(title.size()));
 
     Atom wm_pid = XInternAtom(m_display, "_NET_WM_PID", False);
     pid_t pid = getpid();

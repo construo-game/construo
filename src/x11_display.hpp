@@ -33,7 +33,7 @@ class X11Display : public RootGraphicContext,
                    public InputContext
 {
 public:
-  X11Display(int w, int h, bool fullscreen_);
+  X11Display(std::string const& title, int w, int h, bool fullscreen_);
   virtual ~X11Display();
 
   // Graphic Context stuff

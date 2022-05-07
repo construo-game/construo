@@ -24,7 +24,7 @@ class GlutDisplay : public RootGraphicContext,
                     public InputContext
 {
 public:
-  GlutDisplay(int width, int height, int fullscreen);
+  GlutDisplay(std::string const& title, int width, int height, int fullscreen);
   virtual ~GlutDisplay();
 
   void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;

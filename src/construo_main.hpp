@@ -30,27 +30,12 @@ class UnixSystem;
 
 class ConstruoMain
 {
-private:
-#ifdef USE_X11_DISPLAY
-  std::unique_ptr<X11Display>  display;
-#elif USE_GLUT_DISPLAY
-  std::unique_ptr<GlutDisplay> display;
-#endif
-  std::unique_ptr<UnixSystem> system;
-
-  bool do_quit;
-  std::unique_ptr<GUIManager> gui_manager;
-
 public:
   ConstruoMain ();
   virtual ~ConstruoMain ();
 
-  const char* get_title ();
-  int main (int argc, char* argv[]);
+  int main(int argc, char* argv[]);
 
-  /** Exit ConstruoMain and do all stuff necesarry for a clean
-      shutdown */
-  void exit();
 private:
   /** Called once the game is going to end, used to do the lastsave
       and similar things */
@@ -63,9 +48,22 @@ private:
   void deinit_system();
 
   void process_events ();
-};
 
-extern ConstruoMain* construo_main;
+private:
+#ifdef USE_X11_DISPLAY
+  std::unique_ptr<X11Display>  m_display;
+#elif USE_GLUT_DISPLAY
+  std::unique_ptr<GlutDisplay> m_display;
+#endif
+  std::unique_ptr<UnixSystem> m_system;
+
+  bool m_do_quit;
+  std::unique_ptr<GUIManager> m_gui_manager;
+
+public:
+  ConstruoMain(const ConstruoMain&) = delete;
+  ConstruoMain& operator=(const ConstruoMain&) = delete;
+};
 
 #endif
 
