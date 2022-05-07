@@ -295,7 +295,7 @@ GlutDisplay::reshape_func(int w, int h)
 
   glScissor(0, 0, m_width, m_height);
 
-  ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
+  ScreenManager::instance()->set_geometry(0, 0, static_cast<float>(m_width), static_cast<float>(m_height));
 }
 
 void

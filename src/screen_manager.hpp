@@ -41,7 +41,7 @@ public:
   bool is_finished();
   void run_once(GraphicContext& gc);
   void draw(GraphicContext& gc);
-  void resize(float width, float height);
+  void set_geometry(float x, float y, float width, float height);
 
 private:
   bool m_do_quit;

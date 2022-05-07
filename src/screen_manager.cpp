@@ -72,7 +72,7 @@ ScreenManager::set_gui(int gui_id)
 }
 
 void
-ScreenManager::resize(float width, float height)
+ScreenManager::set_geometry(float x, float y, float width, float height)
 {
   m_load_gui_manager->resize(width, height);
   m_save_gui_manager->resize(width, height);

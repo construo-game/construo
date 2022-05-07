@@ -441,7 +441,10 @@ X11Display::process_pending_events()
     m_width = m_pending_configure_event->width;
     m_height = m_pending_configure_event->height;
 
-    ScreenManager::instance()->resize(static_cast<float>(m_width), static_cast<float>(m_height));
+    ScreenManager::instance()->set_geometry(static_cast<float>(m_pending_configure_event->x),
+                                            static_cast<float>(m_pending_configure_event->y),
+                                            static_cast<float>(m_width),
+                                            static_cast<float>(m_height));
 
     m_pending_configure_event = std::nullopt;
   }
