@@ -127,7 +127,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
         float x = m_worldview.zoom().screen_to_world_x (screen_x);
         float y = m_worldview.zoom().screen_to_world_y (screen_y);
 
-        World& world = *Controller::instance()->get_world ();
+        World& world = Controller::instance()->get_world();
 
         WorldGUIManager::instance()->grab_mouse(m_worldview);
 
@@ -265,7 +265,7 @@ WorldViewSelectTool::on_delete_press (float x, float y)
 {
   Controller::instance()->push_undo();
 
-  World& world = *Controller::instance()->get_world ();
+  World& world = Controller::instance()->get_world();
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
       world.remove_particle(*i);
@@ -305,7 +305,7 @@ WorldViewSelectTool::on_fix_press(float x, float y)
 void
 WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, float of_y)
 {
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
 
   switch (m_mode)
     {

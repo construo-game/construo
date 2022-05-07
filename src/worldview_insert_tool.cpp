@@ -91,9 +91,9 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
 void
 WorldViewInsertTool::on_mouse_move(float x, float y, float of_x, float of_y)
 {
-  World const& world = *Controller::instance()->get_world();
-  Vector2d const pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
+  World const& world = Controller::instance()->get_world();
 
+  Vector2d const pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
   float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
   m_hover_particle = world.get_particle(pos.x, pos.y, capture_distance);
@@ -103,7 +103,7 @@ WorldViewInsertTool::on_mouse_move(float x, float y, float of_x, float of_y)
 void
 WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 {
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
   float x = m_worldview.zoom().screen_to_world_x (screen_x);
   float y = m_worldview.zoom().screen_to_world_y (screen_y);
 
@@ -199,7 +199,7 @@ WorldViewInsertTool::on_secondary_button_release (float screen_x, float screen_y
 void
 WorldViewInsertTool::on_delete_press(float screen_x, float screen_y)
 {
-  World& world = *Controller::instance()->get_world ();
+  World& world = Controller::instance()->get_world ();
 
   if (m_current_particle)
   { // We are currently creating a new spring, abort that

@@ -47,9 +47,9 @@ WorldViewColliderTool::draw_background (ZoomGraphicContext& gc)
 }
 
 Collider*
-WorldViewColliderTool::get_collider (const Vector2d& pos)
+WorldViewColliderTool::get_collider(const Vector2d& pos)
 {
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
   World::Colliders& colliders = world.get_colliders();
   for (World::Colliders::reverse_iterator i = colliders.rbegin ();
        i != colliders.rend(); ++i)
@@ -100,7 +100,7 @@ WorldViewColliderTool::on_primary_button_release (float x, float y)
   if (m_creating_rect)
     {
       Vector2d pos2 = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos ());
-      World& world = *Controller::instance()->get_world();
+      World& world = Controller::instance()->get_world();
 
       if (fabs(pos2.x - m_click_pos.x) < 15
           || fabs(pos2.y - m_click_pos.y) < 15)
@@ -137,7 +137,7 @@ WorldViewColliderTool::on_secondary_button_press (float x, float y)
 void
 WorldViewColliderTool::on_secondary_button_release (float x, float y)
 {
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
 
   if (m_to_delete_collider
       == get_collider(m_worldview.zoom().screen_to_world(Vector2d(x, y))))

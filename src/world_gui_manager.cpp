@@ -201,7 +201,7 @@ WorldGUIManager::resize(float width, float height)
 void
 WorldGUIManager::update()
 {
-  Controller::instance()->update ();
+  Controller::instance()->update();
 }
 
 void
@@ -255,7 +255,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
       break;
     }
 
-  World& world = *Controller::instance()->get_world ();
+  World& world = Controller::instance()->get_world ();
 
   /*graphic_context->draw_string (600,  430, "Particles Mass: ");
     graphic_context->draw_string (BUTTON_LX_POS,  430,

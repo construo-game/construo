@@ -741,7 +741,7 @@ X11Display::run()
 {
   while (!ScreenManager::instance ()->is_finished ())
   {
-    ScreenManager::instance ()->run_once(*this);
+    ScreenManager::instance()->run_once(*this);
 
     if (Controller::instance()->is_running())
     {

@@ -27,10 +27,8 @@ private:
   static Controller* instance_;
 
 public:
-  /** Create an empty world workspace */
-  Controller ();
-  Controller (const std::string& filename);
-  ~Controller ();
+  Controller();
+  ~Controller();
 
   static inline Controller* instance() { return instance_; }
 
@@ -46,7 +44,7 @@ public:
   void set_hide_dots (bool);
   bool get_hide_dots ();
 
-  World* get_world () { assert(m_world); return m_world; }
+  World& get_world () { assert(m_world != nullptr); return *m_world; }
 
   /** Load a world by name, name is relative to the construo user directory */
   void load_world (const std::string& name);
@@ -75,10 +73,10 @@ public:
 private:
   /** The current active world, don't delete this, delete is handled in
       the undo stacks */
-  World* m_world;
+  std::unique_ptr<World> m_world;
 
-  std::vector<World*> m_undo_world_stack;
-  std::vector<World*> m_redo_world_stack;
+  std::vector<std::unique_ptr<World>> m_undo_world_stack;
+  std::vector<std::unique_ptr<World>> m_redo_world_stack;
 
   bool m_running;
   bool m_slow_down;

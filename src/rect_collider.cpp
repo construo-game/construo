@@ -80,7 +80,7 @@ RectCollider::set_pos(const Vector2d& pos)
 void
 RectCollider::bounce ()
 {
-  ParticleFactory& particle_mgr = Controller::instance()->get_world()->get_particle_mgr();
+  ParticleFactory& particle_mgr = Controller::instance()->get_world().get_particle_mgr();
 
   float damp = 0.8f;
   for (ParticleFactory::ParticleIter i = particle_mgr.begin(); i != particle_mgr.end (); ++i)

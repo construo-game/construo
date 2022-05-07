@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "construo_main.hpp"
+
 #include <fstream>
 #include "construo.hpp"
 #include "particle.hpp"
@@ -35,38 +37,17 @@
 #include "command_line.hpp"
 #include "settings.hpp"
 #include "gui_manager.hpp"
-
-#include "construo_main.hpp"
-
-Controller*   controller;
+#include "screen_manager.hpp"
 
 ConstruoMain::ConstruoMain () :
   m_display(),
   m_system(),
-  m_do_quit(false),
-  m_gui_manager()
+  m_do_quit(false)
 {
 }
 
 ConstruoMain::~ConstruoMain ()
 {
-}
-
-void
-ConstruoMain::on_exit()
-{
-  //std::cout << "Calling on_exit()" << std::endl;
-
-  //if (!controller->has_been_run())
-  {
-    controller->save_world("/user/laststate.construo");
-  }
-
-  std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
-            << "  New versions and more information can be found at:\n\n"
-            << "    * http://fs.fsf.org/construo/\n\n"
-            << "  Comments, critique, suggestions self build\n  construction and patches can be send to:\n\n"
-            << "    * Ingo Ruhnke <grumbel@gmail.com>\n\n" << std::endl;
 }
 
 void
@@ -113,43 +94,51 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     std::cout << "If you have throuble with programm startup, delete the file:\n\n"
               << "    " << (g_system_context->get_construo_rc_path() / "laststate.construo") << "\n" << std::endl;
 
-    if (!g_settings.datadir.empty())
+    if (!g_settings.datadir.empty()) {
       path_manager.add_path(g_settings.datadir);
-
+    }
     path_manager.add_path(".");
     path_manager.add_path("..");
     path_manager.add_path(CONSTRUO_DATADIR);
+
     if (!path_manager.find_path("examples"))
-      {
-        std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
-        ::exit(EXIT_FAILURE);
-      }
+    {
+      std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
+      ::exit(EXIT_FAILURE);
+    }
 
-    m_gui_manager = std::make_unique<GUIManager>();
-
+    std::unique_ptr<Controller> controller = std::make_unique<Controller>();
     if (!g_settings.startup_file.empty())
-      {
-        controller = new Controller (g_settings.startup_file);
-      }
+    {
+      controller->load_world(g_settings.startup_file);
+    }
     else
+    {
+      try
       {
-        try
-          {
-            controller = new Controller ("/user/laststate.construo");
-          }
-        catch (std::exception const& err)
-          {
-            print_exception(err);
-            controller = new Controller ();
-          }
+        controller->load_world("/user/laststate.construo");
       }
+      catch (std::exception const& err)
+      {
+        print_exception(err);
+        controller = std::make_unique<Controller>();
+      }
+    }
+
+    ScreenManager::instance(); // FIXME: ugly temp hack to create a global ScreenManager
 
     // For some targets this will never return
     m_display->run();
 
     // Shutdown the system and exit
-    on_exit();
-    m_gui_manager.reset();
+    controller->save_world("/user/laststate.construo");
+
+    std::cout << "\n\n            Thank you for playing Construo!\n\n\n"
+              << "  New versions and more information can be found at:\n\n"
+              << "    * http://fs.fsf.org/construo/\n\n"
+              << "  Comments, critique, suggestions self build\n  construction and patches can be send to:\n\n"
+              << "    * Ingo Ruhnke <grumbel@gmail.com>\n\n" << std::endl;
+
     deinit_system();
   } catch (std::exception const& err) {
     print_exception(err);

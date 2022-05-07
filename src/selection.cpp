@@ -106,7 +106,7 @@ Selection::flip ()
 void
 Selection::select_particles(Vector2d p1, Vector2d p2)
 {
-  m_world = Controller::instance()->get_world ();
+  m_world = &Controller::instance()->get_world();
 
   std::vector<Particle*> particles = m_world->get_particles (p1.x, p1.y,
                                                              p2.x, p2.y);
@@ -191,7 +191,7 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
 void
 Selection::validate()
 {
-  if (m_world != Controller::instance()->get_world ())
+  if (m_world != &Controller::instance()->get_world())
   {
     //std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
     clear();
@@ -203,7 +203,7 @@ Selection::join_doubles(float toleranz)
 {
   // FIXME: Undo add undo, if stuff is going to change
   Controller::instance()->push_undo();
-  World& world = *Controller::instance()->get_world ();
+  World& world = Controller::instance()->get_world ();
 
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
   {

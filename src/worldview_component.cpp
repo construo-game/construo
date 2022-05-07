@@ -48,8 +48,6 @@ WorldViewComponent::WorldViewComponent() :
   m_mode(INSERT_MODE)
 {
   instance_ = this;
-
-  on_world_change();
 }
 
 void
@@ -197,7 +195,7 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 
   draw_ground(gc);
 
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
 
   if (Controller::instance()->get_action_cam()
       && Controller::instance()->is_running())
@@ -405,7 +403,7 @@ WorldViewComponent::get_scale ()
 void
 WorldViewComponent::on_world_change()
 {
-  World& world = *Controller::instance()->get_world();
+  World& world = Controller::instance()->get_world();
 
   const BoundingBox& box = world.calc_bounding_box();
   // Zoom to the bounding box

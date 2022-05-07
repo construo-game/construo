@@ -57,7 +57,7 @@ public:
 
   void update (float delta);
 
-  World* duplicate () { return new World (*this); }
+  std::unique_ptr<World> duplicate() { return std::make_unique<World>(*this); }
 
   /** @return the particles closed to the given coordinates */
   Particle* get_particle(float x, float y, float capture_distance = 20.0f) const;

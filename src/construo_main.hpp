@@ -37,10 +37,6 @@ public:
   int main(int argc, char* argv[]);
 
 private:
-  /** Called once the game is going to end, used to do the lastsave
-      and similar things */
-  void on_exit();
-
   /** Initialize the graphic context and the system */
   void init_system();
 
@@ -58,7 +54,6 @@ private:
   std::unique_ptr<UnixSystem> m_system;
 
   bool m_do_quit;
-  std::unique_ptr<GUIManager> m_gui_manager;
 
 public:
   ConstruoMain(const ConstruoMain&) = delete;

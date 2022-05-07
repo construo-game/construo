@@ -21,20 +21,7 @@
 Controller* Controller::instance_ = nullptr;
 
 Controller::Controller() :
-  m_world(new World),
-  m_undo_world_stack(),
-  m_redo_world_stack(),
-  m_running(false),
-  m_slow_down(false),
-  m_action_cam(false),
-  m_hide_dots(false),
-  m_delta_manager()
-{
-  instance_ = this;
-}
-
-Controller::Controller(const std::string& filename) :
-  m_world(new World(filename)),
+  m_world(std::make_unique<World>()),
   m_undo_world_stack(),
   m_redo_world_stack(),
   m_running(false),
@@ -55,24 +42,22 @@ void
 Controller::load_world(const std::string& filename)
 {
   if (m_world) {
-    m_undo_world_stack.push_back(m_world);
+    m_undo_world_stack.push_back(std::move(m_world));
   }
 
-  //std::cout << "Loading World..." << std::endl;
-  m_world = new World (filename);
+  m_world = std::make_unique<World>(filename);
 
-  WorldViewComponent::instance()->on_world_change();
+  if (WorldViewComponent::instance()) {
+    WorldViewComponent::instance()->on_world_change();
+  }
 
   m_running = false;
-  //std::cout << "Loading World... DONE" << std::endl;
 }
 
 void
 Controller::save_world (const std::string& filename)
 {
-  //std::cout << "Saving World..." << std::endl;
   m_world->write_lisp (filename);
-  //std::cout << "Saving World... DONE" << std::endl;
 }
 
 
@@ -157,9 +142,8 @@ Controller::push_undo()
 void
 Controller::clear_world ()
 {
-  std::cout << "Controller: Clear" << std::endl;
-  m_undo_world_stack.push_back(m_world);
-  m_world = new World;
+  m_undo_world_stack.push_back(std::move(m_world));
+  m_world = std::make_unique<World>();
   m_running = false;
 }
 
@@ -173,9 +157,8 @@ Controller::undo ()
 
   if (!m_undo_world_stack.empty())
     {
-      //delete world; // fixme: memory hole
-      m_redo_world_stack.push_back(m_world);
-      m_world = m_undo_world_stack.back();
+      m_redo_world_stack.push_back(std::move(m_world));
+      m_world = std::move(m_undo_world_stack.back());
       m_undo_world_stack.pop_back();
       m_running = false;
     }
@@ -190,8 +173,8 @@ Controller::redo ()
 {
   if (!m_redo_world_stack.empty())
     {
-      m_undo_world_stack.push_back(m_world);
-      m_world = m_redo_world_stack.back();
+      m_undo_world_stack.push_back(std::move(m_world));
+      m_world = std::move(m_redo_world_stack.back());
       m_redo_world_stack.pop_back();
       m_running = false;
     }
