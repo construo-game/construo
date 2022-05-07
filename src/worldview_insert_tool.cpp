@@ -231,14 +231,9 @@ WorldViewInsertTool::on_delete_press(float screen_x, float screen_y)
 void
 WorldViewInsertTool::on_fix_press (float screen_x, float screen_y)
 {
-  float x = m_worldview.zoom().screen_to_world_x (screen_x);
-  float y = m_worldview.zoom().screen_to_world_y (screen_y);
-
-  Particle* particle = Controller::instance()->get_world ()->get_particle (x, y);
-  if (particle)
-    {
-      particle->set_fixed (!particle->get_fixed ());
-    }
+  if (m_hover_particle) {
+    m_hover_particle->set_fixed(!m_hover_particle->get_fixed());
+  }
 }
 
 /* EOF */
