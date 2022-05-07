@@ -23,14 +23,8 @@
 class GlutDisplay : public RootGraphicContext,
                     public InputContext
 {
-private:
-  static GlutDisplay* instance_;
-
 public:
-  static GlutDisplay* instance() { return instance_; }
-
-public:
-  GlutDisplay(int w, int h, int fullscreen);
+  GlutDisplay(int width, int height, int fullscreen);
   virtual ~GlutDisplay();
 
   void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;

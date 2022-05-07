@@ -14,18 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#if defined(HAVE_FREEGLUT)
-#  include <GL/freeglut.h>
-#elif defined(__APPLE__)
-#  include <glut.h>
-#else
-#  include <GL/glut.h>
-#endif
-
-#include <string.h>
-#include <stdio.h>
+#include <GL/freeglut.h>
+#include <GL/freeglut_ucall.h>
 #include <assert.h>
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
+
 #include "buttons.hpp"
 #include "events.hpp"
 #include "settings.hpp"
@@ -33,58 +28,19 @@
 #include "screen_manager.hpp"
 #include "glut_display.hpp"
 
-GlutDisplay* GlutDisplay::instance_ = nullptr;
-
-void reshape_func(int w, int h)
-{
-  GlutDisplay::instance()->reshape_func(w, h);
-}
-
-void display_func()
-{
-  GlutDisplay::instance()->display_func();
-}
-
-void mouse_func(int button, int button_state, int x, int y)
-{
-  GlutDisplay::instance()->mouse_func(button, button_state, x, y);
-}
-
-void idle_func()
-{
-  GlutDisplay::instance()->idle_func();
-}
-
-void keyboard_func(unsigned char key, int x, int y)
-{
-  GlutDisplay::instance()->keyboard_func(key, x, y);
-}
-
-void special_func(int key, int x, int y)
-{
-  GlutDisplay::instance()->special_func(key, x, y);
-}
-
-void mouse_motion_func(int x, int y)
-{
-  GlutDisplay::instance()->mouse_motion_func(x, y);
-}
-
-GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
+GlutDisplay::GlutDisplay(int width, int height, int fullscreen) :
   m_window_x_pos(),
   m_window_y_pos(),
   m_window_width(),
   m_window_height(),
-  m_width(w),
-  m_height(h),
+  m_width(width),
+  m_height(height),
   m_mouse_x(),
   m_mouse_y(),
   m_block(),
   m_update_display(0),
   m_is_fullscreen()
 {
-  instance_ = this;
-
   int argc = 1;
   char* argv[2];
   argv[0] = strdup("construo");
@@ -97,16 +53,33 @@ GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
   //glutInitWindowPosition(100, 100); don't care
   glutSetWindow(glutCreateWindow(construo_main->get_title()));
 
-  glutDisplayFunc(::display_func);
-  glutReshapeFunc(::reshape_func);
-  glutMouseFunc(::mouse_func);
+  glutDisplayFuncUcall([](void* userdata) {
+     static_cast<GlutDisplay*>(userdata)->display_func();
+  }, this);
 
-  glutMotionFunc(::mouse_motion_func);
-  glutPassiveMotionFunc(::mouse_motion_func);
+  glutReshapeFuncUcall([](int w, int h, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->reshape_func(w, h);
+  }, this);
 
-  glutIdleFunc(::idle_func);
-  glutKeyboardFunc(::keyboard_func);
-  glutSpecialFunc(::special_func);
+  glutMouseFuncUcall([](int button, int button_state, int x, int y, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->mouse_func(button, button_state, x, y);
+  }, this);
+
+  glutPassiveMotionFuncUcall([](int x, int y, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->mouse_motion_func(x, y);
+  }, this);
+
+  glutIdleFuncUcall([](void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->idle_func();
+  }, this);
+
+  glutKeyboardFuncUcall([](unsigned char key, int x, int y, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->keyboard_func(key, x, y);
+  }, this);
+
+  glutSpecialFuncUcall([](int key, int x, int y, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->special_func(key, x, y);
+  }, this);
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
   if (g_settings.alphablending)
@@ -125,8 +98,8 @@ GlutDisplay::GlutDisplay(int w, int h, int fullscreen) :
 
   m_window_x_pos = 0;
   m_window_y_pos = 0;
-  m_window_width  = w;
-  m_window_height = h;
+  m_window_width  = width;
+  m_window_height = height;
 
   if (fullscreen) {
     enter_fullscreen();
