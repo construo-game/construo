@@ -34,7 +34,7 @@ public:
   enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };
 
 public:
-  GUIDirectory(const std::string& pathname, Mode mode);
+  GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode);
   ~GUIDirectory();
 
   void set_geometry(float x, float y, float width, float height) override;
@@ -52,6 +52,7 @@ private:
   void place_components();
 
 private:
+  GUIFileManager& m_file_manager;
   std::string m_pathname;
   Mode m_mode;
   WorldCache m_world_cache;

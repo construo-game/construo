@@ -17,8 +17,10 @@
 #include "gui_file_manager.hpp"
 #include "gui_directory_button.hpp"
 
-GUIDirectoryButton::GUIDirectoryButton (const std::string& arg_filename)
-  : GUIFileButton (arg_filename)
+GUIDirectoryButton::GUIDirectoryButton(const std::string& pathname,
+                                       std::function<void ()> callback) :
+  GUIFileButton(pathname),
+  m_callback(callback)
 {
 }
 
@@ -50,8 +52,7 @@ GUIDirectoryButton::draw (GraphicContext& parent_gc)
 void
 GUIDirectoryButton::on_click()
 {
-  std::cout << "Click on GUIDirectoryButton detected" << std::endl;
-  GUIFileManager::instance()->open_directory(m_path);
+  m_callback();
 }
 
 /* EOF */

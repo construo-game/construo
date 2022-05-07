@@ -43,7 +43,6 @@ SaveGUIManager::draw_overlay(GraphicContext& gc)
 void
 SaveGUIManager::run_once(GraphicContext& gc)
 {
-  GUIFileManager::set_instance(m_file_manager);
   GUIManager::run_once(gc);
   g_system_context->sleep (1000);
 }

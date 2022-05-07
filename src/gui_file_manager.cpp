@@ -24,8 +24,6 @@
 #include "screen_manager.hpp"
 #include "zoom_graphic_context.hpp"
 
-GUIFileManager* GUIFileManager::instance_ = nullptr;
-
 GUIFileManager::GUIFileManager(Mode m) :
   GUIChildManager(),
   m_mode(m),
@@ -36,12 +34,10 @@ GUIFileManager::GUIFileManager(Mode m) :
   m_btn_update_directory(),
   m_directory()
 {
-  instance_ = this;
-
   if (m_mode == SAVE_MANAGER) {
-    m_directory = create<GUIDirectory>("/", GUIDirectory::SAVE_DIRECTORY);
+    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::SAVE_DIRECTORY);
   } else {
-    m_directory = create<GUIDirectory>("/", GUIDirectory::LOAD_DIRECTORY);
+    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::LOAD_DIRECTORY);
   }
 
   m_btn_up_directory = create<GUIGenericButton>("Up", [this]{
@@ -91,9 +87,9 @@ GUIFileManager::open_directory (const std::string& pathname)
   GUIDirectory* old_directory = m_directory;
   std::unique_ptr<GUIDirectory> new_directory;
   if (m_mode == SAVE_MANAGER) {
-    m_directory = create<GUIDirectory>(pathname, GUIDirectory::SAVE_DIRECTORY);
+    m_directory = create<GUIDirectory>(*this, pathname, GUIDirectory::SAVE_DIRECTORY);
   } else {
-    m_directory = create<GUIDirectory>(pathname, GUIDirectory::LOAD_DIRECTORY);
+    m_directory = create<GUIDirectory>(*this, pathname, GUIDirectory::LOAD_DIRECTORY);
   }
   m_directory->set_geometry(m_x, m_y, m_width, m_height);
 

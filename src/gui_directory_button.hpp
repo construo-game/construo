@@ -21,13 +21,15 @@
 
 class GUIDirectoryButton : public GUIFileButton
 {
-private:
 public:
-  GUIDirectoryButton (const std::string& pathname);
-  ~GUIDirectoryButton ();
+  GUIDirectoryButton(const std::string& pathname, std::function<void ()> callback);
+  ~GUIDirectoryButton();
 
   void draw(GraphicContext& gc) override;
   void on_click() override;
+
+private:
+  std::function<void ()> m_callback;
 };
 
 #endif

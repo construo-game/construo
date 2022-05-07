@@ -25,8 +25,9 @@
 #include "gui_new_file_button.hpp"
 #include "path.hpp"
 
-GUIDirectory::GUIDirectory (const std::string& pathname, Mode mode) :
+GUIDirectory::GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode) :
   GUIChildManager(),
+  m_file_manager(file_manager),
   m_pathname(pathname),
   m_mode(mode),
   m_world_cache(),
@@ -58,14 +59,22 @@ GUIDirectory::read_directory()
 
     if (type == FT_DIRECTORY)
     {
-      m_items.emplace_back([filename]{ return std::make_unique<GUIDirectoryButton>(filename); });
+      m_items.emplace_back([this, filename]{
+        return std::make_unique<GUIDirectoryButton>(filename, [this, filename]{
+          m_file_manager.open_directory(filename);
+        });
+      });
     }
     else if (type == FT_CONSTRUO_FILE)
     {
       if (m_mode == SAVE_DIRECTORY) {
-        m_items.emplace_back([this, filename]{ return std::make_unique<WorldButton>(m_world_cache, filename, WorldButton::SAVE_BUTTON); });
+        m_items.emplace_back([this, filename]{
+          return std::make_unique<WorldButton>(m_world_cache, filename, WorldButton::SAVE_BUTTON);
+        });
       } else {
-        m_items.emplace_back([this, filename]{ return std::make_unique<WorldButton>(m_world_cache, filename, WorldButton::LOAD_BUTTON); });
+        m_items.emplace_back([this, filename]{
+          return std::make_unique<WorldButton>(m_world_cache, filename, WorldButton::LOAD_BUTTON);
+        });
       }
     }
     else // (type == FT_UNKNOWN_FILE)

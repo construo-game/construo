@@ -18,6 +18,7 @@
 #define HEADER_CONSTRUO_FWD_HPP
 
 class GUIComponent;
+class GUIFileManager;
 class GUIGenericButton;
 class GUIManager;
 class GraphicContext;

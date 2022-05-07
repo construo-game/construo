@@ -26,13 +26,6 @@
 
 class GUIFileManager : public GUIChildManager
 {
-private:
-  static GUIFileManager* instance_;
-
-public:
-  static GUIFileManager* instance() { return instance_; }
-  static void set_instance(GUIFileManager* g) { instance_ = g; }
-
 public:
   enum Mode { LOAD_MANAGER, SAVE_MANAGER };
 
