@@ -26,7 +26,7 @@
 WorldViewColliderTool::WorldViewColliderTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
   m_creating_rect(false),
-  m_click_pos(),
+  m_click_pos(0.0f, 0.0f),
   m_to_delete_collider(nullptr),
   m_move_collider(nullptr)
 {

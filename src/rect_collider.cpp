@@ -33,7 +33,8 @@ RectCollider::RectCollider(ReaderMapping const& reader) :
   x2(),
   y2()
 {
-  Vector2d pos1, pos2;
+  Vector2d pos1(0.0f, 0.0f);
+  Vector2d pos2(0.0f, 0.0f);
   if (reader.read("pos1", pos1) == false ||
       reader.read("pos2", pos2) == false) {
     throw ConstruoError("RectCollider entry incomplete");

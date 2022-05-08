@@ -23,7 +23,7 @@
 
 WorldViewZoomTool::WorldViewZoomTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
-  m_click_pos(),
+  m_click_pos(0.0f, 0.0f),
   m_creating_zoom_rectangle(false)
 {
 }

@@ -355,7 +355,7 @@ World::zero_out_velocity ()
   for (auto i = get_particle_mgr().begin();
        i != get_particle_mgr().end(); ++i)
     {
-      (*i)->velocity = Vector2d ();
+      (*i)->velocity = Vector2d(0.0f, 0.0f);
     }
 }
 

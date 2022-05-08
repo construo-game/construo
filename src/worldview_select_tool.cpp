@@ -30,11 +30,11 @@ WorldViewSelectTool::WorldViewSelectTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
   m_selection(),
   m_mode(IDLE_MODE),
-  m_click_pos(),
-  m_move_diff(),
+  m_click_pos(0.0f, 0.0f),
+  m_move_diff(0.0f, 0.0f),
   m_move_current_particle(nullptr),
-  m_rotate_center(),
-  m_scale_center(),
+  m_rotate_center(0.0f, 0.0f),
+  m_scale_center(0.0f, 0.0f),
   m_old_scale_factor(1.0f)
 {
 }
@@ -146,7 +146,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
               {
                 Controller::instance()->push_undo();
                 m_mode = MOVING_SELECTION_MODE;
-                m_move_diff = Vector2d();
+                m_move_diff = Vector2d(0.0f, 0.0f);
                 m_move_current_particle = new_current_particle;
                 break;
               }

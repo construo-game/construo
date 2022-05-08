@@ -33,7 +33,7 @@ Vector2d
 Selection::get_center()
 {
   validate();
-  if (empty()) { return {}; }
+  if (empty()) { return Vector2d(0.0f, 0.0f); }
 
   Rect<float> rot_box((*m_selection.begin())->pos.x,
                       (*m_selection.begin())->pos.y,

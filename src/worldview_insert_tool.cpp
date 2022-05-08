@@ -52,7 +52,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
   Vector2d click_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
 
   float const grid_size = m_worldview.get_snap_size();
-  Vector2d new_particle_pos;
+  Vector2d new_particle_pos(0.0f, 0.0f);
   if (m_worldview.uses_grid()) {
     new_particle_pos = Vector2d(Math::round_to_float(click_pos.x, grid_size),
                                 Math::round_to_float(click_pos.y, grid_size));
@@ -120,10 +120,9 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
       }
       else // add a new particle and connect it with the current one
       {
-        Vector2d new_particle_pos;
+        float const grid_size = m_worldview.get_snap_size();
 
-        float grid_size = m_worldview.get_snap_size();
-
+        Vector2d new_particle_pos(0.0f, 0.0f);
         if (m_worldview.uses_grid())
           new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
                                       Math::round_to_float(y, grid_size));
@@ -131,7 +130,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
           new_particle_pos = Vector2d(x, y);
 
         new_current_particle = world.get_particle_mgr().add_particle(new_particle_pos,
-                                                                     Vector2d(),
+                                                                     Vector2d(0.0f, 0.0f),
                                                                      m_particle_mass);
         world.add_spring (m_current_particle, new_current_particle);
       }
@@ -160,7 +159,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
       // insert a new particle
       float const grid_size = m_worldview.get_snap_size();
 
-      Vector2d new_particle_pos;
+      Vector2d new_particle_pos(0.0f, 0.0f);
       if (m_worldview.uses_grid()) {
         new_particle_pos = Vector2d(Math::round_to_float(x, grid_size),
                                     Math::round_to_float(y, grid_size));
@@ -169,7 +168,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
       }
 
       Particle* p = world.get_particle_mgr().add_particle(new_particle_pos,
-                                                          Vector2d(),
+                                                          Vector2d(0.0f, 0.0f),
                                                           m_particle_mass);
       m_current_particle = p;
       // Increase the spring count so that the particle isn't cleaned up

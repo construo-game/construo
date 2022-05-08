@@ -26,9 +26,9 @@ public:
   float x;
   float y;
 
-  Vector2d ()
-    : x(0), y(0)
-  {}
+  //  Vector2d ()
+  //  : x(0), y(0)
+  //{}
 
   Vector2d (float x_, float y_)
     : x (x_), y (y_)

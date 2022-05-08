@@ -36,8 +36,8 @@ ParticleFactory::ParticleFactory(int version, ReaderCollection const& collection
   for(ReaderObject const& item : collection.get_objects()) {
     ReaderMapping const& reader = item.get_mapping();
 
-    Vector2d pos;
-    Vector2d velocity;
+    Vector2d pos(0.0f, 0.0f);
+    Vector2d velocity(0.0f, 0.0f);
     float mass = 1.0f/10.0f;
     bool fixed = false;
     int id = -1;

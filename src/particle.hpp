@@ -65,7 +65,7 @@ public:
 
   void clear_force ()
   {
-    totale_force = Vector2d ();
+    totale_force = Vector2d(0.0f, 0.0f);
   }
 
   void set_fixed (bool f) {
