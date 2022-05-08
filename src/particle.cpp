@@ -16,6 +16,8 @@
 
 #include <cmath>
 
+#include <glm/gtx/io.hpp>
+
 #include "colors.hpp"
 #include "math.hpp"
 #include "reader.hpp"
@@ -156,16 +158,16 @@ Particle::update (float delta)
 
   /*
     Vector2d dist = pos - Vector2d (400, 300);
-    if (dist.norm () < 50.0f)
+    if (glm::length(dist) < 50.0f)
     {
     velocity = -velocity;
     }*/
   clear_force ();
 
   // Avoid to fast things
-  if (velocity.norm () > max_velocity)
+  if (glm::length(velocity) > max_velocity)
     {
-      velocity.normalize();
+      velocity = glm::normalize(velocity);
       velocity *= max_velocity;
     }
 }

@@ -17,6 +17,9 @@
 #include <algorithm>
 #include <math.h>
 #include <map>
+
+#include <glm/gtx/io.hpp>
+
 #include "rect.hpp"
 #include "selection.hpp"
 #include "particle.hpp"
@@ -181,7 +184,7 @@ Selection::rotate (float rot_angle, Vector2d rotate_center)
     pos.y -= rotate_center.y;
 
     float angle  = atan2(pos.y, pos.x) + rot_angle;
-    float length = pos.norm ();
+    float length = glm::length(pos);
 
     pos.x = (cos (angle)*length) + rotate_center.x;
     pos.y = (sin (angle)*length) + rotate_center.y;
@@ -209,7 +212,7 @@ Selection::join_doubles(float toleranz)
   {
     for (auto j = std::next(i); j != m_selection.end (); ++j)
     {
-      if (Vector2d::distance((*j)->pos, (*i)->pos) < toleranz)
+      if (glm::distance((*j)->pos, (*i)->pos) < toleranz)
       {
         // Join two particles
         std::cout << "joining particles: " << (*j)->pos << " " << (*i)->pos << std::endl;

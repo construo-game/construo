@@ -20,6 +20,11 @@
 #include <math.h>
 #include <iostream>
 
+#include <glm/glm.hpp>
+
+using Vector2d = glm::vec2;
+
+#if 0
 class Vector2d
 {
 public:
@@ -99,13 +104,14 @@ public:
     return (a - b).norm();
   }
 };
-
+#endif
+/*
 inline
 std::ostream& operator << (std::ostream& os, const Vector2d& v)
 {
   return os << "[" << v.x << ", " << v.y << "]";
 }
-
+*/
 #endif
 
 /* EOF */

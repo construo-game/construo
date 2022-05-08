@@ -164,7 +164,7 @@ World::draw_springs(ZoomGraphicContext& gc) const
   std::vector<GraphicContext::Line> lines (springs.size());
 
   Vector2d dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = fabs(dist.norm ()/springs[0]->length - 1.0f) * 10.0f;
+  float stretch = fabs(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
   float color = fabs((stretch/springs[0]->max_stretch));
 
   for (unsigned int i = 0; i < springs.size(); ++i)
@@ -213,16 +213,16 @@ World::update (float delta)
 
       // Central Gravity force:
       /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
-        if (direction.norm () != 0.0f)
-        (*i)->add_force (direction * (-100.0f/(direction.norm () * direction.norm ())));
+        if (glm::length(direction) != 0.0f)
+        (*i)->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
       */
 
       /*
         for (auto j = particles.begin (); j != particles.end (); ++j)
         {
         Vector2d diff = (*j)->pos - (*i)->pos;
-        if (diff.norm () != 0.0f)
-        (*i)->add_force (diff * ((10.0f - (*j)->mass)/(diff.norm () * diff.norm ())));
+        if (glm::length(diff) != 0.0f)
+        (*i)->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
         }	    */
     }
 
@@ -320,9 +320,9 @@ World::get_particle(float x, float y, float capture_distance) const
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       Vector2d diff = mouse_pos - (*i)->pos;
-      if (diff.norm () < min_dist)
+      if (glm::length(diff) < min_dist)
 	{
-	  min_dist = diff.norm ();
+	  min_dist = glm::length(diff);
 	  particle = *i;
 	}
     }

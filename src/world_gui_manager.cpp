@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "world_gui_manager.hpp"
+
+#include <glm/gtx/io.hpp>
+
 #include "controller.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
@@ -25,7 +29,6 @@
 #include "gui_label.hpp"
 #include "screen_manager.hpp"
 #include "root_graphic_context.hpp"
-#include "world_gui_manager.hpp"
 
 using namespace StringUtils;
 

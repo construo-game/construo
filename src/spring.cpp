@@ -33,7 +33,7 @@ Spring::Spring(Particle* f, Particle* s, float l) :
 
 Spring::Spring(Particle* f, Particle* s) :
   particles(f, s),
-  length(fabs((f->pos - s->pos).norm ())),
+  length(fabs(glm::length(f->pos - s->pos))),
   destroyed(false),
   stiffness(50.0f),
   damping(0.1f),
@@ -78,7 +78,7 @@ Spring::Spring(World* world, ReaderMapping const& reader) :
   if (length == -1)
     {
       //std::cout << "Spring: length missing in data file, recalculating" << std::endl;
-      length = fabs((particles.first->pos - particles.second->pos).norm ());
+      length = fabs(glm::length(particles.first->pos - particles.second->pos));
     }
 }
 
@@ -95,7 +95,7 @@ Spring::update (float delta)
 
   // Calculate the stretchness of the spring, 0.0 if unstretch, else
   // <> 0
-  float stretch = (dist.norm () - length);
+  float stretch = glm::length(dist) - length;
 
   //std::cout << "Stretch: " << stretch << std::endl;
   if (fabs(stretch/length) > max_stretch &&
@@ -106,9 +106,9 @@ Spring::update (float delta)
   else
     {
       stretch *= stiffness;
-      float dterm = (dist.dot(particles.first->velocity - particles.second->velocity) * damping)/dist.norm ();
+      float dterm = (glm::dot(dist, particles.first->velocity - particles.second->velocity) * damping) / glm::length(dist);
 
-      dist.normalize ();
+      dist = glm::normalize(dist);
       Vector2d force = dist * (stretch + dterm);
 
       /*std::cout << "DTerm: " << dterm << " HTerm: " << stretch
@@ -124,7 +124,7 @@ void
 Spring::draw (ZoomGraphicContext& gc)
 {
   Vector2d dist = particles.first->pos - particles.second->pos;
-  float stretch = fabs(dist.norm ()/length - 1.0f) * 10.0f;
+  float stretch = fabs(glm::length(dist)/length - 1.0f) * 10.0f;
 
   float color = fabs((stretch/max_stretch));
 
@@ -162,7 +162,7 @@ Spring::serialize(prio::Writer& writer)
 void
 Spring::recalc_length ()
 {
-  length = fabs((particles.first->pos - particles.second->pos).norm ());
+  length = fabs(glm::length(particles.first->pos - particles.second->pos));
 }
 
 /* EOF */

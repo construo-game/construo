@@ -17,7 +17,7 @@
 #ifndef HEADER_BOUNDING_BOX_HPP
 #define HEADER_BOUNDING_BOX_HPP
 
-class Vector2d;
+#include <glm/fwd.hpp>
 
 class BoundingBox
 {

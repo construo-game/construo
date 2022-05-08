@@ -358,7 +358,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
     case SCALING_SELECTION_MODE:
       {
         Vector2d const new_pos = m_worldview.zoom().screen_to_world(Vector2d(screen_x, screen_y));
-        float const scale_factor = fabsf((m_scale_center - new_pos).norm() / (m_scale_center - m_click_pos).norm());
+        float const scale_factor = fabsf(glm::length(m_scale_center - new_pos) / glm::length(m_scale_center - m_click_pos));
         m_selection.scale(1.0f / m_old_scale_factor, m_scale_center);
         m_selection.scale(scale_factor, m_scale_center);
         m_old_scale_factor = scale_factor;
