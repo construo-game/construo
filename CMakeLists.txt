@@ -34,6 +34,8 @@ set(OpenGL_GL_PREFERENCE "LEGACY")
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
+find_package(fmt REQUIRED)
+find_package(glm REQUIRED)
 
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
@@ -52,6 +54,11 @@ function(build_dependencies)
 
   find_package(prio QUIET)
   if(NOT TARGET prio::prio)
+    add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+  endif()
+
+  find_package(geom QUIET)
+  if(NOT TARGET geom::geom)
     add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
   endif()
 
@@ -143,7 +150,7 @@ set_target_properties(libconstruo PROPERTIES
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
-target_link_libraries(libconstruo PUBLIC prio::prio xdgcpp)
+target_link_libraries(libconstruo PUBLIC prio::prio geom::geom fmt::fmt xdgcpp)
 target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS} -Wuseless-cast)
 
 if(GLUT_FOUND AND OPENGL_FOUND)

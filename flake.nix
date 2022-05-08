@@ -26,13 +26,18 @@
     priocpp.inputs.tinycmmc.follows = "tinycmmc";
     priocpp.inputs.logmich.follows = "logmich";
 
+    geomcpp.url = "gitlab:grumbel/geomcpp";
+    geomcpp.inputs.nixpkgs.follows = "nixpkgs";
+    geomcpp.inputs.flake-utils.follows = "flake-utils";
+    geomcpp.inputs.tinycmmc.follows = "tinycmmc";
+
     xdgcpp.url = "gitlab:grumbel/xdgcpp";
     xdgcpp.inputs.nixpkgs.follows = "nixpkgs";
     xdgcpp.inputs.flake-utils.follows = "flake-utils";
     xdgcpp.inputs.tinycmmc.follows = "tinycmmc";
   };
 
-  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, xdgcpp }:
+  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, geomcpp, xdgcpp }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -75,15 +80,19 @@
                appstream-glib
              ];
              buildInputs = with pkgs; [
-               gtest
-               zlib
-               xorg.libX11
+               fmt
                freeglut
+               glm
+               gtest
                libGL
                libGLU
+               xorg.libX11
+               zlib
              ] ++ [
-               tinycmmc.defaultPackage.${system}
+               geomcpp.defaultPackage.${system}
+               logmich.defaultPackage.${system}
                priocpp.defaultPackage.${system}
+               tinycmmc.defaultPackage.${system}
                xdgcpp.defaultPackage.${system}
              ];
            };
