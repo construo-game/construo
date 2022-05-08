@@ -19,6 +19,7 @@
 #include <algorithm>
 
 #include <zlib.h>
+#include <geom/rect.hpp>
 
 #include "math.hpp"
 #include "construo_error.hpp"
@@ -26,7 +27,6 @@
 #include "particle_factory.hpp"
 #include "system_context.hpp"
 #include "controller.hpp"
-#include "rect.hpp"
 #include "rect_collider.hpp"
 #include "string_utils.hpp"
 
@@ -495,9 +495,9 @@ World::get_num_springs()
 void
 World::add_rect_collider(const glm::vec2& pos1, const glm::vec2& pos2)
 {
-  Rect<float> rect (pos1.x, pos1.y, pos2.x, pos2.y);
+  geom::frect rect(pos1, pos2);
 
-  m_colliders.push_back(new RectCollider(rect.x1, rect.y1, rect.x2, rect.y2));
+  m_colliders.push_back(new RectCollider(rect.left(), rect.top(), rect.right(), rect.bottom()));
 }
 
 /* EOF */

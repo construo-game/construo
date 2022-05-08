@@ -19,8 +19,8 @@
 #include <map>
 
 #include <glm/gtx/io.hpp>
+#include <geom/rect.hpp>
 
-#include "rect.hpp"
 #include "selection.hpp"
 #include "particle.hpp"
 #include "particle_factory.hpp"
@@ -38,21 +38,18 @@ Selection::get_center()
   validate();
   if (empty()) { return glm::vec2(0.0f, 0.0f); }
 
-  Rect<float> rot_box((*m_selection.begin())->pos.x,
-                      (*m_selection.begin())->pos.y,
-                      (*m_selection.begin())->pos.x,
-                      (*m_selection.begin())->pos.y);
+  geom::frect rot_box((*m_selection.begin())->pos,
+                      (*m_selection.begin())->pos);
 
   for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
   {
-    rot_box.x1 = Math::min(rot_box.x1, (*i)->pos.x);
-    rot_box.y1 = Math::min(rot_box.y1, (*i)->pos.y);
-
-    rot_box.x2 = Math::max(rot_box.x2, (*i)->pos.x);
-    rot_box.y2 = Math::max(rot_box.y2, (*i)->pos.y);
+    rot_box = geom::frect(Math::min(rot_box.left(), (*i)->pos.x),
+                          Math::min(rot_box.top(), (*i)->pos.y),
+                          Math::max(rot_box.right(), (*i)->pos.x),
+                          Math::max(rot_box.bottom(), (*i)->pos.y));
   }
 
-  return rot_box.get_center();
+  return geom::center(rot_box).as_vec();
 }
 
 void

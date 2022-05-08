@@ -15,15 +15,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
-#include "math.hpp"
-#include "world.hpp"
+
+#include <geom/rect.hpp>
+
 #include "colors.hpp"
 #include "controller.hpp"
-#include "worldview_component.hpp"
+#include "math.hpp"
 #include "particle.hpp"
-#include "world_gui_manager.hpp"
-#include "rect.hpp"
 #include "root_graphic_context.hpp"
+#include "world.hpp"
+#include "world_gui_manager.hpp"
+#include "worldview_component.hpp"
 #include "worldview_select_tool.hpp"
 
 WorldViewSelectTool::WorldViewSelectTool(WorldViewComponent& worldview) :
@@ -71,36 +73,35 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
   if (!m_selection.empty())
   {
     Particle& p = **m_selection.begin();
-    Rect<float> selection_box (p.pos.x, p.pos.y, p.pos.x, p.pos.y);
+    geom::frect selection_box(p.pos, p.pos);
 
     for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
-      selection_box.x1 = Math::min(selection_box.x1, (*i)->pos.x);
-      selection_box.y1 = Math::min(selection_box.y1, (*i)->pos.y);
-
-      selection_box.x2 = Math::max(selection_box.x2, (*i)->pos.x);
-      selection_box.y2 = Math::max(selection_box.y2, (*i)->pos.y);
+      selection_box = geom::frect(Math::min(selection_box.left(), (*i)->pos.x),
+                                  Math::min(selection_box.top(), (*i)->pos.y),
+                                  Math::max(selection_box.right(), (*i)->pos.x),
+                                  Math::max(selection_box.bottom(), (*i)->pos.y));
     }
 
     float border = 20.0f / gc.zoom().get_scale();
-    gc.draw_rect (selection_box.x1 - border, selection_box.y1 - border,
-                  selection_box.x2 + border, selection_box.y2 + border,
+    gc.draw_rect (selection_box.left() - border, selection_box.top() - border,
+                  selection_box.right() + border, selection_box.bottom() + border,
                   g_style.new_spring);
 
     if (0) // draw selection rect
     {
       float rsize = 5.0f / gc.zoom().get_scale();
-      gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y1 - border - rsize,
-                         selection_box.x1 - border + rsize, selection_box.y1 - border + rsize,
+      gc.draw_fill_rect (selection_box.left() - border - rsize, selection_box.top() - border - rsize,
+                         selection_box.left() - border + rsize, selection_box.top() - border + rsize,
                          g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y1 - border - rsize,
-                         selection_box.x2 + border + rsize, selection_box.y1 - border + rsize,
+      gc.draw_fill_rect (selection_box.right() + border - rsize, selection_box.top() - border - rsize,
+                         selection_box.right() + border + rsize, selection_box.top() - border + rsize,
                          g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.x1 - border - rsize, selection_box.y2 + border - rsize,
-                         selection_box.x1 - border + rsize, selection_box.y2 + border + rsize,
+      gc.draw_fill_rect (selection_box.left() - border - rsize, selection_box.bottom() + border - rsize,
+                         selection_box.left() - border + rsize, selection_box.bottom() + border + rsize,
                          g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.x2 + border - rsize, selection_box.y2 + border - rsize,
-                         selection_box.x2 + border + rsize, selection_box.y2 + border + rsize,
+      gc.draw_fill_rect (selection_box.right() + border - rsize, selection_box.bottom() + border - rsize,
+                         selection_box.right() + border + rsize, selection_box.bottom() + border + rsize,
                          g_style.selection_resizer);
     }
 
