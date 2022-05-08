@@ -17,7 +17,8 @@
 #ifndef HEADER_WORLDVIEW_ZOOM_TOOL_HPP
 #define HEADER_WORLDVIEW_ZOOM_TOOL_HPP
 
-#include "vector2d.hpp"
+#include <glm/glm.hpp>
+
 #include "worldview_tool.hpp"
 
 class WorldViewZoomTool : public WorldViewTool
@@ -40,7 +41,7 @@ public:
 private:
   /** Position of the mouse click, click_pos and the button_release
       pos form the rectangle. click_pos is in world coordinates */
-  Vector2d m_click_pos;
+  glm::vec2 m_click_pos;
 
   /** true if we are currently creating the zoom rectangle and
       click_pos is set, false otherwise */

@@ -17,8 +17,9 @@
 #ifndef HEADER_ZOOM_GRAPHIC_CONTEXT_HPP
 #define HEADER_ZOOM_GRAPHIC_CONTEXT_HPP
 
+#include <glm/glm.hpp>
+
 #include "graphic_context.hpp"
-#include "vector2d.hpp"
 #include "zoom_state.hpp"
 
 /** A GraphicContext, that wraps another GraphicContext and adds

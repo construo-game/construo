@@ -17,8 +17,9 @@
 #ifndef HEADER_RECT_HPP
 #define HEADER_RECT_HPP
 
+#include <glm/glm.hpp>
+
 #include "math.hpp"
-#include "vector2d.hpp"
 
 template<class T>
 class Rect
@@ -54,9 +55,9 @@ public:
     return x2 - x1;
   }
 
-  Vector2d get_center () const
+  glm::vec2 get_center () const
   {
-    return Vector2d ((x1 + x2)/2.0f,
+    return glm::vec2 ((x1 + x2)/2.0f,
                      (y1 + y2)/2.0f);
   }
 };

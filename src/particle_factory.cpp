@@ -36,8 +36,8 @@ ParticleFactory::ParticleFactory(int version, ReaderCollection const& collection
   for(ReaderObject const& item : collection.get_objects()) {
     ReaderMapping const& reader = item.get_mapping();
 
-    Vector2d pos(0.0f, 0.0f);
-    Vector2d velocity(0.0f, 0.0f);
+    glm::vec2 pos(0.0f, 0.0f);
+    glm::vec2 velocity(0.0f, 0.0f);
     float mass = 1.0f/10.0f;
     bool fixed = false;
     int id = -1;
@@ -86,7 +86,7 @@ ParticleFactory::operator= (const ParticleFactory& pmgr)
 }
 
 Particle*
-ParticleFactory::add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
+ParticleFactory::add_particle (const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float m, bool f)
 {
   Particle* p = new Particle(m_particle_id_count++,
                              arg_pos,

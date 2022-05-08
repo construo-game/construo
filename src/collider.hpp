@@ -17,7 +17,8 @@
 #ifndef HEADER_CONSTRUO_COLLIDER_HPP
 #define HEADER_CONSTRUO_COLLIDER_HPP
 
-#include "vector2d.hpp"
+#include <glm/glm.hpp>
+
 #include "particle.hpp"
 #include "bounding_box.hpp"
 #include "graphic_context.hpp"
@@ -34,12 +35,12 @@ public:
   virtual void draw (GraphicContext& gc) =0;
   virtual void draw_highlight (GraphicContext& gc) =0;
 
-  virtual Vector2d get_pos() =0;
-  virtual void     set_pos(const Vector2d&) =0;
+  virtual glm::vec2 get_pos() =0;
+  virtual void     set_pos(const glm::vec2&) =0;
 
   /** @return true if the collider is at the given world coordinates,
       used for drag&drop */
-  virtual bool is_at (const Vector2d& pos) =0;
+  virtual bool is_at (const glm::vec2& pos) =0;
 
   /** act on a particle */
   virtual void bounce () =0;

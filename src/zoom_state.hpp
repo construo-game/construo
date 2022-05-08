@@ -17,7 +17,7 @@
 #ifndef HEADER_ZOOM_STATE_HPP
 #define HEADER_ZOOM_STATE_HPP
 
-#include "vector2d.hpp"
+#include <glm/glm.hpp>
 
 // FIXME: ZoomState name conflicts with X11
 class GCZoomState
@@ -96,10 +96,10 @@ public:
   float world_to_screen_y(float y) const;
 
   /** Convert a coordinate from screen units to world units */
-  Vector2d screen_to_world(const Vector2d&) const;
+  glm::vec2 screen_to_world(const glm::vec2&) const;
 
   /** Convert a coordinate from world units to screen units */
-  Vector2d world_to_screen(const Vector2d&) const;
+  glm::vec2 world_to_screen(const glm::vec2&) const;
 
   float bounding_x1() const { return m_x1; }
   float bounding_y1() const { return m_y1; }

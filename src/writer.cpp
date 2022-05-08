@@ -19,7 +19,7 @@
 namespace prio {
 
 template<>
-void write_custom(prio::Writer& writer, std::string_view key, Vector2d const& value)
+void write_custom(prio::Writer& writer, std::string_view key, glm::vec2 const& value)
 {
   std::array<float, 2> v{value.x, value.y};
   writer.write(key, std::span<float const>(v));

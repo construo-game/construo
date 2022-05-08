@@ -65,19 +65,19 @@ private:
 
   /** The start position of a click & drap operation (aka move or
       rotate), in world coordinates */
-  Vector2d m_click_pos;
+  glm::vec2 m_click_pos;
 
   /** The difference the selection was moved on the last mouse move */
-  Vector2d m_move_diff;
+  glm::vec2 m_move_diff;
 
   /** The particle, by which is selection grabbed */
   Particle* m_move_current_particle;
 
   /** The center of a rotation */
-  Vector2d m_rotate_center;
+  glm::vec2 m_rotate_center;
 
   /** The center of a scalation */
-  Vector2d m_scale_center;
+  glm::vec2 m_scale_center;
   float m_old_scale_factor;
 
 public:

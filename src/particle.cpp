@@ -26,7 +26,7 @@
 
 using namespace StringUtils;
 
-Particle::Particle (int i, const Vector2d& arg_pos, const Vector2d& arg_velocity, float m, bool f)
+Particle::Particle (int i, const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float m, bool f)
   : id (i),
     pos (arg_pos),
     velocity (arg_velocity),
@@ -71,15 +71,15 @@ Particle::draw_highlight (ZoomGraphicContext& gc)
 void
 Particle::draw_infos (ZoomGraphicContext& gc)
 {
-  Vector2d p = gc.zoom().world_to_screen(pos);
+  glm::vec2 p = gc.zoom().world_to_screen(pos);
   draw_velocity_vector (gc);
-  gc.get_parent_gc().draw_string (p + Vector2d(20.0f, 5.0f),
+  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 5.0f),
                                     "Particle: " + to_string (pos));
-  gc.get_parent_gc().draw_string (p + Vector2d(20.0f, 25.0f),
+  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 25.0f),
                                     "Fixed:    " + to_string (fixed));
-  gc.get_parent_gc().draw_string (p + Vector2d(20.0f, 45.0f),
+  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 45.0f),
                                     "Mass :    " + to_string (get_mass()));
-  gc.get_parent_gc().draw_string (p + Vector2d(20.0f, 70.0f),
+  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 70.0f),
                                     "Links :    " + to_string (spring_links));
 }
 
@@ -133,31 +133,31 @@ Particle::update (float delta)
 #if 0 // FIXME: Replace this with a generic shape collision handling thing
   // Calc collision with screen x border
   if (pos.x < 0) {
-    velocity.x =  fabs(velocity.x);
+    velocity.x =  fabsf(velocity.x);
     pos.x = 0;
     velocity *= collision_damp;
   } else if (pos.x > 799) {
-    velocity.x =  -fabs(velocity.x);
+    velocity.x =  -fabsf(velocity.x);
     pos.x = 799;
     velocity *= collision_damp;
   }
 
   // Calc collision with screen y border
   if (pos.y < 0) {
-    velocity.y =  fabs(velocity.y);
+    velocity.y =  fabsf(velocity.y);
     pos.y = 0;
     velocity *= collision_damp;
   } else
 #endif
 
     if (pos.y > 599) {
-      velocity.y =  -fabs(velocity.y);
+      velocity.y =  -fabsf(velocity.y);
       pos.y = 599;
       velocity *= collision_damp;
     }
 
   /*
-    Vector2d dist = pos - Vector2d (400, 300);
+    glm::vec2 dist = pos - glm::vec2 (400, 300);
     if (glm::length(dist) < 50.0f)
     {
     velocity = -velocity;

@@ -27,10 +27,10 @@ public:
 
   Collider* duplicate() const override;
 
-  Vector2d get_pos() override;
-  void     set_pos(const Vector2d&) override;
+  glm::vec2 get_pos() override;
+  void     set_pos(const glm::vec2&) override;
 
-  bool is_at (const Vector2d& pos) override;
+  bool is_at (const glm::vec2& pos) override;
   void bounce() override;
   void draw (GraphicContext& gc) override;
   void draw_highlight (GraphicContext& gc) override;

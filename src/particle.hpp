@@ -18,10 +18,12 @@
 #define HEADER_CONSTRUO_PARTICLE_HPP
 
 #include <iostream>
+
+#include <glm/glm.hpp>
+
 #include "writer.hpp"
 #include "construo.hpp"
 #include "zoom_graphic_context.hpp"
-#include "vector2d.hpp"
 
 class Particle
 {
@@ -31,10 +33,10 @@ private:
 
 public:
   /** position of the particle */
-  Vector2d pos;
+  glm::vec2 pos;
 
   /** velocity of the particle */
-  Vector2d velocity;
+  glm::vec2 velocity;
 
   /** the mass of the particle as 1/mass (FIXME: is this still the
       case?!) */
@@ -46,7 +48,7 @@ public:
 
   /** totale force acting on particle (used as temp-var in update() to
       collect the forces)*/
-  Vector2d totale_force;
+  glm::vec2 totale_force;
 
   /** Number of connection this particle has to other springs */
   int spring_links;
@@ -57,7 +59,7 @@ public:
     return id;
   }
 
-  void add_force (const Vector2d& force)
+  void add_force (const glm::vec2& force)
   {
     if (fixed) return;
     totale_force += force;
@@ -65,7 +67,7 @@ public:
 
   void clear_force ()
   {
-    totale_force = Vector2d(0.0f, 0.0f);
+    totale_force = glm::vec2(0.0f, 0.0f);
   }
 
   void set_fixed (bool f) {
@@ -95,7 +97,7 @@ public:
 
 private:
   // Nobody beside the ParticleFactory can create particles
-  Particle (int id_, const Vector2d& arg_pos, const Vector2d& arg_velocity, float mass_, bool fixed_);
+  Particle (int id_, const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float mass_, bool fixed_);
   Particle (const Particle&);
 };
 

@@ -17,7 +17,8 @@
 #ifndef HEADER_CONSTRUO_WORLDVIEW_COLLIDER_TOOL_HPP
 #define HEADER_CONSTRUO_WORLDVIEW_COLLIDER_TOOL_HPP
 
-#include "vector2d.hpp"
+#include <glm/glm.hpp>
+
 #include "worldview_tool.hpp"
 
 class Collider;
@@ -41,11 +42,11 @@ public:
 
 private:
   /** Get the collider on the given world cooridnates */
-  Collider* get_collider (const Vector2d&);
+  Collider* get_collider (const glm::vec2&);
 
 private:
   bool m_creating_rect;
-  Vector2d m_click_pos;
+  glm::vec2 m_click_pos;
 
   Collider* m_to_delete_collider;
   Collider* m_move_collider;

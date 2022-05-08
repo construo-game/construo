@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "vector2d.hpp"
-#include "math.hpp"
 #include "bounding_box.hpp"
+
+#include <glm/glm.hpp>
+
+#include "math.hpp"
 
 BoundingBox::BoundingBox()
   : x1(0), y1(0), x2(0), y2(0)
@@ -39,7 +41,7 @@ BoundingBox::join(const BoundingBox& box)
 }
 
 void
-BoundingBox::join(const Vector2d& pos)
+BoundingBox::join(const glm::vec2& pos)
 {
   x1 = Math::min(x1, pos.x);
   y1 = Math::min(y1, pos.y);

@@ -18,7 +18,9 @@
 #define HEADER_CONSTRUO_INPUT_CONTEXT_HPP
 
 #include <queue>
-#include "vector2d.hpp"
+
+#include <glm/glm.hpp>
+
 #include "keys.hpp"
 #include "buttons.hpp"
 #include "events.hpp"
@@ -43,7 +45,7 @@ public:
   /** @return mouse y coordinate */
   virtual float get_mouse_y () =0;
 
-  Vector2d get_mouse_pos() { return Vector2d(get_mouse_x(), get_mouse_y()); }
+  glm::vec2 get_mouse_pos() { return glm::vec2(get_mouse_x(), get_mouse_y()); }
 
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */

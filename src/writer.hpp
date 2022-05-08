@@ -19,13 +19,12 @@
 
 #include <vector>
 
-#include "vector2d.hpp"
-
+#include <glm/glm.hpp>
 #include <prio/writer.hpp>
 
 namespace prio {
 
-template<> void write_custom(prio::Writer& writer, std::string_view key, Vector2d const& value);
+template<> void write_custom(prio::Writer& writer, std::string_view key, glm::vec2 const& value);
 
 } // namespace prio
 

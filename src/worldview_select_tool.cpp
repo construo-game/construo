@@ -146,7 +146,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
               {
                 Controller::instance()->push_undo();
                 m_mode = MOVING_SELECTION_MODE;
-                m_move_diff = Vector2d(0.0f, 0.0f);
+                m_move_diff = glm::vec2(0.0f, 0.0f);
                 m_move_current_particle = new_current_particle;
                 break;
               }
@@ -185,7 +185,7 @@ WorldViewSelectTool::on_primary_button_release (float x, float y)
     case GETTING_SELECTION_MODE:
       {
         m_selection.select_particles(m_click_pos,
-                                     m_worldview.zoom().screen_to_world (Vector2d(x,y)));
+                                     m_worldview.zoom().screen_to_world (glm::vec2(x,y)));
         m_mode = IDLE_MODE;
       }
       break;
@@ -222,7 +222,7 @@ WorldViewSelectTool::on_secondary_button_press (float screen_x, float screen_y)
         m_mode = ROTATING_SELECTION_MODE;
         WorldGUIManager::instance()->grab_mouse(m_worldview);
 
-        m_click_pos = m_worldview.zoom().screen_to_world(Vector2d(screen_x, screen_y));
+        m_click_pos = m_worldview.zoom().screen_to_world(glm::vec2(screen_x, screen_y));
 
         m_rotate_center = m_selection.get_center();
       }
@@ -311,10 +311,10 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
     {
     case MOVING_SELECTION_MODE:
       {
-        Vector2d new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
+        glm::vec2 new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
                          m_worldview.zoom().screen_to_world_y(screen_y));
 
-        Vector2d diff = new_pos - m_click_pos;
+        glm::vec2 diff = new_pos - m_click_pos;
 
         // Undo the last move (FIXME: Potential round errors)
         for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
@@ -357,7 +357,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
 
     case SCALING_SELECTION_MODE:
       {
-        Vector2d const new_pos = m_worldview.zoom().screen_to_world(Vector2d(screen_x, screen_y));
+        glm::vec2 const new_pos = m_worldview.zoom().screen_to_world(glm::vec2(screen_x, screen_y));
         float const scale_factor = fabsf(glm::length(m_scale_center - new_pos) / glm::length(m_scale_center - m_click_pos));
         m_selection.scale(1.0f / m_old_scale_factor, m_scale_center);
         m_selection.scale(scale_factor, m_scale_center);
@@ -366,7 +366,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
       break;
     case ROTATING_SELECTION_MODE:
       {
-        Vector2d new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
+        glm::vec2 new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
                          m_worldview.zoom().screen_to_world_y(screen_y));
 
         float new_angle = atan2(new_pos.y - m_rotate_center.y,
@@ -395,7 +395,7 @@ WorldViewSelectTool::on_scale_press(float x, float y)
       g_graphic_context->push_cursor();
       g_graphic_context->set_cursor(CURSOR_SCALE);
 
-      m_click_pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
+      m_click_pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
       WorldGUIManager::instance()->grab_mouse(m_worldview);
 
       m_mode = SCALING_SELECTION_MODE;
@@ -413,7 +413,7 @@ WorldViewSelectTool::on_duplicate_press(float x, float y)
 void
 WorldViewSelectTool::on_button_press(int button_id, float x, float y)
 {
-  Vector2d pos = m_worldview.zoom().screen_to_world(Vector2d(x, y));
+  glm::vec2 pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
 
   switch(button_id)
     {

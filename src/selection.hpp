@@ -18,7 +18,8 @@
 #define HEADER_CONSTRUO_SELECTION_HPP
 
 #include <list>
-#include "vector2d.hpp"
+
+#include <glm/glm.hpp>
 
 class Particle;
 class World;
@@ -35,19 +36,19 @@ public:
   /** @return Center point of the selection, aka the center of its
       bounding box, result is undefined if called on a empty
       selection */
-  Vector2d get_center();
+  glm::vec2 get_center();
 
   /** Select the particles between p1 (upper/left) and p2
       (bottom/right) */
-  void select_particles(Vector2d p1, Vector2d p2);
+  void select_particles(glm::vec2 p1, glm::vec2 p2);
 
   /** scales the selection by the given factor */
-  void scale(float factor, Vector2d center);
+  void scale(float factor, glm::vec2 center);
 
   void flip();
 
   /** sets the velocity of all particles to the given one */
-  void set_velocity(const Vector2d vel);
+  void set_velocity(const glm::vec2 vel);
 
   /** duplicates all selected objects */
   void duplicate();
@@ -62,7 +63,7 @@ public:
       a bit more docu here */
   void validate();
 
-  void rotate(float rot_angle, Vector2d rotate_center);
+  void rotate(float rot_angle, glm::vec2 rotate_center);
 
   /** Join particles that are on nearly the same position
    *

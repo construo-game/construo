@@ -32,11 +32,11 @@ Selection::Selection() :
 {
 }
 
-Vector2d
+glm::vec2
 Selection::get_center()
 {
   validate();
-  if (empty()) { return Vector2d(0.0f, 0.0f); }
+  if (empty()) { return glm::vec2(0.0f, 0.0f); }
 
   Rect<float> rot_box((*m_selection.begin())->pos.x,
                       (*m_selection.begin())->pos.y,
@@ -56,7 +56,7 @@ Selection::get_center()
 }
 
 void
-Selection::scale(float factor, Vector2d center)
+Selection::scale(float factor, glm::vec2 center)
 {
   validate();
   if (m_selection.empty()) { return; }
@@ -77,7 +77,7 @@ Selection::scale(float factor, Vector2d center)
 }
 
 void
-Selection::set_velocity(const Vector2d vel)
+Selection::set_velocity(const glm::vec2 vel)
 {
   validate();
   if (m_selection.empty()) { return; }
@@ -107,7 +107,7 @@ Selection::flip ()
 }
 
 void
-Selection::select_particles(Vector2d p1, Vector2d p2)
+Selection::select_particles(glm::vec2 p1, glm::vec2 p2)
 {
   m_world = &Controller::instance()->get_world();
 
@@ -134,7 +134,7 @@ Selection::duplicate ()
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
   {
     Particle* p = m_world->get_particle_mgr().add_particle(**i);
-    p->pos += Vector2d (50,50);
+    p->pos += glm::vec2 (50,50);
     new_selection.push_back(p);
     p_trans_table[*i] = p;
 
@@ -172,13 +172,13 @@ Selection::clear()
 }
 
 void
-Selection::rotate (float rot_angle, Vector2d rotate_center)
+Selection::rotate (float rot_angle, glm::vec2 rotate_center)
 {
   validate();
 
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
   {
-    Vector2d& pos = (*i)->pos;
+    glm::vec2& pos = (*i)->pos;
 
     pos.x -= rotate_center.x;
     pos.y -= rotate_center.y;

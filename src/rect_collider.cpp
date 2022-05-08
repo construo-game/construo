@@ -33,8 +33,8 @@ RectCollider::RectCollider(ReaderMapping const& reader) :
   x2(),
   y2()
 {
-  Vector2d pos1(0.0f, 0.0f);
-  Vector2d pos2(0.0f, 0.0f);
+  glm::vec2 pos1(0.0f, 0.0f);
+  glm::vec2 pos2(0.0f, 0.0f);
   if (reader.read("pos1", pos1) == false ||
       reader.read("pos2", pos2) == false) {
     throw ConstruoError("RectCollider entry incomplete");
@@ -55,23 +55,23 @@ RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_) :
 }
 
 bool
-RectCollider::is_at (const Vector2d& pos)
+RectCollider::is_at (const glm::vec2& pos)
 {
   return (x1 <= pos.x && x2 > pos.x
           && y1 <= pos.y && y2 > pos.y);
 }
 
-Vector2d
+glm::vec2
 RectCollider::get_pos()
 {
-  return Vector2d ((x1 + x2)/2.0f,
+  return glm::vec2 ((x1 + x2)/2.0f,
                    (y1 + y2)/2.0f);
 }
 
 void
-RectCollider::set_pos(const Vector2d& pos)
+RectCollider::set_pos(const glm::vec2& pos)
 {
-  Vector2d center = get_pos();
+  glm::vec2 center = get_pos();
   x1 = x1 - center.x + pos.x;
   x2 = x2 - center.x + pos.x;
   y1 = y1 - center.y + pos.y;
@@ -86,8 +86,8 @@ RectCollider::bounce ()
   float damp = 0.8f;
   for (ParticleFactory::ParticleIter i = particle_mgr.begin(); i != particle_mgr.end (); ++i)
     {
-      Vector2d& pos = (*i)->pos;
-      Vector2d& velocity = (*i)->velocity;
+      glm::vec2& pos = (*i)->pos;
+      glm::vec2& velocity = (*i)->velocity;
 
       if (pos.x > x1 && pos.x < x2
           && pos.y > y1 && pos.y < y2)
@@ -102,26 +102,26 @@ RectCollider::bounce ()
               && left_dist < top_dist
               && left_dist < bottom_dist)
             {
-              velocity.x = -fabs(velocity.x);
+              velocity.x = -fabsf(velocity.x);
               pos.x = x1;
             }
           else if (right_dist < left_dist
                    && right_dist < top_dist
                    && right_dist < bottom_dist)
             {
-              velocity.x = fabs(velocity.x);
+              velocity.x = fabsf(velocity.x);
               pos.x = x2;
             }
           else if (top_dist < left_dist
                    && top_dist < right_dist
                    && top_dist < bottom_dist)
             {
-              velocity.y = -fabs(velocity.y);
+              velocity.y = -fabsf(velocity.y);
               pos.y = y1;
             }
           else
             {
-              velocity.y = fabs(velocity.y);
+              velocity.y = fabsf(velocity.y);
               pos.y = y2;
             }
           velocity *= damp;
@@ -154,8 +154,8 @@ void
 RectCollider::serialize(prio::Writer& writer)
 {
   writer.begin_object("rect")
-    .write("pos1", Vector2d(x1, y1))
-    .write("pos2", Vector2d(x2, y2))
+    .write("pos1", glm::vec2(x1, y1))
+    .write("pos2", glm::vec2(x2, y2))
     .end_object();
 }
 

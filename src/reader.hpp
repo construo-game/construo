@@ -17,7 +17,7 @@
 #ifndef HEADER_LISP_READER_HPP
 #define HEADER_LISP_READER_HPP
 
-#include "vector2d.hpp"
+#include <glm/glm.hpp>
 
 #include <prio/reader.hpp>
 
@@ -28,7 +28,7 @@ using ReaderObject = prio::ReaderObject;
 
 namespace prio {
 
-template<> bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d& value_out);
+template<> bool read_custom(prio::ReaderMapping const& map, std::string_view key, glm::vec2& value_out);
 
 } // namespace prio
 

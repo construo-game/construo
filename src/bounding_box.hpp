@@ -17,6 +17,8 @@
 #ifndef HEADER_BOUNDING_BOX_HPP
 #define HEADER_BOUNDING_BOX_HPP
 
+#include <ostream>
+
 #include <glm/fwd.hpp>
 
 class BoundingBox
@@ -35,7 +37,7 @@ public:
   void join(const BoundingBox& box);
 
   /** Let the bounding box be enlarge so that it also coveres pos */
-  void join(const Vector2d& pos);
+  void join(const glm::vec2& pos);
 };
 
 std::ostream& operator << (std::ostream& os, const BoundingBox& box);

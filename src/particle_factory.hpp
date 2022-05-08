@@ -19,10 +19,11 @@
 
 #include <vector>
 
+#include <glm/glm.hpp>
+
 #include "fwd.hpp"
 #include "reader.hpp"
 #include "writer.hpp"
-#include "vector2d.hpp"
 
 /** id of a particle, uniq only for a single ParticleFactory */
 typedef int ParticleId;
@@ -40,7 +41,7 @@ public:
   /** Copy a particle manager, the id's will be keep */
   ParticleFactory(const ParticleFactory&);
 
-  Particle* add_particle (const Vector2d& arg_pos, const Vector2d& arg_velocity,
+  Particle* add_particle (const glm::vec2& arg_pos, const glm::vec2& arg_velocity,
                           float m, bool f = false);
 
   /** Duplicate a particle */

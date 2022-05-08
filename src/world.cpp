@@ -163,9 +163,9 @@ World::draw_springs(ZoomGraphicContext& gc) const
 #ifdef NEW_SPRING_CODE
   std::vector<GraphicContext::Line> lines (springs.size());
 
-  Vector2d dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = fabs(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
-  float color = fabs((stretch/springs[0]->max_stretch));
+  glm::vec2 dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
+  float stretch = fabsf(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
+  float color = fabsf((stretch/springs[0]->max_stretch));
 
   for (unsigned int i = 0; i < springs.size(); ++i)
     {
@@ -209,10 +209,10 @@ World::update (float delta)
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
       // Gravity
-      (*i)->add_force (Vector2d (0.0, 15.0f) * (*i)->get_mass ());
+      (*i)->add_force (glm::vec2 (0.0, 15.0f) * (*i)->get_mass ());
 
       // Central Gravity force:
-      /*Vector2d direction = ((*i)->pos - Vector2d (400, 300));
+      /*glm::vec2 direction = ((*i)->pos - glm::vec2 (400, 300));
         if (glm::length(direction) != 0.0f)
         (*i)->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
       */
@@ -220,7 +220,7 @@ World::update (float delta)
       /*
         for (auto j = particles.begin (); j != particles.end (); ++j)
         {
-        Vector2d diff = (*j)->pos - (*i)->pos;
+        glm::vec2 diff = (*j)->pos - (*i)->pos;
         if (glm::length(diff) != 0.0f)
         (*i)->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
         }	    */
@@ -244,7 +244,7 @@ World::update (float delta)
           if ((*i)->length > 20.0f)
             {
               // Calc midpoint
-              Vector2d pos = ((*i)->particles.first->pos
+              glm::vec2 pos = ((*i)->particles.first->pos
                                + (*i)->particles.second->pos) * 0.5f;
 
               // FIXME: particle mass needs to be recalculated
@@ -295,8 +295,8 @@ World::get_spring(float x, float y, float capture_distance) const
       float u = (((x0 - x1)*(x2-x1) + (y0 - y1)*(y2 - y1))
                  / ((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
 
-      float distance = (fabs((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
-                        / sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
+      float distance = (fabsf((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
+                        / sqrtf((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
 
       if (u >= 0 && u <= 1.0f
           && ((spring && min_distance > distance)
@@ -315,11 +315,11 @@ World::get_particle(float x, float y, float capture_distance) const
 {
   Particle* particle = nullptr;
   float min_dist = capture_distance;
-  Vector2d mouse_pos (x, y);
+  glm::vec2 mouse_pos (x, y);
 
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
-      Vector2d diff = mouse_pos - (*i)->pos;
+      glm::vec2 diff = mouse_pos - (*i)->pos;
       if (glm::length(diff) < min_dist)
 	{
 	  min_dist = glm::length(diff);
@@ -355,7 +355,7 @@ World::zero_out_velocity ()
   for (auto i = get_particle_mgr().begin();
        i != get_particle_mgr().end(); ++i)
     {
-      (*i)->velocity = Vector2d(0.0f, 0.0f);
+      (*i)->velocity = glm::vec2(0.0f, 0.0f);
     }
 }
 
@@ -493,7 +493,7 @@ World::get_num_springs()
 }
 
 void
-World::add_rect_collider(const Vector2d& pos1, const Vector2d& pos2)
+World::add_rect_collider(const glm::vec2& pos1, const glm::vec2& pos2)
 {
   Rect<float> rect (pos1.x, pos1.y, pos2.x, pos2.y);
 

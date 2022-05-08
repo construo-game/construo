@@ -23,7 +23,7 @@
 namespace prio {
 
 template<>
-bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d& value_out)
+bool read_custom(prio::ReaderMapping const& map, std::string_view key, glm::vec2& value_out)
 {
   std::vector<float> v;
   if (!map.read(key, v)) {
@@ -34,7 +34,7 @@ bool read_custom(prio::ReaderMapping const& map, std::string_view key, Vector2d&
     return false;
   }
 
-  value_out = Vector2d(v[0], v[1]);
+  value_out = glm::vec2(v[0], v[1]);
   return true;
 }
 

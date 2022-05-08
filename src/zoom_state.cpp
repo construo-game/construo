@@ -78,17 +78,17 @@ GCZoomState::zoom_out(float screen_x, float screen_y)
   return true;
 }
 
-Vector2d
-GCZoomState::screen_to_world(const Vector2d& pos) const
+glm::vec2
+GCZoomState::screen_to_world(const glm::vec2& pos) const
 {
-  return Vector2d((pos.x / m_scale) - m_x_offset,
+  return glm::vec2((pos.x / m_scale) - m_x_offset,
                   (pos.y / m_scale) - m_y_offset);
 }
 
-Vector2d
-GCZoomState::world_to_screen(const Vector2d& pos) const
+glm::vec2
+GCZoomState::world_to_screen(const glm::vec2& pos) const
 {
-  return Vector2d((pos.x + m_x_offset) * m_scale + static_cast<float>(m_x1),
+  return glm::vec2((pos.x + m_x_offset) * m_scale + static_cast<float>(m_x1),
                   (pos.y + m_y_offset) * m_scale + m_y1);
 }
 
