@@ -35,8 +35,6 @@ public:
   ~Spring ();
 
   void update (float delta);
-  void draw (ZoomGraphicContext& gc);
-  void draw_highlight (ZoomGraphicContext& gc);
 
   /** Forces the recalculation of the springs length */
   void recalc_length ();

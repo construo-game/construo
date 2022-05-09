@@ -24,6 +24,7 @@
 #include "particle.hpp"
 #include "root_graphic_context.hpp"
 #include "world.hpp"
+#include "world_renderer.hpp"
 #include "world_gui_manager.hpp"
 #include "worldview_component.hpp"
 #include "worldview_select_tool.hpp"
@@ -49,10 +50,10 @@ void
 WorldViewSelectTool::draw_background (ZoomGraphicContext& gc)
 {
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
-    {
-      (*i)->draw_velocity_vector (gc);
-      (*i)->draw_highlight (gc);
-    }
+  {
+    WorldRenderer::draw_particle_velocity_vector(gc, **i);
+    WorldRenderer::draw_particle_highlight(gc, **i);
+  }
 }
 
 void

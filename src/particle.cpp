@@ -61,14 +61,6 @@ Particle::serialize(prio::Writer& writer)
 }
 
 void
-Particle::draw_highlight (ZoomGraphicContext& gc)
-{
-  gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(pos),
-                                       std::max(6.0f, get_mass() + 3),
-                                       g_style.highlight);
-}
-
-void
 Particle::draw_infos (ZoomGraphicContext& gc)
 {
   glm::vec2 p = gc.zoom().world_to_screen(pos);

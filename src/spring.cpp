@@ -121,32 +121,6 @@ Spring::update (float delta)
 }
 
 void
-Spring::draw (ZoomGraphicContext& gc)
-{
-  glm::vec2 dist = particles.first->pos - particles.second->pos;
-  float stretch = std::fabs(glm::length(dist)/length - 1.0f) * 10.0f;
-
-  float color = std::fabs((stretch/max_stretch));
-
-  if (particles.first->pos.y  < 598.5f
-      ||
-      particles.second->pos.y < 598.5f)
-    {
-      gc.GraphicContext::draw_line(particles.first->pos,
-                                    particles.second->pos,
-                                    Color(color, 1.0f - color, 0.0f),
-                                    2);
-    }
-}
-
-void
-Spring::draw_highlight (ZoomGraphicContext& gc)
-{
-  gc.GraphicContext::draw_line (particles.first->pos, particles.second->pos,
-                                 g_style.highlight, 4);
-}
-
-void
 Spring::serialize(prio::Writer& writer)
 {
   writer.begin_object("spring")

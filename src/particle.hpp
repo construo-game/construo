@@ -83,9 +83,6 @@ public:
   void update (float delta);
   void draw (ZoomGraphicContext& gc);
 
-  /** draws the particle in highlight mode (aka if mouse is over it) */
-  void draw_highlight (ZoomGraphicContext& gc);
-
   /** draws additional infos to this stop */
   void draw_infos (ZoomGraphicContext& gc);
 

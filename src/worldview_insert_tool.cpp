@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <float.h>
 #include "colors.hpp"
 #include "particle_factory.hpp"
 #include "input_context.hpp"
 #include "graphic_context.hpp"
 #include "world.hpp"
 #include "controller.hpp"
+#include "world_renderer.hpp"
 #include "worldview_component.hpp"
 #include "worldview_insert_tool.hpp"
 #include "world_gui_manager.hpp"
@@ -42,7 +42,7 @@ void
 WorldViewInsertTool::draw_background(ZoomGraphicContext& gc)
 {
   if (m_hover_particle) {
-    m_hover_particle->draw_highlight(gc);
+    WorldRenderer::draw_particle_highlight(gc, *m_hover_particle);
   }
 }
 
@@ -75,7 +75,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
       m_hover_particle->draw_infos(gc);
     } else {
       if (m_hover_spring) {
-        m_hover_spring->draw_highlight (gc);
+        WorldRenderer::draw_spring_highlight(gc, *m_hover_spring);
       }
 
       { // draw where new particle would be inserted
