@@ -37,9 +37,6 @@
 #include "construo_error.hpp"
 #include "path.hpp"
 #include "path_manager.hpp"
-#include "string_utils.hpp"
-
-using namespace StringUtils;
 
 UnixSystem::UnixSystem () :
   start_time(0),
@@ -170,7 +167,7 @@ UnixSystem::get_file_type(const std::string& filename)
     }
     else if (S_ISREG(buf.st_mode))
     {
-      if (has_suffix(filename, ".construo") || has_suffix(filename, ".construo.gz"))
+      if (filename.ends_with(".construo") || filename.ends_with(".construo.gz"))
         return FT_CONSTRUO_FILE;
       else
       {
@@ -204,11 +201,11 @@ UnixSystem::translate_filename(const std::string& filename)
   {
     return m_construo_rc_path;
   }
-  else if (has_prefix(filename, "/user/"))
+  else if (filename.starts_with("/user/"))
   {
     return m_construo_rc_path / filename.substr(6);
   }
-  else if (has_prefix(filename, "/examples/"))
+  else if (filename.starts_with("/examples/"))
   {
     return path_manager.complete("examples") / filename.substr(10);
   }

@@ -110,7 +110,6 @@ set(CONSTRUO_SOURCES_CXX
   src/selection.cpp
   src/settings.cpp
   src/spring.cpp
-  src/string_utils.cpp
   src/unix_system.cpp
   src/world.cpp
   src/world_button.cpp
