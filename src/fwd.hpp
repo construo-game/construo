@@ -28,6 +28,7 @@ class GraphicContext;
 class InputContext;
 class Particle;
 class ParticleFactory;
+class RectCollider;
 class RootGraphicContext;
 class Spring;
 class SystemContext;

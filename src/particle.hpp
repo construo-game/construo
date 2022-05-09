@@ -23,7 +23,6 @@
 
 #include "writer.hpp"
 #include "construo.hpp"
-#include "zoom_graphic_context.hpp"
 
 class Particle
 {
@@ -81,12 +80,6 @@ public:
   inline float get_mass () const { return mass; }
 
   void update (float delta);
-  void draw (ZoomGraphicContext& gc);
-
-  /** draws additional infos to this stop */
-  void draw_infos (ZoomGraphicContext& gc);
-
-  void draw_velocity_vector (ZoomGraphicContext& gc);
 
   void serialize(prio::Writer& writer);
 

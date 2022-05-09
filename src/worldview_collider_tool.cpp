@@ -19,6 +19,7 @@
 #include "controller.hpp"
 #include "colors.hpp"
 #include "world.hpp"
+#include "world_renderer.hpp"
 #include "world_gui_manager.hpp"
 #include "worldview_component.hpp"
 #include "worldview_collider_tool.hpp"
@@ -67,8 +68,9 @@ WorldViewColliderTool::draw_foreground (ZoomGraphicContext& gc)
     = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos ());
   Collider* collider = get_collider (mouse_pos);
 
-  if (collider)
-    collider->draw_highlight(gc);
+  if (collider) {
+    WorldRenderer::draw_collider_highlight(gc, *collider);
+  }
 }
 
 void

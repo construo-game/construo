@@ -72,7 +72,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
   else
   {
     if (m_hover_particle) {
-      m_hover_particle->draw_infos(gc);
+      WorldRenderer::draw_particle_info(gc, *m_hover_particle);
     } else {
       if (m_hover_spring) {
         WorldRenderer::draw_spring_highlight(gc, *m_hover_spring);

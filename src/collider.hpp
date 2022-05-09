@@ -32,9 +32,6 @@ public:
 
   virtual Collider* duplicate() const =0;
 
-  virtual void draw(GraphicContext& gc) =0;
-  virtual void draw_highlight(GraphicContext& gc) =0;
-
   virtual glm::vec2 get_pos() =0;
   virtual void set_pos(const glm::vec2&) =0;
 

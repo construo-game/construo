@@ -32,15 +32,12 @@ public:
 
   bool is_at (const glm::vec2& pos) override;
   void bounce() override;
-  void draw (GraphicContext& gc) override;
-  void draw_highlight (GraphicContext& gc) override;
 
   BoundingBox get_bounding_box() const override;
 
   void serialize(prio::Writer& writer) override;
 
-private:
-  // FIXME: Use the Rect class here
+public:
   float x1;                     /**< left border */
   float y1;                     /**< top border */
   float x2;                     /**< right border */

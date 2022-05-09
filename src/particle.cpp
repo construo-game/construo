@@ -61,49 +61,6 @@ Particle::serialize(prio::Writer& writer)
 }
 
 void
-Particle::draw_infos (ZoomGraphicContext& gc)
-{
-  glm::vec2 p = gc.zoom().world_to_screen(pos);
-  draw_velocity_vector (gc);
-  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 5.0f),
-                                    "Particle: " + to_string (pos));
-  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 25.0f),
-                                    "Fixed:    " + to_string (fixed));
-  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 45.0f),
-                                    "Mass :    " + to_string (get_mass()));
-  gc.get_parent_gc().draw_string (p + glm::vec2(20.0f, 70.0f),
-                                    "Links :    " + to_string (spring_links));
-}
-
-void
-Particle::draw (ZoomGraphicContext& gc)
-{
-  if (pos.y < 598.5f)
-    {
-      if (fixed)
-        {
-          gc.get_parent_gc().draw_fill_circle (gc.zoom().world_to_screen(pos),
-                                                 4,
-                                                 Color(0.6f, 0.6f, 0.6f));
-        }
-      else
-        {
-          gc.get_parent_gc().draw_fill_circle (gc.zoom().world_to_screen(pos),
-                                                 std::max(3.0f, get_mass()),
-                                                 Color(1.0f, 0.0f, 0.0f));
-        }
-    }
-}
-
-void
-Particle::draw_velocity_vector (ZoomGraphicContext& gc)
-{
-  gc.draw_line (int (pos.x), int (pos.y),
-                 int (pos.x + velocity.x), int (pos.y + velocity.y),
-                 Color (0.0f, 0.0f, 1.0f));
-}
-
-void
 Particle::update (float delta)
 {
   const float max_velocity = 1000.0f;

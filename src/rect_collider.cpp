@@ -129,21 +129,6 @@ RectCollider::bounce ()
     }
 }
 
-void
-RectCollider::draw (GraphicContext& gc)
-{
-  //std::cout << "Drawing collider" << std::endl;
-  gc.draw_fill_rect (x1, y1, x2, y2, g_style.rect_collider_bg);
-  gc.draw_rect (x1, y1, x2, y2, g_style.rect_collider_fg);
-}
-
-void
-RectCollider::draw_highlight (GraphicContext& gc)
-{
-  //gc.draw_fill_rect (x1, y1, x2, y2, g_style.rect_collider_bg);
-  gc.draw_rect (x1, y1, x2, y2, g_style.selection_rect);
-}
-
 BoundingBox
 RectCollider::get_bounding_box() const
 {
