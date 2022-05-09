@@ -17,16 +17,30 @@
 #ifndef HEADER_CONSTRUO_FWD_HPP
 #define HEADER_CONSTRUO_FWD_HPP
 
+class Collider;
 class GUIComponent;
+class GUIFileButton;
 class GUIFileManager;
 class GUIGenericButton;
 class GUIManager;
+class GlutDisplay;
 class GraphicContext;
+class InputContext;
 class Particle;
+class ParticleFactory;
+class RootGraphicContext;
+class Spring;
+class SystemContext;
+class UnixSystem;
 class World;
 class WorldCache;
+class WorldViewColliderTool;
 class WorldViewComponent;
-class ZoomGraphicContext;
+class WorldViewInsertTool;
+class WorldViewSelectTool;
+class WorldViewTool;
+class WorldViewZoomTool;
+class X11Display;
 class ZoomGraphicContext;
 struct ButtonEvent;
 

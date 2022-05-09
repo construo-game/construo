@@ -21,8 +21,7 @@
 
 #include <glm/glm.hpp>
 
-class Particle;
-class World;
+#include "fwd.hpp"
 
 /** A class to keep track of a group of selected particles */
 class Selection

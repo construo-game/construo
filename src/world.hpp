@@ -25,10 +25,6 @@
 #include "collider.hpp"
 #include "bounding_box.hpp"
 
-class Particle;
-class ParticleFactory;
-class Spring;
-
 /** This class holds all particles and springs */
 class World
 {

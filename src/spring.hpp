@@ -24,8 +24,6 @@
 #include "world.hpp"
 #include "reader.hpp"
 
-class World;
-
 class Spring
 {
 public:

@@ -17,8 +17,7 @@
 #ifndef HEADER_CONSTRUO_GUI_COMPONENT_HPP
 #define HEADER_CONSTRUO_GUI_COMPONENT_HPP
 
-class GraphicContext;
-class GUIManager;
+#include "fwd.hpp"
 
 /** A thing that is under the controll of the GUIManager */
 class GUIComponent

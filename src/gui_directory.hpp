@@ -24,9 +24,6 @@
 #include "gui_child_manager.hpp"
 #include "world_cache.hpp"
 
-class ZoomGraphicContext;
-class GUIFileButton;
-
 /** Widget which shows a complete directory */
 class GUIDirectory : public GUIChildManager
 {

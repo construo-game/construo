@@ -22,11 +22,7 @@
 #include <iostream>
 #include <list>
 
-class GUIManager;
-class World;
-class X11Display;
-class GlutDisplay;
-class UnixSystem;
+#include "fwd.hpp"
 
 class ConstruoMain
 {

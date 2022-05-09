@@ -19,8 +19,6 @@
 
 #include "gui_manager.hpp"
 
-class GUIFileManager;
-
 class LoadGUIManager : public GUIManager
 {
 public:

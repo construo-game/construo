@@ -17,9 +17,7 @@
 #ifndef HEADER_CONSTRUO_CONSTRUO_HPP
 #define HEADER_CONSTRUO_CONSTRUO_HPP
 
-class SystemContext;
-class InputContext;
-class RootGraphicContext;
+#include "fwd.hpp"
 
 /** Global accessor to the system functions */
 extern SystemContext*  g_system_context;

@@ -21,8 +21,6 @@
 
 #include "worldview_tool.hpp"
 
-class Collider;
-
 class WorldViewColliderTool : public WorldViewTool
 {
 public:

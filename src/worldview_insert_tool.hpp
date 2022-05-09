@@ -19,8 +19,6 @@
 
 #include "worldview_tool.hpp"
 
-class Particle;
-
 class WorldViewInsertTool : public WorldViewTool
 {
 public:

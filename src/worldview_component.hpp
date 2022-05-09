@@ -23,13 +23,6 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_component.hpp"
 
-class Particle;
-class WorldViewTool;
-class WorldViewInsertTool;
-class WorldViewSelectTool;
-class WorldViewZoomTool;
-class WorldViewColliderTool;
-
 /** GUI Component that manages the view and the editing of the
     world, this is the main component of Construo */
 class WorldViewComponent : public GUIComponent
