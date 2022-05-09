@@ -326,36 +326,6 @@ World::clear ()
   m_springs.clear();
 }
 
-void
-World::write_lisp (const std::string& filename)
-{
-  std::cout << "World: Writing to: " << filename << std::endl;
-
-  prio::Writer writer = prio::Writer::from_file(g_system_context->translate_filename(filename));
-
-  writer.write_comment("Written by " PACKAGE_STRING);
-  writer.begin_object("construo-scene");
-  writer.write("version",  3);
-  writer.write("author", std::vector<std::string>({
-        g_system_context->get_user_realname(),
-        g_system_context->get_user_email()}));
-
-  m_particle_mgr->write_lisp(writer);
-
-  writer.begin_collection("springs");
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i) {
-    (*i)->serialize(writer);
-  }
-  writer.end_collection();
-
-  writer.begin_collection("colliders");
-  for (auto i = m_colliders.begin(); i != m_colliders.end(); ++i) {
-    (*i)->serialize (writer);
-  }
-  writer.end_collection();
-  writer.end_object();
-}
-
 BoundingBox
 World::calc_bounding_box() const
 {

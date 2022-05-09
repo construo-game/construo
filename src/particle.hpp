@@ -21,7 +21,6 @@
 
 #include <glm/glm.hpp>
 
-#include "writer.hpp"
 #include "construo.hpp"
 
 class Particle
@@ -80,8 +79,6 @@ public:
   inline float get_mass () const { return mass; }
 
   void update (float delta);
-
-  void serialize(prio::Writer& writer);
 
   friend class ParticleFactory;
 

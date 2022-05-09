@@ -34,8 +34,6 @@ public:
 
   BoundingBox get_bounding_box() const override;
 
-  void serialize(prio::Writer& writer) override;
-
 public:
   float x1;                     /**< left border */
   float y1;                     /**< top border */

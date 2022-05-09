@@ -79,9 +79,6 @@ public:
       to fix broken model files */
   void zero_out_velocity ();
 
-  /** Write the current world down to a file */
-  void write_lisp (const std::string& filename);
-
   /** @return the number of particles in the world */
   int get_num_particles();
 

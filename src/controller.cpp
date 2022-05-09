@@ -19,6 +19,7 @@
 #include "worldview_component.hpp"
 #include "construo_error.hpp"
 #include "world_reader.hpp"
+#include "world_writer.hpp"
 
 Controller* Controller::instance_ = nullptr;
 
@@ -60,9 +61,8 @@ Controller::load_world(const std::string& filename)
 void
 Controller::save_world (const std::string& filename)
 {
-  m_world->write_lisp (filename);
+  WorldWriter(*m_world).write(filename);
 }
-
 
 std::string
 Controller::get_slot_filename(int n)

@@ -22,7 +22,6 @@
 #include <glm/glm.hpp>
 
 #include "fwd.hpp"
-#include "writer.hpp"
 
 /** id of a particle, uniq only for a single ParticleFactory */
 typedef int ParticleId;
@@ -64,7 +63,6 @@ public:
   ParticleIter end() { return m_particles.end(); }
 
   void clear();
-  void write_lisp(prio::Writer& writer);
 
   std::vector<Particle*> get_particles() const { return m_particles; }
 

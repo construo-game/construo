@@ -48,18 +48,6 @@ Particle::Particle (const Particle& p)
 }
 
 void
-Particle::serialize(prio::Writer& writer)
-{
-  writer.begin_object("particle")
-    .write("id", id)
-    .write("pos", pos)
-    .write("velocity", velocity)
-    .write("fixed", fixed)
-    .write("mass", mass)
-    .end_object();
-}
-
-void
 Particle::update (float delta)
 {
   const float max_velocity = 1000.0f;

@@ -43,8 +43,6 @@ public:
   virtual void bounce () =0;
 
   virtual BoundingBox get_bounding_box() const =0;
-
-  virtual void serialize(prio::Writer& writer) =0;
 };
 
 #endif

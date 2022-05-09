@@ -116,13 +116,4 @@ RectCollider::get_bounding_box() const
   return BoundingBox(x1, y1, x2, y2);
 }
 
-void
-RectCollider::serialize(prio::Writer& writer)
-{
-  writer.begin_object("rect")
-    .write("pos1", glm::vec2(x1, y1))
-    .write("pos2", glm::vec2(x2, y2))
-    .end_object();
-}
-
 /* EOF */

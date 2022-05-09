@@ -135,14 +135,4 @@ ParticleFactory::clear ()
   m_particles.clear ();
 }
 
-void
-ParticleFactory::write_lisp(prio::Writer& writer)
-{
-  writer.begin_collection("particles");
-  for (auto i = m_particles.begin (); i != m_particles.end (); ++i) {
-    (*i)->serialize(writer);
-  }
-  writer.end_collection();
-}
-
 /* EOF */

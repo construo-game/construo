@@ -84,19 +84,6 @@ Spring::update (float delta)
 }
 
 void
-Spring::serialize(prio::Writer& writer)
-{
-  writer.begin_object("spring")
-    .write("first", particles.first->get_id())
-    .write("second", particles.second->get_id())
-    .write ("length", length)
-    .write("stiffness", stiffness)
-    .write("damping", damping)
-    .write("maxstretch", max_stretch)
-    .end_object();
-}
-
-void
 Spring::recalc_length ()
 {
   length = std::fabs(glm::length(particles.first->pos - particles.second->pos));
