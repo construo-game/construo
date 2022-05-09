@@ -14,16 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "worldview_component.hpp"
+
 #include "colors.hpp"
 #include "controller.hpp"
 #include "root_graphic_context.hpp"
 #include "world_gui_manager.hpp"
+#include "world_renderer.hpp"
 #include "worldview_tool.hpp"
 #include "worldview_insert_tool.hpp"
 #include "worldview_select_tool.hpp"
 #include "worldview_zoom_tool.hpp"
 #include "worldview_collider_tool.hpp"
-#include "worldview_component.hpp"
 
 WorldViewComponent* WorldViewComponent::instance_;
 
@@ -107,95 +109,19 @@ WorldViewComponent::get_snap_size()
 }
 
 void
-WorldViewComponent::draw_grid(ZoomGraphicContext& gc)
-{
-  Color color = g_style.grid_color;
-  Color color2 = g_style.grid_color2;
-
-  float grid_size = get_grid_size();
-
-  float start_x = Math::round_to_float(m_zoom.screen_to_world_x(0), grid_size) - grid_size;
-  float end_x   = Math::round_to_float(m_zoom.screen_to_world_x(m_zoom.bounding_width()), grid_size) + grid_size;
-
-  float start_y = Math::round_to_float(m_zoom.screen_to_world_y(0), grid_size) - grid_size;
-  float end_y   = Math::round_to_float(m_zoom.screen_to_world_y(m_zoom.bounding_height()), grid_size) + grid_size;
-
-  gc.push_quick_draw();
-  for(float y = start_y; y < end_y; y += grid_size) {
-    gc.draw_line(start_x, y,
-                 end_x, y,
-                 ((int(y / grid_size) % m_grid_constant) == 0) ? color2 : color, 1);
-  }
-
-  for(float x = start_x; x < end_x; x += grid_size) {
-    gc.draw_line(x, start_y,
-                 x, end_y,
-                 ((int(x / grid_size) % m_grid_constant) == 0) ? color2 : color, 1);
-  }
-
-  gc.pop_quick_draw();
-}
-
-void
-WorldViewComponent::draw_ground(ZoomGraphicContext& gc)
-{
-  GraphicContext& parent_gc = gc.get_parent_gc();
-
-  if (gc.zoom().screen_to_world_y(parent_gc.get_height()) >= 599)
-  {
-    gc.draw_fill_rect(gc.zoom().screen_to_world_x(0),
-                      599,
-                      gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                      gc.zoom().screen_to_world_y(parent_gc.get_height()),
-                      g_style.ground_color);
-
-    // draw grid
-    {
-      gc.push_quick_draw();
-
-      float const step_size = 100.0f;
-
-      float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x1()), step_size) - step_size;
-      float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x2()), step_size) + step_size;
-
-      float const start_y = 599;
-      float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_y2()), step_size) + step_size;
-
-      for(float y = start_y; y < end_y; y += step_size) {
-        gc.draw_line(start_x, y,
-                     end_x, y,
-                     g_style.ground_grid_color, 1);
-      }
-
-      for(float x = start_x; x < end_x; x += step_size) {
-        gc.draw_line(x, start_y,
-                     x, end_y,
-                     g_style.ground_grid_color, 1);
-      }
-      gc.pop_quick_draw();
-    }
-
-    gc.draw_rect(gc.zoom().screen_to_world_x(0),
-                 599,
-                 gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                 gc.zoom().screen_to_world_y(parent_gc.get_height()),
-                 g_style.rect_collider_bg);
-  }
-}
-
-void
 WorldViewComponent::draw(GraphicContext& parent_gc)
 {
   m_zoom.set_bounding_box(m_x, m_y, m_width, m_height);
   ZoomGraphicContext gc(parent_gc, m_zoom);
 
+  World& world = Controller::instance()->get_world();
+  WorldRenderer renderer(world);
+
   if (m_use_grid) {
-    draw_grid(gc);
+    renderer.draw_grid(gc, get_grid_size(), m_grid_constant);
   }
 
-  draw_ground(gc);
-
-  World& world = Controller::instance()->get_world();
+  renderer.draw_ground(gc);
 
   if (Controller::instance()->get_action_cam()
       && Controller::instance()->is_running())
@@ -220,10 +146,10 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
                  Color(1.0f, 1.0f, 1.0f));
   }
 
-  world.draw_colliders(gc);
-  world.draw_springs(gc);
+  renderer.draw_colliders(gc);
+  renderer.draw_springs(gc);
   if (!Controller::instance()->get_hide_dots()) {
-    world.draw_particles(gc);
+    renderer.draw_particles(gc);
   }
 
   m_current_tool->draw_foreground(gc);

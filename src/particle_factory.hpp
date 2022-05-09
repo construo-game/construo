@@ -57,7 +57,6 @@ public:
   Particle* lookup_particle (int id);
 
   void update (float delta);
-  void draw (ZoomGraphicContext& gc);
 
   typedef std::vector<Particle*>::const_iterator CParticleIter;
   typedef std::vector<Particle*>::iterator ParticleIter;
@@ -67,6 +66,8 @@ public:
 
   void clear ();
   void write_lisp(prio::Writer& writer);
+
+  std::vector<Particle*> get_particles() const { return m_particles; }
 
 private:
   std::vector<Particle*> m_particles;

@@ -22,6 +22,7 @@
 #include "screen_manager.hpp"
 #include "world.hpp"
 #include "world_cache.hpp"
+#include "world_renderer.hpp"
 
 WorldButton::WorldButton (WorldCache& world_cache, const std::string& filename, Mode m) :
   GUIFileButton(filename),
@@ -57,8 +58,9 @@ WorldButton::draw(GraphicContext& parent_gc)
 
   if (world)
   {
-    world->draw_colliders(gc);
-    world->draw_springs(gc);
+    WorldRenderer renderer(*world);
+    renderer.draw_colliders(gc);
+    renderer.draw_springs(gc);
   }
   else
   {

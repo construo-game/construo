@@ -88,13 +88,6 @@ public:
   GCZoomState& zoom() { return m_zoom; }
 
 private:
-  /** Draw the background grid to which new dots align */
-  void draw_grid(ZoomGraphicContext& gc);
-
-  /** Draw ground, aka the all overspanning collider at the bottem */
-  void draw_ground(ZoomGraphicContext& gc);
-
-private:
   GCZoomState m_zoom;
 
   /** If set to true, display a grid and align dots to it */

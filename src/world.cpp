@@ -150,56 +150,6 @@ World::parse_particles(ReaderCollection const& collection)
 }
 
 void
-World::draw(ZoomGraphicContext& gc) const
-{
-  draw_colliders(gc);
-  draw_springs(gc);
-  draw_particles(gc);
-}
-
-void
-World::draw_springs(ZoomGraphicContext& gc) const
-{
-#ifdef NEW_SPRING_CODE
-  std::vector<GraphicContext::Line> lines (springs.size());
-
-  glm::vec2 dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = std::fabs(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
-  float color = std::fabs((stretch/springs[0]->max_stretch));
-
-  for (unsigned int i = 0; i < springs.size(); ++i)
-    {
-      //(*i)->draw (gc);
-      lines[i].x1 = springs[i]->particles.first->pos.x;
-      lines[i].y1 = springs[i]->particles.first->pos.y;
-      lines[i].x2 = springs[i]->particles.second->pos.x;
-      lines[i].y2 = springs[i]->particles.second->pos.y;
-    }
-  gc.draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
-#else
-  for (auto i = m_springs.begin(); i != m_springs.end(); ++i)
-    {
-      (*i)->draw (gc);
-    }
-#endif
-}
-
-void
-World::draw_particles(ZoomGraphicContext& gc) const
-{
-  m_particle_mgr->draw(gc);
-}
-
-void
-World::draw_colliders(ZoomGraphicContext& gc) const
-{
-  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i)
-    {
-      (*i)->draw(gc);
-    }
-}
-
-void
 World::update (float delta)
 {
   m_has_been_run = true;

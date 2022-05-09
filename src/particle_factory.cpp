@@ -142,13 +142,6 @@ ParticleFactory::update (float delta)
                     m_particles.end());
 }
 
-void
-ParticleFactory::draw (ZoomGraphicContext& gc)
-{
-  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
-    (*i)->draw(gc);
-}
-
 Particle*
 ParticleFactory::lookup_particle (int id)
 {

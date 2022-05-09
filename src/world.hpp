@@ -46,11 +46,6 @@ public:
   World (const std::string& filename);
   ~World ();
 
-  void draw(ZoomGraphicContext& gc) const;
-  void draw_springs(ZoomGraphicContext& gc) const;
-  void draw_colliders(ZoomGraphicContext& gc) const;
-  void draw_particles(ZoomGraphicContext& gc) const;
-
   void update (float delta);
 
   std::unique_ptr<World> duplicate() { return std::make_unique<World>(*this); }
