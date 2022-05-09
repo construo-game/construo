@@ -20,6 +20,7 @@
 
 #include <zlib.h>
 #include <geom/rect.hpp>
+#include <logmich/log.hpp>
 
 #include "math.hpp"
 #include "construo_error.hpp"
@@ -31,7 +32,6 @@
 #include "string_utils.hpp"
 
 World::World() :
-  m_file_version(0),
   m_has_been_run(false),
   m_particle_mgr(std::make_unique<ParticleFactory>()),
   m_springs(),
@@ -39,34 +39,8 @@ World::World() :
 {
 }
 
-World::World(const std::string& filename) :
-  m_file_version(0),
-  m_has_been_run(false),
-  m_particle_mgr(nullptr),
-  m_springs(),
-  m_colliders()
-{
-  std::cout << "World: Loading '" << filename << "'..." << std::endl;
-  m_file_version = 0;
-
-  m_has_been_run = false;
-
-  ReaderDocument doc = ReaderDocument::from_file(g_system_context->translate_filename(filename));
-  if (doc.get_name() != "construo-scene") {
-    throw ConstruoError ("World: Read error in " + filename + ". Couldn't find 'construo-scene'");
-  }
-
-  parse_scene(doc.get_mapping());
-
-  ConstruoAssert(m_particle_mgr, "No Particles given in file, load failed");
-
-  //std::cout << "particles: " << particle_mgr->size () << std::endl;
-  //std::cout << "springs:   " << springs.size () << std::endl;
-}
-
 // Copy Constructor
 World::World(const World& old_world) :
-  m_file_version(0),
   m_has_been_run(false),
   m_particle_mgr(nullptr),
   m_springs(),
@@ -102,51 +76,6 @@ World::World(const World& old_world) :
 World::~World ()
 {
   clear();
-}
-
-void
-World::parse_scene(ReaderMapping const& reader)
-{
-  reader.read("version", m_file_version);
-
-  if (ReaderCollection particles = reader.get<ReaderCollection>("particles")) {
-    parse_particles(particles);
-  }
-
-  if (ReaderCollection springs = reader.get<ReaderCollection>("springs")) {
-    parse_springs(springs);
-  }
-
-  if (ReaderCollection colliders = reader.get<ReaderCollection>("colliders")) {
-    parse_colliders(colliders);
-  }
-}
-
-void
-World::parse_springs(ReaderCollection const& collection)
-{
-  for (ReaderObject const& item : collection.get_objects()) {
-    m_springs.push_back(new Spring(this, item.get_mapping()));
-  }
-}
-
-void
-World::parse_colliders(ReaderCollection const& collection)
-{
-  for(auto const& item : collection.get_objects()) {
-    if (item.get_name() == "rect") {
-      m_colliders.push_back(new RectCollider(item.get_mapping()));
-    } else {
-      std::cout << "WARNING: Unknown collider type '" << item.get_name()
-                << "' skipping" << std::endl;
-    }
-  }
-}
-
-void
-World::parse_particles(ReaderCollection const& collection)
-{
-  m_particle_mgr = std::make_unique<ParticleFactory>(m_file_version, collection);
 }
 
 void
@@ -310,10 +239,39 @@ World::zero_out_velocity ()
 }
 
 void
+World::add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch)
+{
+  Particle* lhs_particle = m_particle_mgr->lookup_particle(lhs);
+  Particle* rhs_particle = m_particle_mgr->lookup_particle(rhs);
+  if (lhs_particle == nullptr ||
+      rhs_particle == nullptr)
+  {
+    throw std::runtime_error("spring: particle lookup failed");
+  }
+
+  if (length == -1)
+  {
+    log_warn("World: spring length missing, recalculating");
+    length = std::fabs(glm::length(lhs_particle->pos - rhs_particle->pos));
+  }
+
+  lhs_particle->spring_links += 1;
+  rhs_particle->spring_links += 1;
+
+  m_springs.push_back(new Spring(lhs_particle, rhs_particle));
+}
+
+void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
   assert (last_particle && particle);
   m_springs.push_back(new Spring(last_particle, particle));
+}
+
+void
+World::add_particle(int id, glm::vec2 const& pos, glm::vec2 const& velocity, float mass, bool fixed)
+{
+  m_particle_mgr->add_particle(id, pos, velocity, mass, fixed);
 }
 
 void

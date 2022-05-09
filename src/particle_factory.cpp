@@ -16,7 +16,6 @@
 
 #include <float.h>
 #include <algorithm>
-#include "reader.hpp"
 #include "zoom_graphic_context.hpp"
 #include "particle.hpp"
 #include "construo_error.hpp"
@@ -27,41 +26,6 @@ ParticleFactory::ParticleFactory() :
   m_particles(),
   m_particle_id_count(0)
 {
-}
-
-ParticleFactory::ParticleFactory(int version, ReaderCollection const& collection) :
-  m_particles(),
-  m_particle_id_count(0)
-{
-  for(ReaderObject const& item : collection.get_objects()) {
-    ReaderMapping const& reader = item.get_mapping();
-
-    glm::vec2 pos(0.0f, 0.0f);
-    glm::vec2 velocity(0.0f, 0.0f);
-    float mass = 1.0f/10.0f;
-    bool fixed = false;
-    int id = -1;
-
-    reader.read("pos", pos);
-    reader.read("velocity", velocity);
-    reader.read("mass", mass);
-    reader.read("fixed", fixed);
-    reader.read("id", id);
-
-    switch (version) {
-      case 0:
-      case 1:
-      case 2:
-        mass = 1.0f/10.0f;
-        break;
-    }
-
-    if (id >= m_particle_id_count) {
-      m_particle_id_count = id + 1;
-    }
-
-    m_particles.push_back(new Particle (id, pos, velocity, mass, fixed));
-  }
 }
 
 ParticleFactory::ParticleFactory(const ParticleFactory& pmgr) :
@@ -86,13 +50,22 @@ ParticleFactory::operator= (const ParticleFactory& pmgr)
 }
 
 Particle*
-ParticleFactory::add_particle (const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float m, bool f)
+ParticleFactory::add_particle(int id, const glm::vec2& pos, const glm::vec2& velocity,
+                       float mass, bool fixed)
 {
-  Particle* p = new Particle(m_particle_id_count++,
-                             arg_pos,
-                             arg_velocity, m, f);
+  if (id >= m_particle_id_count) {
+    m_particle_id_count = id + 1;
+  }
+
+  Particle* p = new Particle(id, pos, velocity, mass, fixed);
   m_particles.push_back(p);
   return p;
+}
+
+Particle*
+ParticleFactory::add_particle (const glm::vec2& pos, const glm::vec2& velocity, float mass, bool fixed)
+{
+  return add_particle(m_particle_id_count++, pos, velocity, mass, fixed);
 }
 
 Particle*

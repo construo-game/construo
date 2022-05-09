@@ -27,25 +27,6 @@ RectCollider::duplicate() const
   return new RectCollider(x1, y1, x2, y2);
 }
 
-RectCollider::RectCollider(ReaderMapping const& reader) :
-  x1(),
-  y1(),
-  x2(),
-  y2()
-{
-  glm::vec2 pos1(0.0f, 0.0f);
-  glm::vec2 pos2(0.0f, 0.0f);
-  if (reader.read("pos1", pos1) == false ||
-      reader.read("pos2", pos2) == false) {
-    throw ConstruoError("RectCollider entry incomplete");
-  }
-
-  x1 = pos1.x;
-  y1 = pos1.y;
-  x2 = pos2.x;
-  y2 = pos2.y;
-}
-
 RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_) :
   x1(std::min(x1_, x2_)),
   y1(std::min(y1_, y2_)),

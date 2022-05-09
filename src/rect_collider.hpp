@@ -22,7 +22,6 @@
 class RectCollider : public Collider
 {
 public:
-  RectCollider(ReaderMapping const& reader);
   RectCollider(float x1_, float y1_, float x2_, float y2_);
 
   Collider* duplicate() const override;

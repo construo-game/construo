@@ -45,43 +45,6 @@ Spring::Spring(Particle* f, Particle* s) :
   assert (length != 0);
 }
 
-Spring::Spring(World* world, ReaderMapping const& reader) :
-  particles(nullptr, nullptr),
-  length(-1),
-  destroyed(false),
-  stiffness(50.0f),
-  damping(0.1f),
-  max_stretch(0.15f)
-{
-  int first_id = -1;
-  int second_id = -1;
-  length = -1;
-
-  reader.read("first", first_id);
-  reader.read("second", second_id);
-  reader.read("length", length);
-  reader.read("stiffness", stiffness);
-  reader.read("damping", damping);
-  reader.read("maxstretch", max_stretch);
-
-  particles.first  = world->get_particle_mgr().lookup_particle(first_id);
-  particles.second = world->get_particle_mgr().lookup_particle(second_id);
-
-  if (particles.first == nullptr || particles.second == nullptr)
-    {
-      throw ConstruoError ("Spring: Pair lookup failed");
-    }
-
-  particles.first->spring_links  += 1;
-  particles.second->spring_links += 1;
-
-  if (length == -1)
-    {
-      //std::cout << "Spring: length missing in data file, recalculating" << std::endl;
-      length = std::fabs(glm::length(particles.first->pos - particles.second->pos));
-    }
-}
-
 Spring::~Spring ()
 {
   particles.first->spring_links -= 1;

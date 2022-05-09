@@ -22,15 +22,12 @@
 
 #include "particle.hpp"
 #include "world.hpp"
-#include "reader.hpp"
 
 class Spring
 {
 public:
   Spring (Particle* f, Particle* s, float l);
   Spring (Particle* f, Particle* s);
-
-  Spring (World* world, ReaderMapping const& reader);
 
   ~Spring ();
 

@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "world.hpp"
+#include "world_reader.hpp"
 
 WorldCache::WorldCache() :
   m_worlds()
@@ -32,7 +33,7 @@ WorldCache::get(std::string const& filename)
     return it->second.get();
   } else {
     try {
-      auto world = std::make_unique<World>(filename);
+      auto world = WorldReader().from_file(filename);
       World const* tmp = world.get();
       m_worlds[filename] = std::move(world);
       return tmp;

@@ -116,6 +116,7 @@ set(CONSTRUO_SOURCES_CXX
   src/world_button.cpp
   src/world_cache.cpp
   src/world_gui_manager.cpp
+  src/world_reader.cpp
   src/world_renderer.cpp
   src/worldview_collider_tool.cpp
   src/worldview_component.cpp

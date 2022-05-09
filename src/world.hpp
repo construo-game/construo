@@ -36,14 +36,8 @@ public:
   typedef std::vector<Spring*>::const_iterator CSpringIter;
 
 public:
-  /** Create an empty world */
-  World ();
-
-  /** Copy an existing world */
+  World();
   World (const World& w);
-
-  /** load a world from file */
-  World (const std::string& filename);
   ~World ();
 
   void update (float delta);
@@ -57,7 +51,9 @@ public:
   Spring* get_spring(float x, float y, float capture_threshold = 20.0f) const;
 
   void add_rect_collider(const glm::vec2&, const glm::vec2&);
-  void add_spring (Particle*, Particle*);
+  void add_spring(Particle*, Particle*);
+  void add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch);
+  void add_particle(int id, glm::vec2 const& pos, glm::vec2 const& velocity, float mass, bool fixed);
 
   /** removes the given particle and all objects/springs which
       reference to it */
@@ -97,14 +93,6 @@ public:
   BoundingBox calc_bounding_box() const;
 
 private:
-  void parse_scene(ReaderMapping const& reader);
-  void parse_springs(ReaderCollection const& collection);
-  void parse_particles(ReaderCollection const& collection);
-  void parse_colliders(ReaderCollection const& collection);
-
-private:
-  /** Version number of the file, used to ensure backward compability */
-  int m_file_version;
   bool m_has_been_run;
   std::unique_ptr<ParticleFactory> m_particle_mgr;
   std::vector<Spring*> m_springs;

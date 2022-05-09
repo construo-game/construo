@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "controller.hpp"
+
 #include "worldview_component.hpp"
 #include "construo_error.hpp"
-#include "controller.hpp"
+#include "world_reader.hpp"
 
 Controller* Controller::instance_ = nullptr;
 
@@ -45,7 +47,8 @@ Controller::load_world(const std::string& filename)
     m_undo_world_stack.push_back(std::move(m_world));
   }
 
-  m_world = std::make_unique<World>(filename);
+  m_world = WorldReader().from_file(filename);
+
 
   if (WorldViewComponent::instance()) {
     WorldViewComponent::instance()->on_world_change();

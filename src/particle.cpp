@@ -20,7 +20,6 @@
 
 #include "colors.hpp"
 #include "math.hpp"
-#include "reader.hpp"
 #include "string_utils.hpp"
 #include "particle.hpp"
 

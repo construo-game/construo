@@ -22,7 +22,6 @@
 #include <glm/glm.hpp>
 
 #include "fwd.hpp"
-#include "reader.hpp"
 #include "writer.hpp"
 
 /** id of a particle, uniq only for a single ParticleFactory */
@@ -35,36 +34,36 @@ public:
   /** Create an empty particle manager */
   ParticleFactory();
 
-  /** Create a particle manager from the data in a .construo file */
-  ParticleFactory(int version, ReaderCollection const& particles_collection);
-
   /** Copy a particle manager, the id's will be keep */
   ParticleFactory(const ParticleFactory&);
 
-  Particle* add_particle (const glm::vec2& arg_pos, const glm::vec2& arg_velocity,
-                          float m, bool f = false);
+  Particle* add_particle(const glm::vec2& pos, const glm::vec2& velocity,
+                         float mass, bool fixed = false);
+
+  Particle* add_particle(int id, const glm::vec2& pos, const glm::vec2& velocity,
+                         float mass, bool fixed = false);
 
   /** Duplicate a particle */
-  Particle* add_particle (const Particle& particle);
+  Particle* add_particle(const Particle& particle);
 
   /** Remove a particle by pointer */
-  void remove_particle (Particle*);
+  void remove_particle(Particle* particle);
 
   /** Remove a particle by id */
-  void remove_particle (int id);
+  void remove_particle(int id);
 
   int size () { return static_cast<int>(m_particles.size()); }
-  Particle* lookup_particle (int id);
+  Particle* lookup_particle(int id);
 
-  void update (float delta);
+  void update(float delta);
 
   typedef std::vector<Particle*>::const_iterator CParticleIter;
   typedef std::vector<Particle*>::iterator ParticleIter;
 
-  ParticleIter begin () { return m_particles.begin(); }
-  ParticleIter end () { return m_particles.end(); }
+  ParticleIter begin() { return m_particles.begin(); }
+  ParticleIter end() { return m_particles.end(); }
 
-  void clear ();
+  void clear();
   void write_lisp(prio::Writer& writer);
 
   std::vector<Particle*> get_particles() const { return m_particles; }
