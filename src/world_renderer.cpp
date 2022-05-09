@@ -19,11 +19,11 @@
 #include <assert.h>
 
 #include <glm/gtx/io.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "colors.hpp"
 #include "particle_factory.hpp"
 #include "rect_collider.hpp"
-#include "string_utils.hpp"
 #include "world.hpp"
 #include "zoom_graphic_context.hpp"
 
@@ -187,15 +187,14 @@ WorldRenderer::draw_particle_info(ZoomGraphicContext& gc, Particle const& partic
 
   draw_particle_velocity_vector(gc, particle);
 
-  using StringUtils::to_string;
   gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 5.0f),
-                                 "Particle: " + to_string(particle.pos));
+                                 "Particle: " + glm::to_string(particle.pos));
   gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 25.0f),
-                                 "Fixed:    " + to_string(particle.fixed));
+                                 "Fixed:    " + std::to_string(static_cast<int>(particle.fixed)));
   gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 45.0f),
-                                 "Mass :    " + to_string(particle.get_mass()));
+                                 "Mass :    " + std::to_string(particle.get_mass()));
   gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 70.0f),
-                                 "Links :    " + to_string(particle.spring_links));
+                                 "Links :    " + std::to_string(particle.spring_links));
 }
 
 void

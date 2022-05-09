@@ -17,20 +17,18 @@
 #include "world_gui_manager.hpp"
 
 #include <glm/gtx/io.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "controller.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
 #include "worldview_component.hpp"
-#include "string_utils.hpp"
 #include "worldview_insert_tool.hpp"
 #include "gui_buttons.hpp"
 #include "gui_window.hpp"
 #include "gui_label.hpp"
 #include "screen_manager.hpp"
 #include "root_graphic_context.hpp"
-
-using namespace StringUtils;
 
 WorldGUIManager* WorldGUIManager::instance_ = nullptr;
 
@@ -266,23 +264,23 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   */
   float const bottom_line = gc.get_height() - 10;
   gc.draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
-  gc.draw_string(80.0f, bottom_line - 20.0f, to_string(get_fps()));
+  gc.draw_string(80.0f, bottom_line - 20.0f, std::to_string(get_fps()));
 
   gc.draw_string(10.0f, bottom_line, "Pos: ");
   gc.draw_string(80.0f, bottom_line,
-                                to_string(m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos())));
+                 glm::to_string(m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos())));
 
   gc.draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
-  gc.draw_string(280.0f, bottom_line - 20.0f, to_string(world.get_num_particles()));
+  gc.draw_string(280.0f, bottom_line - 20.0f, std::to_string(world.get_num_particles()));
 
   gc.draw_string(210.0f, bottom_line, "Springs: ");
-  gc.draw_string(280.0f, bottom_line, to_string(world.get_num_springs()));
+  gc.draw_string(280.0f, bottom_line, std::to_string(world.get_num_springs()));
 
   gc.draw_string(410.0f, bottom_line, "Zoom: ");
-  gc.draw_string(480.0f, bottom_line, to_string(m_worldview_component->get_scale()));
+  gc.draw_string(480.0f, bottom_line, std::to_string(m_worldview_component->get_scale()));
 
   gc.draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
-  //gc.draw_string (680, bottom_line, to_string(m_worldview_component->get_scale()));
+  //gc.draw_string (680, bottom_line, std::to_string(m_worldview_component->get_scale()));
 }
 
 /* EOF */
