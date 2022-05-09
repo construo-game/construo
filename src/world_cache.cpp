@@ -16,7 +16,7 @@
 
 #include "world_cache.hpp"
 
-#include <iostream>
+#include <logmich/log.hpp>
 
 #include "world.hpp"
 #include "world_reader.hpp"
@@ -38,7 +38,7 @@ WorldCache::get(std::string const& filename)
       m_worlds[filename] = std::move(world);
       return tmp;
     } catch (std::exception const& err) {
-      std::cerr << filename << ": failed to load World: " << err.what() << std::endl;
+      log_error("{}: failed to load World: {}", filename, err.what());
       m_worlds[filename] = {};
       return nullptr;
     }

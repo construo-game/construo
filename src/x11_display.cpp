@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
+#include "x11_display.hpp"
+
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
@@ -22,14 +23,13 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cursors/cursors.hpp"
+#include <logmich/log.hpp>
 
 #include "construo_error.hpp"
-#include "x11_display.hpp"
-#include "settings.hpp"
-
 #include "controller.hpp"
+#include "cursors/cursors.hpp"
 #include "screen_manager.hpp"
+#include "settings.hpp"
 
 Atom wm_delete_window;
 
@@ -71,14 +71,14 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   m_fullscreen(fullscreen_),
   m_pending_configure_event()
 {
-  std::cout << "Using X11 display" << std::endl;
+  log_info("Using X11 display");
   m_display = XOpenDisplay(NULL);
   if (!m_display) {
     throw ConstruoError("X11Display: Couldn't conncet to X server");
   }
 
   XSetErrorHandler([](Display* display, XErrorEvent* error_event){
-    std::cerr << "X11 Error" << std::endl;
+    log_error("X11 Error");
     return 0;
   });
 
@@ -190,8 +190,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
     m_depth = DefaultDepth(m_display, DefaultScreen(m_display));
     if (m_depth != 16 && m_depth != 24 && m_depth != 32)
     {
-      std::cout << "X11Display: Warring color depth '" << m_depth
-                << "' not supported, Construo will be slow!" << std::endl;
+      log_warn("X11Display: Warring color depth '{}' not supported, Construo will be slow!", m_depth);
     }
   }
 
@@ -270,7 +269,7 @@ X11Display::set_cursor_real(CursorType cursor)
       XDefineCursor(m_display, m_window, m_cursor_select);
       break;
     default:
-      std::cout << "X11Display: Unhandled cursor type: " << static_cast<int>(cursor) << std::endl;
+      log_error("X11Display: Unhandled cursor type: {}", static_cast<int>(cursor));
       break;
     }
 }
@@ -469,7 +468,7 @@ X11Display::process_event(XEvent& event)
 
     case ButtonPress:
       {
-        //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
+        // log_info("ButtonID: {} {}", event.xbutton.button, event.xbutton.state);
         if (event.xbutton.button == 1)
           send_button_press(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)
@@ -485,7 +484,7 @@ X11Display::process_event(XEvent& event)
 
     case ButtonRelease:
       {
-        //std::cout << "ButtonID: " << event.xbutton.button << " " << event.xbutton.state << std::endl;
+        // log_debug("ButtonID: {} {}", event.xbutton.button, event.xbutton.state);
         if (event.xbutton.button == 1)
           send_button_release(BUTTON_PRIMARY);
         else if (event.xbutton.button == 2)
@@ -628,7 +627,7 @@ X11Display::process_event(XEvent& event)
             break;
 
           default:
-            std::cout << "X11Display: unhandled keypress: " << sym << " " << XK_grave << std::endl;
+            log_debug("X11Display: unhandled keypress: {}", sym);
             break;
         }
       }
@@ -645,42 +644,41 @@ X11Display::process_event(XEvent& event)
             m_shift_pressed = false;
             break;
           default:
-            //std::cout << "X11Display: unhandled keyrelease: " << sym << " " << XK_f << std::endl;
+            // log_debug("X11Display: unhandled keyrelease: {}", sym);
             break;
         }
       }
       break;
 
     case ResizeRequest:
-      std::cout << "X11Display:ResizeRequest: "
-                << event.xresizerequest.width << "x" << event.xresizerequest.height << std::endl;
+      log_debug("X11Display:ResizeRequest: {}x{}", event.xresizerequest.width, event.xresizerequest.height);
       break;
 
     case ConfigureNotify:
       if ((false)) {
-        std::cout << "X11Display:ConfigureNotify: "
-                  << event.xconfigure.width << "x" << event.xconfigure.height
-                  << "+" << event.xconfigure.x << "+" << event.xconfigure.y << std::endl;
+        log_info("X11Display:ConfigureNotify: {}x{}+{}+{}",
+                 event.xconfigure.width, event.xconfigure.height,
+                 event.xconfigure.x, event.xconfigure.y);
       }
 
       m_pending_configure_event = event.xconfigure;
       break;
 
     case DestroyNotify:
-      std::cout << "Window got destroyed" << std::endl;
+      log_debug("Window got destroyed");
       break;
 
     case ClientMessage:
-      std::cout << "X11Display: got client message" << std::endl;
+      log_debug("X11Display: got client message");
       // Window close request
       if (static_cast<int>(event.xclient.data.l[0]) == static_cast<int>(wm_delete_window)) {
-        std::cout << "Window is destroyed" << std::endl;
+        log_debug("Window is destroyed");
         send_button_press(BUTTON_ESCAPE);
       }
       break;
 
     default:
-      //std::cout << "X11Display: Unhandled event: " << event.type << std::endl;
+      log_debug("X11Display: Unhandled event: {}", event.type);
       break;
   }
 }
@@ -784,7 +782,7 @@ X11Display::enter_fullscreen ()
   event.xclient.data.l[4] = 0;
 
   if (!XSendEvent(m_display, DefaultRootWindow(m_display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event)) {
-    std::cerr << "XSendEvent failure" << std::endl;
+    log_error("XSendEvent failure");
   }
 
   m_fullscreen = true;
@@ -809,7 +807,7 @@ X11Display::leave_fullscreen()
   event.xclient.data.l[4] = 0;
 
   if (!XSendEvent(m_display, DefaultRootWindow(m_display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event)) {
-    std::cerr << "XSendEvent failure" << std::endl;
+    log_error("XSendEvent failure");
   }
 
   m_fullscreen = false;

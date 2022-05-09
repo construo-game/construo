@@ -16,6 +16,8 @@
 
 #include "gui_manager.hpp"
 
+#include <logmich/log.hpp>
+
 #include "string_utils.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
@@ -350,7 +352,7 @@ void
 GUIManager::ungrab_mouse(GUIComponent& component)
 {
   if (m_grabbing_component != &component) {
-    std::cerr << "GUIManager: ungrab mismatch: " << m_grabbing_component << " != " << &component << std::endl;
+    log_error("GUIManager: ungrab mismatch: {} != {}", static_cast<void*>(m_grabbing_component), static_cast<void*>(&component));
   }
 
   m_grabbing_component = nullptr;
