@@ -33,7 +33,7 @@ Spring::Spring(Particle* f, Particle* s, float l) :
 
 Spring::Spring(Particle* f, Particle* s) :
   particles(f, s),
-  length(fabsf(glm::length(f->pos - s->pos))),
+  length(std::fabs(glm::length(f->pos - s->pos))),
   destroyed(false),
   stiffness(50.0f),
   damping(0.1f),
@@ -78,7 +78,7 @@ Spring::Spring(World* world, ReaderMapping const& reader) :
   if (length == -1)
     {
       //std::cout << "Spring: length missing in data file, recalculating" << std::endl;
-      length = fabsf(glm::length(particles.first->pos - particles.second->pos));
+      length = std::fabs(glm::length(particles.first->pos - particles.second->pos));
     }
 }
 
@@ -98,7 +98,7 @@ Spring::update (float delta)
   float stretch = glm::length(dist) - length;
 
   //std::cout << "Stretch: " << stretch << std::endl;
-  if (fabsf(stretch/length) > max_stretch &&
+  if (std::fabs(stretch/length) > max_stretch &&
       length > 10.0f) // atomar spring
     { // If the spring is streched above limits, let it get destroyed
       destroyed = true;
@@ -124,9 +124,9 @@ void
 Spring::draw (ZoomGraphicContext& gc)
 {
   glm::vec2 dist = particles.first->pos - particles.second->pos;
-  float stretch = fabsf(glm::length(dist)/length - 1.0f) * 10.0f;
+  float stretch = std::fabs(glm::length(dist)/length - 1.0f) * 10.0f;
 
-  float color = fabsf((stretch/max_stretch));
+  float color = std::fabs((stretch/max_stretch));
 
   if (particles.first->pos.y  < 598.5f
       ||
@@ -162,7 +162,7 @@ Spring::serialize(prio::Writer& writer)
 void
 Spring::recalc_length ()
 {
-  length = fabsf(glm::length(particles.first->pos - particles.second->pos));
+  length = std::fabs(glm::length(particles.first->pos - particles.second->pos));
 }
 
 /* EOF */

@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include <map>
 
 #include <glm/gtx/io.hpp>
@@ -43,10 +43,10 @@ Selection::get_center()
 
   for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
   {
-    rot_box = geom::frect(Math::min(rot_box.left(), (*i)->pos.x),
-                          Math::min(rot_box.top(), (*i)->pos.y),
-                          Math::max(rot_box.right(), (*i)->pos.x),
-                          Math::max(rot_box.bottom(), (*i)->pos.y));
+    rot_box = geom::frect(std::min(rot_box.left(), (*i)->pos.x),
+                          std::min(rot_box.top(), (*i)->pos.y),
+                          std::max(rot_box.right(), (*i)->pos.x),
+                          std::max(rot_box.bottom(), (*i)->pos.y));
   }
 
   return geom::center(rot_box).as_vec();
@@ -180,11 +180,11 @@ Selection::rotate (float rot_angle, glm::vec2 rotate_center)
     pos.x -= rotate_center.x;
     pos.y -= rotate_center.y;
 
-    float angle  = atan2(pos.y, pos.x) + rot_angle;
+    float angle  = std::atan2(pos.y, pos.x) + rot_angle;
     float length = glm::length(pos);
 
-    pos.x = (cos (angle)*length) + rotate_center.x;
-    pos.y = (sin (angle)*length) + rotate_center.y;
+    pos.x = (std::cos(angle)*length) + rotate_center.x;
+    pos.y = (std::sin(angle)*length) + rotate_center.y;
   }
 }
 

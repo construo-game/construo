@@ -24,33 +24,6 @@
     @brief A collection of mathematical helper functions */
 namespace Math {
 
-const float pi   = 3.14159265358979323846f;	/* pi */
-const float pi_2 = 1.57079632679489661923f;	/* pi/2 */
-
-template<class T>
-T min (const T& a, const T& b)
-{
-  if (a < b)
-    return a;
-  else
-    return b;
-}
-
-template<class T>
-T max (const T& a, const T& b)
-{
-  if (a > b)
-    return a;
-  else
-    return b;
-}
-
-template<class T>
-T mid (const T& a, const T& b, const T& c)
-{
-  return max((a), min((b), (c)));
-}
-
 inline int round(float a)
 {
   return int((a > 0.0f) ? (a + 0.5f) : (a - 0.5f));
@@ -94,3 +67,5 @@ inline int get_exp_n(float x, int n)
 } // namespace Math
 
 #endif
+
+/* EOF */

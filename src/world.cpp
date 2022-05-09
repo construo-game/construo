@@ -164,8 +164,8 @@ World::draw_springs(ZoomGraphicContext& gc) const
   std::vector<GraphicContext::Line> lines (springs.size());
 
   glm::vec2 dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = fabsf(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
-  float color = fabsf((stretch/springs[0]->max_stretch));
+  float stretch = std::fabs(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
+  float color = std::fabs((stretch/springs[0]->max_stretch));
 
   for (unsigned int i = 0; i < springs.size(); ++i)
     {
@@ -295,8 +295,8 @@ World::get_spring(float x, float y, float capture_distance) const
       float u = (((x0 - x1)*(x2-x1) + (y0 - y1)*(y2 - y1))
                  / ((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
 
-      float distance = (fabsf((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
-                        / sqrtf((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
+      float distance = (std::fabs((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
+                        / std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
 
       if (u >= 0 && u <= 1.0f
           && ((spring && min_distance > distance)
@@ -333,10 +333,10 @@ World::get_particle(float x, float y, float capture_distance) const
 std::vector<Particle*>
 World::get_particles(float x1_, float y1_, float x2_, float y2_) const
 {
-  float const x1 = Math::min(x1_, x2_);
-  float const x2 = Math::max(x1_, x2_);
-  float const y1 = Math::min(y1_, y2_);
-  float const y2 = Math::max(y1_, y2_);
+  float const x1 = std::min(x1_, x2_);
+  float const x2 = std::max(x1_, x2_);
+  float const y1 = std::min(y1_, y2_);
+  float const y2 = std::max(y1_, y2_);
 
   std::vector<Particle*> caputred_particles;
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)

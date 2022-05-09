@@ -102,8 +102,8 @@ WorldViewColliderTool::on_primary_button_release (float x, float y)
       glm::vec2 pos2 = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos ());
       World& world = Controller::instance()->get_world();
 
-      if (fabsf(pos2.x - m_click_pos.x) < 15
-          || fabsf(pos2.y - m_click_pos.y) < 15)
+      if (std::fabs(pos2.x - m_click_pos.x) < 15
+          || std::fabs(pos2.y - m_click_pos.y) < 15)
         {
           std::cout << "Rect collider to small, not inserting" << std::endl;
         }

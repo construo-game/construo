@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <math.h>
+#include <cmath>
 #include "colors.hpp"
 #include "particle_factory.hpp"
 #include "controller.hpp"
@@ -47,10 +47,10 @@ RectCollider::RectCollider(ReaderMapping const& reader) :
 }
 
 RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_) :
-  x1(Math::min(x1_, x2_)),
-  y1(Math::min(y1_, y2_)),
-  x2(Math::max(x1_, x2_)),
-  y2(Math::max(y1_, y2_))
+  x1(std::min(x1_, x2_)),
+  y1(std::min(y1_, y2_)),
+  x2(std::max(x1_, x2_)),
+  y2(std::max(y1_, y2_))
 {
 }
 
@@ -102,26 +102,26 @@ RectCollider::bounce ()
               && left_dist < top_dist
               && left_dist < bottom_dist)
             {
-              velocity.x = -fabsf(velocity.x);
+              velocity.x = -std::fabs(velocity.x);
               pos.x = x1;
             }
           else if (right_dist < left_dist
                    && right_dist < top_dist
                    && right_dist < bottom_dist)
             {
-              velocity.x = fabsf(velocity.x);
+              velocity.x = std::fabs(velocity.x);
               pos.x = x2;
             }
           else if (top_dist < left_dist
                    && top_dist < right_dist
                    && top_dist < bottom_dist)
             {
-              velocity.y = -fabsf(velocity.y);
+              velocity.y = -std::fabs(velocity.y);
               pos.y = y1;
             }
           else
             {
-              velocity.y = fabsf(velocity.y);
+              velocity.y = std::fabs(velocity.y);
               pos.y = y2;
             }
           velocity *= damp;

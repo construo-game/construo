@@ -125,7 +125,7 @@ struct particle_obsolete
   {
     return (p->spring_links == 0
             && p->velocity.x == 0
-            && fabsf(p->velocity.y) < 0.1f);
+            && std::fabs(p->velocity.y) < 0.1f);
   }
 };
 

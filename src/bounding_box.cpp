@@ -33,21 +33,21 @@ BoundingBox::BoundingBox(float x1_, float y1_, float x2_, float y2_)
 void
 BoundingBox::join(const BoundingBox& box)
 {
-  x1 = Math::min(x1, box.x1);
-  y1 = Math::min(y1, box.y1);
+  x1 = std::min(x1, box.x1);
+  y1 = std::min(y1, box.y1);
 
-  x2 = Math::max(x2, box.x2);
-  y2 = Math::max(y2, box.y2);
+  x2 = std::max(x2, box.x2);
+  y2 = std::max(y2, box.y2);
 }
 
 void
 BoundingBox::join(const glm::vec2& pos)
 {
-  x1 = Math::min(x1, pos.x);
-  y1 = Math::min(y1, pos.y);
+  x1 = std::min(x1, pos.x);
+  y1 = std::min(y1, pos.y);
 
-  x2 = Math::max(x2, pos.x);
-  y2 = Math::max(y2, pos.y);
+  x2 = std::max(x2, pos.x);
+  y2 = std::max(y2, pos.y);
 }
 
 std::ostream& operator << (std::ostream& os, const BoundingBox& box)

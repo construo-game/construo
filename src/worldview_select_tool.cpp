@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <math.h>
+#include <cmath>
 
 #include <geom/rect.hpp>
 
@@ -63,10 +63,10 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 
   if (m_mode == GETTING_SELECTION_MODE)
   {
-    gc.draw_rect (Math::min(x, m_click_pos.x),
-                  Math::min(y, m_click_pos.y),
-                  Math::max(x, m_click_pos.x),
-                  Math::max(y, m_click_pos.y),
+    gc.draw_rect (std::min(x, m_click_pos.x),
+                  std::min(y, m_click_pos.y),
+                  std::max(x, m_click_pos.x),
+                  std::max(y, m_click_pos.y),
                   g_style.selection_rect);
   }
 
@@ -77,10 +77,10 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 
     for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
     {
-      selection_box = geom::frect(Math::min(selection_box.left(), (*i)->pos.x),
-                                  Math::min(selection_box.top(), (*i)->pos.y),
-                                  Math::max(selection_box.right(), (*i)->pos.x),
-                                  Math::max(selection_box.bottom(), (*i)->pos.y));
+      selection_box = geom::frect(std::min(selection_box.left(), (*i)->pos.x),
+                                  std::min(selection_box.top(), (*i)->pos.y),
+                                  std::max(selection_box.right(), (*i)->pos.x),
+                                  std::max(selection_box.bottom(), (*i)->pos.y));
     }
 
     float border = 20.0f / gc.zoom().get_scale();
@@ -359,7 +359,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
     case SCALING_SELECTION_MODE:
       {
         glm::vec2 const new_pos = m_worldview.zoom().screen_to_world(glm::vec2(screen_x, screen_y));
-        float const scale_factor = fabsf(glm::length(m_scale_center - new_pos) / glm::length(m_scale_center - m_click_pos));
+        float const scale_factor = std::fabs(glm::length(m_scale_center - new_pos) / glm::length(m_scale_center - m_click_pos));
         m_selection.scale(1.0f / m_old_scale_factor, m_scale_center);
         m_selection.scale(scale_factor, m_scale_center);
         m_old_scale_factor = scale_factor;

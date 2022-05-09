@@ -64,7 +64,7 @@ void
 Particle::draw_highlight (ZoomGraphicContext& gc)
 {
   gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(pos),
-                                       Math::max(6.0f, get_mass() + 3),
+                                       std::max(6.0f, get_mass() + 3),
                                        g_style.highlight);
 }
 
@@ -97,7 +97,7 @@ Particle::draw (ZoomGraphicContext& gc)
       else
         {
           gc.get_parent_gc().draw_fill_circle (gc.zoom().world_to_screen(pos),
-                                                 Math::max(3.0f, get_mass()),
+                                                 std::max(3.0f, get_mass()),
                                                  Color(1.0f, 0.0f, 0.0f));
         }
     }
@@ -133,25 +133,25 @@ Particle::update (float delta)
 #if 0 // FIXME: Replace this with a generic shape collision handling thing
   // Calc collision with screen x border
   if (pos.x < 0) {
-    velocity.x =  fabsf(velocity.x);
+    velocity.x =  std::fabs(velocity.x);
     pos.x = 0;
     velocity *= collision_damp;
   } else if (pos.x > 799) {
-    velocity.x =  -fabsf(velocity.x);
+    velocity.x =  -std::fabs(velocity.x);
     pos.x = 799;
     velocity *= collision_damp;
   }
 
   // Calc collision with screen y border
   if (pos.y < 0) {
-    velocity.y =  fabsf(velocity.y);
+    velocity.y =  std::fabs(velocity.y);
     pos.y = 0;
     velocity *= collision_damp;
   } else
 #endif
 
     if (pos.y > 599) {
-      velocity.y =  -fabsf(velocity.y);
+      velocity.y =  -std::fabs(velocity.y);
       pos.y = 599;
       velocity *= collision_damp;
     }

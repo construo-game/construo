@@ -66,10 +66,10 @@ public:
 
   void draw_rect (const glm::vec2& pos1, const glm::vec2& pos2, Color color)
   {
-    draw_rect (Math::min(pos1.x, pos2.x),
-               Math::min(pos1.y, pos2.y),
-               Math::max(pos1.x, pos2.x),
-               Math::max(pos1.y, pos2.y),
+    draw_rect (std::min(pos1.x, pos2.x),
+               std::min(pos1.y, pos2.y),
+               std::max(pos1.x, pos2.x),
+               std::max(pos1.y, pos2.y),
                color);
   }
 
