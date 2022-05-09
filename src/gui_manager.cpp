@@ -18,7 +18,6 @@
 
 #include <logmich/log.hpp>
 
-#include "string_utils.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
 #include "input_context.hpp"
@@ -30,8 +29,6 @@
 #include "worldview_insert_tool.hpp"
 #include "root_graphic_context.hpp"
 #include "screen_manager.hpp"
-
-using namespace StringUtils;
 
 GUIManager::GUIManager() :
   m_frame_count(0),

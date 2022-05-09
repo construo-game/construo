@@ -20,10 +20,7 @@
 
 #include "colors.hpp"
 #include "math.hpp"
-#include "string_utils.hpp"
 #include "particle.hpp"
-
-using namespace StringUtils;
 
 Particle::Particle (int i, const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float m, bool f)
   : id (i),

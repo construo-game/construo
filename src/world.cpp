@@ -29,7 +29,6 @@
 #include "system_context.hpp"
 #include "controller.hpp"
 #include "rect_collider.hpp"
-#include "string_utils.hpp"
 
 World::World() :
   m_has_been_run(false),
