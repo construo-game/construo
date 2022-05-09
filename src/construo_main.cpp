@@ -114,14 +114,8 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     }
     else
     {
-      try
-      {
+      if (std::filesystem::exists(g_system_context->translate_filename("/user/laststate.construo"))) {
         controller->load_world("/user/laststate.construo");
-      }
-      catch (std::exception const& err)
-      {
-        print_exception(err);
-        controller = std::make_unique<Controller>();
       }
     }
 

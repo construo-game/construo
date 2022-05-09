@@ -16,6 +16,8 @@
 
 #include "controller.hpp"
 
+#include <logmich/log.hpp>
+
 #include "worldview_component.hpp"
 #include "construo_error.hpp"
 #include "world_reader.hpp"
@@ -33,6 +35,7 @@ Controller::Controller() :
   m_hide_dots(false),
   m_delta_manager()
 {
+  assert(instance_ == nullptr);
   instance_ = this;
 }
 
@@ -44,12 +47,17 @@ Controller::~Controller ()
 void
 Controller::load_world(const std::string& filename)
 {
-  if (m_world) {
-    m_undo_world_stack.push_back(std::move(m_world));
+  std::unique_ptr<World> new_world;
+  try {
+    new_world = WorldReader().from_file(filename);
+  } catch (std::exception const& err) {
+    log_error("{}: error while loading: {}", filename, err.what());
+    return;
   }
 
-  m_world = WorldReader().from_file(filename);
+  m_undo_world_stack.push_back(std::move(m_world));
 
+  m_world = std::move(new_world);
 
   if (WorldViewComponent::instance()) {
     WorldViewComponent::instance()->on_world_change();
