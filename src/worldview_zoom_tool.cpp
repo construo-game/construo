@@ -39,12 +39,12 @@ WorldViewZoomTool::activate ()
 }
 
 void
-WorldViewZoomTool::draw_foreground (ZoomGraphicContext& gc)
+WorldViewZoomTool::draw_foreground(ZoomGraphicContext& gc)
 {
   if (m_creating_zoom_rectangle)
   {
-    float x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x());
-    float y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y());
+    float const x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x());
+    float const y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y());
 
     gc.draw_rect(std::min(x, m_click_pos.x),
                  std::min(y, m_click_pos.y),
@@ -55,20 +55,21 @@ WorldViewZoomTool::draw_foreground (ZoomGraphicContext& gc)
 }
 
 void
-WorldViewZoomTool::on_primary_button_press (float screen_x, float screen_y)
+WorldViewZoomTool::on_primary_button_press(float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = true;
+
   m_click_pos.x = m_worldview.zoom().screen_to_world_x (screen_x);
   m_click_pos.y = m_worldview.zoom().screen_to_world_y (screen_y);
 }
 
 void
-WorldViewZoomTool::on_primary_button_release (float screen_x, float screen_y)
+WorldViewZoomTool::on_primary_button_release(float screen_x, float screen_y)
 {
   m_creating_zoom_rectangle = false;
 
-  float x = m_worldview.zoom().screen_to_world_x (screen_x);
-  float y = m_worldview.zoom().screen_to_world_y (screen_y);
+  float const x = m_worldview.zoom().screen_to_world_x (screen_x);
+  float const y = m_worldview.zoom().screen_to_world_y (screen_y);
 
   m_worldview.zoom().zoom_to(static_cast<int>(std::min(x, m_click_pos.x)),
                                                  static_cast<int>(std::min(y, m_click_pos.y)),
@@ -77,13 +78,13 @@ WorldViewZoomTool::on_primary_button_release (float screen_x, float screen_y)
 }
 
 void
-WorldViewZoomTool::on_secondary_button_press (float x, float y)
+WorldViewZoomTool::on_secondary_button_press(float x, float y)
 {
   m_worldview.zoom().zoom_out(x, y);
 }
 
 void
-WorldViewZoomTool::on_secondary_button_release (float x, float y)
+WorldViewZoomTool::on_secondary_button_release(float x, float y)
 {
 
 }

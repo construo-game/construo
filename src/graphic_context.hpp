@@ -28,7 +28,6 @@
 /** Graphic abstraction interface */
 class GraphicContext
 {
-private:
 public:
   struct Line
   {
@@ -46,59 +45,59 @@ public:
 
   void draw_circle(const glm::vec2& pos, float radius, Color color)
   {
-    draw_circle (pos.x, pos.y, radius, color);
+    draw_circle(pos.x, pos.y, radius, color);
   }
 
   void draw_fill_circle(const glm::vec2& pos, float radius, Color color)
   {
-    draw_fill_circle (pos.x, pos.y, radius, color);
+    draw_fill_circle(pos.x, pos.y, radius, color);
   }
 
-  void draw_string(const glm::vec2& pos, const std::string& str, Color color = Color (0xFFFFFFFF))
+  void draw_string(const glm::vec2& pos, const std::string& str, Color color = Color(0xFFFFFFFF))
   {
-    draw_string (pos.x, pos.y, str, color);
+    draw_string(pos.x, pos.y, str, color);
   }
 
-  void draw_line (const glm::vec2& pos1, const glm::vec2& pos2, Color color, int wide = 0)
+  void draw_line(const glm::vec2& pos1, const glm::vec2& pos2, Color color, int wide = 0)
   {
-    draw_line (pos1.x, pos1.y, pos2.x, pos2.y, color, wide);
+    draw_line(pos1.x, pos1.y, pos2.x, pos2.y, color, wide);
   }
 
-  void draw_rect (const glm::vec2& pos1, const glm::vec2& pos2, Color color)
+  void draw_rect(const glm::vec2& pos1, const glm::vec2& pos2, Color color)
   {
-    draw_rect (std::min(pos1.x, pos2.x),
-               std::min(pos1.y, pos2.y),
-               std::max(pos1.x, pos2.x),
-               std::max(pos1.y, pos2.y),
-               color);
+    draw_rect(std::min(pos1.x, pos2.x),
+              std::min(pos1.y, pos2.y),
+              std::max(pos1.x, pos2.x),
+              std::max(pos1.y, pos2.y),
+              color);
   }
 
-  void draw_fill_rect (const glm::vec2& pos1, const glm::vec2& pos2, Color color)
+  void draw_fill_rect(const glm::vec2& pos1, const glm::vec2& pos2, Color color)
   {
-    draw_fill_rect (pos1.x, pos1.y, pos2.x, pos2.y, color);
+    draw_fill_rect(pos1.x, pos1.y, pos2.x, pos2.y, color);
   }
 
-  virtual void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) =0;
+  virtual void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) =0;
   virtual void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) =0;
   virtual void draw_rect(float x1, float y1, float x2, float y2, Color color) =0;
   virtual void draw_circle(float x, float y, float radius, Color color) =0;
   virtual void draw_circles(std::vector<Circle>& circles, Color color) =0;
   virtual void draw_fill_circle(float x, float y, float radius, Color color) =0;
   virtual void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) =0;
-  virtual void draw_string(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
+  virtual void draw_string(float x, float y, const std::string& str, Color color = Color(0xFFFFFFFF)) =0;
 
-  virtual void draw_string_centered(float x, float y, const std::string& str, Color color = Color (0xFFFFFFFF)) =0;
+  virtual void draw_string_centered(float x, float y, const std::string& str, Color color = Color(0xFFFFFFFF)) =0;
 
   virtual void set_clip_rect(float x1_, float y1_, float x2_, float y2_) =0;
   virtual void clear_clip_rect() = 0;
 
-  virtual float get_width ()  =0;
-  virtual float get_height () =0;
+  virtual float get_width()  =0;
+  virtual float get_height() =0;
 
-  virtual void clear () =0;
+  virtual void clear() =0;
 
   /** FIXME: flip should be handled outsite of GraphicContext */
-  virtual void flip () =0;
+  virtual void flip() =0;
 
   /** Goes into quick draw mode, disabling anti-aliasing and other
       time consuming features */

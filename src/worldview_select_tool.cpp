@@ -123,7 +123,7 @@ void
 WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
 {
   switch (m_mode)
-    {
+  {
     case IDLE_MODE:
       {
         float x = m_worldview.zoom().screen_to_world_x (screen_x);
@@ -143,22 +143,22 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
         // If the mouse clicks on a particle from the selection, we move the selection
         Particle* new_current_particle = world.get_particle(x, y, capture_distance);
         for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
+        {
+          if (new_current_particle == *i)
           {
-            if (new_current_particle == *i)
-              {
-                Controller::instance()->push_undo();
-                m_mode = MOVING_SELECTION_MODE;
-                m_move_diff = glm::vec2(0.0f, 0.0f);
-                m_move_current_particle = new_current_particle;
-                break;
-              }
+            Controller::instance()->push_undo();
+            m_mode = MOVING_SELECTION_MODE;
+            m_move_diff = glm::vec2(0.0f, 0.0f);
+            m_move_current_particle = new_current_particle;
+            break;
           }
+        }
 
         // If mouse clicks into empty space, we make a new selection
         if (m_mode == GETTING_SELECTION_MODE)
-          {
-            m_selection.clear();
-          }
+        {
+          m_selection.clear();
+        }
       }
       break;
 
@@ -174,7 +174,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
     default:
       // Do nothing, so that we don't mess up other modes
       break;
-    }
+  }
 }
 
 void
@@ -269,9 +269,9 @@ WorldViewSelectTool::on_delete_press (float x, float y)
 
   World& world = Controller::instance()->get_world();
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
-    {
-      world.remove_particle(*i);
-    }
+  {
+    world.remove_particle(*i);
+  }
 
   m_selection.clear();
 }
@@ -281,27 +281,27 @@ WorldViewSelectTool::on_fix_press(float x, float y)
 {
   bool mark_all = false;
   for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
+  {
+    if (!(*i)->get_fixed())
     {
-      if (!(*i)->get_fixed())
-        {
-          mark_all = true;
-        }
+      mark_all = true;
     }
+  }
 
   if (mark_all)
+  {
+    for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
     {
-      for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
-        {
-          (*i)->set_fixed(true);
-        }
+      (*i)->set_fixed(true);
     }
+  }
   else
+  {
+    for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
     {
-      for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
-        {
-          (*i)->set_fixed(!(*i)->get_fixed());
-        }
+      (*i)->set_fixed(!(*i)->get_fixed());
     }
+  }
 }
 
 void
@@ -310,50 +310,49 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
   World& world = Controller::instance()->get_world();
 
   switch (m_mode)
-    {
+  {
     case MOVING_SELECTION_MODE:
       {
-        glm::vec2 new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
-                         m_worldview.zoom().screen_to_world_y(screen_y));
+        glm::vec2 const new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
+                                m_worldview.zoom().screen_to_world_y(screen_y));
 
         glm::vec2 diff = new_pos - m_click_pos;
 
         // Undo the last move (FIXME: Potential round errors)
         for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
-          {
-            (*i)->pos -= m_move_diff;
-          }
+        {
+          (*i)->pos -= m_move_diff;
+        }
 
         if (m_worldview.uses_grid())
-          {
+        {
+          float const grid_size = m_worldview.get_snap_size();
 
-            float grid_size = m_worldview.get_snap_size();
-
-            diff.x = Math::round_to_float(diff.x, grid_size);
-            diff.y = Math::round_to_float(diff.y, grid_size);
-	    diff.x -= m_move_current_particle->pos.x - Math::round_to_float(m_move_current_particle->pos.x, grid_size);
-	    diff.y -= m_move_current_particle->pos.y - Math::round_to_float(m_move_current_particle->pos.y, grid_size);
-          }
+          diff.x = Math::round_to_float(diff.x, grid_size);
+          diff.y = Math::round_to_float(diff.y, grid_size);
+          diff.x -= m_move_current_particle->pos.x - Math::round_to_float(m_move_current_particle->pos.x, grid_size);
+          diff.y -= m_move_current_particle->pos.y - Math::round_to_float(m_move_current_particle->pos.y, grid_size);
+        }
 
         m_move_diff = diff;
 
         for (auto i = m_selection.begin(); i != m_selection.end(); ++i)
-          {
-            (*i)->pos += diff;
+        {
+          (*i)->pos += diff;
 
-            // Recalculate all springs that are attached to the
-            // selection, but not fully in it.
-            std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
-            for (std::vector<Spring*>::iterator j = spring_mgr.begin();
-                 j != spring_mgr.end(); ++j)
-              {
-                if ((*j)->particles.first == *i
-                    || (*j)->particles.second == *i)
-                  {
-                    (*j)->recalc_length();
-                  }
-              }
+          // Recalculate all springs that are attached to the
+          // selection, but not fully in it.
+          std::vector<Spring*>& spring_mgr = world.get_spring_mgr();
+          for (std::vector<Spring*>::iterator j = spring_mgr.begin();
+               j != spring_mgr.end(); ++j)
+          {
+            if ((*j)->particles.first == *i
+                || (*j)->particles.second == *i)
+            {
+              (*j)->recalc_length();
+            }
           }
+        }
       }
       break;
 
@@ -369,7 +368,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
     case ROTATING_SELECTION_MODE:
       {
         glm::vec2 new_pos(m_worldview.zoom().screen_to_world_x(screen_x),
-                         m_worldview.zoom().screen_to_world_y(screen_y));
+                          m_worldview.zoom().screen_to_world_y(screen_y));
 
         float new_angle = atan2(new_pos.y - m_rotate_center.y,
                                 new_pos.x - m_rotate_center.x);
@@ -384,26 +383,26 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
       break;
     default:
       break;
-    }
+  }
 }
 
 void
 WorldViewSelectTool::on_scale_press(float x, float y)
 {
   if (!m_selection.empty())
-    {
-      m_rotate_center = m_selection.get_center();
-      Controller::instance()->push_undo();
-      g_graphic_context->push_cursor();
-      g_graphic_context->set_cursor(CURSOR_SCALE);
+  {
+    m_rotate_center = m_selection.get_center();
+    Controller::instance()->push_undo();
+    g_graphic_context->push_cursor();
+    g_graphic_context->set_cursor(CURSOR_SCALE);
 
-      m_click_pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
-      WorldGUIManager::instance()->grab_mouse(m_worldview);
+    m_click_pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
+    WorldGUIManager::instance()->grab_mouse(m_worldview);
 
-      m_mode = SCALING_SELECTION_MODE;
+    m_mode = SCALING_SELECTION_MODE;
 
-      m_scale_center = m_selection.get_center();
-    }
+    m_scale_center = m_selection.get_center();
+  }
 }
 
 void
@@ -418,7 +417,7 @@ WorldViewSelectTool::on_button_press(int button_id, float x, float y)
   glm::vec2 pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
 
   switch(button_id)
-    {
+  {
     case BUTTON_SETVELOCITY:
       if (!m_selection.empty()) {
         m_selection.set_velocity(pos - m_selection.get_center());
@@ -431,7 +430,7 @@ WorldViewSelectTool::on_button_press(int button_id, float x, float y)
 
     default:
       break;
-    }
+  }
 }
 
 void

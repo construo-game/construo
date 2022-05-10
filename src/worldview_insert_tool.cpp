@@ -55,7 +55,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
   glm::vec2 new_particle_pos(0.0f, 0.0f);
   if (m_worldview.uses_grid()) {
     new_particle_pos = glm::vec2(Math::round_to_float(click_pos.x, grid_size),
-                                Math::round_to_float(click_pos.y, grid_size));
+                                 Math::round_to_float(click_pos.y, grid_size));
   } else {
     new_particle_pos = glm::vec2(click_pos.x, click_pos.y);
   }
@@ -104,8 +104,8 @@ void
 WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 {
   World& world = Controller::instance()->get_world();
-  float x = m_worldview.zoom().screen_to_world_x (screen_x);
-  float y = m_worldview.zoom().screen_to_world_y (screen_y);
+  float const x = m_worldview.zoom().screen_to_world_x (screen_x);
+  float const y = m_worldview.zoom().screen_to_world_y (screen_y);
 
   if (m_current_particle)
   {

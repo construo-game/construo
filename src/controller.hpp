@@ -32,43 +32,43 @@ public:
 
   static inline Controller* instance() { return instance_; }
 
-  bool has_been_run () { return m_world && m_world->get_has_been_run (); }
+  bool has_been_run() { return m_world && m_world->get_has_been_run(); }
 
-  bool is_running () { return m_running; }
-  bool slow_down_active () { return m_slow_down; }
-  void set_slow_down (bool s) { m_slow_down = s; }
+  bool is_running() { return m_running; }
+  bool slow_down_active() { return m_slow_down; }
+  void set_slow_down(bool s) { m_slow_down = s; }
 
   void set_action_cam(bool);
   bool get_action_cam();
 
-  void set_hide_dots (bool);
-  bool get_hide_dots ();
+  void set_hide_dots(bool);
+  bool get_hide_dots();
 
-  World& get_world () { assert(m_world != nullptr); return *m_world; }
+  World& get_world() { assert(m_world != nullptr); return *m_world; }
 
   /** Load a world by name, name is relative to the construo user directory */
-  void load_world (const std::string& name);
+  void load_world(const std::string& name);
 
   /** Save a world by name, name is relative to the construo user directory */
-  void save_world (const std::string& name);
+  void save_world(const std::string& name);
 
   std::string get_slot_filename(int n);
-  void save_to_slot (int n);
-  void load_from_slot (int n);
+  void save_to_slot(int n);
+  void load_from_slot(int n);
 
   /** Updates the state of the controller and also the world */
-  void update ();
+  void update();
 
-  void clear_world ();
+  void clear_world();
 
-  void undo ();
-  void redo ();
+  void undo();
+  void redo();
 
   /** Push the current world to the undo stack */
   void push_undo();
 
   /** start or stops the simulation */
-  void start_simulation ();
+  void start_simulation();
 
 private:
   /** The current active world, don't delete this, delete is handled in

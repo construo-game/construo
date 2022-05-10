@@ -49,6 +49,7 @@ public:
   /** All particles inside the given rectangle */
   std::vector<Particle*> get_particles(float x1, float y1, float x2, float y2) const;
   Spring* get_spring(float x, float y, float capture_threshold = 20.0f) const;
+  Collider* get_collider(glm::vec2 const& pos) const;
 
   void add_rect_collider(const glm::vec2&, const glm::vec2&);
   void add_spring(Particle*, Particle*);

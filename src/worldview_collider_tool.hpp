@@ -39,10 +39,6 @@ public:
   void on_mouse_move (float x, float y, float of_x, float of_y) override;
 
 private:
-  /** Get the collider on the given world cooridnates */
-  Collider* get_collider (const glm::vec2&);
-
-private:
   bool m_creating_rect;
   glm::vec2 m_click_pos;
 

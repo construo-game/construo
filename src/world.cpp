@@ -208,6 +208,18 @@ World::get_particle(float x, float y, float capture_distance) const
   return particle;
 }
 
+Collider*
+World::get_collider(glm::vec2 const& pos) const
+{
+  for (auto it = m_colliders.rbegin (); it != m_colliders.rend(); ++it)
+  {
+    if ((*it)->is_at(pos)) {
+      return *it;
+    }
+  }
+  return nullptr;
+}
+
 std::vector<Particle*>
 World::get_particles(float x1_, float y1_, float x2_, float y2_) const
 {
@@ -219,9 +231,10 @@ World::get_particles(float x1_, float y1_, float x2_, float y2_) const
   std::vector<Particle*> caputred_particles;
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
     {
-      if ((*i)->pos.x >= x1 && (*i)->pos.x < x2
-          && (*i)->pos.y >= y1 && (*i)->pos.y < y2)
+      if ((*i)->pos.x >= x1 && (*i)->pos.x < x2 &&
+          (*i)->pos.y >= y1 && (*i)->pos.y < y2) {
         caputred_particles.push_back(*i);
+      }
     }
   return caputred_particles;
 }
