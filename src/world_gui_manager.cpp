@@ -56,76 +56,76 @@ WorldGUIManager::WorldGUIManager() :
   m_worldview_component = create<WorldViewComponent>();
 
   // simulation
-  m_run_button = create<GUIGenericButton>(
+  m_run_button = create<GUIButton>(
     "Run",
     []{ Controller::instance()->start_simulation(); },
     []{ return Controller::instance()->is_running (); });
 
-  m_slowmo_button = create<GUIGenericButton>(
+  m_slowmo_button = create<GUIButton>(
     "SlowMotion",
     []{ Controller::instance()->set_slow_down(!Controller::instance()->slow_down_active ()); },
     []{ return Controller::instance()->slow_down_active(); });
 
-  m_load_button = create<GUIGenericButton>(
+  m_load_button = create<GUIButton>(
     "Load",
     []{ ScreenManager::instance()->set_gui(ScreenManager::LOAD_GUI); });
 
-  m_save_button = create<GUIGenericButton>(
+  m_save_button = create<GUIButton>(
     "Save",
     []{ ScreenManager::instance()->set_gui(ScreenManager::SAVE_GUI); });
 
-  m_undo_button = create<GUIGenericButton>(
+  m_undo_button = create<GUIButton>(
     "Undo",
     []{ return Controller::instance()->undo(); });
-  m_redo_button = create<GUIGenericButton>(
+  m_redo_button = create<GUIButton>(
     "Redo",
     []{ return Controller::instance()->redo(); });
 
-  m_actioncam_button = create<GUIGenericButton>(
+  m_actioncam_button = create<GUIButton>(
     "ActionCam",
     []{ Controller::instance()->set_action_cam(!Controller::instance()->get_action_cam()); },
     []{ return Controller::instance()->get_action_cam(); });
 
-  m_dots_button = create<GUIGenericButton>(
+  m_dots_button = create<GUIButton>(
     "Hide Dots",
     []{ Controller::instance()->set_hide_dots(!Controller::instance()->get_hide_dots()); },
     []{ return Controller::instance()->get_hide_dots(); });
 
-  m_grid_button = create<GUIGenericButton>(
+  m_grid_button = create<GUIButton>(
     "Use Grid",
     [this]{ m_worldview_component->on_grid_press(0, 0); },
     [this]{ return m_worldview_component->uses_grid(); });
 
-  m_quit_button = create<GUIGenericButton>("Quit", []{
+  m_quit_button = create<GUIButton>("Quit", []{
     ScreenManager::instance()->quit();
   });
 
   // toolbar
-  m_insert_button = create<GUIGenericButton>(
+  m_insert_button = create<GUIButton>(
     "Insert",
     [this]{ m_worldview_component->set_mode (WorldViewComponent::INSERT_MODE); },
     [this]{ return m_worldview_component->get_mode() == WorldViewComponent::INSERT_MODE; });
 
-  m_select_button = create<GUIGenericButton>(
+  m_select_button = create<GUIButton>(
     "Select",
     [this]{ m_worldview_component->set_mode (WorldViewComponent::SELECT_MODE); },
     [this]{ return m_worldview_component->get_mode() == WorldViewComponent::SELECT_MODE; });
 
-  m_collider_button = create<GUIGenericButton>(
+  m_collider_button = create<GUIButton>(
     "Collider",
     [this]{ m_worldview_component->set_mode (WorldViewComponent::COLLIDER_MODE); },
     [this]{ return m_worldview_component->get_mode() == WorldViewComponent::COLLIDER_MODE; });
 
-  m_zoom_button = create<GUIGenericButton>(
+  m_zoom_button = create<GUIButton>(
     "Zoom",
     [this]{ m_worldview_component->set_mode (WorldViewComponent::ZOOM_MODE); },
     [this]{ return m_worldview_component->get_mode() == WorldViewComponent::ZOOM_MODE; });
 
-  m_zoomout_button = create<GUIGenericButton>(
+  m_zoomout_button = create<GUIButton>(
     "-",
     [this]{ m_worldview_component->wheel_up(g_graphic_context->get_width()/2,
                                                  g_graphic_context->get_height()/2); });
-  m_zoomin_button = create<GUIGenericButton>(
+  m_zoomin_button = create<GUIButton>(
     "+",
     [this]{ m_worldview_component->wheel_down(g_graphic_context->get_width()/2,
                                                    g_graphic_context->get_height()/2); });
@@ -133,19 +133,19 @@ WorldGUIManager::WorldGUIManager() :
   // FIXME: Stuff for particle mass and Co. must be implemented in another way
 #if 0
   {
-    create<GUIGenericButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
-    create<GUIGenericButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
+    create<GUIButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
+    create<GUIButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
 
     create<GUILabel>("Stiffness",   550, 280, 75, 25);
 
     [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() + 1.0f); }
       [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() - 1.0f); }
 
-      create<GUIGenericButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
-    create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
+      create<GUIButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
+    create<GUIButton>("-",   680, 280, 25, 25, decrease_particle_mass);
 
-    create<GUIGenericButton>("+",   650, 280, 25, 25, increase_particle_mass);
-    create<GUIGenericButton>("-",   680, 280, 25, 25, decrease_particle_mass);
+    create<GUIButton>("+",   650, 280, 25, 25, increase_particle_mass);
+    create<GUIButton>("-",   680, 280, 25, 25, decrease_particle_mass);
   }
 #endif
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);

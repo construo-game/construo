@@ -52,11 +52,11 @@ public:
 private:
   Mode m_mode;
 
-  GUIGenericButton* m_btn_up_directory;
-  GUIGenericButton* m_btn_close;
-  GUIGenericButton* m_btn_scroll_up;
-  GUIGenericButton* m_btn_scroll_down;
-  GUIGenericButton* m_btn_update_directory;
+  GUIButton* m_btn_up_directory;
+  GUIButton* m_btn_close;
+  GUIButton* m_btn_scroll_up;
+  GUIButton* m_btn_scroll_down;
+  GUIButton* m_btn_update_directory;
 
   GUIDirectory* m_directory;
 

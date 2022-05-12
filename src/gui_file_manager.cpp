@@ -40,23 +40,23 @@ GUIFileManager::GUIFileManager(Mode m) :
     m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::LOAD_DIRECTORY);
   }
 
-  m_btn_up_directory = create<GUIGenericButton>("Up", [this]{
+  m_btn_up_directory = create<GUIButton>("Up", [this]{
     directory_up();
   });
 
-  m_btn_close = create<GUIGenericButton>("Close", []{
+  m_btn_close = create<GUIButton>("Close", []{
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   });
 
-  m_btn_scroll_up = create<GUIGenericButton>("/\\", [this]{
+  m_btn_scroll_up = create<GUIButton>("/\\", [this]{
     scroll_up();
   });
 
-  m_btn_scroll_down = create<GUIGenericButton>("\\/", [this]{
+  m_btn_scroll_down = create<GUIButton>("\\/", [this]{
     scroll_down();
   });
 
-  m_btn_update_directory = create<GUIGenericButton>("Reload", [this]{
+  m_btn_update_directory = create<GUIButton>("Reload", [this]{
     update_current_directory();
   });
 }

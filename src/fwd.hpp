@@ -21,7 +21,7 @@ class Collider;
 class GUIComponent;
 class GUIFileButton;
 class GUIFileManager;
-class GUIGenericButton;
+class GUIButton;
 class GUIManager;
 class GlutDisplay;
 class GraphicContext;

@@ -25,8 +25,17 @@
 class GUIButton : public GUIComponent
 {
 public:
-  GUIButton (const std::string& title, float x, float y, float width, float height);
-  GUIButton (const std::string& title);
+  using OnClickSignal = std::function<void ()>;
+  using HighlightPred = std::function<bool ()>;
+
+public:
+  GUIButton(const std::string& title,
+            float x, float y, float width, float height,
+            OnClickSignal sig_on_click,
+            HighlightPred sig_highlight_p = []{ return false; });
+  GUIButton(const std::string& title,
+            OnClickSignal sig_on_click,
+            HighlightPred sig_highlight_p = []{ return false; });
 
   void draw_border_hover(GraphicContext& gc);
   void draw_border_pressed(GraphicContext& gc);
@@ -40,57 +49,11 @@ public:
 
   void draw (GraphicContext& gc) override;
 
-  virtual void draw_content(GraphicContext& gc);
-  virtual void on_click() = 0;
-
 protected:
   std::string m_title;
   bool m_mouse_over;
   bool m_pressed;
-};
 
-class GUIGenericButton : public GUIButton
-{
-public:
-  using OnClickSignal = std::function<void ()>;
-  using HighlightPred = std::function<bool ()>;
-
-public:
-  GUIGenericButton(const std::string& title,
-                   float x, float y, float width, float height,
-                   OnClickSignal sig_on_click,
-                   HighlightPred sig_highlight_p = []{ return false; }) :
-    GUIButton(title, x, y, width, height),
-    m_sig_on_click(std::move(sig_on_click)),
-    m_sig_highlight_p(std::move(sig_highlight_p))
-  {
-  }
-
-  GUIGenericButton(const std::string& title,
-                   OnClickSignal sig_on_click,
-                   HighlightPred sig_highlight_p = []{ return false; }) :
-    GUIButton(title),
-    m_sig_on_click(std::move(sig_on_click)),
-    m_sig_highlight_p(std::move(sig_highlight_p))
-  {
-  }
-
-  void on_click() override
-  {
-    m_sig_on_click();
-  }
-
-  void draw_content(GraphicContext& gc) override
-  {
-    if (m_sig_highlight_p()) {
-      gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
-                        g_style.button_bg_active);
-    }
-
-    GUIButton::draw_content (gc);
-  }
-
-private:
   OnClickSignal m_sig_on_click;
   HighlightPred m_sig_highlight_p;
 };

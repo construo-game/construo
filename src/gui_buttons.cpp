@@ -27,107 +27,115 @@
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
 
-GUIButton::GUIButton (const std::string& title,
-                      float x, float y, float width, float height) :
+GUIButton::GUIButton(const std::string& title,
+                     float x, float y, float width, float height,
+                     OnClickSignal sig_on_click,
+                     HighlightPred sig_highlight_p) :
   GUIComponent(x, y, width, height),
   m_title(title),
   m_mouse_over(false),
-  m_pressed(false)
+  m_pressed(false),
+  m_sig_on_click(std::move(sig_on_click)),
+  m_sig_highlight_p(std::move(sig_highlight_p))
 {
 }
 
-GUIButton::GUIButton (const std::string& title_) :
+GUIButton::GUIButton(const std::string& title,
+          OnClickSignal sig_on_click,
+          HighlightPred sig_highlight_p) :
   GUIComponent(),
-  m_title(title_),
+  m_title(title),
   m_mouse_over(false),
-  m_pressed(false)
+  m_pressed(false),
+  m_sig_on_click(std::move(sig_on_click)),
+  m_sig_highlight_p(std::move(sig_highlight_p))
 {
 }
 
 void
-GUIButton::on_mouse_enter ()
+GUIButton::on_mouse_enter()
 {
   m_mouse_over = true;
 }
 
 void
-GUIButton::on_mouse_leave ()
+GUIButton::on_mouse_leave()
 {
   m_mouse_over = false;
 }
 
 void
-GUIButton::on_primary_button_press (float x, float y)
+GUIButton::on_primary_button_press(float x, float y)
 {
   WorldGUIManager::instance()->grab_mouse(*this);
   m_pressed = true;
 }
 
 void
-GUIButton::on_primary_button_release (float x, float y)
+GUIButton::on_primary_button_release(float x, float y)
 {
   WorldGUIManager::instance()->ungrab_mouse(*this);
-  if (is_at (x, y))
-    on_click ();
+  if (is_at(x, y)) {
+    m_sig_on_click();
+  }
   m_pressed = false;
 }
 
 void
-GUIButton::draw (GraphicContext& gc)
+GUIButton::draw(GraphicContext& gc)
 {
-  if (m_pressed && m_mouse_over)
-    {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_pressed);
-    }
-  else if (m_mouse_over)
-    {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_hover);
-    }
-  else
-    {
-      gc.draw_fill_rect (m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_passive);
-    }
-
-  draw_content (gc);
+  if (m_sig_highlight_p()) {
+    gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
+                      g_style.button_bg_active);
+  }
 
   if (m_pressed && m_mouse_over)
-    {
-      draw_border_pressed (gc);
-    }
+  {
+    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_pressed);
+  }
   else if (m_mouse_over)
-    {
-      draw_border_hover (gc);
-    }
+  {
+    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_hover);
+  }
   else
-    {
-      draw_border_normal (gc);
-    }
-}
+  {
+    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_passive);
+  }
 
-void
-GUIButton::draw_content (GraphicContext& gc)
-{
-  gc.draw_string_centered (m_x + m_width/2, m_y + 16, m_title);
+  gc.draw_string_centered(m_x + m_width/2, m_y + 16, m_title);
+
+  if (m_pressed && m_mouse_over)
+  {
+    draw_border_pressed(gc);
+  }
+  else if (m_mouse_over)
+  {
+    draw_border_hover(gc);
+  }
+  else
+  {
+    draw_border_normal(gc);
+  }
 }
 
 void
 GUIButton::draw_border_hover(GraphicContext& gc)
 {
-  gc.draw_rect (m_x, m_y,
+  gc.draw_rect(m_x, m_y,
                  m_x + m_width, m_y + m_height, g_style.button_fg_hover);
 }
 
 void
 GUIButton::draw_border_pressed(GraphicContext& gc)
 {
-  gc.draw_rect (m_x, m_y,
+  gc.draw_rect(m_x, m_y,
                  m_x + m_width, m_y + m_height, g_style.button_fg_pressed);
 }
 
 void
 GUIButton::draw_border_normal(GraphicContext& gc)
 {
-  gc.draw_rect (m_x, m_y,
+  gc.draw_rect(m_x, m_y,
                  m_x + m_width, m_y + m_height, g_style.button_fg_passive);
 }
 
