@@ -17,6 +17,9 @@
 #ifndef CONSTRUO_MATH_HPP
 #define CONSTRUO_MATH_HPP
 
+#include <cassert>
+#include <cmath>
+
 /** A collection of small math helper functions, some of them might be
     equal in functionality to standard STL functions, but provided
     here for portability and broken STL implementations
@@ -27,19 +30,17 @@ namespace Math {
 /** Round x to a multilple of n */
 inline int round_to(float x, int n)
 {
-  if (x > 0.0f)
-    return static_cast<int>(x + (static_cast<float>(n) / 2.0f)) / n * n;
-  else
-    return static_cast<int>(x - (static_cast<float>(n) / 2.0f)) / n * n;
+  if (n == 0) { return static_cast<int>(std::lround(x)); }
+
+  return static_cast<int>(std::lround(x / static_cast<float>(n)) * n);
 }
 
 /** Same as above, except n can be less to 1 */
 inline float round_to_float(float x, float n)
 {
-  if (x > 0.0f)
-    return int((x + (n / 2.0f)) / n) * n;
-  else
-    return int((x - (n / 2.0f)) / n) * n;
+  if (n == 0) { return x; }
+
+  return std::round(x / n) * n;
 }
 
 /** Get exponent of x */
