@@ -64,6 +64,10 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
     static_cast<GlutDisplay*>(userdata)->mouse_func(button, button_state, x, y);
   }, this);
 
+  glutMotionFuncUcall([](int x, int y, void* userdata) {
+    static_cast<GlutDisplay*>(userdata)->mouse_motion_func(x, y);
+  }, this);
+
   glutPassiveMotionFuncUcall([](int x, int y, void* userdata) {
     static_cast<GlutDisplay*>(userdata)->mouse_motion_func(x, y);
   }, this);
