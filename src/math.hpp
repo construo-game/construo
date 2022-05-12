@@ -24,11 +24,6 @@
     @brief A collection of mathematical helper functions */
 namespace Math {
 
-inline int round(float a)
-{
-  return int((a > 0.0f) ? (a + 0.5f) : (a - 0.5f));
-}
-
 /** Round x to a multilple of n */
 inline int round_to(float x, int n)
 {
