@@ -138,7 +138,7 @@ World::update (float delta)
 }
 
 Spring*
-World::get_spring(float x, float y, float capture_distance) const
+World::find_spring(float x, float y, float capture_distance) const
 {
   Spring* found_spring = nullptr;
   float min_distance = 0.0f;
@@ -172,7 +172,7 @@ World::get_spring(float x, float y, float capture_distance) const
 }
 
 Particle*
-World::get_particle(float x, float y, float capture_distance) const
+World::find_particle(float x, float y, float capture_distance) const
 {
   Particle* found_particle = nullptr;
   float min_dist = capture_distance;
@@ -192,7 +192,7 @@ World::get_particle(float x, float y, float capture_distance) const
 }
 
 Collider*
-World::get_collider(glm::vec2 const& pos) const
+World::find_collider(glm::vec2 const& pos) const
 {
   for (auto it = m_colliders.rbegin (); it != m_colliders.rend(); ++it)
   {
@@ -204,7 +204,7 @@ World::get_collider(glm::vec2 const& pos) const
 }
 
 std::vector<Particle*>
-World::get_particles(float x1_, float y1_, float x2_, float y2_) const
+World::find_particles(float x1_, float y1_, float x2_, float y2_) const
 {
   float const x1 = std::min(x1_, x2_);
   float const x2 = std::max(x1_, x2_);

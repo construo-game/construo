@@ -96,8 +96,8 @@ WorldViewInsertTool::on_mouse_move(float x, float y, float of_x, float of_y)
   glm::vec2 const pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
   float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
-  m_hover_particle = world.get_particle(pos.x, pos.y, capture_distance);
-  m_hover_spring = world.get_spring(pos.x, pos.y, capture_distance);
+  m_hover_particle = world.find_particle(pos.x, pos.y, capture_distance);
+  m_hover_spring = world.find_spring(pos.x, pos.y, capture_distance);
 }
 
 void

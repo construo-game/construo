@@ -141,7 +141,7 @@ WorldViewSelectTool::on_primary_button_press (float screen_x, float screen_y)
         float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
         // If the mouse clicks on a particle from the selection, we move the selection
-        Particle* new_current_particle = world.get_particle(x, y, capture_distance);
+        Particle* new_current_particle = world.find_particle(x, y, capture_distance);
         for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           if (new_current_particle == *i)
