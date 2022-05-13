@@ -31,7 +31,6 @@
 #include "rect_collider.hpp"
 
 World::World() :
-  m_has_been_run(false),
   m_particle_mgr(std::make_unique<ParticleFactory>()),
   m_springs(),
   m_colliders()
@@ -40,7 +39,6 @@ World::World() :
 
 // Copy Constructor
 World::World(const World& old_world) :
-  m_has_been_run(false),
   m_particle_mgr(nullptr),
   m_springs(),
   m_colliders()
@@ -73,14 +71,11 @@ World::World(const World& old_world) :
 
 World::~World ()
 {
-  clear();
 }
 
 void
 World::update (float delta)
 {
-  m_has_been_run = true;
-
   // Main Movement and Forces
   // FIXME: Hardcoded Force Emitters
   for (auto& particle : m_particle_mgr->particles())
@@ -228,16 +223,6 @@ World::get_particles(float x1_, float y1_, float x2_, float y2_) const
 }
 
 void
-World::zero_out_velocity ()
-{
-  log_debug("Setting velocity to zero");
-  for (auto& particle : m_particle_mgr->particles())
-  {
-    particle->velocity = glm::vec2(0.0f, 0.0f);
-  }
-}
-
-void
 World::add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch)
 {
   Particle* lhs_particle = m_particle_mgr->lookup_particle(lhs);
@@ -297,13 +282,6 @@ World::remove_collider(Collider* c)
   std::erase_if(m_colliders, [c](auto&& collider){ return collider.get() == c; });
 }
 
-void
-World::clear ()
-{
-  m_particle_mgr->clear();
-  m_springs.clear();
-}
-
 BoundingBox
 World::calc_bounding_box() const
 {
@@ -334,18 +312,6 @@ World::calc_bounding_box() const
   }
 
   return bbox;
-}
-
-int
-World::get_num_particles()
-{
-  return m_particle_mgr->size ();
-}
-
-int
-World::get_num_springs()
-{
-  return static_cast<int>(m_springs.size());
 }
 
 void

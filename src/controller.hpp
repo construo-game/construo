@@ -32,8 +32,6 @@ public:
 
   static inline Controller* instance() { return instance_; }
 
-  bool has_been_run() { return m_world && m_world->get_has_been_run(); }
-
   bool is_running() { return m_running; }
   bool slow_down_active() { return m_slow_down; }
   void set_slow_down(bool s) { m_slow_down = s; }

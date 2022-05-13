@@ -277,10 +277,10 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
                  glm::to_string(m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos())));
 
   gc.draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
-  gc.draw_string(280.0f, bottom_line - 20.0f, std::to_string(world.get_num_particles()));
+  gc.draw_string(280.0f, bottom_line - 20.0f, std::to_string(world.particles().size()));
 
   gc.draw_string(210.0f, bottom_line, "Springs: ");
-  gc.draw_string(280.0f, bottom_line, std::to_string(world.get_num_springs()));
+  gc.draw_string(280.0f, bottom_line, std::to_string(world.springs().size()));
 
   gc.draw_string(410.0f, bottom_line, "Zoom: ");
   gc.draw_string(480.0f, bottom_line, std::to_string(m_worldview_component->get_scale()));

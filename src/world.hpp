@@ -26,19 +26,15 @@
 #include "particle_factory.hpp"
 #include "spring.hpp"
 
-/** This class holds all particles and springs */
 class World
 {
-  friend class ParticleFactory;
-
 public:
   World();
-  World (const World& w);
-  ~World ();
+  ~World();
 
-  void update (float delta);
+  void update(float delta);
 
-  std::unique_ptr<World> duplicate() { return std::make_unique<World>(*this); }
+  std::unique_ptr<World> duplicate() { return std::unique_ptr<World>(new World(*this)); }
 
   /** @return the particles closed to the given coordinates */
   Particle* get_particle(float x, float y, float capture_distance = 20.0f) const;
@@ -54,47 +50,31 @@ public:
 
   /** removes the given particle and all objects/springs which
       reference to it */
-  void remove_particle (Particle*);
+  void remove_particle(Particle*);
 
   /** remove the given spring */
-  void remove_spring (Spring*);
+  void remove_spring(Spring*);
 
   /** Remove the gives collider from the world */
-  void remove_collider (Collider*);
+  void remove_collider(Collider*);
 
   ParticleFactory& get_particle_mgr() { return *m_particle_mgr; }
   std::vector<std::unique_ptr<Particle>> const& particles() const { return m_particle_mgr->particles(); }
   std::vector<std::unique_ptr<Spring>> const& springs() const { return m_springs; }
   std::vector<std::unique_ptr<Collider>> const& colliders() const { return m_colliders; }
 
-  /** removes everything from the world */
-  void clear ();
-
-  bool get_has_been_run () { return m_has_been_run; }
-
-  /** Sets the velocity of all particles to zero, usefull if the
-      particles are getting out of order (aka. explode). Also usefull
-      to fix broken model files */
-  void zero_out_velocity ();
-
-  /** @return the number of particles in the world */
-  int get_num_particles();
-
-  /** @return the number of springs in the world */
-  int get_num_springs();
-
   /** Callculate the bounding box of the world from the particle and
    *  collider it contains. */
   BoundingBox calc_bounding_box() const;
 
 private:
-  bool m_has_been_run;
   std::unique_ptr<ParticleFactory> m_particle_mgr;
   std::vector<std::unique_ptr<Spring>> m_springs;
   std::vector<std::unique_ptr<Collider>> m_colliders;
 
 private:
-  World& operator= (const World&);
+  World(World const& other);
+  World& operator=(World const& other) = delete;
 };
 
 #endif
