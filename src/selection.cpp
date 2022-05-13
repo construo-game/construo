@@ -64,12 +64,11 @@ Selection::scale(float factor, glm::vec2 center)
   {
     (*i)->pos = center + (((*i)->pos - center) * factor);
 
-    std::vector<Spring*>& springs = m_world->get_spring_mgr();
-    for (auto s = springs.begin(); s != springs.end(); ++s)
+    for (auto& spring : m_world->get_spring_mgr())
     {
-      if ((*s)->particles.first == (*i) || ((*s)->particles.second == (*i)))
+      if (spring->particles.first == (*i) || (spring->particles.second == (*i)))
       {
-        (*s)->recalc_length();
+        spring->recalc_length();
       }
     }
   }
@@ -139,16 +138,15 @@ Selection::duplicate ()
   }
 
   // FIXME: Warning, make sure that iterators stays intact while modifing the container
-  std::vector<Spring*> springs = m_world->get_spring_mgr ();
-  for (auto i = springs.begin (); i != springs.end (); ++i)
+  for (auto& spring : m_world->get_spring_mgr())
   {
     // both particles of the spring are in the current selection
-    if (std::find (m_selection.begin(), m_selection.end(), (*i)->particles.first) != m_selection.end ()
+    if (std::find (m_selection.begin(), m_selection.end(), spring->particles.first) != m_selection.end ()
         &&
-        std::find (m_selection.begin(), m_selection.end(), (*i)->particles.second) != m_selection.end ())
+        std::find (m_selection.begin(), m_selection.end(), spring->particles.second) != m_selection.end ())
     {
-      m_world->add_spring (p_trans_table[(*i)->particles.first],
-                           p_trans_table[(*i)->particles.second]);
+      m_world->add_spring (p_trans_table[spring->particles.first],
+                           p_trans_table[spring->particles.second]);
     }
   }
 
@@ -221,14 +219,13 @@ Selection::join_doubles(float toleranz)
         { // Everything that is connected to the particle 'i'
           // which should get removed, needs to get connected to
           // 'j'
-          std::vector<Spring*>& springs = world.get_spring_mgr ();
-          for (auto s = springs.begin(); s != springs.end(); ++s)
+          for (auto& spring : world.get_spring_mgr())
           {
-            if ((*s)->particles.first == (*i))
-              (*s)->particles.first = (*j);
+            if (spring->particles.first == (*i))
+              spring->particles.first = (*j);
 
-            if ((*s)->particles.second == (*i))
-              (*s)->particles.second = (*j);
+            if (spring->particles.second == (*i))
+              spring->particles.second = (*j);
           }
         }
 

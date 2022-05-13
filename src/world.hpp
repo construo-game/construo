@@ -32,8 +32,6 @@ class World
 
 public:
   typedef std::vector<Collider*> Colliders;
-  typedef std::vector<Spring*>::iterator SpringIter;
-  typedef std::vector<Spring*>::const_iterator CSpringIter;
 
 public:
   World();
@@ -67,7 +65,7 @@ public:
   void remove_collider (Collider*);
 
   ParticleFactory& get_particle_mgr() { return *m_particle_mgr; }
-  std::vector<Spring*>& get_spring_mgr () { return m_springs; }
+  std::vector<std::unique_ptr<Spring> >& get_spring_mgr () { return m_springs; }
   Colliders& get_colliders() { return m_colliders; }
 
   /** removes everything from the world */
@@ -93,7 +91,7 @@ public:
 private:
   bool m_has_been_run;
   std::unique_ptr<ParticleFactory> m_particle_mgr;
-  std::vector<Spring*> m_springs;
+  std::vector<std::unique_ptr<Spring> > m_springs;
   Colliders m_colliders;
 
 private:

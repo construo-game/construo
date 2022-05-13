@@ -63,7 +63,7 @@ World::World(const World& old_world) :
     if (first && second)
     {
       // FIXME: Use copy c'tor here maxstiffnes and Co. aren't copied correctly
-      m_springs.push_back(new Spring (first, second, (*i)->length));
+      m_springs.emplace_back(std::make_unique<Spring>(first, second, (*i)->length));
     }
     else
     {
@@ -85,24 +85,24 @@ World::update (float delta)
   // Main Movement and Forces
   // FIXME: Hardcoded Force Emitters
   for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
-    {
-      // Gravity
-      (*i)->add_force (glm::vec2 (0.0, 15.0f) * (*i)->get_mass ());
+  {
+    // Gravity
+    (*i)->add_force (glm::vec2 (0.0, 15.0f) * (*i)->get_mass ());
 
-      // Central Gravity force:
-      /*glm::vec2 direction = ((*i)->pos - glm::vec2 (400, 300));
-        if (glm::length(direction) != 0.0f)
-        (*i)->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
-      */
+    // Central Gravity force:
+    /*glm::vec2 direction = ((*i)->pos - glm::vec2 (400, 300));
+      if (glm::length(direction) != 0.0f)
+      (*i)->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
+    */
 
-      /*
-        for (auto j = particles.begin (); j != particles.end (); ++j)
-        {
-        glm::vec2 diff = (*j)->pos - (*i)->pos;
-        if (glm::length(diff) != 0.0f)
-        (*i)->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
-        }	    */
-    }
+    /*
+      for (auto j = particles.begin (); j != particles.end (); ++j)
+      {
+      glm::vec2 diff = (*j)->pos - (*i)->pos;
+      if (glm::length(diff) != 0.0f)
+      (*i)->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
+      }	    */
+  }
 
   for (auto i = m_springs.begin (); i != m_springs.end (); ++i) {
     (*i)->update (delta);
@@ -115,44 +115,31 @@ World::update (float delta)
   }
 
   // Spring splitting
-  std::vector<Spring*> new_springs;
+  std::vector<std::unique_ptr<Spring>> new_springs;
   for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
+  {
+    if ((*i)->destroyed)
     {
-      if ((*i)->destroyed)
-        {
-          if ((*i)->length > 20.0f)
-            {
-              // Calc midpoint
-              glm::vec2 pos = ((*i)->particles.first->pos
-                               + (*i)->particles.second->pos) * 0.5f;
+      if ((*i)->length > 20.0f)
+      {
+        // Calc midpoint
+        glm::vec2 pos = ((*i)->particles.first->pos
+                         + (*i)->particles.second->pos) * 0.5f;
 
-              // FIXME: particle mass needs to be recalculated
-              Particle* p1 = m_particle_mgr->add_particle (pos, (*i)->particles.first->velocity * 0.5f, .1f);
-              Particle* p2 = m_particle_mgr->add_particle (pos, (*i)->particles.second->velocity * 0.5f, .1f);
+        // FIXME: particle mass needs to be recalculated
+        Particle* p1 = m_particle_mgr->add_particle(pos, (*i)->particles.first->velocity * 0.5f, .1f);
+        Particle* p2 = m_particle_mgr->add_particle(pos, (*i)->particles.second->velocity * 0.5f, .1f);
 
-              // FIXME: Insert a more sofistikated string splitter here
-              new_springs.push_back(new Spring ((*i)->particles.first, p1, (*i)->length/2));
-              new_springs.push_back(new Spring ((*i)->particles.second, p2, (*i)->length/2));
-            }
-        }
+        // FIXME: Insert a more sofistikated string splitter here
+        new_springs.emplace_back(std::make_unique<Spring>((*i)->particles.first, p1, (*i)->length/2));
+        new_springs.emplace_back(std::make_unique<Spring>((*i)->particles.second, p2, (*i)->length/2));
+      }
     }
-  m_springs.insert(m_springs.end(), new_springs.begin(), new_springs.end ());
+  }
+  m_springs.insert(m_springs.end(),
+                   std::make_move_iterator(new_springs.begin()), std::make_move_iterator(new_springs.end()));
 
-  // Remove any springs that are marked as destroyed
-  // FIXME: Could be faster
-  SpringIter i = m_springs.begin ();
-  while ( i != m_springs.end ())
-    {
-      if ((*i)->destroyed)
-        {
-          delete *i;
-          i = m_springs.erase(i);
-        }
-      else
-        {
-          ++i;
-        }
-    }
+  std::erase_if(m_springs, [](auto&& spring){ return spring->destroyed; });
 }
 
 Spring*
@@ -181,7 +168,7 @@ World::get_spring(float x, float y, float capture_distance) const
           && ((spring && min_distance > distance)
               || (!spring && distance <= capture_distance)))
         {
-          spring = *i;
+          spring = i->get();
           min_distance = distance;
         }
     }
@@ -271,14 +258,14 @@ World::add_spring(int lhs, int rhs, float length, float stiffness, float damping
   lhs_particle->spring_links += 1;
   rhs_particle->spring_links += 1;
 
-  m_springs.push_back(new Spring(lhs_particle, rhs_particle));
+  m_springs.emplace_back(std::make_unique<Spring>(lhs_particle, rhs_particle));
 }
 
 void
 World::add_spring (Particle* last_particle, Particle* particle)
 {
   assert (last_particle && particle);
-  m_springs.push_back(new Spring(last_particle, particle));
+  m_springs.emplace_back(std::make_unique<Spring>(last_particle, particle));
 }
 
 void
@@ -288,33 +275,21 @@ World::add_particle(int id, glm::vec2 const& pos, glm::vec2 const& velocity, flo
 }
 
 void
-World::remove_particle (Particle* p)
+World::remove_particle(Particle* particle)
 {
   // Remove everyting that references the particle
-  for (auto i = m_springs.begin (); i != m_springs.end ();)
-    {
-      if ((*i)->particles.first == p || (*i)->particles.second == p)
-        {
-          delete *i;
-          // FIXME: this is potentially slow, since we don't care
-          // about order, we could speed this up
-          i = m_springs.erase(i);
-        }
-      else
-        {
-          ++i;
-        }
-    }
+  std::erase_if(m_springs, [particle](auto&& spring) {
+    return (spring->particles.first == particle ||
+            spring->particles.second == particle);
+  });
 
-  m_particle_mgr->remove_particle(p);
+  m_particle_mgr->remove_particle(particle);
 }
 
 void
-World::remove_spring (Spring* s)
+World::remove_spring(Spring* s)
 {
-  delete s;
-  m_springs.erase(std::remove(m_springs.begin (), m_springs.end (), s),
-                  m_springs.end ());
+  std::erase_if(m_springs, [s](auto&& spring) { return spring.get() == s; });
 }
 
 void
@@ -329,10 +304,6 @@ void
 World::clear ()
 {
   m_particle_mgr->clear();
-
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
-    delete *i;
-
   m_springs.clear();
 }
 
