@@ -56,8 +56,8 @@ public:
   void on_delete_press(float x, float y) override;
   void on_fix_press(float x, float y) override;
 
-  virtual void on_mouse_enter() override;
-  virtual void on_mouse_leave() override;
+  void on_mouse_enter() override;
+  void on_mouse_leave() override;
 
   void wheel_up(float x, float y) override;
   void wheel_down(float x, float y) override;
