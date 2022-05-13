@@ -45,11 +45,10 @@ World::World(const World& old_world) :
   m_springs(),
   m_colliders()
 {
-  for (Colliders::const_iterator i = old_world.m_colliders.begin();
-       i != old_world.m_colliders.end();
+  for (auto i = old_world.m_colliders.begin(); i != old_world.m_colliders.end();
        ++i)
   {
-    m_colliders.push_back((*i)->duplicate());
+    m_colliders.emplace_back((*i)->duplicate());
   }
 
   // FIXME: Could need optimizations
@@ -202,7 +201,7 @@ World::get_collider(glm::vec2 const& pos) const
   for (auto it = m_colliders.rbegin (); it != m_colliders.rend(); ++it)
   {
     if ((*it)->is_at(pos)) {
-      return *it;
+      return it->get();
     }
   }
   return nullptr;
@@ -293,11 +292,9 @@ World::remove_spring(Spring* s)
 }
 
 void
-World::remove_collider (Collider* c)
+World::remove_collider(Collider* c)
 {
-  delete c;
-  m_colliders.erase(std::remove(m_colliders.begin(), m_colliders.end(), c),
-                    m_colliders.end ());
+  std::erase_if(m_colliders, [c](auto&& collider){ return collider.get() == c; });
 }
 
 void
@@ -356,7 +353,7 @@ World::add_rect_collider(const glm::vec2& pos1, const glm::vec2& pos2)
 {
   geom::frect rect(pos1, pos2);
 
-  m_colliders.push_back(new RectCollider(rect.left(), rect.top(), rect.right(), rect.bottom()));
+  m_colliders.emplace_back(std::make_unique<RectCollider>(rect.left(), rect.top(), rect.right(), rect.bottom()));
 }
 
 /* EOF */

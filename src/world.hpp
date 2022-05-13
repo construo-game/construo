@@ -31,9 +31,6 @@ class World
   friend class ParticleFactory;
 
 public:
-  typedef std::vector<Collider*> Colliders;
-
-public:
   World();
   World (const World& w);
   ~World ();
@@ -65,8 +62,8 @@ public:
   void remove_collider (Collider*);
 
   ParticleFactory& get_particle_mgr() { return *m_particle_mgr; }
-  std::vector<std::unique_ptr<Spring> >& get_spring_mgr () { return m_springs; }
-  Colliders& get_colliders() { return m_colliders; }
+  std::vector<std::unique_ptr<Spring>>& get_spring_mgr () { return m_springs; }
+  std::vector<std::unique_ptr<Collider>>& get_colliders() { return m_colliders; }
 
   /** removes everything from the world */
   void clear ();
@@ -91,8 +88,8 @@ public:
 private:
   bool m_has_been_run;
   std::unique_ptr<ParticleFactory> m_particle_mgr;
-  std::vector<std::unique_ptr<Spring> > m_springs;
-  Colliders m_colliders;
+  std::vector<std::unique_ptr<Spring>> m_springs;
+  std::vector<std::unique_ptr<Collider>> m_colliders;
 
 private:
   World& operator= (const World&);

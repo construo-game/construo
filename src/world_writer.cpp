@@ -74,7 +74,7 @@ WorldWriter::write(std::string const& filename)
   writer.begin_collection("colliders");
   for (auto const& collider : m_world.get_colliders())
   {
-    if (RectCollider const* rect = dynamic_cast<RectCollider const*>(collider)) {
+    if (RectCollider const* rect = dynamic_cast<RectCollider const*>(collider.get())) {
       writer.begin_object("rect")
         .write("pos1", glm::vec2(rect->x1, rect->y1))
         .write("pos2", glm::vec2(rect->x2, rect->y2))

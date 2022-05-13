@@ -24,7 +24,7 @@ class RectCollider : public Collider
 public:
   RectCollider(float x1_, float y1_, float x2_, float y2_);
 
-  Collider* duplicate() const override;
+  std::unique_ptr<Collider> duplicate() const override;
 
   glm::vec2 get_pos() override;
   void     set_pos(const glm::vec2&) override;

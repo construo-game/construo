@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "rect_collider.hpp"
+
 #include <cmath>
+
 #include "colors.hpp"
 #include "particle_factory.hpp"
 #include "controller.hpp"
-#include "rect_collider.hpp"
 #include "construo_error.hpp"
 
-Collider*
+std::unique_ptr<Collider>
 RectCollider::duplicate() const
 {
-  return new RectCollider(x1, y1, x2, y2);
+  return std::make_unique<RectCollider>(x1, y1, x2, y2);
 }
 
 RectCollider::RectCollider (float x1_, float y1_, float x2_, float y2_) :

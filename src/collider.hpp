@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_COLLIDER_HPP
 #define HEADER_CONSTRUO_COLLIDER_HPP
 
+#include <memory>
+
 #include <glm/glm.hpp>
 
 #include "particle.hpp"
@@ -30,7 +32,7 @@ private:
 public:
   virtual ~Collider() {}
 
-  virtual Collider* duplicate() const =0;
+  virtual std::unique_ptr<Collider> duplicate() const =0;
 
   virtual glm::vec2 get_pos() =0;
   virtual void set_pos(const glm::vec2&) =0;
