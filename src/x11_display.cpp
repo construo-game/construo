@@ -24,6 +24,7 @@
 #include <unistd.h>
 
 #include <logmich/log.hpp>
+#include <geom/io.hpp>
 
 #include "construo_error.hpp"
 #include "controller.hpp"
@@ -57,8 +58,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   m_orig_viewport_x(),
   m_orig_viewport_y(),
   m_orig_dotclock(),
-  m_width(w),
-  m_height(h),
+  m_geometry(geom::isize(w, h)),
   m_display(),
   m_window(),
   m_colormap(),
@@ -78,7 +78,11 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   }
 
   XSetErrorHandler([](Display* display, XErrorEvent* error_event){
-    log_error("X11 Error");
+    std::array<char, 1024> buffer;
+    XGetErrorText(display, error_event->error_code, buffer.data(), buffer.size());
+
+    log_error("X11 Error: {}", buffer.data());
+    exit(EXIT_FAILURE);
     return 0;
   });
 
@@ -103,7 +107,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   attributes.colormap = m_colormap;
   m_window = XCreateWindow(m_display, RootWindow(m_display, screen),
                            0,0, // position
-                           m_width, m_height, 0,
+                           m_geometry.width(), m_geometry.height(), 0,
                            CopyFromParent, // depth
                            InputOutput, // class
                            nullptr /*CopyFromParent*/, // visual
@@ -137,8 +141,8 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
     size_hints.y = 0;
     size_hints.flags  = PSize | PMinSize;
 
-    size_hints.width  = m_width;
-    size_hints.height = m_height;
+    size_hints.width  = m_geometry.width();
+    size_hints.height = m_geometry.height();
 
     size_hints.min_width  = 0;
     size_hints.min_height = 0;
@@ -164,7 +168,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   }
 
   if (m_doublebuffer) {
-    m_drawable = XCreatePixmap(m_display, m_window, m_width, m_height,
+    m_drawable = XCreatePixmap(m_display, m_window, m_geometry.width(), m_geometry.height(),
                                DefaultDepth(m_display, screen));
   } else {
     m_drawable = m_window;
@@ -252,7 +256,7 @@ void
 X11Display::set_cursor_real(CursorType cursor)
 {
   switch(cursor)
-    {
+  {
     case CURSOR_INSERT:
       XDefineCursor(m_display, m_window, m_cursor_insert);
       break;
@@ -271,7 +275,7 @@ X11Display::set_cursor_real(CursorType cursor)
     default:
       log_error("X11Display: Unhandled cursor type: {}", static_cast<int>(cursor));
       break;
-    }
+  }
 }
 
 void
@@ -280,12 +284,12 @@ X11Display::draw_lines(std::vector<Line>& lines, Color color, int wide)
   std::vector<XSegment> segments(lines.size());
 
   for (std::vector<Line>::size_type i = 0; i < lines.size(); ++i)
-    {
-      segments[i].x1 = static_cast<short>(lines[i].x1);
-      segments[i].y1 = static_cast<short>(lines[i].y1);
-      segments[i].x2 = static_cast<short>(lines[i].x2);
-      segments[i].y2 = static_cast<short>(lines[i].y2);
-    }
+  {
+    segments[i].x1 = static_cast<short>(lines[i].x1);
+    segments[i].y1 = static_cast<short>(lines[i].y1);
+    segments[i].x2 = static_cast<short>(lines[i].x2);
+    segments[i].y2 = static_cast<short>(lines[i].y2);
+  }
 
   XDrawSegments(m_display, m_drawable, m_gc, &*segments.begin(), static_cast<int>(segments.size()));
 }
@@ -295,14 +299,14 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
 {
   std::vector<XArc> arcs (circles.size());
   for (std::vector<Circle>::size_type i = 0; i < circles.size(); ++i)
-    {
-      arcs[i].x      = static_cast<short>(circles[i].x - circles[i].r);
-      arcs[i].y      = static_cast<short>(circles[i].y - circles[i].r);
-      arcs[i].width  = static_cast<short>(2 * circles[i].r);
-      arcs[i].height = static_cast<short>(2 * circles[i].r);
-      arcs[i].angle1 = 0;
-      arcs[i].angle2 = 360 * 64;
-    }
+  {
+    arcs[i].x      = static_cast<short>(circles[i].x - circles[i].r);
+    arcs[i].y      = static_cast<short>(circles[i].y - circles[i].r);
+    arcs[i].width  = static_cast<short>(2 * circles[i].r);
+    arcs[i].height = static_cast<short>(2 * circles[i].r);
+    arcs[i].angle1 = 0;
+    arcs[i].angle2 = 360 * 64;
+  }
 
   XSetForeground(m_display, m_gc, get_color_value(color));
   XFillArcs(m_display, m_drawable, m_gc,
@@ -321,8 +325,8 @@ X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XFillRectangle(m_display, m_drawable, m_gc,
-                  static_cast<int>(x1), static_cast<int>(y1),
-                  static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
+                 static_cast<int>(x1), static_cast<int>(y1),
+                 static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
 }
 
 void
@@ -349,8 +353,8 @@ X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XDrawRectangle(m_display, m_drawable, m_gc,
-                  static_cast<int>(x1), static_cast<int>(y1),
-                  static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
+                 static_cast<int>(x1), static_cast<int>(y1),
+                 static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
 }
 
 void
@@ -365,8 +369,8 @@ X11Display::draw_string_centered(float x, float y, const std::string& str, Color
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XDrawString(m_display, m_drawable, m_gc,
-               static_cast<int>(x) - ((static_cast<int>(str.length()) * 6) / 2), static_cast<int>(y),
-               str.c_str (), static_cast<int>(str.length()));
+              static_cast<int>(x) - ((static_cast<int>(str.length()) * 6) / 2), static_cast<int>(y),
+              str.c_str (), static_cast<int>(str.length()));
 }
 
 float
@@ -422,26 +426,39 @@ X11Display::process_pending_events()
     // will get filled with ever more ConfigureNotify events and cause
     // huge delays.
 
+    geom::irect new_geometry;
+    { // FIXME: Don't know how to interpret ConfigureNotify properly,
+      // it does not return absolute values, but values relative to
+      // something (m_pending_configure_event->above?!). This code
+      // seems to get the proper values, but might do unnecessary
+      // work.
+      int x, y;
+      Window child;
+      XWindowAttributes xwa;
+      XTranslateCoordinates(m_display, m_window, RootWindow(m_display, DefaultScreen(m_display)),
+                            0, 0, &x, &y, &child);
+      XGetWindowAttributes(m_display, m_window, &xwa);
+
+      new_geometry = geom::irect(geom::ipoint(xwa.x + x, xwa.y + y),
+                                 geom::isize(xwa.width, xwa.height));
+    }
+
     if (m_doublebuffer) {
-      if (m_width < m_pending_configure_event->width ||
-          m_height < m_pending_configure_event->height)
+      if (m_geometry.width() < new_geometry.width() ||
+          m_geometry.height() < new_geometry.height())
       {
         // enlarge the pixmap when necessary
         XFreePixmap(m_display, m_drawable);
         m_drawable = XCreatePixmap(m_display, m_window,
-                                   m_pending_configure_event->width,
-                                   m_pending_configure_event->height,
+                                   new_geometry.width(),
+                                   new_geometry.height(),
                                    DefaultDepth(m_display, DefaultScreen(m_display)));
       }
     }
 
-    m_width = m_pending_configure_event->width;
-    m_height = m_pending_configure_event->height;
+    m_geometry = new_geometry;
 
-    ScreenManager::instance()->set_geometry(static_cast<float>(m_pending_configure_event->x),
-                                            static_cast<float>(m_pending_configure_event->y),
-                                            static_cast<float>(m_width),
-                                            static_cast<float>(m_height));
+    ScreenManager::instance()->set_geometry(geom::frect(m_geometry));
 
     m_pending_configure_event = std::nullopt;
   }
@@ -655,12 +672,6 @@ X11Display::process_event(XEvent& event)
       break;
 
     case ConfigureNotify:
-      if ((false)) {
-        log_info("X11Display:ConfigureNotify: {}x{}+{}+{}",
-                 event.xconfigure.width, event.xconfigure.height,
-                 event.xconfigure.x, event.xconfigure.y);
-      }
-
       m_pending_configure_event = event.xconfigure;
       break;
 
@@ -716,7 +727,7 @@ void
 X11Display::clear ()
 {
   XSetForeground(m_display, m_gc, 0x000000);
-  XFillRectangle(m_display, m_drawable, m_gc, 0, 0, m_width, m_height);
+  XFillRectangle(m_display, m_drawable, m_gc, 0, 0, m_geometry.width(), m_geometry.height());
 }
 
 void
@@ -727,7 +738,7 @@ X11Display::flip()
     // FIXME: Use another gc here
     XCopyArea(m_display, m_drawable, m_window, m_gc,
               0, 0, // source
-              m_width, m_height,
+              m_geometry.width(), m_geometry.height(),
               0, 0 // destination
       );
     //XFlush(m_display);
@@ -839,7 +850,7 @@ unsigned int
 X11Display::get_color_value(const Color& color)
 {
   switch (m_depth)
-    {
+  {
     case 24:
     case 32:
       return color.get_as_rrggbb();
@@ -858,7 +869,7 @@ X11Display::get_color_value(const Color& color)
         return static_cast<unsigned int>(x_color.pixel);
       }
       break;
-    }
+  }
 }
 
 XColor

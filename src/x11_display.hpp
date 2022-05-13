@@ -21,6 +21,8 @@
 #include <X11/Xutil.h>
 #include <optional>
 
+#include <geom/rect.hpp>
+
 #include "math.hpp"
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
@@ -37,7 +39,7 @@ public:
   virtual ~X11Display();
 
   // Graphic Context stuff
-  void draw_lines (std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
   void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
   void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
   void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
@@ -48,24 +50,25 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  float get_width() override { return static_cast<float>(m_width); }
-  float get_height() override { return static_cast<float>(m_height); }
+  geom::frect get_geometry() const override { return geom::frect(m_geometry); }
+  float get_width() override { return static_cast<float>(m_geometry.width()); }
+  float get_height() override { return static_cast<float>(m_geometry.height()); }
 
   void toggle_fullscreen();
 
-  void clear () override;
+  void clear() override;
 
   /** Flip the double buffered display */
-  void flip () override;
+  void flip() override;
 
   void enter_fullscreen() override;
   void leave_fullscreen() override;
 
   // Input Context stuff
-  float get_mouse_x () override;
-  float get_mouse_y () override;
+  float get_mouse_x() override;
+  float get_mouse_y() override;
 
-  bool get_key (int key) override;
+  bool get_key(int key) override;
 
   /** Waits for events to come in, blocks until new events are available */
   void wait_for_events_blocking();
@@ -85,8 +88,8 @@ public:
 private:
   void process_event(XEvent& event);
   void process_pending_events();
-  void send_button_press (int i);
-  void send_button_release (int i);
+  void send_button_press(int i);
+  void send_button_release(int i);
   void send_load_or_save(int n);
 
   /** Save the current visual mode for later restoration after leaving
@@ -120,8 +123,7 @@ private:
   int m_orig_viewport_y;
   int m_orig_dotclock;
 
-  int m_width;
-  int m_height;
+  geom::irect m_geometry;
   Display* m_display;
   Window m_window;
   Colormap m_colormap;
@@ -142,7 +144,7 @@ private:
 
 public:
   X11Display(const X11Display&) = delete;
-  X11Display& operator= (const X11Display&) = delete;
+  X11Display& operator=(const X11Display&) = delete;
 };
 
 #endif

@@ -17,6 +17,9 @@
 #ifndef HEADER_CONSTRUO_GLUT_DISPLAY_HPP
 #define HEADER_CONSTRUO_GLUT_DISPLAY_HPP
 
+#include <geom/rect.hpp>
+#include <geom/size.hpp>
+
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
 
@@ -42,6 +45,10 @@ public:
 
   bool get_fullscreen() { return m_is_fullscreen; }
 
+  geom::frect get_geometry() const override {
+    return geom::frect(geom::fsize(static_cast<float>(m_width),
+                                   static_cast<float>(m_height)));
+  }
   float get_width() override { return static_cast<float>(m_width); }
   float get_height() override { return static_cast<float>(m_height); }
 

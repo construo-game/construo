@@ -20,6 +20,8 @@
 #include <memory>
 #include <vector>
 
+#include <geom/fwd.hpp>
+
 #include "fwd.hpp"
 
 /** The GUIManager is basically the place where the main loop runs */
@@ -41,7 +43,7 @@ public:
 
   virtual void draw_overlay(GraphicContext& gc) {}
 
-  virtual void resize(float width, float height) {}
+  virtual void set_geometry(geom::frect const& geometry) {}
 
   /** Stops the GUIManager */
   void quit();

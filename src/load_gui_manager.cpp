@@ -14,11 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "load_gui_manager.hpp"
+
+#include <geom/rect.hpp>
+
 #include "gui_file_manager.hpp"
 #include "construo.hpp"
 #include "system_context.hpp"
 #include "root_graphic_context.hpp"
-#include "load_gui_manager.hpp"
 
 LoadGUIManager::LoadGUIManager() :
   m_file_manager()
@@ -27,10 +30,10 @@ LoadGUIManager::LoadGUIManager() :
 }
 
 void
-LoadGUIManager::resize(float width, float height)
+LoadGUIManager::set_geometry(geom::frect const& geometry)
 {
-  GUIManager::resize(width, height);
-  m_file_manager->set_geometry(0, 0, width, height);
+  GUIManager::set_geometry(geometry);
+  m_file_manager->set_geometry(0, 0, geometry.width(), geometry.height());
 }
 
 void

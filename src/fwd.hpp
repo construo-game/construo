@@ -18,23 +18,26 @@
 #define HEADER_CONSTRUO_FWD_HPP
 
 class Collider;
+class GUIButton;
 class GUIComponent;
 class GUIFileButton;
 class GUIFileManager;
-class GUIButton;
 class GUIManager;
 class GlutDisplay;
 class GraphicContext;
 class InputContext;
+class LoadGUIManager;
 class Particle;
 class ParticleFactory;
 class RectCollider;
 class RootGraphicContext;
+class SaveGUIManager;
 class Spring;
 class SystemContext;
 class UnixSystem;
 class World;
 class WorldCache;
+class WorldGUIManager;
 class WorldViewColliderTool;
 class WorldViewComponent;
 class WorldViewInsertTool;

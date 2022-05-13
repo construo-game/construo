@@ -19,6 +19,8 @@
 
 #include "gui_manager.hpp"
 
+#include <geom/rect.hpp>
+
 class WorldGUIManager : public GUIManager
 {
 private:
@@ -29,7 +31,7 @@ public:
   WorldGUIManager ();
   virtual ~WorldGUIManager ();
 
-  void resize(float width, float height) override;
+  void set_geometry(geom::frect const& geometry) override;
 
   void update() override;
   void draw_overlay(GraphicContext& gc) override;
@@ -57,6 +59,8 @@ private:
 
   GUIComponent* m_zoomout_button;
   GUIComponent* m_zoomin_button;
+
+  geom::frect m_last_geometry;
 
 public:
   WorldGUIManager(const WorldGUIManager&) = delete;

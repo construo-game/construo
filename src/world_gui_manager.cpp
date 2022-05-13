@@ -18,6 +18,7 @@
 
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <geom/rect.hpp>
 
 #include "controller.hpp"
 #include "construo.hpp"
@@ -49,7 +50,8 @@ WorldGUIManager::WorldGUIManager() :
   m_collider_button(),
   m_zoom_button(),
   m_zoomout_button(),
-  m_zoomin_button()
+  m_zoomin_button(),
+  m_last_geometry()
 {
   instance_  = this;
 
@@ -155,9 +157,6 @@ WorldGUIManager::WorldGUIManager() :
     window->add (new GUIButton ("Testbutton", 10, 10, 100, 25);
     add (window);
   */
-
-  resize(g_graphic_context->get_width(),
-         g_graphic_context->get_height());
 }
 
 WorldGUIManager::~WorldGUIManager ()
@@ -165,17 +164,22 @@ WorldGUIManager::~WorldGUIManager ()
 }
 
 void
-WorldGUIManager::resize(float width, float height)
+WorldGUIManager::set_geometry(geom::frect const& geometry)
 {
-  GUIManager::resize(width, height);
+  auto offset = m_last_geometry.topleft().as_vec() - geometry.topleft().as_vec();
+
+  m_worldview_component->zoom().set_offset(m_worldview_component->zoom().get_x_offset() + offset.x / m_worldview_component->zoom().get_scale(),
+                                           m_worldview_component->zoom().get_y_offset() + offset.y / m_worldview_component->zoom().get_scale());
+
+  GUIManager::set_geometry(geometry);
 
   auto BUTTON_POS = [](int n) { return 80.0f + static_cast<float>(n) * 30.0f; };
   auto BUTTON_RPOS = [](int n) { return 50.0f + static_cast<float>(n) * 30.0f; };
   float const BUTTON_WIDTH = 75.0f;
   float const BUTTON_HEIGHT = 25.0f;
-  float const BUTTON_LX_POS = width - BUTTON_WIDTH - 10.0f;
+  float const BUTTON_LX_POS = geometry.width() - BUTTON_WIDTH - 10.0f;
 
-  m_worldview_component->set_geometry(0, 0, width, height);
+  m_worldview_component->set_geometry(0, 0, geometry.width(), geometry.height());
 
   m_run_button->set_geometry(10, BUTTON_POS(0), BUTTON_WIDTH, BUTTON_HEIGHT);
   m_slowmo_button->set_geometry(10, BUTTON_POS(1), BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -197,6 +201,8 @@ WorldGUIManager::resize(float width, float height)
 
   m_zoomout_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25);
   m_zoomin_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25);
+
+  m_last_geometry = geometry;
 }
 
 void

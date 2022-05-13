@@ -18,6 +18,9 @@
 #define HEADER_ROOT_GRAPHIC_CONTEXT_HPP
 
 #include <stack>
+
+#include <geom/fwd.hpp>
+
 #include "graphic_context.hpp"
 #include "cursor_type.hpp"
 
@@ -37,6 +40,9 @@ public:
     current_cursor()
   {}
   virtual ~RootGraphicContext() {}
+
+  /** Return the window size and position */
+  virtual geom::frect get_geometry() const = 0;
 
   void set_cursor(CursorType);
   void push_cursor();

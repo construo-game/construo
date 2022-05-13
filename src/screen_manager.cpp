@@ -14,10 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "screen_manager.hpp"
+
+#include <logmich/log.hpp>
+#include <geom/io.hpp>
+
 #include "load_gui_manager.hpp"
 #include "save_gui_manager.hpp"
 #include "world_gui_manager.hpp"
-#include "screen_manager.hpp"
 
 std::unique_ptr<ScreenManager> ScreenManager::s_instance;
 
@@ -72,11 +76,11 @@ ScreenManager::set_gui(int gui_id)
 }
 
 void
-ScreenManager::set_geometry(float x, float y, float width, float height)
+ScreenManager::set_geometry(geom::frect const& geometry)
 {
-  m_load_gui_manager->resize(width, height);
-  m_save_gui_manager->resize(width, height);
-  m_world_gui_manager->resize(width, height);
+  m_load_gui_manager->set_geometry(geometry);
+  m_save_gui_manager->set_geometry(geometry);
+  m_world_gui_manager->set_geometry(geometry);
 }
 
 ScreenManager*

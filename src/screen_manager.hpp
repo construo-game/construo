@@ -19,6 +19,8 @@
 
 #include <memory>
 
+#include <geom/fwd.hpp>
+
 #include "fwd.hpp"
 
 class ScreenManager
@@ -41,14 +43,14 @@ public:
   bool is_finished();
   void run_once(GraphicContext& gc);
   void draw(GraphicContext& gc);
-  void set_geometry(float x, float y, float width, float height);
+  void set_geometry(geom::frect const& geometry);
 
 private:
   bool m_do_quit;
 
-  std::unique_ptr<GUIManager> m_load_gui_manager;
-  std::unique_ptr<GUIManager> m_save_gui_manager;
-  std::unique_ptr<GUIManager> m_world_gui_manager;
+  std::unique_ptr<LoadGUIManager> m_load_gui_manager;
+  std::unique_ptr<SaveGUIManager> m_save_gui_manager;
+  std::unique_ptr<WorldGUIManager> m_world_gui_manager;
 
   GUIManager* m_current_gui_manager;
 

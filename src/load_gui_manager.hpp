@@ -24,7 +24,7 @@ class LoadGUIManager : public GUIManager
 public:
   LoadGUIManager ();
 
-  void resize(float width, float height) override;
+  void set_geometry(geom::frect const& geometry) override;
   void draw_overlay(GraphicContext& gc) override;
   void run_once(GraphicContext& gc) override;
 
