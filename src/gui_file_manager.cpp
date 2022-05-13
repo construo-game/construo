@@ -34,12 +34,6 @@ GUIFileManager::GUIFileManager(Mode m) :
   m_btn_update_directory(),
   m_directory()
 {
-  if (m_mode == SAVE_MANAGER) {
-    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::SAVE_DIRECTORY);
-  } else {
-    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::LOAD_DIRECTORY);
-  }
-
   m_btn_up_directory = create<GUIButton>("Up", [this]{
     directory_up();
   });
@@ -59,6 +53,12 @@ GUIFileManager::GUIFileManager(Mode m) :
   m_btn_update_directory = create<GUIButton>("Reload", [this]{
     update_current_directory();
   });
+
+  if (m_mode == SAVE_MANAGER) {
+    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::SAVE_DIRECTORY);
+  } else {
+    m_directory = create<GUIDirectory>(*this, "/", GUIDirectory::LOAD_DIRECTORY);
+  }
 }
 
 GUIFileManager::~GUIFileManager ()
@@ -85,7 +85,6 @@ void
 GUIFileManager::open_directory (const std::string& pathname)
 {
   GUIDirectory* old_directory = m_directory;
-  std::unique_ptr<GUIDirectory> new_directory;
   if (m_mode == SAVE_MANAGER) {
     m_directory = create<GUIDirectory>(*this, pathname, GUIDirectory::SAVE_DIRECTORY);
   } else {
