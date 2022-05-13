@@ -85,7 +85,7 @@ set(CONSTRUO_SOURCES_CXX
   src/cursors/cursor_select_mask.xbm
   src/cursors/cursor_zoom.xbm
   src/cursors/cursor_zoom_mask.xbm
-  src/gui_buttons.cpp
+  src/gui_button.cpp
   src/gui_child_manager.cpp
   src/gui_component.cpp
   src/gui_directory.cpp

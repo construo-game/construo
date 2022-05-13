@@ -14,13 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "gui_button.hpp"
+
 #include <iostream>
-#include "graphic_context.hpp"
-#include "controller.hpp"
+
 #include "colors.hpp"
-#include "world_gui_manager.hpp"
-#include "gui_buttons.hpp"
+#include "controller.hpp"
+#include "graphic_context.hpp"
 #include "screen_manager.hpp"
+#include "world_gui_manager.hpp"
 #include "worldview_component.hpp"
 
 #define BUTTON_POS(n) (80 + n * 30)

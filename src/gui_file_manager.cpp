@@ -19,7 +19,7 @@
 #include <assert.h>
 
 #include "construo.hpp"
-#include "gui_buttons.hpp"
+#include "gui_button.hpp"
 #include "path.hpp"
 #include "screen_manager.hpp"
 #include "zoom_graphic_context.hpp"

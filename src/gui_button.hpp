@@ -18,6 +18,7 @@
 #define HEADER_CONSTRUO_GUI_BUTTONS_HPP
 
 #include <functional>
+#include <string>
 
 #include "colors.hpp"
 #include "gui_component.hpp"

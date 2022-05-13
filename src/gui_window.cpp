@@ -21,7 +21,7 @@
 #include "graphic_context.hpp"
 #include "colors.hpp"
 #include "gui_label.hpp"
-#include "gui_buttons.hpp"
+#include "gui_button.hpp"
 
 void yes_press()
 {

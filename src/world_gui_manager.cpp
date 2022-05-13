@@ -24,7 +24,7 @@
 #include "graphic_context.hpp"
 #include "worldview_component.hpp"
 #include "worldview_insert_tool.hpp"
-#include "gui_buttons.hpp"
+#include "gui_button.hpp"
 #include "gui_window.hpp"
 #include "gui_label.hpp"
 #include "screen_manager.hpp"
