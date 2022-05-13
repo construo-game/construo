@@ -83,8 +83,7 @@ WorldViewComponent::set_mode(Mode m)
   }
   else
   {
-    std::cout << "Unknown Mode" << std::endl;
-    assert(false);
+    assert(false && "WorldViewComponent: unknown mode");
   }
 
   m_current_tool->activate ();

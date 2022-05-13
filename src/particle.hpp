@@ -17,8 +17,6 @@
 #ifndef HEADER_CONSTRUO_PARTICLE_HPP
 #define HEADER_CONSTRUO_PARTICLE_HPP
 
-#include <iostream>
-
 #include <glm/glm.hpp>
 
 #include "construo.hpp"

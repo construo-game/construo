@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "selection.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <map>
 
-#include <glm/gtx/io.hpp>
 #include <geom/rect.hpp>
+#include <glm/gtx/io.hpp>
+#include <logmich/log.hpp>
 
-#include "selection.hpp"
+#include "controller.hpp"
 #include "particle.hpp"
 #include "particle_factory.hpp"
-#include "controller.hpp"
 
 Selection::Selection() :
   m_selection(),
@@ -127,15 +129,13 @@ Selection::duplicate ()
 
   SelectionLst new_selection;
 
-  std::cout << "Trying to duplicate the selection" << std::endl;
+  log_debug("Trying to duplicate the selection");
   for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
   {
     Particle* p = m_world->get_particle_mgr().add_particle(**i);
     p->pos += glm::vec2 (50,50);
     new_selection.push_back(p);
     p_trans_table[*i] = p;
-
-    //std::cout << "P: " << (*i)->get_id () << " New: " << p->get_id () << std::endl;
   }
 
   // FIXME: Warning, make sure that iterators stays intact while modifing the container
@@ -193,7 +193,6 @@ Selection::validate()
 {
   if (m_world != &Controller::instance()->get_world())
   {
-    //std::cout << "World changed; " << world << " " << Controller::instance()->get_world () << std::endl;
     clear();
   }
 }
@@ -212,7 +211,8 @@ Selection::join_doubles(float toleranz)
       if (glm::distance((*j)->pos, (*i)->pos) < toleranz)
       {
         // Join two particles
-        std::cout << "joining particles: " << (*j)->pos << " " << (*i)->pos << std::endl;
+        log_debug("joining particles: {} {}", (*j)->pos, (*i)->pos);
+
         (*j)->pos      = ((*j)->pos + (*i)->pos) * 0.5f;
         (*j)->velocity = ((*j)->velocity + (*i)->velocity) * 0.5f;
 

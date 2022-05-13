@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
 #include <unistd.h>
+
+#include <logmich/log.hpp>
+
 #include "path_manager.hpp"
 
 PathManager path_manager;
@@ -59,13 +61,13 @@ PathManager::find_path(const std::list<std::filesystem::path>& file_list)
       m_path_found = true;
       m_base_path = *i;
 
-      std::cout << "PathManager: Using base_path: " << m_base_path << std::endl;
+      log_info("PathManager: Using base_path: {}", m_base_path);
 
       return true;
     }
   }
 
-  std::cout << "PathManager: No base path found" << std::endl;
+  log_info("PathManager: No base path found");
 
   return false;
 }
@@ -81,13 +83,13 @@ PathManager::find_path(const std::filesystem::path& file)
       m_path_found = true;
       m_base_path = *i;
 
-      std::cout << "PathManager: Using base_path: " << m_base_path << std::endl;
+      log_info("PathManager: Using base_path: {}", m_base_path);
 
       return true;
     }
   }
 
-  std::cout << "PathManager: No base path found" << std::endl;
+  log_info("PathManager: No base path found");
 
   return false;
 }

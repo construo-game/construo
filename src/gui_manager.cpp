@@ -54,9 +54,7 @@ GUIManager::run_once(GraphicContext& gc)
 
   if (m_start_time + 3000 < g_system_context->get_time ())
     {
-      float passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
-
-      //std::cout << "FPS: " << frame_count / passed_time << std::endl;
+      float const passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
 
       m_current_fps = static_cast<float>(m_frame_count) / passed_time;
 
@@ -90,8 +88,9 @@ GUIManager::find_component_at(float x, float y)
   GUIComponent* component = nullptr;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
     {
-      if ((*i)->is_at(x, y))
+      if ((*i)->is_at(x, y)) {
         component = i->get();
+      }
     }
   return component;
 }
@@ -264,10 +263,7 @@ GUIManager::process_button_events (ButtonEvent& button)
           break;
 
         default:
-#ifdef DEBUG
-          std::cout << "GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: "
-                    << button.id << std::endl;
-#endif
+          log_debug("GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: {}", button.id);
           break;
         }
     }
@@ -324,11 +320,10 @@ GUIManager::process_events ()
           switch (event.type)
             {
             case BUTTON_EVENT:
-              //std::cout << "BUTTON_EVENT: " << event.button.id  << " state: " << event.button.pressed << std::endl;
               process_button_events (event.button);
               break;
             default:
-              std::cout << "GUIManager: Unhandled event type" << std::endl;
+              log_debug("GUIManager: Unhandled event type: {}", event.type);
               break;
             }
         }

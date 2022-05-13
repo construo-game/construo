@@ -45,11 +45,6 @@ WorldReader::from_file(std::string const& filename)
 
   parse_scene(doc.get_mapping());
 
-  //ConstruoAssert(m_particle_mgr, "No Particles given in file, load failed");
-
-  //std::cout << "particles: " << particle_mgr->size () << std::endl;
-  //std::cout << "springs:   " << springs.size () << std::endl;
-
   return std::move(m_world);
 }
 
@@ -118,8 +113,7 @@ WorldReader::parse_colliders(ReaderCollection const& collection)
     }
     else
     {
-      std::cout << "WARNING: Unknown collider type '" << item.get_name()
-                << "' skipping" << std::endl;
+      log_warn("WARNING: Unknown collider type '{}' skipping", item.get_name());
     }
   }
 }

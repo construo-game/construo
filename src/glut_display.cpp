@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <logmich/log.hpp>
+
 #include "buttons.hpp"
 #include "events.hpp"
 #include "settings.hpp"
@@ -116,9 +118,7 @@ GlutDisplay::~GlutDisplay()
 void
 GlutDisplay::run()
 {
-  std::cout << "Starting glut mainloop" << std::endl;
   glutMainLoop();
-  std::cout << "Ending glut mainloop" << std::endl;
 }
 
 void
@@ -316,8 +316,6 @@ GlutDisplay::mouse_func(int button, int button_state, int x, int y)
   Event event;
   event.type = BUTTON_EVENT;
 
-  //std::cout << "mouse button press: " << button << " " << button_state <<  " " << x << " " << y << std::endl;
-
   if (button_state == 0)
     event.button.pressed = true;
   else
@@ -341,7 +339,7 @@ GlutDisplay::mouse_func(int button, int button_state, int x, int y)
       event.button.id = BUTTON_ZOOM_OUT;
       break;
     default:
-      std::cout << "GlutDisplay: Unhandle mouse button press: " << button << " " << button_state << std::endl;
+      log_debug("GlutDisplay: Unhandle mouse button press: {} {}", button, button_state);
       return;
   }
   events.push(event);
@@ -382,8 +380,6 @@ GlutDisplay::special_func(int key, int x, int y)
 void
 GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 {
-  //std::cout << "GlutDisplay: keypress: " << key << " (" << int(key) << ") " << x << " " << y << std::endl;
-
   Event event;
   event.type = BUTTON_EVENT;
   event.button.pressed = true;
@@ -535,8 +531,7 @@ GlutDisplay::keyboard_func(unsigned char key, int x, int y)
       event.button.id = BUTTON_ZOOM_OUT;
       break;
     default:
-      //std::cout << "GlutDisplay: Unhandled keypress: '" << key << "'[" << int(key) << "] x/y: "
-      //        << x << ", " << y << std::endl;
+      log_debug("GlutDisplay: Unhandled keypress: '{}' {}+{}", key, x, y);
       return;
   }
 
@@ -546,7 +541,6 @@ GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 void
 GlutDisplay::mouse_motion_func(int x, int y)
 {
-  //std::cout << "Motion: " << x << " " << y << std::endl;
   m_mouse_x = x;
   m_mouse_y = y;
 }
@@ -554,9 +548,9 @@ GlutDisplay::mouse_motion_func(int x, int y)
 void
 GlutDisplay::leave_fullscreen()
 {
-  std::cout << "GlutDisplay: leaving fullscreen: restoring to: pos: "
-            << m_window_x_pos << ", " << m_window_y_pos << " - WxH: "
-            << m_window_width << ", " << m_window_height << std::endl;
+  log_debug("GlutDisplay: leaving fullscreen: restoring to: pos: {}x{}+{}+{}",
+            m_window_width, m_window_height,
+            m_window_x_pos, m_window_y_pos);
 
   glutReshapeWindow(m_window_width, m_window_height);
   glutPositionWindow(m_window_x_pos, m_window_y_pos);
@@ -570,20 +564,21 @@ GlutDisplay::enter_fullscreen()
 #if 0
   char mode[64];
   snprintf(mode, 64, "%dx%d:%d@%d", width, height, 16, 80);
-  std::cout << "GlutDisplay: switching to: " << mode << std::endl;
+  log_debug("GlutDisplay: switching to: {}", mode);
   glutGameModeString(mode);
   glutEnterGameMode();
   is_fullscreen = true;
 #else
-  std::cout << "GlutDisplay: Entering fullscreen" << std::endl;
+  log_debug("GlutDisplay: Entering fullscreen");
 
   m_window_x_pos  = glutGet((GLenum)GLUT_WINDOW_X);
   m_window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
   m_window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
   m_window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
 
-  std::cout << "Saving window: " << m_window_x_pos << ", " << m_window_y_pos << " - WxH: "
-            << m_window_width << ", " << m_window_height << std::endl;
+  log_debug("Saving window: {}x{}+{}+{}",
+            m_window_width, m_window_height,
+            m_window_x_pos, m_window_y_pos);
 
   glutFullScreen();
 
@@ -651,7 +646,7 @@ GlutDisplay::set_cursor_real(CursorType cursor)
       glutSetCursor(GLUT_CURSOR_CYCLE);
       break;
     default:
-      std::cout << "GlutDisplay: Unhandled cursor type: " << static_cast<int>(cursor) << std::endl;
+      log_debug("GlutDisplay: Unhandled cursor type: {}", static_cast<int>(cursor));
       break;
   }
 

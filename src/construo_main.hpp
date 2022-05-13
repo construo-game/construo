@@ -19,7 +19,6 @@
 
 #include <memory>
 #include <vector>
-#include <iostream>
 #include <list>
 
 #include "fwd.hpp"

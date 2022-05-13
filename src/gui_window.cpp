@@ -16,8 +16,6 @@
 
 #include "gui_window.hpp"
 
-#include <iostream>
-
 #include "graphic_context.hpp"
 #include "colors.hpp"
 #include "gui_label.hpp"
@@ -48,16 +46,13 @@ GUIWindow::~GUIWindow ()
 void
 GUIWindow::draw(GraphicContext& gc)
 {
-  std::cout << "Window draw.." << m_mouse_over << std::endl;
   /*if (mouse_over)
     {
-      std::cout << "MOUSEOVER" << std::endl;
       gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_bg_hover);
       gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_fg_hover);
     }
   else
     {
-      std::cout << "MOUSEOVER NOT OVER" << std::endl;
       gc.draw_fill_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_bg_passive);
       gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_fg_passive);
     }*/

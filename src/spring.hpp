@@ -17,9 +17,6 @@
 #ifndef HEADER_CONSTRUO_SPRING_HPP
 #define HEADER_CONSTRUO_SPRING_HPP
 
-#include <iostream>
-#include <assert.h>
-
 #include "particle.hpp"
 #include "world.hpp"
 

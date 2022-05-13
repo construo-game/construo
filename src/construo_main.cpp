@@ -53,8 +53,6 @@ ConstruoMain::~ConstruoMain ()
 void
 ConstruoMain::init_system()
 {
-  //std::cout << "ConstruoMain::init_system()" << std::endl;
-
   std::string const title = "Construo " VERSION;
 
   m_system = std::make_unique<UnixSystem>();
@@ -76,7 +74,6 @@ ConstruoMain::init_system()
 void
 ConstruoMain::deinit_system()
 {
-  //std::cout << "ConstruoMain::deinit_system()" << std::endl;
   m_display.reset();
   m_system.reset();
 }
@@ -103,7 +100,7 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
 
     if (!path_manager.find_path("examples"))
     {
-      std::cout << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
+      std::cerr << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
       ::exit(EXIT_FAILURE);
     }
 
@@ -119,7 +116,8 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
       }
     }
 
-    ScreenManager::instance(); // FIXME: ugly temp hack to create a global ScreenManager
+    // FIXME: get proper x/y position of the window
+    ScreenManager::instance()->set_geometry(0, 0, m_display->get_width(), m_display->get_height());
 
     // For some targets this will never return
     m_display->run();

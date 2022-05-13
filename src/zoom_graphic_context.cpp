@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
+#include "zoom_graphic_context.hpp"
+
 #include <assert.h>
+
 #include "construo.hpp"
 #include "math.hpp"
 #include "root_graphic_context.hpp"
-#include "zoom_graphic_context.hpp"
 
 ZoomGraphicContext::ZoomGraphicContext(GraphicContext& gc, GCZoomState& zoom) :
   m_parent_gc(gc),

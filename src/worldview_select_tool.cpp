@@ -436,7 +436,6 @@ WorldViewSelectTool::on_button_press(int button_id, float x, float y)
 void
 WorldViewSelectTool::on_join_press(float x, float y)
 {
-  std::cout << "Join pressed" << std::endl;
   m_selection.join_doubles(5.0f);
 }
 

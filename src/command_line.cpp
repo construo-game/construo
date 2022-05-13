@@ -24,8 +24,8 @@
 void
 CommandLine::error (const std::string& msg)
 {
-  std::cout << "CommandLine parse failure!" << std::endl;
-  std::cout << "CommandLine: " << msg << std::endl;
+  std::cerr << "CommandLine parse failure!" << std::endl;
+  std::cerr << "CommandLine: " << msg << std::endl;
   exit(EXIT_FAILURE);
 }
 
@@ -35,8 +35,6 @@ CommandLine::parse (int argc, char** argv)
   // FIXME: Replace this with getopt_long() or argp()
   for (int i = 1; i < argc; ++i) // Skip Programm name
     {
-      //std::cout << "Arg: " << argv[i] << std::endl;
-
       if (argv[i][0] == '-') // Argument is an option
         {
           if (strcmp(argv[i], "--fullscreen") == 0
@@ -53,7 +51,7 @@ CommandLine::parse (int argc, char** argv)
           else if (strcmp(argv[i], "--help") == 0
               || strcmp(argv[i], "-h") == 0)
             {
-              print_help ();
+              print_help(std::cout);
               exit (EXIT_SUCCESS);
             }
           else if (strcmp(argv[i], "--disable-alphablending") == 0)
@@ -115,20 +113,20 @@ CommandLine::parse (int argc, char** argv)
 }
 
 void
-CommandLine::print_help ()
+CommandLine::print_help(std::ostream& out)
 {
-  std::cout << "Construo " VERSION "\n\n"
-            << "Usage: construo [OPTIONS] [FILENAME]\n\n"
-            << "  -h, --help                  display this help text\n"
-            << "  -v,--version                Print version number of the programm\n"
-            << "  -f, --fullscreen            switch to fullscreen mode if available\n"
-            << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
-            << "  -d, --disable-antialiasing  Switch into non antialiased mode\n"
-            << "  -l, --disable-thicklines    Disable thick (slow) line drawing\n"
-            << "  --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
-            << "  --disable-alphablending     Switch into non alphablended mode\n"
-            << "  --datadir DIR               Set the datadir of Construo to DIR\n"
-            << std::endl;
+  out << "Construo " VERSION "\n\n"
+      << "Usage: construo [OPTIONS] [FILENAME]\n\n"
+      << "  -h, --help                  display this help text\n"
+      << "  -v,--version                Print version number of the programm\n"
+      << "  -f, --fullscreen            switch to fullscreen mode if available\n"
+      << "  -g, --geometry WIDTHxHEIGHT switch resolution to WIDTH and HEIGHT\n"
+      << "  -d, --disable-antialiasing  Switch into non antialiased mode\n"
+      << "  -l, --disable-thicklines    Disable thick (slow) line drawing\n"
+      << "  --disable-doublebuffer  disable the double buffer (might cause flicker)\n"
+      << "  --disable-alphablending     Switch into non alphablended mode\n"
+      << "  --datadir DIR               Set the datadir of Construo to DIR\n"
+      << std::endl;
 }
 
 void

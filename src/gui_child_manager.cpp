@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "gui_child_manager.hpp"
+
 #include <algorithm>
+
 #include "graphic_context.hpp"
 #include "colors.hpp"
-#include "gui_child_manager.hpp"
 
 GUIChildManager::GUIChildManager (float x, float y, float width, float height) :
   GUIComponent (x, y, width, height),
@@ -265,7 +267,6 @@ void
 GUIChildManager::on_mouse_move(float x, float y, float of_x, float of_y)
 {
   GUIComponent* const comp = find_component_at(x, y);
-  //std::cout << " MouseMove: " << x << " " << y << " " << comp << std::endl;
 
   if (comp != m_current_component)
   {

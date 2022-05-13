@@ -16,8 +16,6 @@
 
 #include "gui_button.hpp"
 
-#include <iostream>
-
 #include "colors.hpp"
 #include "controller.hpp"
 #include "graphic_context.hpp"

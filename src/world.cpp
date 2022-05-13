@@ -67,7 +67,7 @@ World::World(const World& old_world) :
     }
     else
     {
-      std::cout << "World: Error couldn't resolve particles" << std::endl;
+      log_error("World: Error couldn't resolve particles");
     }
   }
 }
@@ -104,14 +104,15 @@ World::update (float delta)
         }	    */
     }
 
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto i = m_springs.begin (); i != m_springs.end (); ++i) {
     (*i)->update (delta);
+  }
 
   m_particle_mgr->update(delta);
 
-  //std::cout << "Colliders: " << colliders.size () << std::endl;
-  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i)
+  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i) {
     (*i)->bounce ();
+  }
 
   // Spring splitting
   std::vector<Spring*> new_springs;
@@ -242,7 +243,7 @@ World::get_particles(float x1_, float y1_, float x2_, float y2_) const
 void
 World::zero_out_velocity ()
 {
-  std::cout << "Setting velocity to zero" << std::endl;
+  log_debug("Setting velocity to zero");
   for (auto i = get_particle_mgr().begin();
        i != get_particle_mgr().end(); ++i)
     {
@@ -311,9 +312,6 @@ World::remove_particle (Particle* p)
 void
 World::remove_spring (Spring* s)
 {
-  //std::cout << "particles: " << particle_mgr->size () << std::endl;
-  //std::cout << "springs:   " << springs.size () << std::endl;
-
   delete s;
   m_springs.erase(std::remove(m_springs.begin (), m_springs.end (), s),
                   m_springs.end ());

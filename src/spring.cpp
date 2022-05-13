@@ -14,10 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "spring.hpp"
+
+#include <cassert>
+
 #include "colors.hpp"
 #include "construo_error.hpp"
 #include "particle_factory.hpp"
-#include "spring.hpp"
 
 Spring::Spring(Particle* f, Particle* s, float l) :
   particles(f, s),
@@ -60,7 +63,6 @@ Spring::update (float delta)
   // <> 0
   float stretch = glm::length(dist) - length;
 
-  //std::cout << "Stretch: " << stretch << std::endl;
   if (std::fabs(stretch/length) > max_stretch &&
       length > 10.0f) // atomar spring
     { // If the spring is streched above limits, let it get destroyed
@@ -73,10 +75,6 @@ Spring::update (float delta)
 
       dist = glm::normalize(dist);
       glm::vec2 force = dist * (stretch + dterm);
-
-      /*std::cout << "DTerm: " << dterm << " HTerm: " << stretch
-                << " Force: " << force
-                << std::endl;*/
 
       particles.first->add_force (-force);
       particles.second->add_force (force);

@@ -42,14 +42,14 @@ public:
 inline
 void print_exception(std::exception const& err, int level = 0)
 {
-  std::cout << std::string(level, ' ') << "exception: " << err.what() << '\n';
+  std::cerr << std::string(level, ' ') << "exception: " << err.what() << '\n';
 
   try {
     std::rethrow_if_nested(err);
   } catch(std::exception const& new_err) {
     print_exception(new_err, level + 1);
   } catch(...) {
-    std::cout << "unknown exception\n";
+    std::cerr << "unknown exception\n";
   }
 }
 

@@ -137,8 +137,6 @@ Controller::start_simulation ()
   if (m_undo_world_stack.size() > 100)
     {
       // FIXME: shrink stack here
-      //delete *undo_world_stack.front();
-      //std::cout << "Stak
     }
 
   m_running = !m_running;
@@ -161,38 +159,23 @@ Controller::clear_world ()
 void
 Controller::undo ()
 {
-#ifdef DEBUG
-  std::cout << "Controller::undo (): undostack: " << undo_world_stack.size()
-            << " redostack: " << redo_world_stack.size() << std::endl;
-#endif
+  if (m_undo_world_stack.empty()) { return; }
 
-  if (!m_undo_world_stack.empty())
-    {
-      m_redo_world_stack.push_back(std::move(m_world));
-      m_world = std::move(m_undo_world_stack.back());
-      m_undo_world_stack.pop_back();
-      m_running = false;
-    }
-  else
-    {
-      std::cout << "Undo stack empty" << std::endl;
-    }
+  m_redo_world_stack.push_back(std::move(m_world));
+  m_world = std::move(m_undo_world_stack.back());
+  m_undo_world_stack.pop_back();
+  m_running = false;
 }
 
 void
 Controller::redo ()
 {
-  if (!m_redo_world_stack.empty())
-    {
-      m_undo_world_stack.push_back(std::move(m_world));
-      m_world = std::move(m_redo_world_stack.back());
-      m_redo_world_stack.pop_back();
-      m_running = false;
-    }
-  else
-    {
-      std::cout << "Redo stack empty" << std::endl;
-    }
+  if (m_redo_world_stack.empty()) { return; }
+
+  m_undo_world_stack.push_back(std::move(m_world));
+  m_world = std::move(m_redo_world_stack.back());
+  m_redo_world_stack.pop_back();
+  m_running = false;
 }
 
 void

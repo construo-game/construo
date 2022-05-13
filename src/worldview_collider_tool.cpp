@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "worldview_collider_tool.hpp"
+
+#include <logmich/log.hpp>
+
 #include "construo.hpp"
 #include "input_context.hpp"
 #include "controller.hpp"
@@ -22,7 +26,6 @@
 #include "world_renderer.hpp"
 #include "world_gui_manager.hpp"
 #include "worldview_component.hpp"
-#include "worldview_collider_tool.hpp"
 
 WorldViewColliderTool::WorldViewColliderTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
@@ -96,7 +99,7 @@ WorldViewColliderTool::on_primary_button_release (float x, float y)
     if (std::fabs(pos2.x - m_click_pos.x) < 15 ||
         std::fabs(pos2.y - m_click_pos.y) < 15)
     {
-      std::cout << "Rect collider to small, not inserting" << std::endl;
+      log_debug("Rect collider to small, not inserting");
     }
     else
     {

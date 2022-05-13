@@ -17,17 +17,19 @@
 #ifndef HEADER_CONSTRUO_COMMAND_LINE_HPP
 #define HEADER_CONSTRUO_COMMAND_LINE_HPP
 
+#include <ostream>
 #include <string>
 
 /** Parses the command line */
 class CommandLine
 {
-private:
-  static void error (const std::string& msg);
 public:
-  static void parse (int argc, char** argv);
-  static void print_help ();
-  static void print_version ();
+  static void parse(int argc, char** argv);
+  static void print_help(std::ostream& out);
+  static void print_version();
+
+private:
+  static void error(const std::string& msg);
 };
 
 #endif

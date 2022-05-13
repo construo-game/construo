@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
-
 #include "root_graphic_context.hpp"
+
+#include <logmich/log.hpp>
 
 void
 RootGraphicContext::set_cursor(CursorType cursor)
@@ -41,7 +41,7 @@ RootGraphicContext::pop_cursor()
     }
   else
     {
-      std::cout << "RootGraphicContext::pop_cursor(): Stack empty!" << std::endl;
+      log_debug("RootGraphicContext::pop_cursor(): Stack empty!");
     }
 }
 

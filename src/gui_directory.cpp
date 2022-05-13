@@ -16,14 +16,17 @@
 
 #include "gui_directory.hpp"
 
+#include <logmich/log.hpp>
+
 #include "construo.hpp"
-#include "system_context.hpp"
-#include "world.hpp"
-#include "world_button.hpp"
 #include "gui_directory_button.hpp"
 #include "gui_file_manager.hpp"
 #include "gui_new_file_button.hpp"
 #include "path.hpp"
+#include "system_context.hpp"
+#include "world.hpp"
+#include "world_button.hpp"
+#include "worldview_collider_tool.hpp"
 
 GUIDirectory::GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode) :
   GUIChildManager(),
@@ -80,8 +83,7 @@ GUIDirectory::read_directory()
     else // (type == FT_UNKNOWN_FILE)
     {
       // ignore unknown files
-      std::cout << "GUIFileManager: ignoring '" << filename
-                << "' since it has unknown filetype" << std::endl;
+      log_debug("GUIFileManager: ignoring '{}' since it has unknown filetype", filename);
     }
   }
 }

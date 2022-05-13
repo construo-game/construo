@@ -33,9 +33,6 @@ GCZoomState::zoom_in(float screen_x, float screen_y)
   float const x = screen_to_world_x(screen_x);
   float const y = screen_to_world_y(screen_y);
 
-  //std::cout << "Zoom: " << screen_x << " " << screen_y
-  //<< " " << x << " " << y << std::endl;
-
   if ((true))
   {
     float old_zoom = m_scale;
@@ -171,7 +168,6 @@ GCZoomState::zoom_to(float x1, float y1, float x2, float y2)
   float const screen_relation = bounding_height() / bounding_width();
   float const rect_relation   = height/width;
 
-  //std::cout << "Screen: " << screen_relation << " Zoom: " << rect_relation << std::endl;
   if (rect_relation < screen_relation) // take width, ignore height
   {
     set_zoom(bounding_width()/width);

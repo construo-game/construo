@@ -32,6 +32,7 @@
 #include <unistd.h>
 
 #include <xdg.h>
+#include <logmich/log.hpp>
 
 #include "construo.hpp"
 #include "construo_error.hpp"
@@ -49,7 +50,7 @@ UnixSystem::UnixSystem () :
 
   char* home = getenv("HOME");
   if (!home) {
-    std::cout << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
+    std::cerr << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
     throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
   }
 
@@ -156,7 +157,7 @@ UnixSystem::get_file_type(const std::string& filename)
   struct stat buf;
   if (stat(sys_name.c_str(), &buf) != 0)
   {
-    std::cout << "UnixSystem: ERROR: Couldn't stat: '" << sys_name << "'" << std::endl;
+    log_debug("UnixSystem: ERROR: Couldn't stat: '{}'", sys_name);
     return FT_UNKNOWN_FILE;
   }
   else
@@ -218,14 +219,12 @@ UnixSystem::translate_filename(const std::string& filename)
 FILE*
 UnixSystem::open_input_file(const std::string& filename)
 {
-  //std::cout << "UnixSystem: open_input_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "r");
 }
 
 FILE*
 UnixSystem::open_output_file(const std::string& filename)
 {
-  //std::cout << "UnixSystem: open_output_file: " << translate_filename (filename) << std::endl;
   return fopen(translate_filename (filename).c_str(), "w");
 }
 
@@ -272,7 +271,6 @@ UnixSystem::read_directory(const std::string& arg_pathname)
 
     for (std::filesystem::directory_entry const& entry : std::filesystem::directory_iterator{pathname})
     {
-      std::cout << entry.path().filename() << std::endl;
       if (entry.path().filename() != "." &&
           entry.path().filename() != "..")
       { // We ignore unusefull directories

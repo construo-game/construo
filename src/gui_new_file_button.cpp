@@ -18,6 +18,8 @@
 
 #include <time.h>
 
+#include <logmich/log.hpp>
+
 #include "controller.hpp"
 #include "screen_manager.hpp"
 #include "path.hpp"
@@ -64,7 +66,7 @@ void
 GUINewFileButton::on_click()
 {
   std::string filename = generate_filename();
-  std::cout << "Saving to: " <<  filename << std::endl;
+  log_info("Saving to: {}", filename);
   Controller::instance()->save_world (filename);
   ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
 }
