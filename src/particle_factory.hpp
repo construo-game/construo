@@ -17,6 +17,7 @@
 #ifndef HEADER_CONSTRUO_PARTICLE_FACTORY_HPP
 #define HEADER_CONSTRUO_PARTICLE_FACTORY_HPP
 
+#include <memory>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -56,24 +57,24 @@ public:
 
   void update(float delta);
 
-  typedef std::vector<Particle*>::const_iterator CParticleIter;
-  typedef std::vector<Particle*>::iterator ParticleIter;
+  typedef std::vector<std::unique_ptr<Particle>>::const_iterator CParticleIter;
+  typedef std::vector<std::unique_ptr<Particle>>::iterator ParticleIter;
 
   ParticleIter begin() { return m_particles.begin(); }
   ParticleIter end() { return m_particles.end(); }
 
   void clear();
 
-  std::vector<Particle*> get_particles() const { return m_particles; }
+  std::vector<std::unique_ptr<Particle>> const& get_particles() const { return m_particles; }
 
 private:
-  std::vector<Particle*> m_particles;
+  std::vector<std::unique_ptr<Particle>> m_particles;
 
   /** the id of next particle that will get created */
   int m_particle_id_count;
 
 private:
-  ParticleFactory& operator=(const ParticleFactory&);
+  ParticleFactory& operator=(const ParticleFactory&) = delete;
 };
 
 #endif

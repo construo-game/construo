@@ -188,7 +188,7 @@ World::get_particle(float x, float y, float capture_distance) const
       if (glm::length(diff) < min_dist)
 	{
 	  min_dist = glm::length(diff);
-	  particle = *i;
+	  particle = i->get();
 	}
     }
 
@@ -220,7 +220,7 @@ World::get_particles(float x1_, float y1_, float x2_, float y2_) const
     {
       if ((*i)->pos.x >= x1 && (*i)->pos.x < x2 &&
           (*i)->pos.y >= y1 && (*i)->pos.y < y2) {
-        caputred_particles.push_back(*i);
+        caputred_particles.push_back(i->get());
       }
     }
   return caputred_particles;

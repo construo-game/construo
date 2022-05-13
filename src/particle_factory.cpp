@@ -32,34 +32,21 @@ ParticleFactory::ParticleFactory(const ParticleFactory& pmgr) :
   m_particles(),
   m_particle_id_count(pmgr.m_particle_id_count)
 {
-  for (auto i = pmgr.m_particles.begin (); i != pmgr.m_particles.end (); ++i)
-    m_particles.push_back(new Particle(**i));
-}
-
-ParticleFactory&
-ParticleFactory::operator= (const ParticleFactory& pmgr)
-{
-  ConstruoAssert (0, "Don't use this");
-  for (auto i = pmgr.m_particles.begin ();
-       i != pmgr.m_particles.end ();
-       ++i)
-    {
-      m_particles.push_back (new Particle (*(*i)));
-    }
-  return *this;
+  for (auto& particle : pmgr.m_particles) {
+    m_particles.emplace_back(std::make_unique<Particle>(*particle));
+  }
 }
 
 Particle*
 ParticleFactory::add_particle(int id, const glm::vec2& pos, const glm::vec2& velocity,
-                       float mass, bool fixed)
+                              float mass, bool fixed)
 {
   if (id >= m_particle_id_count) {
     m_particle_id_count = id + 1;
   }
 
-  Particle* p = new Particle(id, pos, velocity, mass, fixed);
-  m_particles.push_back(p);
-  return p;
+  m_particles.emplace_back(std::make_unique<Particle>(id, pos, velocity, mass, fixed));
+  return m_particles.back().get();
 }
 
 Particle*
@@ -71,36 +58,17 @@ ParticleFactory::add_particle (const glm::vec2& pos, const glm::vec2& velocity, 
 Particle*
 ParticleFactory::add_particle (const Particle& particle)
 {
-  Particle* p = new Particle (particle);
-  p->id = m_particle_id_count++,
-  m_particles.push_back(p);
-  return p;
+  auto p = std::make_unique<Particle>(particle);
+  p->id = m_particle_id_count++;
+  m_particles.emplace_back(std::move(p));
+  return m_particles.back().get();
 }
 
 void
-ParticleFactory::remove_particle (Particle* p)
+ParticleFactory::remove_particle(Particle* p)
 {
-  // Remove the particle itself
-  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
-    {
-      if (*i == p)
-        {
-          delete *i;
-          m_particles.erase(i);
-          return;
-        }
-    }
+  std::erase_if(m_particles, [p](auto&& particle){ return particle.get() == p; });
 }
-
-struct particle_obsolete
-{
-  inline bool operator()(Particle* p)
-  {
-    return (p->spring_links == 0
-            && p->velocity.x == 0
-            && std::fabs(p->velocity.y) < 0.1f);
-  }
-};
 
 void
 ParticleFactory::update (float delta)
@@ -110,9 +78,11 @@ ParticleFactory::update (float delta)
 
   // FIXME: There is no need to do this on any update, doing it only
   //once a second should be enough
-  m_particles.erase(std::remove_if(m_particles.begin(), m_particles.end(),
-                                   particle_obsolete()),
-                    m_particles.end());
+  std::erase_if(m_particles, [](auto&& p) {
+    return (p->spring_links == 0
+            && p->velocity.x == 0
+            && std::fabs(p->velocity.y) < 0.1f);
+  });
 }
 
 Particle*
@@ -122,7 +92,7 @@ ParticleFactory::lookup_particle (int id)
   for (auto i = m_particles.begin(); i != m_particles.end(); ++i)
     {
       if ((*i)->get_id () == id)
-        return *i;
+        return (*i).get();
     }
   return nullptr;
 }
@@ -130,8 +100,6 @@ ParticleFactory::lookup_particle (int id)
 void
 ParticleFactory::clear ()
 {
-  for (auto i = m_particles.begin (); i != m_particles.end (); ++i)
-    delete *i;
   m_particles.clear ();
 }
 
