@@ -84,12 +84,12 @@ GUIButton::on_primary_button_release(float x, float y)
 void
 GUIButton::draw(GraphicContext& gc)
 {
-  if (m_sig_highlight_p()) {
+  if (m_sig_highlight_p())
+  {
     gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
                       g_style.button_bg_active);
   }
-
-  if (m_pressed && m_mouse_over)
+  else if (m_pressed && m_mouse_over)
   {
     gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_pressed);
   }
