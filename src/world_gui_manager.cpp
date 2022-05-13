@@ -166,10 +166,16 @@ WorldGUIManager::~WorldGUIManager ()
 void
 WorldGUIManager::set_geometry(geom::frect const& geometry)
 {
-  auto offset = m_last_geometry.topleft().as_vec() - geometry.topleft().as_vec();
-
-  m_worldview_component->zoom().set_offset(m_worldview_component->zoom().get_x_offset() + offset.x / m_worldview_component->zoom().get_scale(),
-                                           m_worldview_component->zoom().get_y_offset() + offset.y / m_worldview_component->zoom().get_scale());
+  // FIXME: This doesn't work when the window goes from maximized to
+  // move (click+drag on titlebar)
+  if (geometry.size() != m_last_geometry.size()) {
+    // Do clever enlarging of the viewport only when the window is
+    // resized, but avoid it when the window is moved
+    auto const offset = m_last_geometry.topleft().as_vec() - geometry.topleft().as_vec();
+    m_worldview_component->zoom().set_offset(
+      m_worldview_component->zoom().get_x_offset() + offset.x / m_worldview_component->zoom().get_scale(),
+      m_worldview_component->zoom().get_y_offset() + offset.y / m_worldview_component->zoom().get_scale());
+  }
 
   GUIManager::set_geometry(geometry);
 
