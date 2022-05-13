@@ -62,15 +62,13 @@ RectCollider::set_pos(const glm::vec2& pos)
 }
 
 void
-RectCollider::bounce ()
+RectCollider::bounce()
 {
-  ParticleFactory& particle_mgr = Controller::instance()->get_world().get_particle_mgr();
-
-  float damp = 0.8f;
-  for (ParticleFactory::ParticleIter i = particle_mgr.begin(); i != particle_mgr.end (); ++i)
+  float const damp = 0.8f;
+  for (auto& particle : Controller::instance()->get_world().particles())
     {
-      glm::vec2& pos = (*i)->pos;
-      glm::vec2& velocity = (*i)->velocity;
+      glm::vec2& pos = particle->pos;
+      glm::vec2& velocity = particle->velocity;
 
       if (pos.x > x1 && pos.x < x2
           && pos.y > y1 && pos.y < y2)

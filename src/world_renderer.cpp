@@ -43,7 +43,7 @@ WorldRenderer::draw(ZoomGraphicContext& gc) const
 void
 WorldRenderer::draw_springs(ZoomGraphicContext& gc) const
 {
-  auto const& springs = m_world.get_spring_mgr();
+  auto const& springs = m_world.springs();
 
 #ifdef NEW_SPRING_CODE
   std::vector<GraphicContext::Line> lines (springs.size());
@@ -72,7 +72,7 @@ WorldRenderer::draw_springs(ZoomGraphicContext& gc) const
 void
 WorldRenderer::draw_colliders(ZoomGraphicContext& gc) const
 {
-  for (auto const& collider : m_world.get_colliders()) {
+  for (auto const& collider : m_world.colliders()) {
     draw_collider(gc, *collider);
   }
 }
@@ -80,7 +80,7 @@ WorldRenderer::draw_colliders(ZoomGraphicContext& gc) const
 void
 WorldRenderer::draw_particles(ZoomGraphicContext& gc) const
 {
-  for (auto const& particle : m_world.get_particle_mgr().get_particles()) {
+  for (auto const& particle : m_world.particles()) {
     draw_particle(gc, *particle);
   }
 }

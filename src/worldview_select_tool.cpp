@@ -342,7 +342,7 @@ WorldViewSelectTool::on_mouse_move(float screen_x, float screen_y, float of_x, f
 
           // Recalculate all springs that are attached to the
           // selection, but not fully in it.
-          for (auto& spring : world.get_spring_mgr())
+          for (auto& spring : world.springs())
           {
             if (spring->particles.first == *i || spring->particles.second == *i)
             {

@@ -20,10 +20,11 @@
 #include <memory>
 #include <vector>
 
-#include "spring.hpp"
-#include "particle.hpp"
-#include "collider.hpp"
 #include "bounding_box.hpp"
+#include "collider.hpp"
+#include "particle.hpp"
+#include "particle_factory.hpp"
+#include "spring.hpp"
 
 /** This class holds all particles and springs */
 class World
@@ -62,8 +63,9 @@ public:
   void remove_collider (Collider*);
 
   ParticleFactory& get_particle_mgr() { return *m_particle_mgr; }
-  std::vector<std::unique_ptr<Spring>>& get_spring_mgr () { return m_springs; }
-  std::vector<std::unique_ptr<Collider>>& get_colliders() { return m_colliders; }
+  std::vector<std::unique_ptr<Particle>> const& particles() const { return m_particle_mgr->particles(); }
+  std::vector<std::unique_ptr<Spring>> const& springs() const { return m_springs; }
+  std::vector<std::unique_ptr<Collider>> const& colliders() const { return m_colliders; }
 
   /** removes everything from the world */
   void clear ();

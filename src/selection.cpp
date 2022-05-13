@@ -64,7 +64,7 @@ Selection::scale(float factor, glm::vec2 center)
   {
     (*i)->pos = center + (((*i)->pos - center) * factor);
 
-    for (auto& spring : m_world->get_spring_mgr())
+    for (auto& spring : m_world->springs())
     {
       if (spring->particles.first == (*i) || (spring->particles.second == (*i)))
       {
@@ -138,7 +138,7 @@ Selection::duplicate ()
   }
 
   // FIXME: Warning, make sure that iterators stays intact while modifing the container
-  for (auto& spring : m_world->get_spring_mgr())
+  for (auto& spring : m_world->springs())
   {
     // both particles of the spring are in the current selection
     if (std::find (m_selection.begin(), m_selection.end(), spring->particles.first) != m_selection.end ()
@@ -219,7 +219,7 @@ Selection::join_doubles(float toleranz)
         { // Everything that is connected to the particle 'i'
           // which should get removed, needs to get connected to
           // 'j'
-          for (auto& spring : world.get_spring_mgr())
+          for (auto& spring : world.springs())
           {
             if (spring->particles.first == (*i))
               spring->particles.first = (*j);

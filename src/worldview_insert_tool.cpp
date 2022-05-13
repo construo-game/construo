@@ -125,7 +125,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
         glm::vec2 new_particle_pos(0.0f, 0.0f);
         if (m_worldview.uses_grid())
           new_particle_pos = glm::vec2(Math::round_to_float(x, grid_size),
-                                      Math::round_to_float(y, grid_size));
+                                       Math::round_to_float(y, grid_size));
         else
           new_particle_pos = glm::vec2(x, y);
 
@@ -162,7 +162,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
       glm::vec2 new_particle_pos(0.0f, 0.0f);
       if (m_worldview.uses_grid()) {
         new_particle_pos = glm::vec2(Math::round_to_float(x, grid_size),
-                                    Math::round_to_float(y, grid_size));
+                                     Math::round_to_float(y, grid_size));
       } else {
         new_particle_pos = glm::vec2(x, y);
       }

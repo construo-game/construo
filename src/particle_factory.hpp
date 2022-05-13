@@ -57,15 +57,9 @@ public:
 
   void update(float delta);
 
-  typedef std::vector<std::unique_ptr<Particle>>::const_iterator CParticleIter;
-  typedef std::vector<std::unique_ptr<Particle>>::iterator ParticleIter;
-
-  ParticleIter begin() { return m_particles.begin(); }
-  ParticleIter end() { return m_particles.end(); }
-
   void clear();
 
-  std::vector<std::unique_ptr<Particle>> const& get_particles() const { return m_particles; }
+  std::vector<std::unique_ptr<Particle>> const& particles() const { return m_particles; }
 
 private:
   std::vector<std::unique_ptr<Particle>> m_particles;

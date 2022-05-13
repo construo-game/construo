@@ -83,60 +83,61 @@ World::update (float delta)
 
   // Main Movement and Forces
   // FIXME: Hardcoded Force Emitters
-  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto& particle : m_particle_mgr->particles())
   {
     // Gravity
-    (*i)->add_force (glm::vec2 (0.0, 15.0f) * (*i)->get_mass ());
+    particle->add_force (glm::vec2 (0.0, 15.0f) * particle->get_mass ());
 
     // Central Gravity force:
-    /*glm::vec2 direction = ((*i)->pos - glm::vec2 (400, 300));
+    /*glm::vec2 direction = (particle->pos - glm::vec2 (400, 300));
       if (glm::length(direction) != 0.0f)
-      (*i)->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
+      particle->add_force (direction * (-100.0f/(glm::length(direction) * glm::length(direction))));
     */
 
     /*
       for (auto j = particles.begin (); j != particles.end (); ++j)
       {
-      glm::vec2 diff = (*j)->pos - (*i)->pos;
+      glm::vec2 diff = (*j)->pos - particle->pos;
       if (glm::length(diff) != 0.0f)
-      (*i)->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
+      particle->add_force (diff * ((10.0f - (*j)->mass)/(glm::length(diff) * glm::length(diff))));
       }	    */
   }
 
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i) {
-    (*i)->update (delta);
+  for (auto& spring : m_springs) {
+    spring->update (delta);
   }
 
   m_particle_mgr->update(delta);
 
-  for (auto i = m_colliders.begin (); i != m_colliders.end (); ++i) {
-    (*i)->bounce ();
+  for (auto& collider : m_colliders) {
+    collider->bounce ();
   }
 
   // Spring splitting
   std::vector<std::unique_ptr<Spring>> new_springs;
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto& spring : m_springs)
   {
-    if ((*i)->destroyed)
+    if (spring->destroyed)
     {
-      if ((*i)->length > 20.0f)
+      if (spring->length > 20.0f)
       {
         // Calc midpoint
-        glm::vec2 pos = ((*i)->particles.first->pos
-                         + (*i)->particles.second->pos) * 0.5f;
+        glm::vec2 pos = (spring->particles.first->pos
+                         + spring->particles.second->pos) * 0.5f;
 
         // FIXME: particle mass needs to be recalculated
-        Particle* p1 = m_particle_mgr->add_particle(pos, (*i)->particles.first->velocity * 0.5f, .1f);
-        Particle* p2 = m_particle_mgr->add_particle(pos, (*i)->particles.second->velocity * 0.5f, .1f);
+        Particle* p1 = m_particle_mgr->add_particle(pos, spring->particles.first->velocity * 0.5f, .1f);
+        Particle* p2 = m_particle_mgr->add_particle(pos, spring->particles.second->velocity * 0.5f, .1f);
 
         // FIXME: Insert a more sofistikated string splitter here
-        new_springs.emplace_back(std::make_unique<Spring>((*i)->particles.first, p1, (*i)->length/2));
-        new_springs.emplace_back(std::make_unique<Spring>((*i)->particles.second, p2, (*i)->length/2));
+        new_springs.emplace_back(std::make_unique<Spring>(spring->particles.first, p1, spring->length/2));
+        new_springs.emplace_back(std::make_unique<Spring>(spring->particles.second, p2, spring->length/2));
       }
     }
   }
   m_springs.insert(m_springs.end(),
-                   std::make_move_iterator(new_springs.begin()), std::make_move_iterator(new_springs.end()));
+                   std::make_move_iterator(new_springs.begin()),
+                   std::make_move_iterator(new_springs.end()));
 
   std::erase_if(m_springs, [](auto&& spring){ return spring->destroyed; });
 }
@@ -144,55 +145,55 @@ World::update (float delta)
 Spring*
 World::get_spring(float x, float y, float capture_distance) const
 {
-  Spring* spring = nullptr;
+  Spring* found_spring = nullptr;
   float min_distance = 0.0f;
 
-  for (auto i = m_springs.begin (); i != m_springs.end (); ++i)
+  for (auto const& spring : m_springs)
     {
       float x0 = x;
       float y0 = y;
-      float& x1 = (*i)->particles.first->pos.x;
-      float& y1 = (*i)->particles.first->pos.y;
-      float& x2 = (*i)->particles.second->pos.x;
-      float& y2 = (*i)->particles.second->pos.y;
+      float& x1 = spring->particles.first->pos.x;
+      float& y1 = spring->particles.first->pos.y;
+      float& x2 = spring->particles.second->pos.x;
+      float& y2 = spring->particles.second->pos.y;
 
       // FIXME: optimize me
-      float u = (((x0 - x1)*(x2-x1) + (y0 - y1)*(y2 - y1))
-                 / ((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
+      float u = (((x0 - x1) * (x2 - x1) + (y0 - y1) *(y2 - y1)) /
+                 ((x2 - x1) * (x2 - x1) + (y2 - y1) *(y2 - y1)));
 
-      float distance = (std::fabs((x2 - x1)*(y1-y0) - (x1-x0)*(y2-y1))
-                        / std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)));
+      float distance = (std::fabs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) /
+                        std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 
-      if (u >= 0 && u <= 1.0f
-          && ((spring && min_distance > distance)
-              || (!spring && distance <= capture_distance)))
+      if (u >= 0 && u <= 1.0f &&
+          ((found_spring && min_distance > distance) ||
+           (!found_spring && distance <= capture_distance)))
         {
-          spring = i->get();
+          found_spring = spring.get();
           min_distance = distance;
         }
     }
 
-  return spring;
+  return found_spring;
 }
 
 Particle*
 World::get_particle(float x, float y, float capture_distance) const
 {
-  Particle* particle = nullptr;
+  Particle* found_particle = nullptr;
   float min_dist = capture_distance;
   glm::vec2 mouse_pos (x, y);
 
-  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
+  for (auto& particle : m_particle_mgr->particles())
+  {
+    glm::vec2 diff = mouse_pos - particle->pos;
+    if (glm::length(diff) < min_dist)
     {
-      glm::vec2 diff = mouse_pos - (*i)->pos;
-      if (glm::length(diff) < min_dist)
-	{
-	  min_dist = glm::length(diff);
-	  particle = i->get();
-	}
+      min_dist = glm::length(diff);
+      found_particle = particle.get();
     }
+  }
 
-  return particle;
+  return found_particle;
 }
 
 Collider*
@@ -216,13 +217,13 @@ World::get_particles(float x1_, float y1_, float x2_, float y2_) const
   float const y2 = std::max(y1_, y2_);
 
   std::vector<Particle*> caputred_particles;
-  for (auto i = m_particle_mgr->begin (); i != m_particle_mgr->end (); ++i)
-    {
-      if ((*i)->pos.x >= x1 && (*i)->pos.x < x2 &&
-          (*i)->pos.y >= y1 && (*i)->pos.y < y2) {
-        caputred_particles.push_back(i->get());
-      }
+  for (auto& particle : m_particle_mgr->particles())
+  {
+    if (particle->pos.x >= x1 && particle->pos.x < x2 &&
+        particle->pos.y >= y1 && particle->pos.y < y2) {
+      caputred_particles.push_back(particle.get());
     }
+  }
   return caputred_particles;
 }
 
@@ -230,11 +231,10 @@ void
 World::zero_out_velocity ()
 {
   log_debug("Setting velocity to zero");
-  for (auto i = get_particle_mgr().begin();
-       i != get_particle_mgr().end(); ++i)
-    {
-      (*i)->velocity = glm::vec2(0.0f, 0.0f);
-    }
+  for (auto& particle : m_particle_mgr->particles())
+  {
+    particle->velocity = glm::vec2(0.0f, 0.0f);
+  }
 }
 
 void
@@ -309,10 +309,10 @@ World::calc_bounding_box() const
 {
   BoundingBox bbox;
 
-  if (m_particle_mgr->size() > 0)
+  if (!m_particle_mgr->particles().empty())
   {
-    bbox.x1 = bbox.x2 = (*m_particle_mgr->begin())->pos.x;
-    bbox.y1 = bbox.y2 = (*m_particle_mgr->begin())->pos.y;
+    bbox.x1 = bbox.x2 = m_particle_mgr->particles().front()->pos.x;
+    bbox.y1 = bbox.y2 = m_particle_mgr->particles().front()->pos.y;
   }
   else
   {
@@ -323,14 +323,14 @@ World::calc_bounding_box() const
     bbox.y2 = 600;
   }
 
-  for (auto i = m_particle_mgr->begin(); i != m_particle_mgr->end(); ++i)
+  for (auto& particle : m_particle_mgr->particles())
   {
-    bbox.join((*i)->pos);
+    bbox.join(particle->pos);
   }
 
-  for (auto i = m_colliders.begin(); i != m_colliders.end(); ++i)
+  for (auto& collider : m_colliders)
   {
-    bbox.join((*i)->get_bounding_box());
+    bbox.join(collider->get_bounding_box());
   }
 
   return bbox;

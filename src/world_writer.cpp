@@ -45,7 +45,7 @@ WorldWriter::write(std::string const& filename)
         g_system_context->get_user_email()}));
 
   writer.begin_collection("particles");
-  for (auto const& particle : m_world.get_particle_mgr().get_particles())
+  for (auto const& particle : m_world.particles())
   {
     writer.begin_object("particle")
       .write("id", particle->get_id())
@@ -58,7 +58,7 @@ WorldWriter::write(std::string const& filename)
   writer.end_collection();
 
   writer.begin_collection("springs");
-  for (auto const& spring : m_world.get_spring_mgr())
+  for (auto const& spring : m_world.springs())
   {
     writer.begin_object("spring")
       .write("first", spring->particles.first->get_id())
@@ -72,7 +72,7 @@ WorldWriter::write(std::string const& filename)
   writer.end_collection();
 
   writer.begin_collection("colliders");
-  for (auto const& collider : m_world.get_colliders())
+  for (auto const& collider : m_world.colliders())
   {
     if (RectCollider const* rect = dynamic_cast<RectCollider const*>(collider.get())) {
       writer.begin_object("rect")
