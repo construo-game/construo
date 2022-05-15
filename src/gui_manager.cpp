@@ -52,7 +52,7 @@ GUIManager::run_once(GraphicContext& gc)
 {
   m_frame_count += 1;
 
-  if (m_start_time + 3000 < g_system_context->get_time ())
+  if (m_start_time + 100 < g_system_context->get_time ())
     {
       float const passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
 
