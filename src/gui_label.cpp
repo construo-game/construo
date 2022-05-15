@@ -20,14 +20,26 @@
 
 GUILabel::GUILabel(const std::string& title) :
   GUIComponent(),
-  m_title(title)
+  m_title(title),
+  m_title_func()
+{
+}
+
+GUILabel::GUILabel(std::function<std::string ()> title_func) :
+  GUIComponent(),
+  m_title(),
+  m_title_func(std::move(title_func))
 {
 }
 
 void
 GUILabel::draw (GraphicContext& gc)
 {
-  gc.draw_string(m_x + 10, m_y + 15, m_title);
+  if (m_title_func) {
+    gc.draw_string(m_x + 10, m_y + 15, m_title_func());
+  } else {
+    gc.draw_string(m_x + 10, m_y + 15, m_title);
+  }
 }
 
 /* EOF */

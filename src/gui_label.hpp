@@ -17,6 +17,7 @@
 #ifndef HEADER_CONSTRUO_GUI_LABEL_HPP
 #define HEADER_CONSTRUO_GUI_LABEL_HPP
 
+#include <functional>
 #include <string>
 
 #include "gui_component.hpp"
@@ -25,12 +26,14 @@ class GUILabel : public GUIComponent
 {
 public:
   GUILabel(std::string const& title);
+  GUILabel(std::function<std::string ()> title_func);
 
   void draw(GraphicContext&) override;
   bool is_at(float x, float y) override { return false; }
 
 private:
   std::string m_title;
+  std::function<std::string ()> m_title_func;
 };
 
 #endif
