@@ -41,10 +41,10 @@ WorldButton::draw(GraphicContext& parent_gc)
 {
   World const* world = m_world_cache.get(m_path);
 
-  parent_gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
+  parent_gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(),
                            Color(0xBB0000FF));
 
-  GCZoomState zoom(m_x, m_y, m_x + m_width, m_y + m_height);
+  GCZoomState zoom(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height());
 
   if (world) {
     BoundingBox const& box = world->calc_bounding_box();
@@ -72,12 +72,12 @@ WorldButton::draw(GraphicContext& parent_gc)
   gc.unlock();
 
   if (m_mouse_over) {
-    parent_gc.draw_rect(m_x, m_y, m_x +  m_width, m_y + m_height, Color (0xFFFFFFFF));
+    parent_gc.draw_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(), Color (0xFFFFFFFF));
   } else {
-    parent_gc.draw_rect(m_x, m_y, m_x + m_width, m_y + m_height, Color (0xFF0000FF));
+    parent_gc.draw_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(), Color (0xFF0000FF));
   }
 
-  parent_gc.draw_string(m_x + 8, m_y + m_height + 14.0f, m_basename);
+  parent_gc.draw_string(m_geometry.left() + 8, m_geometry.top() + m_geometry.height() + 14.0f, m_basename);
 }
 
 void

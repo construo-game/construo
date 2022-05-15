@@ -36,9 +36,9 @@ void
 GUILabel::draw (GraphicContext& gc)
 {
   if (m_title_func) {
-    gc.draw_string(m_x + 10, m_y + 15, m_title_func());
+    gc.draw_string(m_geometry.left() + 10, m_geometry.top() + 15, m_title_func());
   } else {
-    gc.draw_string(m_x + 10, m_y + 15, m_title);
+    gc.draw_string(m_geometry.left() + 10, m_geometry.top() + 15, m_title);
   }
 }
 

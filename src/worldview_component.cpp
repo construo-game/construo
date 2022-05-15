@@ -110,7 +110,7 @@ WorldViewComponent::get_snap_size()
 void
 WorldViewComponent::draw(GraphicContext& parent_gc)
 {
-  m_zoom.set_bounding_box(m_x, m_y, m_width, m_height);
+  m_zoom.set_bounding_box(m_geometry.left(), m_geometry.top(), m_geometry.width(), m_geometry.height());
   ZoomGraphicContext gc(parent_gc, m_zoom);
 
   World& world = Controller::instance()->get_world();

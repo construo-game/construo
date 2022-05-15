@@ -34,7 +34,7 @@ public:
   GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode);
   ~GUIDirectory();
 
-  void set_geometry(float x, float y, float width, float height) override;
+  void set_geometry(geom::frect const& geometry) override;
 
   void wheel_up(float x, float y) override;
   void wheel_down(float x, float y) override;

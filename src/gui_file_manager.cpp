@@ -66,19 +66,23 @@ GUIFileManager::~GUIFileManager ()
 }
 
 void
-GUIFileManager::set_geometry(float x, float y, float width, float height)
+GUIFileManager::set_geometry(geom::frect const& geometry)
 {
-  GUIChildManager::set_geometry(x, y, width, height);
+  GUIChildManager::set_geometry(geometry);
 
-  m_btn_up_directory->set_geometry(0.0f, 0.0f, 100.0f, 25.0f);
-  m_btn_close->set_geometry(width - 100.0f, 0.0f, 100.0f, 25.0f);
+  geom::fsize const btn_size(100.0f, 25.0f);
+  m_btn_up_directory->set_geometry(geom::frect(btn_size));
+  m_btn_close->set_geometry(geom::frect(geom::fpoint(m_geometry.width() - 100.0f, 0.0f), btn_size));
 
-  m_btn_scroll_up->set_geometry(width - 30.0f, height / 2.0f - 100.0f, 25.0f, 50.0f);
-  m_btn_scroll_down->set_geometry(width - 30.0f, height / 2.0f, 25.0f, 50.0f);
+  m_btn_scroll_up->set_geometry(geom::frect(geom::fpoint(m_geometry.width() - 30.0f, m_geometry.height() / 2.0f - 100.0f),
+                                            geom::fsize(25.0f, 50.0f)));
+  m_btn_scroll_down->set_geometry(geom::frect(geom::fpoint(m_geometry.width() - 30.0f, m_geometry.height() / 2.0f),
+                                              geom::fsize(25.0f, 50.0f)));
 
-  m_btn_update_directory->set_geometry(width - 150.0f, height - 25.0f, 150.0f, 25.0f);
+  m_btn_update_directory->set_geometry(geom::frect(geom::fpoint(m_geometry.width() - 150.0f, m_geometry.height() - 25.0f),
+                                                   geom::fsize(150.0f, 25.0f)));
 
-  m_directory->set_geometry(x, y, width, height);
+  m_directory->set_geometry(geometry);
 }
 
 void
@@ -90,7 +94,7 @@ GUIFileManager::open_directory (const std::string& pathname)
   } else {
     m_directory = create<GUIDirectory>(*this, pathname, GUIDirectory::LOAD_DIRECTORY);
   }
-  m_directory->set_geometry(m_x, m_y, m_width, m_height);
+  m_directory->set_geometry(m_geometry);
 
   remove(old_directory);
 }

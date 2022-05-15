@@ -83,7 +83,7 @@ public:
   /** Called once the world has changed, aka a new world got loaded */
   void on_world_change();
 
-  bool is_at(float x, float y) override { return true; }
+  bool is_at(float x, float y) const override { return true; }
 
   GCZoomState& zoom() { return m_zoom; }
 

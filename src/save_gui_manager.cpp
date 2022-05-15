@@ -33,7 +33,7 @@ void
 SaveGUIManager::set_geometry(geom::frect const& geometry)
 {
   GUIManager::set_geometry(geometry);
-  m_file_manager->set_geometry(0, 0, geometry.width(), geometry.height());
+  m_file_manager->set_geometry(geom::frect(geometry.size()));
 }
 
 void

@@ -96,8 +96,8 @@ GUIDirectory::place_components()
   // Remove all file components
   clear();
 
-  int const columns = static_cast<int>(m_width / 320.0f) + 1;
-  int const rows = static_cast<int>(m_height / 240.0f) + 1;
+  int const columns = static_cast<int>(m_geometry.width() / 320.0f) + 1;
+  int const rows = static_cast<int>(m_geometry.height() / 240.0f) + 1;
 
   // calculate how far down scrolling is allowed
   m_last_row = std::max((((static_cast<int>(m_items.size()) + columns - 1) + columns) / columns - 1) - rows, 0);
@@ -107,8 +107,8 @@ GUIDirectory::place_components()
 
   float const spacing = 40.0f;
   float const padding = 50.0f;
-  float const thumb_width = (m_width - (2.0f * padding) - (spacing * static_cast<float>(columns - 1))) / static_cast<float>(columns);
-  float const thumb_height = (m_height - (2.0f * padding) - (spacing * static_cast<float>(rows - 1))) / static_cast<float>(rows);
+  geom::fsize const thumb_size((m_geometry.width() - (2.0f * padding) - (spacing * static_cast<float>(columns - 1))) / static_cast<float>(columns),
+                               (m_geometry.height() - (2.0f * padding) - (spacing * static_cast<float>(rows - 1))) / static_cast<float>(rows));
 
   int row = 0;
   int column = 0;
@@ -118,9 +118,9 @@ GUIDirectory::place_components()
       ++i)
   {
     std::unique_ptr<GUIComponent> comp = m_items[i]();
-    comp->set_geometry(static_cast<float>(column) * (thumb_width + spacing) + padding,
-                       static_cast<float>(row) * (thumb_height + spacing) + padding,
-                       thumb_width, thumb_height);
+    comp->set_geometry(geom::frect(geom::fpoint(static_cast<float>(column) * (thumb_size.width() + spacing) + padding,
+                                                static_cast<float>(row) * (thumb_size.height() + spacing) + padding),
+                                   thumb_size));
     add(std::move(comp));
 
     column += 1;
@@ -133,9 +133,9 @@ GUIDirectory::place_components()
 }
 
 void
-GUIDirectory::set_geometry(float x, float y, float width, float height)
+GUIDirectory::set_geometry(geom::frect const& geometry)
 {
-  GUIChildManager::set_geometry(x, y, width, height);
+  GUIChildManager::set_geometry(geometry);
   place_components();
 }
 

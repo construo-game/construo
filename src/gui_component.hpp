@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_GUI_COMPONENT_HPP
 #define HEADER_CONSTRUO_GUI_COMPONENT_HPP
 
+#include <geom/rect.hpp>
+
 #include "fwd.hpp"
 
 /** A thing that is under the controll of the GUIManager */
@@ -24,30 +26,23 @@ class GUIComponent
 {
 public:
   GUIComponent() :
-    m_x(0),
-    m_y(0),
-    m_width(0),
-    m_height(0)
+    m_geometry()
   {}
-
   virtual ~GUIComponent() {}
 
   virtual void draw(GraphicContext& gc) = 0;
 
   /** @return true if the component is present at the given location */
-  virtual bool is_at(float x, float y);
+  virtual bool is_at(float x, float y) const;
 
-  virtual void set_geometry(float x, float y, float width, float height) {
-    m_x = x;
-    m_y = y;
-    m_width = width;
-    m_height = height;
+  virtual void set_geometry(geom::frect const& geometry) {
+    m_geometry = geometry;
   }
 
-  float get_x_pos() { return m_x; }
-  float get_y_pos() { return m_y; }
-  float get_width() { return m_width; }
-  float get_height() { return m_height; }
+  float get_x_pos() { return m_geometry.left(); }
+  float get_y_pos() { return m_geometry.top(); }
+  float get_width() { return m_geometry.width(); }
+  float get_height() { return m_geometry.height(); }
 
   virtual void on_primary_button_press(float x, float y) {}
   virtual void on_primary_button_release(float x, float y) {}
@@ -83,10 +78,7 @@ public:
   virtual void on_mouse_move(float x, float y, float of_x, float of_y) {}
 
 protected:
-  float m_x;
-  float m_y;
-  float m_width;
-  float m_height;
+  geom::frect m_geometry;
 
 public:
   GUIComponent(const GUIComponent&) = delete;

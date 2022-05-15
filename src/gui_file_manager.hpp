@@ -34,7 +34,7 @@ public:
   ~GUIFileManager();
 
   void draw_overlay(GraphicContext& gc) override;
-  void set_geometry(float x, float y, float width, float height) override;
+  void set_geometry(geom::frect const& geometry) override;
 
   /** Switch the GUIFileManagers view to the directory given by
       pathname */

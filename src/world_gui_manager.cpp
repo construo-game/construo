@@ -178,39 +178,50 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
 
   GUIManager::set_geometry(geometry);
 
-  auto BUTTON_POS = [](int n) { return 80.0f + static_cast<float>(n) * 30.0f; };
-  auto BUTTON_RPOS = [](int n) { return 50.0f + static_cast<float>(n) * 30.0f; };
-  float const BUTTON_WIDTH = 75.0f;
-  float const BUTTON_HEIGHT = 25.0f;
-  float const BUTTON_LX_POS = geometry.width() - BUTTON_WIDTH - 10.0f;
+  geom::fsize const button_size(75.0f, 25.0f);
+  auto btn_left = [=](int row) {
+    return geom::frect(geom::fpoint(10.0f, 80.0f + static_cast<float>(row) * 30.0f),
+                       button_size);
+  };
+  auto btn_right = [=](int row) {
+    return geom::frect(geom::fpoint(geometry.width() - button_size.width() - 10.0f,
+                                    50.0f + static_cast<float>(row) * 30.0f),
+                       button_size);
+  };
+  auto btn_split = [](geom::frect const& rect, int col) {
+    return geom::frect(rect.left() + (rect.width()/2.0f) * static_cast<float>(col) + 3,
+                       rect.top(),
+                       rect.left() + (rect.width()/2.0f) * static_cast<float>(col + 1) - 3,
+                       rect.bottom());
+  };
 
-  m_worldview_component->set_geometry(0, 0, geometry.width(), geometry.height());
+  m_worldview_component->set_geometry(geom::frect(geometry.size()));
 
-  m_run_button->set_geometry(10, BUTTON_POS(0), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_slowmo_button->set_geometry(10, BUTTON_POS(1), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_load_button->set_geometry(10, BUTTON_POS(9), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_save_button->set_geometry(10, BUTTON_POS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_run_button->set_geometry(btn_left(0));
+  m_slowmo_button->set_geometry(btn_left(1));
+  m_load_button->set_geometry(btn_left(9));
+  m_save_button->set_geometry(btn_left(10));
 
-  m_undo_button->set_geometry(10, BUTTON_POS(6), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_redo_button->set_geometry(10, BUTTON_POS(7), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_undo_button->set_geometry(btn_left(6));
+  m_redo_button->set_geometry(btn_left(7));
 
-  m_actioncam_button->set_geometry(10, BUTTON_POS(2), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_dots_button->set_geometry(10, BUTTON_POS(3), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_grid_button->set_geometry(10, BUTTON_POS(4), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_quit_button->set_geometry(10, BUTTON_POS(12), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_actioncam_button->set_geometry(btn_left(2));
+  m_dots_button->set_geometry(btn_left(3));
+  m_grid_button->set_geometry(btn_left(4));
+  m_quit_button->set_geometry(btn_left(12));
 
-  m_insert_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(4), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_select_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(5), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_collider_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(6), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_zoom_button->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(7), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_insert_button->set_geometry(btn_right(4));
+  m_select_button->set_geometry(btn_right(5));
+  m_collider_button->set_geometry(btn_right(6));
+  m_zoom_button->set_geometry(btn_right(7));
 
-  m_zoomout_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25);
-  m_zoomin_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25);
+  m_zoomin_button->set_geometry(btn_split(btn_right(8), 0));
+  m_zoomout_button->set_geometry(btn_split(btn_right(8), 1));
 
   // particle mass
-  m_particle_mass_label->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
-  m_particle_mass_increase_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(11), 25, 25);
-  m_particle_mass_decrease_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(11), 25, 25);
+  m_particle_mass_label->set_geometry(btn_right(10));
+  m_particle_mass_increase_button->set_geometry(btn_split(btn_right(11), 0));
+  m_particle_mass_decrease_button->set_geometry(btn_split(btn_right(11), 1));
 
   m_last_geometry = geometry;
 }

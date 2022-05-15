@@ -34,9 +34,9 @@ GUIWindow::GUIWindow(std::string const& title) :
   m_title(title),
   m_mouse_over(true)
 {
-  create<GUILabel>("Do you really want to quit?")->set_geometry(10, 10, 100, 30);
-  create<GUIButton>("Yes", yes_press)->set_geometry(10, 50, 80, 25);
-  create<GUIButton>("No", no_press)->set_geometry(110, 50, 80, 25);
+  create<GUILabel>("Do you really want to quit?")->set_geometry(geom::frect(geom::fpoint(10.0f, 10.0f), geom::fsize(100.0f, 30.0f)));
+  create<GUIButton>("Yes", yes_press)->set_geometry(geom::frect(geom::fpoint(10.0f, 50.0f), geom::fsize(80.0f, 25.0f)));
+  create<GUIButton>("No", no_press)->set_geometry(geom::frect(geom::fpoint(110.0f, 50.0f), geom::fsize(80.0f, 25.0f)));
 }
 
 GUIWindow::~GUIWindow ()

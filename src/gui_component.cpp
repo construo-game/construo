@@ -17,12 +17,9 @@
 #include "gui_component.hpp"
 
 bool
-GUIComponent::is_at(float x, float y)
+GUIComponent::is_at(float x, float y) const
 {
-  return (x    >= m_x
-          && y >= m_y
-          && x < m_x + m_width
-          && y < m_y + m_height);
+  return geom::contains(m_geometry, geom::fpoint(x, y));
 }
 
 /* EOF */

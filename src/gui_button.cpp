@@ -73,23 +73,23 @@ GUIButton::draw(GraphicContext& gc)
 {
   if (m_sig_highlight_p())
   {
-    gc.draw_fill_rect(m_x, m_y, m_x + m_width, m_y + m_height,
+    gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(),
                       g_style.button_bg_active);
   }
   else if (m_pressed && m_mouse_over)
   {
-    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_pressed);
+    gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(),  m_geometry.top() + m_geometry.height(), g_style.button_bg_pressed);
   }
   else if (m_mouse_over)
   {
-    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_hover);
+    gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(),  m_geometry.top() + m_geometry.height(), g_style.button_bg_hover);
   }
   else
   {
-    gc.draw_fill_rect(m_x, m_y, m_x + m_width,  m_y + m_height, g_style.button_bg_passive);
+    gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(),  m_geometry.top() + m_geometry.height(), g_style.button_bg_passive);
   }
 
-  gc.draw_string_centered(m_x + m_width/2, m_y + 16, m_title);
+  gc.draw_string_centered(m_geometry.left() + m_geometry.width()/2, m_geometry.top() + 16, m_title);
 
   if (m_pressed && m_mouse_over)
   {
@@ -108,22 +108,22 @@ GUIButton::draw(GraphicContext& gc)
 void
 GUIButton::draw_border_hover(GraphicContext& gc)
 {
-  gc.draw_rect(m_x, m_y,
-                 m_x + m_width, m_y + m_height, g_style.button_fg_hover);
+  gc.draw_rect(m_geometry.left(), m_geometry.top(),
+                 m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(), g_style.button_fg_hover);
 }
 
 void
 GUIButton::draw_border_pressed(GraphicContext& gc)
 {
-  gc.draw_rect(m_x, m_y,
-                 m_x + m_width, m_y + m_height, g_style.button_fg_pressed);
+  gc.draw_rect(m_geometry.left(), m_geometry.top(),
+                 m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(), g_style.button_fg_pressed);
 }
 
 void
 GUIButton::draw_border_normal(GraphicContext& gc)
 {
-  gc.draw_rect(m_x, m_y,
-                 m_x + m_width, m_y + m_height, g_style.button_fg_passive);
+  gc.draw_rect(m_geometry.left(), m_geometry.top(),
+                 m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(), g_style.button_fg_passive);
 }
 
 /* EOF */
