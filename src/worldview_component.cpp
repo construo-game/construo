@@ -110,7 +110,7 @@ WorldViewComponent::get_snap_size()
 void
 WorldViewComponent::draw(GraphicContext& parent_gc)
 {
-  m_zoom.set_bounding_box(m_geometry.left(), m_geometry.top(), m_geometry.width(), m_geometry.height());
+  m_zoom.set_bounding_box(m_geometry);
   ZoomGraphicContext gc(parent_gc, m_zoom);
 
   World& world = Controller::instance()->get_world();
@@ -132,8 +132,8 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
                  static_cast<int>(box.x2), static_cast<int>(box.y2));
     // Zoom out two times so that the area isn't covered up by the
     // GUI
-    m_zoom.zoom_out(get_width()/2, get_height()/2);
-    m_zoom.zoom_out(get_width()/2, get_height()/2);
+    m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
+    m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
   }
 
   m_current_tool->draw_background(gc);
@@ -336,8 +336,8 @@ WorldViewComponent::on_world_change()
                static_cast<int>(box.x2), static_cast<int>(box.y2));
   // Zoom out two times so that the area isn't covered up by the
   // GUI
-  m_zoom.zoom_out(get_width()/2, get_height()/2);
-  m_zoom.zoom_out(get_width()/2, get_height()/2);
+  m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
+  m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
 }
 
 /* EOF */

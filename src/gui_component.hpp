@@ -39,10 +39,9 @@ public:
     m_geometry = geometry;
   }
 
-  float get_x_pos() { return m_geometry.left(); }
-  float get_y_pos() { return m_geometry.top(); }
-  float get_width() { return m_geometry.width(); }
-  float get_height() { return m_geometry.height(); }
+  geom::frect geometry() const {
+    return m_geometry;
+  }
 
   virtual void on_primary_button_press(float x, float y) {}
   virtual void on_primary_button_release(float x, float y) {}

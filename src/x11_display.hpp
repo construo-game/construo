@@ -50,7 +50,7 @@ public:
   void draw_string(float x, float y, const std::string& str, Color color) override;
   void draw_string_centered(float x, float y, const std::string& str, Color color) override;
 
-  geom::frect get_geometry() const override { return geom::frect(m_geometry); }
+  geom::frect geometry() const override { return geom::frect(m_geometry); }
   float get_width() override { return static_cast<float>(m_geometry.width()); }
   float get_height() override { return static_cast<float>(m_geometry.height()); }
 

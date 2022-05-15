@@ -117,7 +117,7 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     }
 
     // FIXME: get proper x/y position of the window
-    ScreenManager::instance()->set_geometry(m_display->get_geometry());
+    ScreenManager::instance()->set_geometry(m_display->geometry());
 
     // For some targets this will never return
     m_display->run();

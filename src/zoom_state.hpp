@@ -18,6 +18,7 @@
 #define HEADER_ZOOM_STATE_HPP
 
 #include <glm/glm.hpp>
+#include <geom/rect.hpp>
 
 // FIXME: ZoomState name conflicts with X11
 class GCZoomState
@@ -108,11 +109,11 @@ public:
   float bounding_width() const { return m_x2 - m_x1; }
   float bounding_height() const { return m_y2 - m_y1; }
 
-  void set_bounding_box(float x, float y, float width, float height) {
-    m_x1 = x;
-    m_y1 = y;
-    m_x2 = x + width;
-    m_y2 = y + height;
+  void set_bounding_box(geom::frect const& rect) {
+    m_x1 = rect.left();
+    m_y1 = rect.top();
+    m_x2 = rect.right();
+    m_y2 = rect.bottom();
   }
 
 private:

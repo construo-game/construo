@@ -45,7 +45,7 @@ public:
 
   bool get_fullscreen() { return m_is_fullscreen; }
 
-  geom::frect get_geometry() const override {
+  geom::frect geometry() const override {
     return geom::frect(geom::fsize(static_cast<float>(m_width),
                                    static_cast<float>(m_height)));
   }
