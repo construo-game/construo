@@ -741,7 +741,10 @@ X11Display::flip()
               m_geometry.width(), m_geometry.height(),
               0, 0 // destination
       );
-    //XFlush(m_display);
+
+    // FIXME: brute force sleep to limit the framerate and keep the
+    // XServer responsive for other applications.
+    usleep(5000);
   }
 }
 
