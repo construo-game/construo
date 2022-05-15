@@ -16,9 +16,10 @@
 
 #include "world_gui_manager.hpp"
 
+#include <fmt/format.h>
+#include <geom/rect.hpp>
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <geom/rect.hpp>
 
 #include "controller.hpp"
 #include "construo.hpp"
@@ -276,11 +277,11 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   */
   float const bottom_line = gc.get_height() - 10;
   gc.draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
-  gc.draw_string(80.0f, bottom_line - 20.0f, std::to_string(get_fps()));
+  gc.draw_string(80.0f, bottom_line - 20.0f, fmt::format("{:6.2f}", get_fps()));
 
   gc.draw_string(10.0f, bottom_line, "Pos: ");
-  gc.draw_string(80.0f, bottom_line,
-                 glm::to_string(m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos())));
+  auto const& pos = m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos());
+  gc.draw_string(80.0f, bottom_line, fmt::format("{:6.2f} {:6.2f}", pos.x, pos.y));
 
   gc.draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
   gc.draw_string(280.0f, bottom_line - 20.0f, std::to_string(world.particles().size()));
@@ -289,7 +290,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(280.0f, bottom_line, std::to_string(world.springs().size()));
 
   gc.draw_string(410.0f, bottom_line, "Zoom: ");
-  gc.draw_string(480.0f, bottom_line, std::to_string(m_worldview_component->get_scale()));
+  gc.draw_string(480.0f, bottom_line, fmt::format("{:5.2f}", m_worldview_component->get_scale()));
 
   gc.draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
   //gc.draw_string (680, bottom_line, std::to_string(m_worldview_component->get_scale()));
