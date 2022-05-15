@@ -81,7 +81,18 @@ void
 WorldRenderer::draw_particles(ZoomGraphicContext& gc) const
 {
   for (auto const& particle : m_world.particles()) {
-    draw_particle(gc, *particle);
+    if (particle->fixed)
+    {
+      gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(particle->pos),
+                                          4,
+                                          Color(0.6f, 0.6f, 0.6f));
+    }
+    else
+    {
+      gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(particle->pos),
+                                          std::max(3.0f, gc.zoom().get_scale() * mass_to_radius(particle->get_mass())),
+                                          Color(1.0f, 0.0f, 0.0f));
+    }
   }
 }
 
@@ -161,26 +172,6 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 }
 
 void
-WorldRenderer::draw_particle(ZoomGraphicContext& gc, Particle const& particle)
-{
-  if (particle.pos.y < 598.5f)
-  {
-    if (particle.fixed)
-    {
-      gc.get_parent_gc().draw_fill_circle (gc.zoom().world_to_screen(particle.pos),
-                                           4,
-                                           Color(0.6f, 0.6f, 0.6f));
-    }
-    else
-    {
-      gc.get_parent_gc().draw_fill_circle (gc.zoom().world_to_screen(particle.pos),
-                                           std::max(3.0f, particle.get_mass()),
-                                           Color(1.0f, 0.0f, 0.0f));
-    }
-  }
-}
-
-void
 WorldRenderer::draw_particle_info(ZoomGraphicContext& gc, Particle const& particle)
 {
   glm::vec2 const p = gc.zoom().world_to_screen(particle.pos);
@@ -201,7 +192,7 @@ void
 WorldRenderer::draw_particle_highlight(ZoomGraphicContext& gc, Particle const& particle)
 {
   gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(particle.pos),
-                                      std::max(6.0f, particle.get_mass() + 3),
+                                      std::max(6.0f, gc.zoom().get_scale() * mass_to_radius(particle.get_mass()) + 3),
                                       g_style.highlight);
 }
 
@@ -271,6 +262,13 @@ WorldRenderer::draw_rect_collider_highlight(ZoomGraphicContext& gc, RectCollider
 {
   //gc.draw_fill_rect (x1, y1, x2, y2, g_style.rect_collider_bg);
   gc.draw_rect(collider.x1, collider.y1, collider.x2, collider.y2, g_style.selection_rect);
+}
+
+float
+WorldRenderer::mass_to_radius(float mass)
+{
+  float const scale_factor = 5.0f;
+  return std::sqrt(mass) * scale_factor;
 }
 
 /* EOF */

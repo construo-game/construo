@@ -39,16 +39,10 @@ public:
   void on_delete_press(float x, float y) override;
   void on_fix_press(float x, float y) override;
 
-  void  set_particle_mass(float p) { m_particle_mass = p; }
-  float get_particle_mass() { return m_particle_mass; }
-
 private:
   /** The last particle that got inserted or marked by a click, it is
       used as the first particle of the newly created spring */
   Particle* m_current_particle;
-
-  /** mass of the particles that are inserted on a primary press */
-  float m_particle_mass;
 
   Spring* m_hover_spring;
   Particle* m_hover_particle;

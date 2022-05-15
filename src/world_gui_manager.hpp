@@ -60,6 +60,10 @@ private:
   GUIComponent* m_zoomout_button;
   GUIComponent* m_zoomin_button;
 
+  GUIComponent* m_particle_mass_label;
+  GUIComponent* m_particle_mass_increase_button;
+  GUIComponent* m_particle_mass_decrease_button;
+
   geom::frect m_last_geometry;
 
 public:

@@ -35,7 +35,6 @@ public:
   /** Draw ground, aka the all overspanning collider at the bottem */
   void draw_ground(ZoomGraphicContext& gc) const;
 
-  static void draw_particle(ZoomGraphicContext& gc, Particle const& particle);
   static void draw_particle_info(ZoomGraphicContext& gc, Particle const& particle);
   static void draw_particle_highlight(ZoomGraphicContext& gc, Particle const& particle);
   static void draw_particle_velocity_vector(ZoomGraphicContext& gc, Particle const& particle);
@@ -47,6 +46,9 @@ public:
   static void draw_collider_highlight(ZoomGraphicContext& gc, Collider const& collider);
   static void draw_rect_collider(ZoomGraphicContext& gc, RectCollider const& collider);
   static void draw_rect_collider_highlight(ZoomGraphicContext& gc, RectCollider const& collider);
+
+  /** Convert particle mass to it's visible radius */
+  static float mass_to_radius(float mass);
 
 private:
   World& m_world;

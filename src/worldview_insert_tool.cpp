@@ -28,7 +28,6 @@
 WorldViewInsertTool::WorldViewInsertTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
   m_current_particle(nullptr),
-  m_particle_mass(0.1f),
   m_hover_spring(nullptr),
   m_hover_particle(nullptr)
 {
@@ -79,10 +78,11 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
       }
 
       { // draw where new particle would be inserted
-        gc.draw_fill_circle(new_particle_pos.x,
-                            new_particle_pos.y,
-                            3.0f / m_worldview.zoom().get_scale(),
-                            g_style.highlight);
+        gc.get_parent_gc().draw_fill_circle(gc.zoom().world_to_screen(new_particle_pos),
+                                            std::max(3.0f,
+                                                     gc.zoom().get_scale() *
+                                                     WorldRenderer::mass_to_radius(Controller::instance()->get_particle_mass())),
+                                            g_style.highlight);
       }
     }
   }
@@ -131,7 +131,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 
         new_current_particle = world.get_particle_mgr().add_particle(new_particle_pos,
                                                                      glm::vec2(0.0f, 0.0f),
-                                                                     m_particle_mass);
+                                                                     Controller::instance()->get_particle_mass());
         world.add_spring (m_current_particle, new_current_particle);
       }
       // Lower the spring links count, since we have increased it
@@ -169,7 +169,7 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 
       Particle* p = world.get_particle_mgr().add_particle(new_particle_pos,
                                                           glm::vec2(0.0f, 0.0f),
-                                                          m_particle_mass);
+                                                          Controller::instance()->get_particle_mass());
       m_current_particle = p;
       // Increase the spring count so that the particle isn't cleaned up
       m_current_particle->spring_links += 1;

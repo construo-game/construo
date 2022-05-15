@@ -24,6 +24,12 @@ GUILabel::GUILabel (const std::string& title, float x, float y, float width, flo
 {
 }
 
+GUILabel::GUILabel(const std::string& title) :
+  GUIComponent(),
+  m_title(title)
+{
+}
+
 void
 GUILabel::draw (GraphicContext& gc)
 {

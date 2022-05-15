@@ -52,6 +52,9 @@ WorldGUIManager::WorldGUIManager() :
   m_zoom_button(),
   m_zoomout_button(),
   m_zoomin_button(),
+  m_particle_mass_label(),
+  m_particle_mass_increase_button(),
+  m_particle_mass_decrease_button(),
   m_last_geometry()
 {
   instance_  = this;
@@ -133,24 +136,15 @@ WorldGUIManager::WorldGUIManager() :
     [this]{ m_worldview_component->wheel_down(g_graphic_context->get_width()/2,
                                                    g_graphic_context->get_height()/2); });
 
-  // FIXME: Stuff for particle mass and Co. must be implemented in another way
-#if 0
-  {
-    create<GUIButton>("Increase ParticleMass",   650, 220, 140, 25, increase_particle_mass);
-    create<GUIButton>("Decrease ParticleMass",   650, 250, 140, 25, decrease_particle_mass);
+  // particle mass
+  m_particle_mass_label = create<GUILabel>("Mass");
+  m_particle_mass_increase_button = create<GUIButton>("+", [](){
+    Controller::instance()->set_particle_mass(Controller::instance()->get_particle_mass() + 0.1f);
+  });
+  m_particle_mass_decrease_button = create<GUIButton>("-", [](){
+    Controller::instance()->set_particle_mass(Controller::instance()->get_particle_mass() - 0.1f);
+  });
 
-    create<GUILabel>("Stiffness",   550, 280, 75, 25);
-
-    [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() + 1.0f); }
-      [this]{ m_worldview_component->get_insert_tool()->set_particle_mass(wc.get_particle_mass() - 1.0f); }
-
-      create<GUIButton>("+",   BUTTON_LX_POS, 280, 25, 25, increase_particle_mass);
-    create<GUIButton>("-",   680, 280, 25, 25, decrease_particle_mass);
-
-    create<GUIButton>("+",   650, 280, 25, 25, increase_particle_mass);
-    create<GUIButton>("-",   680, 280, 25, 25, decrease_particle_mass);
-  }
-#endif
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);
 
   /*
@@ -208,6 +202,11 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
 
   m_zoomout_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(8), 25, 25);
   m_zoomin_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25);
+
+  // particle mass
+  m_particle_mass_label->set_geometry(BUTTON_LX_POS + 6, BUTTON_RPOS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_particle_mass_increase_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(11), 25, 25);
+  m_particle_mass_decrease_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(11), 25, 25);
 
   m_last_geometry = geometry;
 }
@@ -271,10 +270,6 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   World& world = Controller::instance()->get_world ();
 
-  /*graphic_context->draw_string (600,  430, "Particles Mass: ");
-    graphic_context->draw_string (BUTTON_LX_POS,  430,
-    to_string(m_worldview_component->get_insert_tool()->get_particle_mass ()));
-  */
   float const bottom_line = gc.get_height() - 10;
   gc.draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
   gc.draw_string(80.0f, bottom_line - 20.0f, fmt::format("{:6.2f}", get_fps()));

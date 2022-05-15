@@ -33,6 +33,7 @@ Controller::Controller() :
   m_slow_down(false),
   m_action_cam(false),
   m_hide_dots(false),
+  m_particle_mass(0.1f),
   m_delta_manager()
 {
   assert(instance_ == nullptr);

@@ -42,6 +42,9 @@ public:
   void set_hide_dots(bool);
   bool get_hide_dots();
 
+  void  set_particle_mass(float mass) { m_particle_mass = mass; }
+  float get_particle_mass() const { return m_particle_mass; }
+
   World& get_world() { assert(m_world != nullptr); return *m_world; }
 
   /** Load a world by name, name is relative to the construo user directory */
@@ -80,6 +83,9 @@ private:
   bool m_slow_down;
   bool m_action_cam;
   bool m_hide_dots;
+
+  /** mass of the particles that are inserted on a primary press */
+  float m_particle_mass;
 
   DeltaManager m_delta_manager;
 
