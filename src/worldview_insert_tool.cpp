@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "worldview_insert_tool.hpp"
+
+#include <logmich/log.hpp>
+
 #include "colors.hpp"
 #include "particle_factory.hpp"
 #include "input_context.hpp"
@@ -22,12 +26,11 @@
 #include "controller.hpp"
 #include "world_renderer.hpp"
 #include "worldview_component.hpp"
-#include "worldview_insert_tool.hpp"
 #include "world_gui_manager.hpp"
 
 WorldViewInsertTool::WorldViewInsertTool(WorldViewComponent& worldview) :
   WorldViewTool(worldview),
-  m_current_particle(nullptr),
+  m_previous_particle(nullptr),
   m_hover_spring(nullptr),
   m_hover_particle(nullptr)
 {
@@ -63,9 +66,9 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
     new_particle_pos = m_hover_particle->pos;
   }
 
-  if (m_current_particle)
+  if (m_previous_particle)
   {
-    gc.GraphicContext::draw_line(m_current_particle->pos, new_particle_pos,
+    gc.GraphicContext::draw_line(m_previous_particle->pos, new_particle_pos,
                                  g_style.new_spring, 2);
   }
   else
@@ -104,42 +107,46 @@ void
 WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 {
   World& world = Controller::instance()->get_world();
-  float const x = m_worldview.zoom().screen_to_world_x (screen_x);
-  float const y = m_worldview.zoom().screen_to_world_y (screen_y);
+  float const x = m_worldview.zoom().screen_to_world_x(screen_x);
+  float const y = m_worldview.zoom().screen_to_world_y(screen_y);
 
-  if (m_current_particle)
+  if (m_previous_particle) // create a spring that connects two particles
   {
     // We are going to place a second particle and connect the last an
     // the new one with a spring
-    Particle* new_current_particle = m_hover_particle;
-    if (new_current_particle != m_current_particle)
+    if (m_hover_particle != m_previous_particle)
     {
-      if (new_current_particle) // connect to particles
+      if (m_hover_particle) // connect to particles
       {
-        world.add_spring (m_current_particle, new_current_particle);
+        world.add_spring(m_previous_particle, m_hover_particle);
       }
       else // add a new particle and connect it with the current one
       {
-        float const grid_size = m_worldview.get_snap_size();
-
         glm::vec2 new_particle_pos(0.0f, 0.0f);
-        if (m_worldview.uses_grid())
+
+        float const grid_size = m_worldview.get_snap_size();
+        if (m_worldview.uses_grid()) {
           new_particle_pos = glm::vec2(Math::round_to_float(x, grid_size),
                                        Math::round_to_float(y, grid_size));
-        else
+        } else {
           new_particle_pos = glm::vec2(x, y);
+        }
 
-        new_current_particle = world.get_particle_mgr().add_particle(new_particle_pos,
-                                                                     glm::vec2(0.0f, 0.0f),
-                                                                     Controller::instance()->get_particle_mass());
-        world.add_spring (m_current_particle, new_current_particle);
+        if (new_particle_pos == m_previous_particle->pos) {
+          log_debug("spring creation with length 0 requested, ignore");
+        } else {
+          Particle* const new_particle = world.get_particle_mgr().add_particle(new_particle_pos,
+                                                                               glm::vec2(0.0f, 0.0f),
+                                                                               Controller::instance()->get_particle_mass());
+          world.add_spring(m_previous_particle, new_particle);
+        }
       }
       // Lower the spring links count, since we have increased it
       // at insertion and now connected it to a real spring, so
       // its no longer needed
-      m_current_particle->spring_links -= 1;
+      m_previous_particle->spring_links -= 1;
 
-      m_current_particle = nullptr;
+      m_previous_particle = nullptr;
     }
     WorldGUIManager::instance()->ungrab_mouse(m_worldview);
   }
@@ -148,9 +155,9 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
     // We are going to create a new particle and making it the
     // current one, so that the next click would result in a new
     // spring
-    m_current_particle = m_hover_particle;
+    m_previous_particle = m_hover_particle;
 
-    if (m_current_particle)
+    if (m_previous_particle)
     {
       // connect a spring to an existing particle
     }
@@ -170,9 +177,9 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
       Particle* p = world.get_particle_mgr().add_particle(new_particle_pos,
                                                           glm::vec2(0.0f, 0.0f),
                                                           Controller::instance()->get_particle_mass());
-      m_current_particle = p;
+      m_previous_particle = p;
       // Increase the spring count so that the particle isn't cleaned up
-      m_current_particle->spring_links += 1;
+      m_previous_particle->spring_links += 1;
     }
 
     WorldGUIManager::instance()->grab_mouse(m_worldview);
@@ -200,10 +207,10 @@ WorldViewInsertTool::on_delete_press(float screen_x, float screen_y)
 {
   World& world = Controller::instance()->get_world ();
 
-  if (m_current_particle)
+  if (m_previous_particle)
   { // We are currently creating a new spring, abort that
-    m_current_particle->spring_links -= 1;
-    m_current_particle = nullptr;
+    m_previous_particle->spring_links -= 1;
+    m_previous_particle = nullptr;
     m_hover_particle = nullptr;
     m_hover_spring = nullptr;
     WorldGUIManager::instance()->ungrab_mouse(m_worldview);

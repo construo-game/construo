@@ -42,7 +42,7 @@ public:
 private:
   /** The last particle that got inserted or marked by a click, it is
       used as the first particle of the newly created spring */
-  Particle* m_current_particle;
+  Particle* m_previous_particle;
 
   Spring* m_hover_spring;
   Particle* m_hover_particle;
