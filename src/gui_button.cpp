@@ -28,19 +28,6 @@
 #define BUTTON_HEIGHT 25
 
 GUIButton::GUIButton(const std::string& title,
-                     float x, float y, float width, float height,
-                     OnClickSignal sig_on_click,
-                     HighlightPred sig_highlight_p) :
-  GUIComponent(x, y, width, height),
-  m_title(title),
-  m_mouse_over(false),
-  m_pressed(false),
-  m_sig_on_click(std::move(sig_on_click)),
-  m_sig_highlight_p(std::move(sig_highlight_p))
-{
-}
-
-GUIButton::GUIButton(const std::string& title,
           OnClickSignal sig_on_click,
           HighlightPred sig_highlight_p) :
   GUIComponent(),

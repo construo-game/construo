@@ -18,13 +18,13 @@
 #define HEADER_CONSTRUO_GUI_LABEL_HPP
 
 #include <string>
+
 #include "gui_component.hpp"
 
 class GUILabel : public GUIComponent
 {
 public:
-  GUILabel (const std::string& title, float x, float y, float width, float height);
-  GUILabel (const std::string& title);
+  GUILabel(std::string const& title);
 
   void draw(GraphicContext&) override;
   bool is_at(float x, float y) override { return false; }

@@ -29,12 +29,6 @@ public:
     m_width(0),
     m_height(0)
   {}
-  GUIComponent (float x_, float y_, float width_, float height_) :
-    m_x(x_),
-    m_y(y_),
-    m_width (width_),
-    m_height(height_)
-  {}
 
   virtual ~GUIComponent() {}
 

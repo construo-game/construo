@@ -31,10 +31,6 @@ public:
 
 public:
   GUIButton(const std::string& title,
-            float x, float y, float width, float height,
-            OnClickSignal sig_on_click,
-            HighlightPred sig_highlight_p = []{ return false; });
-  GUIButton(const std::string& title,
             OnClickSignal sig_on_click,
             HighlightPred sig_highlight_p = []{ return false; });
 

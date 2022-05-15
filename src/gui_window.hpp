@@ -25,8 +25,8 @@
 class GUIWindow : public GUIChildManager
 {
 public:
-  GUIWindow (const std::string&, float x, float y, float width, float height);
-  ~GUIWindow ();
+  GUIWindow(std::string const& title);
+  ~GUIWindow();
 
   void draw(GraphicContext&) override;
   void on_mouse_enter() override { m_mouse_over = true; }

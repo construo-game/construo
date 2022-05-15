@@ -21,13 +21,6 @@
 #include "graphic_context.hpp"
 #include "colors.hpp"
 
-GUIChildManager::GUIChildManager (float x, float y, float width, float height) :
-  GUIComponent (x, y, width, height),
-  m_components(),
-  m_current_component(nullptr)
-{
-}
-
 GUIChildManager::GUIChildManager() :
   GUIComponent(),
   m_components(),

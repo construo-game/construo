@@ -29,14 +29,14 @@ void no_press()
 {
 }
 
-GUIWindow::GUIWindow (const std::string& t, float x, float y, float width, float height) :
-  GUIChildManager(x, y, width, height),
-  m_title(t),
+GUIWindow::GUIWindow(std::string const& title) :
+  GUIChildManager(),
+  m_title(title),
   m_mouse_over(true)
 {
-  create<GUILabel>("Do you really want to quit?", 10, 10, 100, 30);
-  create<GUIButton>("Yes", 10, 50, 80, 25, yes_press);
-  create<GUIButton>("No", 110, 50, 80, 25, no_press);
+  create<GUILabel>("Do you really want to quit?")->set_geometry(10, 10, 100, 30);
+  create<GUIButton>("Yes", yes_press)->set_geometry(10, 50, 80, 25);
+  create<GUIButton>("No", no_press)->set_geometry(110, 50, 80, 25);
 }
 
 GUIWindow::~GUIWindow ()
