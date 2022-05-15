@@ -21,6 +21,8 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <geom/point.hpp>
+#include <geom/rect.hpp>
 
 #include "math.hpp"
 #include "color.hpp"
@@ -43,38 +45,38 @@ public:
 public:
   virtual ~GraphicContext() {}
 
-  void draw_circle(const glm::vec2& pos, float radius, Color color)
+  void draw_circle(geom::fpoint const& pos, float radius, Color color)
   {
-    draw_circle(pos.x, pos.y, radius, color);
+    draw_circle(pos.x(), pos.y(), radius, color);
   }
 
-  void draw_fill_circle(const glm::vec2& pos, float radius, Color color)
+  void draw_fill_circle(geom::fpoint const& pos, float radius, Color color)
   {
-    draw_fill_circle(pos.x, pos.y, radius, color);
+    draw_fill_circle(pos.x(), pos.y(), radius, color);
   }
 
-  void draw_string(const glm::vec2& pos, const std::string& str, Color color = Color(0xFFFFFFFF))
+  void draw_string(geom::fpoint const& pos, const std::string& str, Color color = Color(0xFFFFFFFF))
   {
-    draw_string(pos.x, pos.y, str, color);
+    draw_string(pos.x(), pos.y(), str, color);
   }
 
-  void draw_line(const glm::vec2& pos1, const glm::vec2& pos2, Color color, int wide = 0)
+  void draw_line(geom::fpoint const& pos1, geom::fpoint const& pos2, Color color, int wide = 0)
   {
-    draw_line(pos1.x, pos1.y, pos2.x, pos2.y, color, wide);
+    draw_line(pos1.x(), pos1.y(), pos2.x(), pos2.y(), color, wide);
   }
 
-  void draw_rect(const glm::vec2& pos1, const glm::vec2& pos2, Color color)
+  void draw_rect(geom::fpoint const& pos1, geom::fpoint const& pos2, Color color)
   {
-    draw_rect(std::min(pos1.x, pos2.x),
-              std::min(pos1.y, pos2.y),
-              std::max(pos1.x, pos2.x),
-              std::max(pos1.y, pos2.y),
+    draw_rect(std::min(pos1.x(), pos2.x()),
+              std::min(pos1.y(), pos2.y()),
+              std::max(pos1.x(), pos2.x()),
+              std::max(pos1.y(), pos2.y()),
               color);
   }
 
-  void draw_fill_rect(const glm::vec2& pos1, const glm::vec2& pos2, Color color)
+  void draw_fill_rect(geom::fpoint const& pos1, geom::fpoint const& pos2, Color color)
   {
-    draw_fill_rect(pos1.x, pos1.y, pos2.x, pos2.y, color);
+    draw_fill_rect(pos1.x(), pos1.y(), pos2.x(), pos2.y(), color);
   }
 
   virtual void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) =0;
