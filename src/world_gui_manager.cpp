@@ -137,12 +137,16 @@ WorldGUIManager::WorldGUIManager() :
                                                    g_graphic_context->get_height()/2); });
 
   // particle mass
-  m_particle_mass_label = create<GUILabel>("Mass");
+  m_particle_mass_label = create<GUILabel>([]{
+    return fmt::format("Mass: {:.1f}", Controller::instance()->get_particle_mass());
+  });
   m_particle_mass_increase_button = create<GUIButton>("+", [](){
-    Controller::instance()->set_particle_mass(Controller::instance()->get_particle_mass() + 0.1f);
+    Controller::instance()->set_particle_mass(std::max(0.1f,
+                                                       Math::round_to_float(Controller::instance()->get_particle_mass() + 0.1f, 0.1f)));
   });
   m_particle_mass_decrease_button = create<GUIButton>("-", [](){
-    Controller::instance()->set_particle_mass(Controller::instance()->get_particle_mass() - 0.1f);
+    Controller::instance()->set_particle_mass(std::max(0.1f,
+                                                       Math::round_to_float(Controller::instance()->get_particle_mass() - 0.1f, 0.1f)));
   });
 
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);
@@ -204,7 +208,7 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
   m_zoomin_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(8), 25, 25);
 
   // particle mass
-  m_particle_mass_label->set_geometry(BUTTON_LX_POS + 6, BUTTON_RPOS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
+  m_particle_mass_label->set_geometry(BUTTON_LX_POS, BUTTON_RPOS(10), BUTTON_WIDTH, BUTTON_HEIGHT);
   m_particle_mass_increase_button->set_geometry(BUTTON_LX_POS +  6, BUTTON_RPOS(11), 25, 25);
   m_particle_mass_decrease_button->set_geometry(BUTTON_LX_POS + 38, BUTTON_RPOS(11), 25, 25);
 
