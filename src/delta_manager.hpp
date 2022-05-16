@@ -22,30 +22,33 @@
 
 class DeltaManager
 {
-private:
-  unsigned long last_time;
-
 public:
-  DeltaManager ()
-    : last_time (g_system_context->get_time ())
+  DeltaManager() :
+    m_last_time(g_system_context->get_time()),
+    m_maximum_delta(1.0f / 60.0f)
   {}
 
-  float getset ()
+  float getset()
   {
-    float ret = get ();
-    set ();
+    float ret = get();
+    set();
     return ret;
   }
 
-  void set ()
+  void set()
   {
-    last_time = g_system_context->get_time ();
+    m_last_time = g_system_context->get_time ();
   }
 
-  float get ()
+  float get()
   {
-    return static_cast<float>( g_system_context->get_time () - last_time) / 1000.0f;
+    float const actual_delta = static_cast<float>(g_system_context->get_time () - m_last_time) / 1000.0f;
+    return std::min(actual_delta, m_maximum_delta);
   }
+
+private:
+  unsigned long m_last_time;
+  float m_maximum_delta;
 };
 
 #endif
