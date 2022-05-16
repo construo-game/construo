@@ -33,7 +33,7 @@ public:
   virtual void draw(GraphicContext& gc) = 0;
 
   /** @return true if the component is present at the given location */
-  virtual bool is_at(float x, float y) const;
+  virtual bool is_at(geom::fpoint const& pos) const;
 
   virtual void set_geometry(geom::frect const& geometry) {
     m_geometry = geometry;
@@ -43,38 +43,38 @@ public:
     return m_geometry;
   }
 
-  virtual void on_primary_button_press(float x, float y) {}
-  virtual void on_primary_button_release(float x, float y) {}
+  virtual void on_primary_button_press(geom::fpoint const& pos) {}
+  virtual void on_primary_button_release(geom::fpoint const& pos) {}
 
-  virtual void on_secondary_button_press(float x, float y) {}
-  virtual void on_secondary_button_release(float x, float y) {}
+  virtual void on_secondary_button_press(geom::fpoint const& pos) {}
+  virtual void on_secondary_button_release(geom::fpoint const& pos) {}
 
-  virtual void on_tertiary_button_press(float x, float y) {}
-  virtual void on_tertiary_button_release(float x, float y) {}
+  virtual void on_tertiary_button_press(geom::fpoint const& pos) {}
+  virtual void on_tertiary_button_release(geom::fpoint const& pos) {}
 
   // FIXME: Join these under some generic event handling, like:
   // void on_button_press(int button_id, int x, int y);
-  virtual void on_scale_press(float x, float y) {}
-  virtual void on_grid_press(float x, float y) {}
-  virtual void on_duplicate_press(float x, float y) {}
-  virtual void on_delete_press(float x, float y) {}
-  virtual void on_fix_press(float x, float y) {}
-  virtual void on_join_press(float x, float y) {}
+  virtual void on_scale_press(geom::fpoint const& pos) {}
+  virtual void on_grid_press(geom::fpoint const& pos) {}
+  virtual void on_duplicate_press(geom::fpoint const& pos) {}
+  virtual void on_delete_press(geom::fpoint const& pos) {}
+  virtual void on_fix_press(geom::fpoint const& pos) {}
+  virtual void on_join_press(geom::fpoint const& pos) {}
 
   virtual void on_mouse_enter() {}
   virtual void on_mouse_leave() {}
 
-  virtual void wheel_up(float x, float y) {}
-  virtual void wheel_down(float x, float y) {}
+  virtual void wheel_up(geom::fpoint const& pos) {}
+  virtual void wheel_down(geom::fpoint const& pos) {}
 
-  virtual void on_button_press(int button_id, float x, float y) {}
+  virtual void on_button_press(int button_id, geom::fpoint const& pos) {}
 
   virtual void scroll_left() {}
   virtual void scroll_right() {}
   virtual void scroll_up() {}
   virtual void scroll_down() {}
 
-  virtual void on_mouse_move(float x, float y, float of_x, float of_y) {}
+  virtual void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) {}
 
 protected:
   geom::frect m_geometry;

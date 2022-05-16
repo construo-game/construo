@@ -50,28 +50,28 @@ public:
   float get_grid_size();
   float get_snap_size();
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
-  void on_secondary_button_press(float x, float y) override;
-  void on_secondary_button_release(float x, float y) override;
+  void on_secondary_button_press(geom::fpoint const& pos) override;
+  void on_secondary_button_release(geom::fpoint const& pos) override;
 
-  void on_tertiary_button_press(float x, float y) override;
-  void on_tertiary_button_release(float x, float y) override;
+  void on_tertiary_button_press(geom::fpoint const& pos) override;
+  void on_tertiary_button_release(geom::fpoint const& pos) override;
 
-  void on_mouse_move(float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
-  void on_scale_press(float x, float y) override;
-  void on_grid_press(float x, float y) override;
-  void on_duplicate_press(float x, float y) override;
-  void on_delete_press(float x, float y) override;
-  void on_fix_press(float x, float y) override;
-  void on_join_press(float x, float y) override;
+  void on_scale_press(geom::fpoint const& pos) override;
+  void on_grid_press(geom::fpoint const& pos) override;
+  void on_duplicate_press(geom::fpoint const& pos) override;
+  void on_delete_press(geom::fpoint const& pos) override;
+  void on_fix_press(geom::fpoint const& pos) override;
+  void on_join_press(geom::fpoint const& pos) override;
 
-  void on_button_press(int button_id, float x, float y) override;
+  void on_button_press(int button_id, geom::fpoint const& pos) override;
 
-  void wheel_up(float x, float y) override;
-  void wheel_down(float x, float y) override;
+  void wheel_up(geom::fpoint const& pos) override;
+  void wheel_down(geom::fpoint const& pos) override;
 
   void scroll_left() override;
   void scroll_right() override;
@@ -83,7 +83,7 @@ public:
   /** Called once the world has changed, aka a new world got loaded */
   void on_world_change();
 
-  bool is_at(float x, float y) const override { return true; }
+  bool is_at(geom::fpoint const& pos) const override { return true; }
 
   GCZoomState& zoom() { return m_zoom; }
 

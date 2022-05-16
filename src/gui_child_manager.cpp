@@ -61,7 +61,7 @@ void
 GUIChildManager::draw(GraphicContext& parent_gc)
 {
   GCZoomState zoom(geom::frect(geom::fsize(parent_gc.get_width(), parent_gc.get_height())));
-  zoom.set_offset(m_geometry.left(), m_geometry.top());
+  zoom.set_offset(m_geometry.topleft());
 
   ZoomGraphicContext gc(parent_gc, zoom);
 
@@ -80,78 +80,78 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 }
 
 void
-GUIChildManager::on_primary_button_press(float x, float y)
+GUIChildManager::on_primary_button_press(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_primary_button_press(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_primary_button_press(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_primary_button_release(float x, float y)
+GUIChildManager::on_primary_button_release(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_primary_button_release(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_primary_button_release(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_secondary_button_press(float x, float y)
+GUIChildManager::on_secondary_button_press(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_secondary_button_press(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_secondary_button_press(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_secondary_button_release(float x, float y)
+GUIChildManager::on_secondary_button_release(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_secondary_button_release(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_secondary_button_release(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_delete_press(float x, float y)
+GUIChildManager::on_delete_press(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_delete_press(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_delete_press(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::on_fix_press(float x, float y)
+GUIChildManager::on_fix_press(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->on_fix_press(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->on_fix_press(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
@@ -168,26 +168,26 @@ GUIChildManager::on_mouse_leave()
 }
 
 void
-GUIChildManager::wheel_up(float x, float y)
+GUIChildManager::wheel_up(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->wheel_up(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->wheel_up(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
 }
 
 void
-GUIChildManager::wheel_down(float x, float y)
+GUIChildManager::wheel_down(geom::fpoint const& pos)
 {
   for (auto i = m_components.begin(); i != m_components.end(); ++i)
   {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-      (*i)->wheel_down(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->wheel_down(pos - geom::foffset(m_geometry.topleft()));
       return;
     }
   }
@@ -198,9 +198,9 @@ GUIChildManager::scroll_left()
 {
   /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
       {
-      if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+      if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
       {
-      (*i)->scroll_left(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->scroll_left(pos - geom::foffset(m_geometry.topleft()));
       return;
       }
       }*/
@@ -212,9 +212,9 @@ GUIChildManager::scroll_right()
   /*
     for (auto i = m_components.begin(); i != m_components.end(); ++i)
     {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-    (*i)->scroll_right(x - m_geometry.left(), y - m_geometry.top());
+    (*i)->scroll_right(pos - geom::foffset(m_geometry.topleft()));
     return;
     }
     }*/
@@ -225,9 +225,9 @@ GUIChildManager::scroll_up()
 {
   /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
       {
-      if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+      if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
       {
-      (*i)->scroll_down(x - m_geometry.left(), y - m_geometry.top());
+      (*i)->scroll_down(pos - geom::foffset(m_geometry.topleft()));
       return;
       }
       }*/
@@ -239,18 +239,18 @@ GUIChildManager::scroll_down()
   /*
     for (auto i = m_components.begin(); i != m_components.end(); ++i)
     {
-    if ((*i)->is_at(x - m_geometry.left(), y - m_geometry.top()))
+    if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
-    (*i)->scroll_down(x - m_geometry.left(), y - m_geometry.top());
+    (*i)->scroll_down(pos - geom::foffset(m_geometry.topleft()));
     return;
     }
     }*/
 }
 
 void
-GUIChildManager::on_mouse_move(float x, float y, float of_x, float of_y)
+GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
 {
-  GUIComponent* const comp = find_component_at(x, y);
+  GUIComponent* const comp = find_component_at(pos);
 
   if (comp != m_current_component)
   {
@@ -264,16 +264,16 @@ GUIChildManager::on_mouse_move(float x, float y, float of_x, float of_y)
   }
   else if (comp)
   {
-    comp->on_mouse_move(x, y, of_x, of_y);
+    comp->on_mouse_move(pos, offset);
   }
 }
 
 GUIComponent*
-GUIChildManager::find_component_at(float x, float y)
+GUIChildManager::find_component_at(geom::fpoint const& pos)
 {
   for (auto& component : m_components)
   {
-    if (component->is_at(x - m_geometry.left(), y - m_geometry.top())) {
+    if (component->is_at(pos - geom::foffset(m_geometry.topleft()))) {
       return component.get();
     }
   }

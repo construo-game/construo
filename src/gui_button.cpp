@@ -52,17 +52,17 @@ GUIButton::on_mouse_leave()
 }
 
 void
-GUIButton::on_primary_button_press(float x, float y)
+GUIButton::on_primary_button_press(geom::fpoint const& pos)
 {
   WorldGUIManager::instance()->grab_mouse(*this);
   m_pressed = true;
 }
 
 void
-GUIButton::on_primary_button_release(float x, float y)
+GUIButton::on_primary_button_release(geom::fpoint const& pos)
 {
   WorldGUIManager::instance()->ungrab_mouse(*this);
-  if (is_at(x, y)) {
+  if (is_at(pos)) {
     m_sig_on_click();
   }
   m_pressed = false;

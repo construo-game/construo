@@ -36,8 +36,8 @@ public:
 
   void set_geometry(geom::frect const& geometry) override;
 
-  void wheel_up(float x, float y) override;
-  void wheel_down(float x, float y) override;
+  void wheel_up(geom::fpoint const& pos) override;
+  void wheel_down(geom::fpoint const& pos) override;
 
   std::string get_path() const { return m_pathname; }
 

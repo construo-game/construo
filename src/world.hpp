@@ -36,11 +36,11 @@ public:
   std::unique_ptr<World> duplicate() { return std::unique_ptr<World>(new World(*this)); }
 
   /** @return the particles closed to the given coordinates */
-  Particle* find_particle(float x, float y, float capture_distance = 20.0f) const;
+  Particle* find_particle(geom::fpoint const& pos, float capture_distance = 20.0f) const;
   /** All particles inside the given rectangle */
   std::vector<Particle*> find_particles(float x1, float y1, float x2, float y2) const;
-  Spring* find_spring(float x, float y, float capture_threshold = 20.0f) const;
-  Collider* find_collider(glm::vec2 const& pos) const;
+  Spring* find_spring(geom::fpoint const& pos, float capture_threshold = 20.0f) const;
+  Collider* find_collider(geom::fpoint const& pos) const;
 
   void add_rect_collider(const glm::vec2&, const glm::vec2&);
   void add_spring(Particle*, Particle*);

@@ -28,13 +28,13 @@ GUIFileButton::~GUIFileButton()
 }
 
 void
-GUIFileButton::on_primary_button_press(float x, float y)
+GUIFileButton::on_primary_button_press(geom::fpoint const& pos)
 {
   on_click();
 }
 
 void
-GUIFileButton::on_primary_button_release(float x, float y)
+GUIFileButton::on_primary_button_release(geom::fpoint const& pos)
 {
 }
 

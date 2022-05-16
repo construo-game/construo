@@ -28,16 +28,16 @@ public:
   void draw_background(ZoomGraphicContext& gc) override;
   void draw_foreground(ZoomGraphicContext& gc) override;
 
-  void on_mouse_move(float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
-  void on_secondary_button_press(float x, float y) override;
-  void on_secondary_button_release(float x, float y) override;
+  void on_secondary_button_press(geom::fpoint const& pos) override;
+  void on_secondary_button_release(geom::fpoint const& pos) override;
 
-  void on_delete_press(float x, float y) override;
-  void on_fix_press(float x, float y) override;
+  void on_delete_press(geom::fpoint const& pos) override;
+  void on_fix_press(geom::fpoint const& pos) override;
 
 private:
   /** The last particle that got inserted or marked by a click, it is

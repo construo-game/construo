@@ -138,22 +138,22 @@ World::update (float delta)
 }
 
 Spring*
-World::find_spring(float x, float y, float capture_distance) const
+World::find_spring(geom::fpoint const& pos, float capture_distance) const
 {
   Spring* found_spring = nullptr;
   float min_distance = 0.0f;
 
   for (auto const& spring : m_springs)
     {
-      float x0 = x;
-      float y0 = y;
-      float& x1 = spring->particles.first->pos.x;
-      float& y1 = spring->particles.first->pos.y;
-      float& x2 = spring->particles.second->pos.x;
-      float& y2 = spring->particles.second->pos.y;
+      float const x0 = pos.x();
+      float const y0 = pos.y();
+      float const& x1 = spring->particles.first->pos.x;
+      float const& y1 = spring->particles.first->pos.y;
+      float const& x2 = spring->particles.second->pos.x;
+      float const& y2 = spring->particles.second->pos.y;
 
       // FIXME: optimize me
-      float u = (((x0 - x1) * (x2 - x1) + (y0 - y1) *(y2 - y1)) /
+      float const u = (((x0 - x1) * (x2 - x1) + (y0 - y1) *(y2 - y1)) /
                  ((x2 - x1) * (x2 - x1) + (y2 - y1) *(y2 - y1)));
 
       float distance = (std::fabs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) /
@@ -172,11 +172,11 @@ World::find_spring(float x, float y, float capture_distance) const
 }
 
 Particle*
-World::find_particle(float x, float y, float capture_distance) const
+World::find_particle(geom::fpoint const& pos, float capture_distance) const
 {
   Particle* found_particle = nullptr;
   float min_dist = capture_distance;
-  glm::vec2 mouse_pos (x, y);
+  glm::vec2 mouse_pos = pos.as_vec();
 
   for (auto& particle : m_particle_mgr->particles())
   {
@@ -192,11 +192,11 @@ World::find_particle(float x, float y, float capture_distance) const
 }
 
 Collider*
-World::find_collider(glm::vec2 const& pos) const
+World::find_collider(geom::fpoint const& pos) const
 {
   for (auto it = m_colliders.rbegin (); it != m_colliders.rend(); ++it)
   {
-    if ((*it)->is_at(pos)) {
+    if ((*it)->is_at(pos.as_vec())) {
       return it->get();
     }
   }

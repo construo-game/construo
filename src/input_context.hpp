@@ -19,7 +19,7 @@
 
 #include <queue>
 
-#include <glm/glm.hpp>
+#include <geom/point.hpp>
 
 #include "keys.hpp"
 #include "buttons.hpp"
@@ -45,7 +45,7 @@ public:
   /** @return mouse y coordinate */
   virtual float get_mouse_y () =0;
 
-  glm::vec2 get_mouse_pos() { return glm::vec2(get_mouse_x(), get_mouse_y()); }
+  geom::fpoint get_mouse_pos() { return geom::fpoint(get_mouse_x(), get_mouse_y()); }
 
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */

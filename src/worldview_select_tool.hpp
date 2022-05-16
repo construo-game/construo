@@ -33,22 +33,21 @@ public:
   void draw_background(ZoomGraphicContext& gc) override;
   void draw_foreground(ZoomGraphicContext& gc) override;
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
-  void on_secondary_button_press(float x, float y) override;
-  void on_secondary_button_release(float x, float y) override;
+  void on_secondary_button_press(geom::fpoint const& pos) override;
+  void on_secondary_button_release(geom::fpoint const& pos) override;
 
-  void on_mouse_move(float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
-  void on_button_press(int button_id, float x, float y) override;
+  void on_button_press(int button_id, geom::fpoint const& pos) override;
 
-  void on_scale_press(float x, float y) override;
-  void on_flip_press(float x, float y);
-  void on_duplicate_press(float x, float y) override;
-  void on_delete_press(float x, float y) override;
-  void on_fix_press(float x, float y) override;
-  void on_join_press(float x, float y) override;
+  void on_scale_press(geom::fpoint const& pos) override;
+  void on_duplicate_press(geom::fpoint const& pos) override;
+  void on_delete_press(geom::fpoint const& pos) override;
+  void on_fix_press(geom::fpoint const& pos) override;
+  void on_join_press(geom::fpoint const& pos) override;
 
 private:
   enum Mode {
@@ -65,7 +64,7 @@ private:
 
   /** The start position of a click & drap operation (aka move or
       rotate), in world coordinates */
-  glm::vec2 m_click_pos;
+  geom::fpoint m_click_pos;
 
   /** The difference the selection was moved on the last mouse move */
   glm::vec2 m_move_diff;

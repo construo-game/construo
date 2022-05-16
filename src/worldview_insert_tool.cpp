@@ -51,15 +51,15 @@ WorldViewInsertTool::draw_background(ZoomGraphicContext& gc)
 void
 WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
 {
-  glm::vec2 click_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
+  geom::fpoint click_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
 
   float const grid_size = m_worldview.get_snap_size();
   glm::vec2 new_particle_pos(0.0f, 0.0f);
   if (m_worldview.uses_grid()) {
-    new_particle_pos = glm::vec2(Math::round_to_float(click_pos.x, grid_size),
-                                 Math::round_to_float(click_pos.y, grid_size));
+    new_particle_pos = glm::vec2(Math::round_to_float(click_pos.x(), grid_size),
+                                 Math::round_to_float(click_pos.y(), grid_size));
   } else {
-    new_particle_pos = glm::vec2(click_pos.x, click_pos.y);
+    new_particle_pos = glm::vec2(click_pos.x(), click_pos.y());
   }
 
   if (m_hover_particle) {
@@ -69,7 +69,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
   if (m_previous_particle)
   {
     gc.draw_line(m_previous_particle->pos, new_particle_pos,
-                                 g_style.new_spring, 2);
+                 g_style.new_spring, 2);
   }
   else
   {
@@ -92,23 +92,23 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
 }
 
 void
-WorldViewInsertTool::on_mouse_move(float x, float y, float of_x, float of_y)
+WorldViewInsertTool::on_mouse_move(geom::fpoint const& screen_pos, geom::foffset const& offset)
 {
   World const& world = Controller::instance()->get_world();
 
-  glm::vec2 const pos = m_worldview.zoom().screen_to_world(glm::vec2(x, y));
+  geom::fpoint const pos = m_worldview.zoom().screen_to_world(screen_pos);
   float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
-  m_hover_particle = world.find_particle(pos.x, pos.y, capture_distance);
-  m_hover_spring = world.find_spring(pos.x, pos.y, capture_distance);
+  m_hover_particle = world.find_particle(pos, capture_distance);
+  m_hover_spring = world.find_spring(pos, capture_distance);
 }
 
 void
-WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
+WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
 {
   World& world = Controller::instance()->get_world();
-  float const x = m_worldview.zoom().screen_to_world_x(screen_x);
-  float const y = m_worldview.zoom().screen_to_world_y(screen_y);
+  float const x = m_worldview.zoom().screen_to_world_x(screen_pos.x());
+  float const y = m_worldview.zoom().screen_to_world_y(screen_pos.y());
 
   if (m_previous_particle) // create a spring that connects two particles
   {
@@ -187,23 +187,23 @@ WorldViewInsertTool::on_primary_button_press(float screen_x, float screen_y)
 }
 
 void
-WorldViewInsertTool::on_primary_button_release (float x, float y)
+WorldViewInsertTool::on_primary_button_release (geom::fpoint const& pos)
 {
 }
 
 void
-WorldViewInsertTool::on_secondary_button_press (float screen_x, float screen_y)
+WorldViewInsertTool::on_secondary_button_press (geom::fpoint const& screen_pos)
 {
-  on_delete_press(screen_x, screen_y);
+  on_delete_press(screen_pos);
 }
 
 void
-WorldViewInsertTool::on_secondary_button_release (float screen_x, float screen_y)
+WorldViewInsertTool::on_secondary_button_release (geom::fpoint const& screen_pos)
 {
 }
 
 void
-WorldViewInsertTool::on_delete_press(float screen_x, float screen_y)
+WorldViewInsertTool::on_delete_press(geom::fpoint const& screen_pos)
 {
   World& world = Controller::instance()->get_world ();
 
@@ -235,7 +235,7 @@ WorldViewInsertTool::on_delete_press(float screen_x, float screen_y)
 }
 
 void
-WorldViewInsertTool::on_fix_press (float screen_x, float screen_y)
+WorldViewInsertTool::on_fix_press (geom::fpoint const& screen_pos)
 {
   if (m_hover_particle) {
     m_hover_particle->set_fixed(!m_hover_particle->get_fixed());

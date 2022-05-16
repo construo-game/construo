@@ -29,7 +29,7 @@ public:
   GUILabel(std::function<std::string ()> title_func);
 
   void draw(GraphicContext&) override;
-  bool is_at(float x, float y) const override { return false; }
+  bool is_at(geom::fpoint const& pos) const override { return false; }
 
 private:
   std::string m_title;

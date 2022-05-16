@@ -129,10 +129,9 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
     geom::frect const& box = world.calc_bounding_box();
     // Zoom to the bounding box
     m_zoom.zoom_to(box);
-    // Zoom out two times so that the area isn't covered up by the
-    // GUI
-    m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
-    m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
+    // Zoom out two times so that the area isn't covered up by the GUI
+    m_zoom.zoom_out(geom::center(geometry()));
+    m_zoom.zoom_out(geom::center(geometry()));
   }
 
   m_current_tool->draw_background(gc);
@@ -174,97 +173,97 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 }
 
 void
-WorldViewComponent::wheel_up(float x, float y)
+WorldViewComponent::wheel_up(geom::fpoint const& pos)
 {
-  m_zoom.zoom_in(x, y);
+  m_zoom.zoom_in(pos);
 }
 
 void
-WorldViewComponent::wheel_down(float x, float y)
+WorldViewComponent::wheel_down(geom::fpoint const& pos)
 {
-  m_zoom.zoom_out(x, y);
+  m_zoom.zoom_out(pos);
 }
 
 void
-WorldViewComponent::on_button_press(int button_id, float x, float y)
+WorldViewComponent::on_button_press(int button_id, geom::fpoint const& pos)
 {
-  m_current_tool->on_button_press(button_id, x, y);
+  m_current_tool->on_button_press(button_id, pos);
 }
 
 void
-WorldViewComponent::on_primary_button_press(float screen_x, float screen_y)
+WorldViewComponent::on_primary_button_press(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_primary_button_press(screen_x, screen_y);
+  m_current_tool->on_primary_button_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_primary_button_release(float screen_x, float screen_y)
+WorldViewComponent::on_primary_button_release(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_primary_button_release(screen_x, screen_y);
+  m_current_tool->on_primary_button_release(screen_pos);
 }
 
 void
-WorldViewComponent::on_secondary_button_press(float screen_x, float screen_y)
+WorldViewComponent::on_secondary_button_press(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_secondary_button_press(screen_x, screen_y);
+  m_current_tool->on_secondary_button_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_secondary_button_release(float screen_x, float screen_y)
+WorldViewComponent::on_secondary_button_release(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_secondary_button_release(screen_x, screen_y);
+  m_current_tool->on_secondary_button_release(screen_pos);
 }
 
 void
-WorldViewComponent::on_delete_press(float screen_x, float screen_y)
+WorldViewComponent::on_delete_press(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_delete_press(screen_x, screen_y);
+  m_current_tool->on_delete_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_duplicate_press(float screen_x, float screen_y)
+WorldViewComponent::on_duplicate_press(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_duplicate_press(screen_x, screen_y);
+  m_current_tool->on_duplicate_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_join_press(float x, float y)
+WorldViewComponent::on_join_press(geom::fpoint const& pos)
 {
-  m_current_tool->on_join_press(x, y);
+  m_current_tool->on_join_press(pos);
 }
 
 void
-WorldViewComponent::on_fix_press(float screen_x, float screen_y)
+WorldViewComponent::on_fix_press(geom::fpoint const& screen_pos)
 {
-  m_current_tool->on_fix_press(screen_x, screen_y);
+  m_current_tool->on_fix_press(screen_pos);
 }
 
 void
 WorldViewComponent::scroll_left()
 {
-  m_zoom.translate_offset(-20, 0);
+  m_zoom.translate(geom::foffset(-20, 0));
 }
 
 void
 WorldViewComponent::scroll_right()
 {
-  m_zoom.translate_offset(20, 0);
+  m_zoom.translate(geom::foffset(20, 0));
 }
 
 void
 WorldViewComponent::scroll_up()
 {
-  m_zoom.translate_offset(0, -20);
+  m_zoom.translate(geom::foffset(0, -20));
 }
 
 void
 WorldViewComponent::scroll_down()
 {
-  m_zoom.translate_offset(0, 20);
+  m_zoom.translate(geom::foffset(0, 20));
 }
 
 void
-WorldViewComponent::on_tertiary_button_press(float x, float y)
+WorldViewComponent::on_tertiary_button_press(geom::fpoint const& pos)
 {
   m_scrolling = true;
   g_graphic_context->push_cursor();
@@ -274,12 +273,12 @@ WorldViewComponent::on_tertiary_button_press(float x, float y)
   m_y_offset = m_zoom.get_y_offset();
   WorldGUIManager::instance()->grab_mouse(*this);
 
-  m_scroll_pos_x = m_zoom.screen_to_world_x(x);
-  m_scroll_pos_y = m_zoom.screen_to_world_y(y);
+  m_scroll_pos_x = m_zoom.screen_to_world_x(pos.x());
+  m_scroll_pos_y = m_zoom.screen_to_world_y(pos.y());
 }
 
 void
-WorldViewComponent::on_tertiary_button_release(float x, float y)
+WorldViewComponent::on_tertiary_button_release(geom::fpoint const& pos)
 {
   g_graphic_context->pop_cursor();
   m_scrolling = false;
@@ -287,31 +286,31 @@ WorldViewComponent::on_tertiary_button_release(float x, float y)
 }
 
 void
-WorldViewComponent::on_mouse_move(float x, float y, float of_x, float of_y)
+WorldViewComponent::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
 {
   if (m_scrolling)
   {
-    float const new_scroll_pos_x = x / m_zoom.get_scale() - m_x_offset;
-    float const new_scroll_pos_y = y / m_zoom.get_scale() - m_y_offset;
+    float const new_scroll_pos_x = pos.x() / m_zoom.get_scale() - m_x_offset;
+    float const new_scroll_pos_y = pos.y() / m_zoom.get_scale() - m_y_offset;
 
-    m_zoom.set_offset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
-                      m_y_offset + (new_scroll_pos_y - m_scroll_pos_y));
+    m_zoom.set_offset(geom::foffset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
+                                    m_y_offset + (new_scroll_pos_y - m_scroll_pos_y)));
 
   }
   else
   {
-    m_current_tool->on_mouse_move (x, y, of_x, of_y);
+    m_current_tool->on_mouse_move(pos, offset);
   }
 }
 
 void
-WorldViewComponent::on_scale_press(float x, float y)
+WorldViewComponent::on_scale_press(geom::fpoint const& pos)
 {
-  m_current_tool->on_scale_press(x,y);
+  m_current_tool->on_scale_press(pos);
 }
 
 void
-WorldViewComponent::on_grid_press(float x, float y)
+WorldViewComponent::on_grid_press(geom::fpoint const& pos)
 {
   m_use_grid = !m_use_grid;
 }
@@ -332,8 +331,8 @@ WorldViewComponent::on_world_change()
   m_zoom.zoom_to(box);
   // Zoom out two times so that the area isn't covered up by the
   // GUI
-  m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
-  m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
+  m_zoom.zoom_out(geom::fpoint(geometry().width()/2, geometry().height()/2));
+  m_zoom.zoom_out(geom::fpoint(geometry().width()/2, geometry().height()/2));
 }
 
 /* EOF */

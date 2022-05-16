@@ -45,31 +45,31 @@ public:
   void draw(GraphicContext& gc) override;
   virtual void draw_overlay(GraphicContext& gc) {}
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
-  void on_secondary_button_click(float x, float y);
-  void on_secondary_button_press(float x, float y) override;
-  void on_secondary_button_release(float x, float y) override;
+  void on_secondary_button_click(geom::fpoint const& pos);
+  void on_secondary_button_press(geom::fpoint const& pos) override;
+  void on_secondary_button_release(geom::fpoint const& pos) override;
 
-  void on_delete_press(float x, float y) override;
-  void on_fix_press(float x, float y) override;
+  void on_delete_press(geom::fpoint const& pos) override;
+  void on_fix_press(geom::fpoint const& pos) override;
 
   void on_mouse_enter() override;
   void on_mouse_leave() override;
 
-  void wheel_up(float x, float y) override;
-  void wheel_down(float x, float y) override;
+  void wheel_up(geom::fpoint const& pos) override;
+  void wheel_down(geom::fpoint const& pos) override;
 
   void scroll_left() override;
   void scroll_right() override;
   void scroll_up() override;
   void scroll_down() override;
 
-  void on_mouse_move(float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
 private:
-  GUIComponent* find_component_at(float x, float y);
+  GUIComponent* find_component_at(geom::fpoint const& pos);
 
 private:
   std::vector<std::unique_ptr<GUIComponent>> m_components;

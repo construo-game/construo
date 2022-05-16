@@ -173,17 +173,17 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 void
 WorldRenderer::draw_particle_info(ZoomGraphicContext& gc, Particle const& particle)
 {
-  glm::vec2 const p = gc.zoom().world_to_screen(particle.pos);
+  geom::fpoint const p = gc.zoom().world_to_screen(particle.pos);
 
   draw_particle_velocity_vector(gc, particle);
 
-  gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 5.0f),
+  gc.get_parent_gc().draw_string(p + geom::foffset(20.0f, 5.0f),
                                  "Particle: " + glm::to_string(particle.pos));
-  gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 25.0f),
+  gc.get_parent_gc().draw_string(p + geom::foffset(20.0f, 25.0f),
                                  "Fixed:    " + std::to_string(static_cast<int>(particle.fixed)));
-  gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 45.0f),
+  gc.get_parent_gc().draw_string(p + geom::foffset(20.0f, 45.0f),
                                  "Mass :    " + std::to_string(particle.get_mass()));
-  gc.get_parent_gc().draw_string(p + glm::vec2(20.0f, 70.0f),
+  gc.get_parent_gc().draw_string(p + geom::foffset(20.0f, 70.0f),
                                  "Links :    " + std::to_string(particle.spring_links));
 }
 

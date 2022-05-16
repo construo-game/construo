@@ -36,7 +36,7 @@ public:
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
    */
-  bool zoom_in(float x, float y);
+  bool zoom_in(geom::fpoint const& pos);
 
   /**
    * Zoom Into the GraphicContext by one 'unit', using the x and y
@@ -48,7 +48,7 @@ public:
    * @return true if zoom was successfull, false if zoom boundaries
    * have been reached
    */
-  bool zoom_out(float x, float y);
+  bool zoom_out(geom::fpoint const& pos);
 
   /**
    * Zoom into the given area, all coordinates in world units
@@ -62,13 +62,13 @@ public:
 
   /** Move to the given x and y world coordinates to the center of the
       screen */
-  void move_to(float x, float y);
+  void move_to(geom::fpoint const& pos);
 
   /** Move the current position relativly x/y width */
-  void translate_offset(float x, float y);
+  void translate(geom::foffset const& offset);
 
  /** FIXME: What exactly is an offset?! */
-  void set_offset(float x, float y);
+  void set_offset(geom::foffset const& offset);
 
   /** FIXME: What exactly is an offset?! */
   float get_x_offset() { return m_x_offset; }
@@ -97,10 +97,10 @@ public:
   float world_to_screen_y(float y) const;
 
   /** Convert a coordinate from screen units to world units */
-  glm::vec2 screen_to_world(const glm::vec2&) const;
+  geom::fpoint screen_to_world(geom::fpoint const& pos) const;
 
   /** Convert a coordinate from world units to screen units */
-  glm::vec2 world_to_screen(const glm::vec2&) const;
+  geom::fpoint world_to_screen(geom::fpoint const& pos) const;
 
   float bounding_x1() const { return m_x1; }
   float bounding_y1() const { return m_y1; }

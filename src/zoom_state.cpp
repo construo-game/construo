@@ -28,23 +28,22 @@ GCZoomState::GCZoomState(geom::frect const& rect) :
 }
 
 bool
-GCZoomState::zoom_in(float screen_x, float screen_y)
+GCZoomState::zoom_in(geom::fpoint const& screen_pos)
 {
-  float const x = screen_to_world_x(screen_x);
-  float const y = screen_to_world_y(screen_y);
+  geom::fpoint const pos = screen_to_world(screen_pos);
 
   if ((true))
   {
     float old_zoom = m_scale;
     set_zoom(m_scale * 1.2f);
-    m_x_offset = screen_x / m_scale - screen_x/old_zoom + m_x_offset;
-    m_y_offset = screen_y / m_scale - screen_y/old_zoom + m_y_offset;
+    m_x_offset = screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_x_offset;
+    m_y_offset = screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_y_offset;
 
   }
   else
   {
-    m_x_offset = (x + m_x_offset)/1.2f - x;
-    m_y_offset = (y + m_y_offset)/1.2f - y;
+    m_x_offset = (pos.x() + m_x_offset) / 1.2f - pos.x();
+    m_y_offset = (pos.y() + m_y_offset) / 1.2f - pos.y();
     m_scale *= 1.2f;
   }
 
@@ -52,22 +51,21 @@ GCZoomState::zoom_in(float screen_x, float screen_y)
 }
 
 bool
-GCZoomState::zoom_out(float screen_x, float screen_y)
+GCZoomState::zoom_out(geom::fpoint const& screen_pos)
 {
-  float const x = screen_to_world_x(screen_x);
-  float const y = screen_to_world_y(screen_y);
+  geom::fpoint const pos = screen_to_world(screen_pos);
 
   if ((true))
   {
     float const old_zoom = m_scale;
     set_zoom(m_scale / 1.2f);
-    m_x_offset = screen_x / m_scale - screen_x/old_zoom + m_x_offset;
-    m_y_offset = screen_y / m_scale - screen_y/old_zoom + m_y_offset;
+    m_x_offset = screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_x_offset;
+    m_y_offset = screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_y_offset;
   }
   else
   {
-    m_x_offset = (x + m_x_offset) * 1.2f - x;
-    m_y_offset = (y + m_y_offset) * 1.2f - y;
+    m_x_offset = (pos.x() + m_x_offset) * 1.2f - pos.x();
+    m_y_offset = (pos.y() + m_y_offset) * 1.2f - pos.y();
 
     m_scale *= (1.0f/1.2f);
   }
@@ -75,18 +73,18 @@ GCZoomState::zoom_out(float screen_x, float screen_y)
   return true;
 }
 
-glm::vec2
-GCZoomState::screen_to_world(const glm::vec2& pos) const
+geom::fpoint
+GCZoomState::screen_to_world(geom::fpoint const& pos) const
 {
-  return glm::vec2((pos.x / m_scale) - m_x_offset,
-                  (pos.y / m_scale) - m_y_offset);
+  return geom::fpoint((pos.x() / m_scale) - m_x_offset,
+                      (pos.y() / m_scale) - m_y_offset);
 }
 
-glm::vec2
-GCZoomState::world_to_screen(const glm::vec2& pos) const
+geom::fpoint
+GCZoomState::world_to_screen(geom::fpoint const& pos) const
 {
-  return glm::vec2((pos.x + m_x_offset) * m_scale + static_cast<float>(m_x1),
-                  (pos.y + m_y_offset) * m_scale + m_y1);
+  return geom::fpoint((pos.x() + m_x_offset) * m_scale + static_cast<float>(m_x1),
+                      (pos.y() + m_y_offset) * m_scale + m_y1);
 }
 
 float
@@ -114,24 +112,24 @@ GCZoomState::world_to_screen_y(float y) const
 }
 
 void
-GCZoomState::move_to(float x, float y)
+GCZoomState::move_to(geom::fpoint const& pos)
 {
-  m_x_offset = (bounding_width()  / (2 * m_scale)) + x;
-  m_y_offset = (bounding_height() / (2 * m_scale)) + y;
+  m_x_offset = (bounding_width()  / (2 * m_scale)) + pos.x();
+  m_y_offset = (bounding_height() / (2 * m_scale)) + pos.y();
 }
 
 void
-GCZoomState::translate_offset(float x, float y)
+GCZoomState::translate(geom::foffset const& offset)
 {
-  m_x_offset -= x;
-  m_y_offset -= y;
+  m_x_offset -= offset.x();
+  m_y_offset -= offset.y();
 }
 
 void
-GCZoomState::set_offset(float x, float y)
+GCZoomState::set_offset(geom::foffset const& offset)
 {
-  m_x_offset = x;
-  m_y_offset = y;
+  m_x_offset = offset.x();
+  m_y_offset = offset.y();
 }
 
 bool

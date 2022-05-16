@@ -39,10 +39,10 @@ public:
 
   /** @return true if the collider is at the given world coordinates,
       used for drag&drop */
-  virtual bool is_at (const glm::vec2& pos) =0;
+  virtual bool is_at(const glm::vec2& pos) =0;
 
   /** act on a particle */
-  virtual void bounce () =0;
+  virtual void bounce() =0;
 
   virtual geom::frect get_bounding_box() const =0;
 };

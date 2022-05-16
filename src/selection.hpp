@@ -20,6 +20,7 @@
 #include <list>
 
 #include <glm/glm.hpp>
+#include <geom/point.hpp>
 
 #include "fwd.hpp"
 
@@ -39,7 +40,7 @@ public:
 
   /** Select the particles between p1 (upper/left) and p2
       (bottom/right) */
-  void select_particles(glm::vec2 p1, glm::vec2 p2);
+  void select_particles(geom::fpoint const& p1, geom::fpoint const& p2);
 
   /** scales the selection by the given factor */
   void scale(float factor, glm::vec2 center);

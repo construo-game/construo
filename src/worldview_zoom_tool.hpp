@@ -32,16 +32,16 @@ public:
   void draw_foreground(ZoomGraphicContext& gc) override;
   void draw_background(ZoomGraphicContext& gc) override {}
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
-  void on_secondary_button_press(float x, float y) override;
-  void on_secondary_button_release(float x, float y) override;
+  void on_secondary_button_press(geom::fpoint const& pos) override;
+  void on_secondary_button_release(geom::fpoint const& pos) override;
 
 private:
   /** Position of the mouse click, click_pos and the button_release
       pos form the rectangle. click_pos is in world coordinates */
-  glm::vec2 m_click_pos;
+  geom::fpoint m_click_pos;
 
   /** true if we are currently creating the zoom rectangle and
       click_pos is set, false otherwise */

@@ -37,8 +37,7 @@ GUIManager::GUIManager() :
   m_last_component(nullptr),
   m_current_component(nullptr),
   m_grabbing_component(nullptr),
-  m_last_x(),
-  m_last_y(),
+  m_previous_pos(),
   m_components()
 {
 }
@@ -53,14 +52,14 @@ GUIManager::run_once(GraphicContext& gc)
   m_frame_count += 1;
 
   if (m_start_time + 100 < g_system_context->get_time ())
-    {
-      float const passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
+  {
+    float const passed_time = static_cast<float>(g_system_context->get_time() - m_start_time) / 1000.0f;
 
-      m_current_fps = static_cast<float>(m_frame_count) / passed_time;
+    m_current_fps = static_cast<float>(m_frame_count) / passed_time;
 
-      m_frame_count = 0;
-      m_start_time  = g_system_context->get_time ();
-    }
+    m_frame_count = 0;
+    m_start_time  = g_system_context->get_time ();
+  }
 
   process_events ();
 
@@ -83,254 +82,254 @@ GUIManager::draw(GraphicContext& gc)
 }
 
 GUIComponent*
-GUIManager::find_component_at(float x, float y)
+GUIManager::find_component_at(geom::fpoint const& pos)
 {
   GUIComponent* component = nullptr;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
-    {
-      if ((*i)->is_at(x, y)) {
-        component = i->get();
-      }
+  {
+    if ((*i)->is_at(pos)) {
+      component = i->get();
     }
+  }
   return component;
 }
 
 void
 GUIManager::process_button_events (ButtonEvent& button)
 {
-  float const x = g_input_context->get_mouse_x();
-  float const y = g_input_context->get_mouse_y();
+  geom::fpoint const pos(g_input_context->get_mouse_x(),
+                         g_input_context->get_mouse_y());
 
   if (button.pressed)
+  {
+    switch (button.id)
     {
-      switch (button.id)
+      case BUTTON_FULLSCREEN:
+        // graphic_centext->toggle_fullscreen();
+        break;
+
+      case BUTTON_START:
+        Controller::instance()->start_simulation();
+        break;
+
+      case BUTTON_PRIMARY:
+        m_current_component->on_primary_button_press(pos);
+        break;
+
+      case BUTTON_SECONDARY:
+        m_current_component->on_secondary_button_press(pos);
+        break;
+
+      case BUTTON_TERTIARY:
+        m_current_component->on_tertiary_button_press(pos);
+        break;
+
+      case BUTTON_SCALE:
+        m_current_component->on_scale_press(pos);
+        break;
+
+      case BUTTON_FIX:
+        m_current_component->on_fix_press(pos);
+        break;
+
+      case BUTTON_JOIN:
+        m_current_component->on_join_press(pos);
+        break;
+
+      case BUTTON_GRID:
+        m_current_component->on_grid_press(pos);
+        break;
+
+      case BUTTON_DELETE:
+        m_current_component->on_delete_press(pos);
+        break;
+      case BUTTON_DUPLICATE:
+        m_current_component->on_duplicate_press(pos);
+        break;
+
+      case BUTTON_SCROLL_LEFT:
+        m_current_component->scroll_left();
+        break;
+
+      case BUTTON_SCROLL_RIGHT:
+        m_current_component->scroll_right();
+        break;
+
+      case BUTTON_SCROLL_UP:
+        m_current_component->scroll_up();
+        break;
+
+      case BUTTON_SCROLL_DOWN:
+        m_current_component->scroll_down();
+        break;
+
+      case BUTTON_CLEAR:
+        Controller::instance()->clear_world();
+        break;
+
+      case BUTTON_UNDO:
+        Controller::instance()->undo();
+        break;
+
+      case BUTTON_REDO:
+        Controller::instance()->redo();
+        break;
+
+      case BUTTON_ACTIONCAM:
+        Controller::instance()->set_action_cam(!Controller::instance()->get_action_cam());
+        break;
+
+      case BUTTON_HIDEDOTS:
+        Controller::instance()->set_hide_dots (!Controller::instance()->get_hide_dots());
+        break;
+
+      case BUTTON_ESCAPE:
+        ScreenManager::instance()->quit();
+        break;
+
+      case BUTTON_MODE_CHANGE:
+        if (WorldViewComponent::instance()->get_mode () == WorldViewComponent::INSERT_MODE)
         {
-        case BUTTON_FULLSCREEN:
-          // graphic_centext->toggle_fullscreen();
-          break;
-
-        case BUTTON_START:
-          Controller::instance()->start_simulation ();
-          break;
-
-        case BUTTON_PRIMARY:
-          m_current_component->on_primary_button_press(x, y);
-          break;
-
-        case BUTTON_SECONDARY:
-          m_current_component->on_secondary_button_press(x, y);
-          break;
-
-        case BUTTON_TERTIARY:
-          m_current_component->on_tertiary_button_press(x, y);
-          break;
-
-        case BUTTON_SCALE:
-          m_current_component->on_scale_press (x, y);
-          break;
-
-        case BUTTON_FIX:
-          m_current_component->on_fix_press (x, y);
-          break;
-
-        case BUTTON_JOIN:
-          m_current_component->on_join_press (x, y);
-          break;
-
-        case BUTTON_GRID:
-          m_current_component->on_grid_press(x, y);
-          break;
-
-        case BUTTON_DELETE:
-          m_current_component->on_delete_press (x, y);
-          break;
-        case BUTTON_DUPLICATE:
-          m_current_component->on_duplicate_press (x, y);
-          break;
-
-        case BUTTON_SCROLL_LEFT:
-          m_current_component->scroll_left ();
-          break;
-
-        case BUTTON_SCROLL_RIGHT:
-          m_current_component->scroll_right ();
-          break;
-
-        case BUTTON_SCROLL_UP:
-          m_current_component->scroll_up ();
-          break;
-
-        case BUTTON_SCROLL_DOWN:
-          m_current_component->scroll_down ();
-          break;
-
-        case BUTTON_CLEAR:
-          Controller::instance()->clear_world ();
-          break;
-
-        case BUTTON_UNDO:
-          Controller::instance()->undo ();
-          break;
-
-        case BUTTON_REDO:
-          Controller::instance()->redo ();
-          break;
-
-        case BUTTON_ACTIONCAM:
-          Controller::instance()->set_action_cam (!Controller::instance()->get_action_cam ());
-          break;
-
-        case BUTTON_HIDEDOTS:
-          Controller::instance()->set_hide_dots (!Controller::instance()->get_hide_dots ());
-          break;
-
-        case BUTTON_ESCAPE:
-          ScreenManager::instance()->quit();
-          break;
-
-        case BUTTON_MODE_CHANGE:
-          if (WorldViewComponent::instance()->get_mode () == WorldViewComponent::INSERT_MODE)
-            {
-              WorldViewComponent::instance()->set_mode(WorldViewComponent::SELECT_MODE);
-            }
-          else
-            {
-              WorldViewComponent::instance()->set_mode(WorldViewComponent::INSERT_MODE);
-            }
-          break;
-
-        case BUTTON_TOGGLESLOWMO:
-          Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active ());
-          break;
-
-        case BUTTON_RUN:
-          Controller::instance()->start_simulation ();
-          break;
-
-        case BUTTON_QUICKSAVE0:
-        case BUTTON_QUICKSAVE1:
-        case BUTTON_QUICKSAVE2:
-        case BUTTON_QUICKSAVE3:
-        case BUTTON_QUICKSAVE4:
-        case BUTTON_QUICKSAVE5:
-        case BUTTON_QUICKSAVE6:
-        case BUTTON_QUICKSAVE7:
-        case BUTTON_QUICKSAVE8:
-        case BUTTON_QUICKSAVE9:
-          Controller::instance()->save_to_slot (button.id - BUTTON_QUICKSAVE0);
-          break;
-
-        case BUTTON_QUICKLOAD0:
-        case BUTTON_QUICKLOAD1:
-        case BUTTON_QUICKLOAD2:
-        case BUTTON_QUICKLOAD3:
-        case BUTTON_QUICKLOAD4:
-        case BUTTON_QUICKLOAD5:
-        case BUTTON_QUICKLOAD6:
-        case BUTTON_QUICKLOAD7:
-        case BUTTON_QUICKLOAD8:
-        case BUTTON_QUICKLOAD9:
-          Controller::instance()->load_from_slot (button.id - BUTTON_QUICKLOAD0);
-          break;
-
-        case BUTTON_ZOOM_OUT:
-          m_current_component->wheel_down (x, y);
-          break;
-
-        case BUTTON_ZOOM_IN:
-          m_current_component->wheel_up (x, y);
-          break;
-
-        default:
-          m_current_component->on_button_press (button.id, x, y);
-          break;
+          WorldViewComponent::instance()->set_mode(WorldViewComponent::SELECT_MODE);
         }
+        else
+        {
+          WorldViewComponent::instance()->set_mode(WorldViewComponent::INSERT_MODE);
+        }
+        break;
+
+      case BUTTON_TOGGLESLOWMO:
+        Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active());
+        break;
+
+      case BUTTON_RUN:
+        Controller::instance()->start_simulation();
+        break;
+
+      case BUTTON_QUICKSAVE0:
+      case BUTTON_QUICKSAVE1:
+      case BUTTON_QUICKSAVE2:
+      case BUTTON_QUICKSAVE3:
+      case BUTTON_QUICKSAVE4:
+      case BUTTON_QUICKSAVE5:
+      case BUTTON_QUICKSAVE6:
+      case BUTTON_QUICKSAVE7:
+      case BUTTON_QUICKSAVE8:
+      case BUTTON_QUICKSAVE9:
+        Controller::instance()->save_to_slot(button.id - BUTTON_QUICKSAVE0);
+        break;
+
+      case BUTTON_QUICKLOAD0:
+      case BUTTON_QUICKLOAD1:
+      case BUTTON_QUICKLOAD2:
+      case BUTTON_QUICKLOAD3:
+      case BUTTON_QUICKLOAD4:
+      case BUTTON_QUICKLOAD5:
+      case BUTTON_QUICKLOAD6:
+      case BUTTON_QUICKLOAD7:
+      case BUTTON_QUICKLOAD8:
+      case BUTTON_QUICKLOAD9:
+        Controller::instance()->load_from_slot(button.id - BUTTON_QUICKLOAD0);
+        break;
+
+      case BUTTON_ZOOM_OUT:
+        m_current_component->wheel_down(pos);
+        break;
+
+      case BUTTON_ZOOM_IN:
+        m_current_component->wheel_up(pos);
+        break;
+
+      default:
+        m_current_component->on_button_press(button.id, pos);
+        break;
     }
+  }
   else // button released
+  {
+    switch (button.id)
     {
-      switch (button.id)
-        {
-        case BUTTON_PRIMARY:
-          m_current_component->on_primary_button_release(x, y);
-          break;
+      case BUTTON_PRIMARY:
+        m_current_component->on_primary_button_release(pos);
+        break;
 
-        case BUTTON_SECONDARY:
-          m_current_component->on_secondary_button_release(x, y);
-          break;
+      case BUTTON_SECONDARY:
+        m_current_component->on_secondary_button_release(pos);
+        break;
 
-        case BUTTON_TERTIARY:
-          m_current_component->on_tertiary_button_release(x, y);
-          break;
+      case BUTTON_TERTIARY:
+        m_current_component->on_tertiary_button_release(pos);
+        break;
 
-        default:
-          log_debug("GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: {}", button.id);
-          break;
-        }
+      default:
+        log_debug("GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: {}", button.id);
+        break;
     }
+  }
 }
 
 void
-GUIManager::process_events ()
+GUIManager::process_events()
 {
-  float const x = g_input_context->get_mouse_x();
-  float const y = g_input_context->get_mouse_y();
+  geom::fpoint const pos(g_input_context->get_mouse_x(),
+                         g_input_context->get_mouse_y());
 
-  if (m_grabbing_component && (m_last_x != x || m_last_y != y))
-    {
-      m_grabbing_component->on_mouse_move (x, y, x - m_last_x, y - m_last_y);
-    }
+  if (m_grabbing_component && m_previous_pos != pos)
+  {
+    m_grabbing_component->on_mouse_move(pos, geom::foffset(pos.as_vec() - m_previous_pos.as_vec()));
+  }
   if (m_current_component != m_grabbing_component)
-    {
-      m_current_component->on_mouse_move(x, y, x - m_last_x, y - m_last_y);
-    }
+  {
+    m_current_component->on_mouse_move(pos, geom::foffset(pos.x() - m_previous_pos.x(),
+                                                          pos.y() - m_previous_pos.y()));
+  }
 
   if (!m_grabbing_component)
+  {
+    m_current_component = find_component_at(pos);
+
+    if (m_last_component != m_current_component)
     {
-      m_current_component = find_component_at (x, y);
+      if (m_current_component) m_current_component->on_mouse_enter();
+      if (m_last_component)
+        m_last_component->on_mouse_leave();
 
-      if (m_last_component != m_current_component)
-        {
-          if (m_current_component) m_current_component->on_mouse_enter ();
-          if (m_last_component)
-            m_last_component->on_mouse_leave ();
-
-          m_last_component = m_current_component;
-        }
+      m_last_component = m_current_component;
     }
+  }
   else
-    {
-      GUIComponent* comp = find_component_at (x, y);
+  {
+    GUIComponent* comp = find_component_at(pos);
 
-      if (comp != m_grabbing_component)
-        {
-          m_grabbing_component->on_mouse_leave();
-          m_last_component = comp;
-        }
-      else if (m_last_component != m_grabbing_component)
-        {
-          m_grabbing_component->on_mouse_enter();
-        }
+    if (comp != m_grabbing_component)
+    {
+      m_grabbing_component->on_mouse_leave();
+      m_last_component = comp;
     }
+    else if (m_last_component != m_grabbing_component)
+    {
+      m_grabbing_component->on_mouse_enter();
+    }
+  }
 
   Event event;
-  while (g_input_context->get_event (&event))
+  while (g_input_context->get_event(&event))
+  {
+    if (m_current_component)
     {
-      if (m_current_component)
-        {
-          switch (event.type)
-            {
-            case BUTTON_EVENT:
-              process_button_events (event.button);
-              break;
-            default:
-              log_debug("GUIManager: Unhandled event type: {}", event.type);
-              break;
-            }
-        }
+      switch (event.type)
+      {
+        case BUTTON_EVENT:
+          process_button_events (event.button);
+          break;
+        default:
+          log_debug("GUIManager: Unhandled event type: {}", event.type);
+          break;
+      }
     }
+  }
 
-  m_last_x = x;
-  m_last_y = y;
+  m_previous_pos = pos;
 }
 
 void

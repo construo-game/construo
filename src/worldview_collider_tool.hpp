@@ -30,17 +30,17 @@ public:
   void draw_background (ZoomGraphicContext& gc) override;
   void draw_foreground (ZoomGraphicContext& gc) override;
 
-  void on_primary_button_press (float x, float y) override;
-  void on_primary_button_release (float x, float y) override;
+  void on_primary_button_press (geom::fpoint const& pos) override;
+  void on_primary_button_release (geom::fpoint const& pos) override;
 
-  void on_secondary_button_press (float x, float y) override;
-  void on_secondary_button_release (float x, float y) override;
+  void on_secondary_button_press (geom::fpoint const& pos) override;
+  void on_secondary_button_release (geom::fpoint const& pos) override;
 
-  void on_mouse_move (float x, float y, float of_x, float of_y) override;
+  void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
 private:
   bool m_creating_rect;
-  glm::vec2 m_click_pos;
+  geom::fpoint m_click_pos;
 
   Collider* m_to_delete_collider;
   Collider* m_move_collider;

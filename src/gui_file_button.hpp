@@ -32,8 +32,8 @@ public:
   void on_mouse_enter() override { m_mouse_over = true; }
   void on_mouse_leave() override { m_mouse_over = false; }
 
-  void on_primary_button_press(float x, float y) override;
-  void on_primary_button_release(float x, float y) override;
+  void on_primary_button_press(geom::fpoint const& pos) override;
+  void on_primary_button_release(geom::fpoint const& pos) override;
 
 protected:
   std::string m_path;

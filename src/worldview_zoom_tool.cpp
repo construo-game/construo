@@ -46,45 +46,43 @@ WorldViewZoomTool::draw_foreground(ZoomGraphicContext& gc)
     float const x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x());
     float const y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y());
 
-    gc.draw_rect(geom::frect(std::min(x, m_click_pos.x),
-                             std::min(y, m_click_pos.y),
-                             std::max(x, m_click_pos.x),
-                             std::max(y, m_click_pos.y)),
+    gc.draw_rect(geom::frect(std::min(x, m_click_pos.x()),
+                             std::min(y, m_click_pos.y()),
+                             std::max(x, m_click_pos.x()),
+                             std::max(y, m_click_pos.y())),
                  g_style.new_spring);
   }
 }
 
 void
-WorldViewZoomTool::on_primary_button_press(float screen_x, float screen_y)
+WorldViewZoomTool::on_primary_button_press(geom::fpoint const& screen_pos)
 {
   m_creating_zoom_rectangle = true;
 
-  m_click_pos.x = m_worldview.zoom().screen_to_world_x (screen_x);
-  m_click_pos.y = m_worldview.zoom().screen_to_world_y (screen_y);
+  m_click_pos = m_worldview.zoom().screen_to_world(screen_pos);
 }
 
 void
-WorldViewZoomTool::on_primary_button_release(float screen_x, float screen_y)
+WorldViewZoomTool::on_primary_button_release(geom::fpoint const& screen_pos)
 {
   m_creating_zoom_rectangle = false;
 
-  float const x = m_worldview.zoom().screen_to_world_x (screen_x);
-  float const y = m_worldview.zoom().screen_to_world_y (screen_y);
+  geom::fpoint const pos = m_worldview.zoom().screen_to_world(screen_pos);
 
-  m_worldview.zoom().zoom_to(geom::frect(std::min(x, m_click_pos.x),
-                                         std::min(y, m_click_pos.y),
-                                         std::max(x, m_click_pos.x),
-                                         std::max(y, m_click_pos.y)));
+  m_worldview.zoom().zoom_to(geom::frect(std::min(pos.x(), m_click_pos.x()),
+                                         std::min(pos.y(), m_click_pos.y()),
+                                         std::max(pos.x(), m_click_pos.x()),
+                                         std::max(pos.y(), m_click_pos.y())));
 }
 
 void
-WorldViewZoomTool::on_secondary_button_press(float x, float y)
+WorldViewZoomTool::on_secondary_button_press(geom::fpoint const& pos)
 {
-  m_worldview.zoom().zoom_out(x, y);
+  m_worldview.zoom().zoom_out(pos);
 }
 
 void
-WorldViewZoomTool::on_secondary_button_release(float x, float y)
+WorldViewZoomTool::on_secondary_button_release(geom::fpoint const& pos)
 {
 
 }

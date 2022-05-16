@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <geom/fwd.hpp>
+#include <geom/point.hpp>
 
 #include "fwd.hpp"
 
@@ -64,7 +65,7 @@ public:
 private:
   void process_events ();
   void process_button_events (ButtonEvent&);
-  GUIComponent* find_component_at(float x, float y);
+  GUIComponent* find_component_at(geom::fpoint const& pos);
 
 private:
   unsigned int m_frame_count;
@@ -77,8 +78,7 @@ private:
 
   GUIComponent* m_grabbing_component;
 
-  float m_last_x;
-  float m_last_y;
+  geom::fpoint m_previous_pos;
 
   /** A collection of GUI components aka widgets */
   std::vector<std::unique_ptr<GUIComponent> > m_components;

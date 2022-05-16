@@ -154,13 +154,13 @@ GUIDirectory::move_down ()
 }
 
 void
-GUIDirectory::wheel_up (float x, float y)
+GUIDirectory::wheel_up (geom::fpoint const& pos)
 {
   move_up();
 }
 
 void
-GUIDirectory::wheel_down (float x, float y)
+GUIDirectory::wheel_down (geom::fpoint const& pos)
 {
   move_down();
 }

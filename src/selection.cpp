@@ -105,12 +105,12 @@ Selection::flip ()
 }
 
 void
-Selection::select_particles(glm::vec2 p1, glm::vec2 p2)
+Selection::select_particles(geom::fpoint const& p1, geom::fpoint const& p2)
 {
   m_world = &Controller::instance()->get_world();
 
-  std::vector<Particle*> particles = m_world->find_particles (p1.x, p1.y,
-                                                             p2.x, p2.y);
+  std::vector<Particle*> particles = m_world->find_particles(p1.x(), p1.y(),
+                                                             p2.x(), p2.y());
 
   m_selection = SelectionLst(particles.begin(), particles.end());
 }

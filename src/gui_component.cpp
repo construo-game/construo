@@ -17,9 +17,9 @@
 #include "gui_component.hpp"
 
 bool
-GUIComponent::is_at(float x, float y) const
+GUIComponent::is_at(geom::fpoint const& pos) const
 {
-  return geom::contains(m_geometry, geom::fpoint(x, y));
+  return geom::contains(m_geometry, pos);
 }
 
 /* EOF */
