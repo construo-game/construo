@@ -71,10 +71,10 @@ WorldViewZoomTool::on_primary_button_release(float screen_x, float screen_y)
   float const x = m_worldview.zoom().screen_to_world_x (screen_x);
   float const y = m_worldview.zoom().screen_to_world_y (screen_y);
 
-  m_worldview.zoom().zoom_to(static_cast<int>(std::min(x, m_click_pos.x)),
-                                                 static_cast<int>(std::min(y, m_click_pos.y)),
-                                                 static_cast<int>(std::max(x, m_click_pos.x)),
-                                                 static_cast<int>(std::max(y, m_click_pos.y)));
+  m_worldview.zoom().zoom_to(geom::frect(std::min(x, m_click_pos.x),
+                                         std::min(y, m_click_pos.y),
+                                         std::max(x, m_click_pos.x),
+                                         std::max(y, m_click_pos.y)));
 }
 
 void

@@ -46,9 +46,7 @@ WorldButton::draw(GraphicContext& parent_gc)
   GCZoomState zoom(m_geometry);
 
   if (world) {
-    BoundingBox const& box = world->calc_bounding_box();
-    zoom.zoom_to(box.x1, box.y1,
-                 box.x2, box.y2);
+    zoom.zoom_to(world->calc_bounding_box());
   }
 
   ZoomGraphicContext gc(parent_gc, zoom);

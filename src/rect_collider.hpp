@@ -32,7 +32,7 @@ public:
   bool is_at (const glm::vec2& pos) override;
   void bounce() override;
 
-  BoundingBox get_bounding_box() const override;
+  geom::frect get_bounding_box() const override;
 
 public:
   float x1;                     /**< left border */

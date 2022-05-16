@@ -70,7 +70,6 @@ endfunction()
 build_dependencies()
 
 set(CONSTRUO_SOURCES_CXX
-  src/bounding_box.cpp
   src/colors.cpp
   src/command_line.cpp
   src/construo.cpp

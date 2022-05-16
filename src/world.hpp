@@ -20,7 +20,6 @@
 #include <memory>
 #include <vector>
 
-#include "bounding_box.hpp"
 #include "collider.hpp"
 #include "particle.hpp"
 #include "particle_factory.hpp"
@@ -65,7 +64,7 @@ public:
 
   /** Callculate the bounding box of the world from the particle and
    *  collider it contains. */
-  BoundingBox calc_bounding_box() const;
+  geom::frect calc_bounding_box() const;
 
 private:
   std::unique_ptr<ParticleFactory> m_particle_mgr;

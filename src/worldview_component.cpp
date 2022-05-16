@@ -126,10 +126,9 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
       && Controller::instance()->is_running())
   {
     // Live Action Cam
-    const BoundingBox& box = world.calc_bounding_box();
+    geom::frect const& box = world.calc_bounding_box();
     // Zoom to the bounding box
-    m_zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
-                   static_cast<int>(box.x2), static_cast<int>(box.y2));
+    m_zoom.zoom_to(box);
     // Zoom out two times so that the area isn't covered up by the
     // GUI
     m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
@@ -140,9 +139,7 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 
   if (0) // draw bounding box
   {
-    const BoundingBox& box = world.calc_bounding_box();
-    gc.draw_rect(geom::frect(box.x1, box.y1, box.x2, box.y2),
-                 Color(1.0f, 1.0f, 1.0f));
+    gc.draw_rect(world.calc_bounding_box(), Color(1.0f, 1.0f, 1.0f));
   }
 
   renderer.draw_colliders(gc);
@@ -330,10 +327,9 @@ WorldViewComponent::on_world_change()
 {
   World& world = Controller::instance()->get_world();
 
-  const BoundingBox& box = world.calc_bounding_box();
+  geom::frect const& box = world.calc_bounding_box();
   // Zoom to the bounding box
-  m_zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
-               static_cast<int>(box.x2), static_cast<int>(box.y2));
+  m_zoom.zoom_to(box);
   // Zoom out two times so that the area isn't covered up by the
   // GUI
   m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);

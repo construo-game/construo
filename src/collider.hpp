@@ -20,9 +20,9 @@
 #include <memory>
 
 #include <glm/glm.hpp>
+#include <geom/rect.hpp>
 
 #include "particle.hpp"
-#include "bounding_box.hpp"
 #include "graphic_context.hpp"
 
 class Collider
@@ -44,7 +44,7 @@ public:
   /** act on a particle */
   virtual void bounce () =0;
 
-  virtual BoundingBox get_bounding_box() const =0;
+  virtual geom::frect get_bounding_box() const =0;
 };
 
 #endif

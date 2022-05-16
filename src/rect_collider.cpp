@@ -110,10 +110,10 @@ RectCollider::bounce()
     }
 }
 
-BoundingBox
+geom::frect
 RectCollider::get_bounding_box() const
 {
-  return BoundingBox(x1, y1, x2, y2);
+  return geom::frect(x1, y1, x2, y2);
 }
 
 /* EOF */

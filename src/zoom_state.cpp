@@ -158,13 +158,13 @@ GCZoomState::set_zoom(const float& z)
 }
 
 void
-GCZoomState::zoom_to(float x1, float y1, float x2, float y2)
+GCZoomState::zoom_to(geom::frect const& rect)
 {
-  float const center_x = (x1 + x2) / 2.0f;
-  float const center_y = (y1 + y2) / 2.0f;
+  float const center_x = (rect.left() + rect.right()) / 2.0f;
+  float const center_y = (rect.top() + rect.bottom()) / 2.0f;
 
-  float const width  = x2 - x1;
-  float const height = y2 - y1;
+  float const width  = rect.right() - rect.left();
+  float const height = rect.bottom() - rect.top();
   float const screen_relation = bounding_height() / bounding_width();
   float const rect_relation   = height/width;
 

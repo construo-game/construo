@@ -58,7 +58,7 @@ public:
    * @param x2 right border in world coordinates
    * @param y2 bottom border in world coordinates
    */
-  void zoom_to(float x1, float y1, float x2, float y2);
+  void zoom_to(geom::frect const& rect);
 
   /** Move to the given x and y world coordinates to the center of the
       screen */

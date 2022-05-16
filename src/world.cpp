@@ -282,33 +282,33 @@ World::remove_collider(Collider* c)
   std::erase_if(m_colliders, [c](auto&& collider){ return collider.get() == c; });
 }
 
-BoundingBox
+geom::frect
 World::calc_bounding_box() const
 {
-  BoundingBox bbox;
+  geom::frect bbox;
 
-  if (!m_particle_mgr->particles().empty())
+  if (m_particle_mgr->particles().empty())
   {
-    bbox.x1 = bbox.x2 = m_particle_mgr->particles().front()->pos.x;
-    bbox.y1 = bbox.y2 = m_particle_mgr->particles().front()->pos.y;
+    bbox = geom::frect(m_particle_mgr->particles().front()->pos,
+                       geom::fsize(1, 1));
   }
   else
   {
-    bbox.x1 = 0;
-    bbox.y1 = 0;
-
-    bbox.x2 = 800;
-    bbox.y2 = 600;
+    bbox = geom::frect(0.0f, 0.0f, 800.0f, 600.0f);
   }
 
   for (auto& particle : m_particle_mgr->particles())
   {
-    bbox.join(particle->pos);
+    bbox = geom::frect(std::min(bbox.left(), particle->pos.x),
+                       std::min(bbox.top(), particle->pos.y),
+                       std::max(bbox.right(), particle->pos.x),
+                       std::max(bbox.bottom(), particle->pos.y));
+
   }
 
   for (auto& collider : m_colliders)
   {
-    bbox.join(collider->get_bounding_box());
+    bbox = geom::unite(bbox, collider->get_bounding_box());
   }
 
   return bbox;
