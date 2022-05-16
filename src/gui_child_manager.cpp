@@ -60,25 +60,16 @@ GUIChildManager::clear()
 void
 GUIChildManager::draw(GraphicContext& parent_gc)
 {
-  GCZoomState zoom(0, 0, parent_gc.get_width(), parent_gc.get_height());
+  GCZoomState zoom(geom::frect(geom::fsize(parent_gc.get_width(), parent_gc.get_height())));
   zoom.set_offset(m_geometry.left(), m_geometry.top());
 
   ZoomGraphicContext gc(parent_gc, zoom);
 
-  parent_gc.draw_fill_rect(m_geometry.left(), m_geometry.top(),
-                           m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                           g_style.button_bg_passive);
-  parent_gc.draw_rect(m_geometry.left(), m_geometry.top(),
-                      m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                      g_style.button_fg_passive);
+  parent_gc.draw_fill_rect(m_geometry, g_style.button_bg_passive);
+  parent_gc.draw_rect(m_geometry, g_style.button_fg_passive);
 
-  parent_gc.draw_fill_rect(m_geometry.left(), m_geometry.top(),
-                           m_geometry.left() + m_geometry.width(), m_geometry.top(),
-                           g_style.button_bg_hover);
-
-  parent_gc.draw_rect(m_geometry.left(), m_geometry.top(),
-                      m_geometry.left() + m_geometry.width(), m_geometry.top(),
-                      g_style.button_fg_passive);
+  parent_gc.draw_fill_rect(m_geometry, g_style.button_bg_hover);
+  parent_gc.draw_rect(m_geometry, g_style.button_fg_passive);
 
   for (auto i = m_components.rbegin(); i != m_components.rend(); ++i)
   {

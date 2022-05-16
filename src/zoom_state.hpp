@@ -24,7 +24,7 @@
 class GCZoomState
 {
 public:
-  GCZoomState(float x1, float y1, float x2, float y2);
+  GCZoomState(geom::frect const& rect);
 
   /**
    * Zoom Out the GraphicContext by one 'unit', using the x and y
@@ -108,6 +108,8 @@ public:
   float bounding_y2() const { return m_y2; }
   float bounding_width() const { return m_x2 - m_x1; }
   float bounding_height() const { return m_y2 - m_y1; }
+
+  geom::frect bounding_box() const { return geom::frect(m_x1, m_y1, m_x2, m_y2); }
 
   void set_bounding_box(geom::frect const& rect) {
     m_x1 = rect.left();

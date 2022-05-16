@@ -285,10 +285,10 @@ X11Display::draw_lines(std::vector<Line>& lines, Color color, int wide)
 
   for (std::vector<Line>::size_type i = 0; i < lines.size(); ++i)
   {
-    segments[i].x1 = static_cast<short>(lines[i].x1);
-    segments[i].y1 = static_cast<short>(lines[i].y1);
-    segments[i].x2 = static_cast<short>(lines[i].x2);
-    segments[i].y2 = static_cast<short>(lines[i].y2);
+    segments[i].x1 = static_cast<short>(lines[i].p1.x());
+    segments[i].y1 = static_cast<short>(lines[i].p1.y());
+    segments[i].x2 = static_cast<short>(lines[i].p2.x());
+    segments[i].y2 = static_cast<short>(lines[i].p2.y());
   }
 
   XDrawSegments(m_display, m_drawable, m_gc, &*segments.begin(), static_cast<int>(segments.size()));
@@ -300,8 +300,8 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
   std::vector<XArc> arcs (circles.size());
   for (std::vector<Circle>::size_type i = 0; i < circles.size(); ++i)
   {
-    arcs[i].x      = static_cast<short>(circles[i].x - circles[i].r);
-    arcs[i].y      = static_cast<short>(circles[i].y - circles[i].r);
+    arcs[i].x      = static_cast<short>(circles[i].pos.x() - circles[i].r);
+    arcs[i].y      = static_cast<short>(circles[i].pos.y() - circles[i].r);
     arcs[i].width  = static_cast<short>(2 * circles[i].r);
     arcs[i].height = static_cast<short>(2 * circles[i].r);
     arcs[i].angle1 = 0;
@@ -314,62 +314,67 @@ X11Display::draw_circles(std::vector<Circle>& circles, Color color)
 }
 
 void
-X11Display::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
+X11Display::draw_line(geom::fpoint const& p1, geom::fpoint const& p2, Color color, int wide)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
-  XDrawLine(m_display, m_drawable, m_gc, static_cast<int>(x1), static_cast<int>(y1), static_cast<int>(x2), static_cast<int>(y2));
+  XDrawLine(m_display, m_drawable, m_gc, static_cast<int>(p1.x()), static_cast<int>(p1.y()), static_cast<int>(p2.x()), static_cast<int>(p2.y()));
 }
 
 void
-X11Display::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
+X11Display::draw_fill_rect(geom::frect const& rect, Color color)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XFillRectangle(m_display, m_drawable, m_gc,
-                 static_cast<int>(x1), static_cast<int>(y1),
-                 static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
+                 static_cast<int>(rect.left()), static_cast<int>(rect.top()),
+                 static_cast<int>(rect.width()), static_cast<int>(rect.height()));
 }
 
 void
-X11Display::draw_fill_circle(float x, float y, float r, Color color)
+X11Display::draw_fill_circle(geom::fpoint const& pos, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(m_display, m_gc, get_color_value(color));
   XFillArc(m_display, m_drawable, m_gc,
-           static_cast<int>(x-r), static_cast<int>(y-r),
-           static_cast<int>(r*2), static_cast<int>(r*2), 0,
-           360*64);
+           static_cast<int>(pos.x() - r), static_cast<int>(pos.y() - r),
+           static_cast<int>(r * 2), static_cast<int>(r * 2), 0,
+           360 * 64);
 }
 
 void
-X11Display::draw_circle(float x, float y, float r, Color color)
+X11Display::draw_circle(geom::fpoint const& pos, float r, Color color)
 {
   // FIXME: doesn't work
   XSetForeground(m_display, m_gc, get_color_value(color));
-  XDrawArc(m_display, m_drawable, m_gc, static_cast<int>(x-r), static_cast<int>(y-r), static_cast<int>(r*2.0f), static_cast<int>(r*2.0f), 0, 360*64);
+  XDrawArc(m_display, m_drawable, m_gc,
+           static_cast<int>(pos.x() - r), static_cast<int>(pos.y() - r),
+           static_cast<int>(r * 2.0f), static_cast<int>(r * 2.0f),
+           0, 360*64);
 }
 
 void
-X11Display::draw_rect(float x1, float y1, float x2, float y2, Color color)
+X11Display::draw_rect(geom::frect const& rect, Color color)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XDrawRectangle(m_display, m_drawable, m_gc,
-                 static_cast<int>(x1), static_cast<int>(y1),
-                 static_cast<int>(x2 - x1), static_cast<int>(y2 - y1));
+                 static_cast<int>(rect.left()), static_cast<int>(rect.top()),
+                 static_cast<int>(rect.width()), static_cast<int>(rect.height()));
 }
 
 void
-X11Display::draw_string(float x, float y, const std::string& str, Color color)
-{
-  XSetForeground(m_display, m_gc, get_color_value(color));
-  XDrawString(m_display, m_drawable, m_gc, static_cast<int>(x), static_cast<int>(y), str.c_str (), static_cast<int>(str.length()));
-}
-
-void
-X11Display::draw_string_centered(float x, float y, const std::string& str, Color color)
+X11Display::draw_string(geom::fpoint const& pos, const std::string& str, Color color)
 {
   XSetForeground(m_display, m_gc, get_color_value(color));
   XDrawString(m_display, m_drawable, m_gc,
-              static_cast<int>(x) - ((static_cast<int>(str.length()) * 6) / 2), static_cast<int>(y),
+              static_cast<int>(pos.x()), static_cast<int>(pos.y()),
+              str.c_str (), static_cast<int>(str.length()));
+}
+
+void
+X11Display::draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color)
+{
+  XSetForeground(m_display, m_gc, get_color_value(color));
+  XDrawString(m_display, m_drawable, m_gc,
+              static_cast<int>(pos.x()) - ((static_cast<int>(str.length()) * 6) / 2), static_cast<int>(pos.y()),
               str.c_str (), static_cast<int>(str.length()));
 }
 
@@ -828,18 +833,18 @@ X11Display::leave_fullscreen()
 }
 
 void
-X11Display::set_clip_rect(float x1, float y1, float x2, float y2)
+X11Display::set_clip_rect(geom::frect const& rect)
 {
-  XRectangle rect;
+  XRectangle xrect;
 
-  rect.x = static_cast<short int>(x1);
-  rect.y = static_cast<short int>(y1);
-  rect.width  = static_cast<short int>(x2 - x1 + 1);
-  rect.height = static_cast<short int>(y2 - y1 + 1);
+  xrect.x = static_cast<short int>(rect.left());
+  xrect.y = static_cast<short int>(rect.top());
+  xrect.width  = static_cast<short int>(rect.width());
+  xrect.height = static_cast<short int>(rect.height());
 
   XSetClipRectangles(m_display, m_gc,
                      0, 0, // clip origin
-                     &rect, 1,
+                     &xrect, 1,
                      Unsorted);
 }
 

@@ -41,10 +41,9 @@ WorldButton::draw(GraphicContext& parent_gc)
 {
   World const* world = m_world_cache.get(m_path);
 
-  parent_gc.draw_fill_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                           Color(0xBB0000FF));
+  parent_gc.draw_fill_rect(m_geometry, Color(0xBB0000FF));
 
-  GCZoomState zoom(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height());
+  GCZoomState zoom(m_geometry);
 
   if (world) {
     BoundingBox const& box = world->calc_bounding_box();
@@ -65,19 +64,19 @@ WorldButton::draw(GraphicContext& parent_gc)
   else
   {
     // Draw an 'X' for broken levels
-    gc.draw_line(0, 0, gc.get_width(), gc.get_height(), Color (0xFF00FFFF));
-    gc.draw_line(0, gc.get_height(), gc.get_width(), 0, Color (0xFF00FFFF));
+    gc.draw_line(geom::fpoint(0, 0), geom::fpoint(gc.get_width(), gc.get_height()), Color (0xFF00FFFF));
+    gc.draw_line(geom::fpoint(0, gc.get_height()), geom::fpoint(gc.get_width(), 0), Color (0xFF00FFFF));
   }
 
   gc.unlock();
 
   if (m_mouse_over) {
-    parent_gc.draw_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(), Color (0xFFFFFFFF));
+    parent_gc.draw_rect(m_geometry, Color (0xFFFFFFFF));
   } else {
-    parent_gc.draw_rect(m_geometry.left(), m_geometry.top(), m_geometry.left() + m_geometry.width(), m_geometry.top() + m_geometry.height(), Color (0xFF0000FF));
+    parent_gc.draw_rect(m_geometry, Color (0xFF0000FF));
   }
 
-  parent_gc.draw_string(m_geometry.left() + 8, m_geometry.top() + m_geometry.height() + 14.0f, m_basename);
+  parent_gc.draw_string(m_geometry.topleft() + geom::foffset(8.0f, m_geometry.height() + 14.0f), m_basename);
 }
 
 void

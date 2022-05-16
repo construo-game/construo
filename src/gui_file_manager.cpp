@@ -109,7 +109,7 @@ GUIFileManager::directory_up()
 void
 GUIFileManager::draw_overlay(GraphicContext& gc)
 {
-  gc.draw_string(200, 16, m_directory->get_path());
+  gc.draw_string(geom::fpoint(200.0f, 16.0f), m_directory->get_path());
 }
 
 void

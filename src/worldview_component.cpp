@@ -31,7 +31,7 @@ WorldViewComponent* WorldViewComponent::instance_;
 
 WorldViewComponent::WorldViewComponent() :
   GUIComponent(),
-  m_zoom(0, 0, g_graphic_context->get_width(), g_graphic_context->get_height()),
+  m_zoom(geom::frect(geom::fsize(g_graphic_context->get_width(), g_graphic_context->get_height()))),
   m_use_grid(false),
   m_grid_base_size(10),
   m_grid_constant(5),
@@ -129,7 +129,7 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
     const BoundingBox& box = world.calc_bounding_box();
     // Zoom to the bounding box
     m_zoom.zoom_to(static_cast<int>(box.x1), static_cast<int>(box.y1),
-                 static_cast<int>(box.x2), static_cast<int>(box.y2));
+                   static_cast<int>(box.x2), static_cast<int>(box.y2));
     // Zoom out two times so that the area isn't covered up by the
     // GUI
     m_zoom.zoom_out(geometry().width()/2, geometry().height()/2);
@@ -141,7 +141,7 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
   if (0) // draw bounding box
   {
     const BoundingBox& box = world.calc_bounding_box();
-    gc.draw_rect(box.x1, box.y1, box.x2, box.y2,
+    gc.draw_rect(geom::frect(box.x1, box.y1, box.x2, box.y2),
                  Color(1.0f, 1.0f, 1.0f));
   }
 
@@ -158,16 +158,16 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
     switch (m_mode)
     {
       case ZOOM_MODE:
-        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[  Zoom Mode  ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[  Zoom Mode  ]");
         break;
       case INSERT_MODE:
-        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[ Insert Mode ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[ Insert Mode ]");
         break;
       case SELECT_MODE:
-        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[ Select Mode ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[ Select Mode ]");
         break;
       case COLLIDER_MODE:
-        parent_gc.draw_string(10, parent_gc.get_height() - 15, "[Collider Mode]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[Collider Mode]");
         break;
     }
   }

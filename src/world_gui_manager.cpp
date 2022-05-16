@@ -235,48 +235,62 @@ WorldGUIManager::update()
 void
 WorldGUIManager::draw_overlay(GraphicContext& gc)
 {
-  gc.draw_string (10,  20, "      [1-9] - quick save");
-  gc.draw_string (10,  32, "[shift 1-9] - quick load");
-  gc.draw_string (10,  44, "    [space] - run simulation");
-  gc.draw_string (10,  56, "      [tab] - toggle slow motion");
-  gc.draw_string (10,  68, "      [F11] - toggle fullscreen");
+  int column = 0;
+  int row = 0;
+  auto pos = [&](){
+    return geom::fpoint(10.0f + 200.0f * static_cast<float>(column),
+                        20.0f + 12.0f * static_cast<float>(row++));
+  };
 
-  gc.draw_string (200,  20, "     [c] - clear scene");
-  gc.draw_string (200,  32, "     [u] - undo to last state");
-  gc.draw_string (200,  44, "     [r] - redo (undo an undo)");
-  gc.draw_string (200,  56, "   [+/-] - zoom in/out");
-  gc.draw_string (200,  68, "     [g] - toggle grid");
+  gc.draw_string(pos(), "      [1-9] - quick save");
+  gc.draw_string(pos(), "[shift 1-9] - quick load");
+  gc.draw_string(pos(), "    [space] - run simulation");
+  gc.draw_string(pos(), "      [tab] - toggle slow motion");
+  gc.draw_string(pos(), "      [F11] - toggle fullscreen");
 
-  gc.draw_string (600,  32, "[middle] - scroll");
+  column += 1; row = 0;
+  gc.draw_string(pos(), "     [c] - clear scene");
+  gc.draw_string(pos(), "     [u] - undo to last state");
+  gc.draw_string(pos(), "     [r] - redo (undo an undo)");
+  gc.draw_string(pos(), "   [+/-] - zoom in/out");
+  gc.draw_string(pos(), "     [g] - toggle grid");
+
+  column += 2; row = 0;
 
   switch (m_worldview_component->get_mode())
     {
     case WorldViewComponent::INSERT_MODE:
-      gc.draw_string (600,  20, "  [left] - insert/connect spots");
-      gc.draw_string (600,  44, " [right] - remove spot");
-      gc.draw_string (400,  20, "     [f] - fix current dot");
+      gc.draw_string(pos(), "  [left] - insert/connect spots");
+      gc.draw_string(pos(), "[middle] - scroll");
+      gc.draw_string(pos(), " [right] - remove spot");
+      column -= 1;
+      gc.draw_string(pos(), "     [f] - fix current dot");
       break;
 
     case WorldViewComponent::SELECT_MODE:
-      gc.draw_string (600,  20, "  [left] - create/move selection");
-      gc.draw_string (600,  44, " [right] - rotate selection");
+      gc.draw_string(pos(), "  [left] - create/move selection");
+      gc.draw_string(pos(), "[middle] - scroll");
+      gc.draw_string(pos(), " [right] - rotate selection");
 
-      gc.draw_string (400,  20, "     [v] - set velocity");
-      gc.draw_string (400,  32, "     [d] - duplicate selection");
-      gc.draw_string (400,  44, "     [h] - flip selection");
-      gc.draw_string (400,  56, "     [f] - fix selection");
-      gc.draw_string (400,  68, "     [j] - join dots");
-      gc.draw_string (400,  80, "     [s] - scale selection");
+      column -= 1;
+      gc.draw_string(pos(), "     [v] - set velocity");
+      gc.draw_string(pos(), "     [d] - duplicate selection");
+      gc.draw_string(pos(), "     [h] - flip selection");
+      gc.draw_string(pos(), "     [f] - fix selection");
+      gc.draw_string(pos(), "     [j] - join dots");
+      gc.draw_string(pos(), "     [s] - scale selection");
       break;
 
     case WorldViewComponent::ZOOM_MODE:
-      gc.draw_string (600,  20, "  [left] - zoom into region");
-      gc.draw_string (600,  44, " [right] - zoom out");
+      gc.draw_string(pos(), "  [left] - zoom into region");
+      gc.draw_string(pos(), "[middle] - scroll");
+      gc.draw_string(pos(), " [right] - zoom out");
       break;
 
     case WorldViewComponent::COLLIDER_MODE:
-      gc.draw_string (600,  20, "  [left] - create/move collider");
-      gc.draw_string (600,  44, " [right] - remove collider");
+      gc.draw_string(pos(), "  [left] - create/move collider");
+      gc.draw_string(pos(), "[middle] - scroll");
+      gc.draw_string(pos(), " [right] - remove collider");
       break;
 
     default:
@@ -286,24 +300,24 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   World& world = Controller::instance()->get_world ();
 
   float const bottom_line = gc.get_height() - 10;
-  gc.draw_string(10.0f, bottom_line - 20.0f, "FPS: ");
-  gc.draw_string(80.0f, bottom_line - 20.0f, fmt::format("{:6.2f}", get_fps()));
+  gc.draw_string(geom::fpoint(10.0f, bottom_line - 20.0f), "FPS: ");
+  gc.draw_string(geom::fpoint(80.0f, bottom_line - 20.0f), fmt::format("{:6.2f}", get_fps()));
 
-  gc.draw_string(10.0f, bottom_line, "Pos: ");
-  auto const& pos = m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos());
-  gc.draw_string(80.0f, bottom_line, fmt::format("{:6.2f} {:6.2f}", pos.x, pos.y));
+  gc.draw_string(geom::fpoint(10.0f, bottom_line), "Pos: ");
+  auto const& p = m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos());
+  gc.draw_string(geom::fpoint(80.0f, bottom_line), fmt::format("{:6.2f} {:6.2f}", p.x, p.y));
 
-  gc.draw_string(210.0f, bottom_line - 20.0f, "Particles: ");
-  gc.draw_string(280.0f, bottom_line - 20.0f, std::to_string(world.particles().size()));
+  gc.draw_string(geom::fpoint(210.0f, bottom_line - 20.0f), "Particles: ");
+  gc.draw_string(geom::fpoint(280.0f, bottom_line - 20.0f), std::to_string(world.particles().size()));
 
-  gc.draw_string(210.0f, bottom_line, "Springs: ");
-  gc.draw_string(280.0f, bottom_line, std::to_string(world.springs().size()));
+  gc.draw_string(geom::fpoint(210.0f, bottom_line), "Springs: ");
+  gc.draw_string(geom::fpoint(280.0f, bottom_line), std::to_string(world.springs().size()));
 
-  gc.draw_string(410.0f, bottom_line, "Zoom: ");
-  gc.draw_string(480.0f, bottom_line, fmt::format("{:5.2f}", m_worldview_component->get_scale()));
+  gc.draw_string(geom::fpoint(410.0f, bottom_line), "Zoom: ");
+  gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_component->get_scale()));
 
-  gc.draw_string (610, bottom_line, "..:: Construo V" VERSION " ::..");
-  //gc.draw_string (680, bottom_line, std::to_string(m_worldview_component->get_scale()));
+  gc.draw_string(geom::fpoint(610, bottom_line), "Construo " VERSION);
+  //gc.draw_string(680, bottom_line, std::to_string(m_worldview_component->get_scale()));
 }
 
 /* EOF */

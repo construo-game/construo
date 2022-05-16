@@ -32,21 +32,15 @@ GUINewFileButton::GUINewFileButton(const std::string& filename) :
 void
 GUINewFileButton::draw(GraphicContext& parent_gc)
 {
-  parent_gc.draw_fill_rect (m_geometry.left(), m_geometry.top(),
-                             m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                             Color (0x999900FF));
+  parent_gc.draw_fill_rect(m_geometry, Color (0x999900FF));
 
-  parent_gc.draw_string (m_geometry.left() + 20, m_geometry.top() + 75, "..:: Save to new file ::..");
-  //parent_gc.draw_string (m_geometry.left() + 30, m_geometry.top() + 40, filename);
+  parent_gc.draw_string(m_geometry.topleft() + geom::foffset(20, 75), "..:: Save to new file ::..");
 
-  if (m_mouse_over)
-    parent_gc.draw_rect (m_geometry.left(), m_geometry.top(),
-                          m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                          Color (0xFFFFFFFF));
-  else
-    parent_gc.draw_rect (m_geometry.left(), m_geometry.top(),
-                          m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                          Color (0xFF0000FF));
+  if (m_mouse_over) {
+    parent_gc.draw_rect(m_geometry, Color (0xFFFFFFFF));
+  } else {
+    parent_gc.draw_rect(m_geometry, Color (0xFF0000FF));
+  }
 }
 
 std::string

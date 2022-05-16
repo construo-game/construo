@@ -31,21 +31,16 @@ GUIDirectoryButton::~GUIDirectoryButton ()
 void
 GUIDirectoryButton::draw (GraphicContext& parent_gc)
 {
-  parent_gc.draw_fill_rect(m_geometry.left(), m_geometry.top(),
-                           m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                           Color (0xBB0000FF));
+  parent_gc.draw_fill_rect(m_geometry, Color (0xBB0000FF));
 
-  parent_gc.draw_string (m_geometry.left() + 40, m_geometry.top() + 20, "..:: Directory ::..");
-  parent_gc.draw_string (m_geometry.left() + 30, m_geometry.top() + 40, m_path);
+  parent_gc.draw_string(m_geometry.topleft() + geom::foffset(40.0f, 20.0f), "..:: Directory ::..");
+  parent_gc.draw_string(m_geometry.topleft() + geom::foffset(30.0f, 40.0f), m_path);
 
-  if (m_mouse_over)
-    parent_gc.draw_rect (m_geometry.left(), m_geometry.top(),
-                         m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                         Color (0xFFFFFFFF));
-  else
-    parent_gc.draw_rect (m_geometry.left(), m_geometry.top(),
-                         m_geometry.left() +  m_geometry.width(), m_geometry.top() + m_geometry.height(),
-                         Color (0xFF0000FF));
+  if (m_mouse_over) {
+    parent_gc.draw_rect (m_geometry, Color (0xFFFFFFFF));
+  } else {
+    parent_gc.draw_rect (m_geometry, Color (0xFF0000FF));
+  }
 }
 
 void

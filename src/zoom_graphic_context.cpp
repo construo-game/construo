@@ -33,9 +33,9 @@ ZoomGraphicContext::~ZoomGraphicContext()
 }
 
 void
-ZoomGraphicContext::set_clip_rect(float x1_, float y1_, float x2_, float y2_)
+ZoomGraphicContext::set_clip_rect(geom::frect const& rect)
 {
-  m_parent_gc.set_clip_rect(x1_, y1_, x2_, y2_);
+  m_parent_gc.set_clip_rect(rect);
 }
 
 void
@@ -47,8 +47,7 @@ ZoomGraphicContext::clear_clip_rect()
 void
 ZoomGraphicContext::lock()
 {
-  m_parent_gc.set_clip_rect(m_zoom.bounding_x1(), m_zoom.bounding_y1(),
-                            m_zoom.bounding_x2(), m_zoom.bounding_y2());
+  m_parent_gc.set_clip_rect(m_zoom.bounding_box());
 }
 
 void
@@ -62,31 +61,31 @@ ZoomGraphicContext::draw_lines(std::vector<Line>& lines, Color color, int wide)
 {
   for (auto i = lines.begin(); i != lines.end(); ++i)
   {
-    i->x1 = m_zoom.world_to_screen_x(i->x1);
-    i->y1 = m_zoom.world_to_screen_y(i->y1);
-    i->x2 = m_zoom.world_to_screen_x(i->x2);
-    i->y2 = m_zoom.world_to_screen_y(i->y2);
+    i->p1 = geom::fpoint(m_zoom.world_to_screen_x(i->p1.x()),
+                         m_zoom.world_to_screen_y(i->p1.y()));
+    i->p2 = geom::fpoint(m_zoom.world_to_screen_x(i->p2.x()),
+                         m_zoom.world_to_screen_y(i->p2.y()));
   }
   m_parent_gc.draw_lines(lines, color, wide);
 }
 
 void
-ZoomGraphicContext::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
+ZoomGraphicContext::draw_line(geom::fpoint const& p1, geom::fpoint const& p2, Color color, int wide)
 {
-  m_parent_gc.draw_line(m_zoom.world_to_screen_x(x1),
-                        m_zoom.world_to_screen_y(y1),
-                        m_zoom.world_to_screen_x(x2),
-                        m_zoom.world_to_screen_y(y2),
+  m_parent_gc.draw_line(geom::fpoint(m_zoom.world_to_screen_x(p1.x()),
+                                     m_zoom.world_to_screen_y(p1.y())),
+                        geom::fpoint(m_zoom.world_to_screen_x(p2.x()),
+                                     m_zoom.world_to_screen_y(p2.y())),
                         color, wide);
 }
 
 void
-ZoomGraphicContext::draw_rect(float x1, float y1, float x2, float y2, Color color)
+ZoomGraphicContext::draw_rect(geom::frect const& rect, Color color)
 {
-  m_parent_gc.draw_rect(m_zoom.world_to_screen_x(x1),
-                        m_zoom.world_to_screen_y(y1),
-                        m_zoom.world_to_screen_x(x2),
-                        m_zoom.world_to_screen_y(y2),
+  m_parent_gc.draw_rect(geom::frect(m_zoom.world_to_screen_x(rect.left()),
+                        m_zoom.world_to_screen_y(rect.top()),
+                        m_zoom.world_to_screen_x(rect.right()),
+                                    m_zoom.world_to_screen_y(rect.bottom())),
                         color);
 }
 
@@ -95,8 +94,8 @@ ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
 {
   for (auto i = circles.begin(); i != circles.end(); ++i)
   {
-    i->x = m_zoom.world_to_screen_x(i->x);
-    i->y = m_zoom.world_to_screen_x(i->y);
+    i->pos = geom::fpoint(m_zoom.world_to_screen_x(i->pos.x()),
+                          m_zoom.world_to_screen_x(i->pos.y()));
     i->r = std::max(2.0f, i->r * m_zoom.get_scale());
   }
 
@@ -104,49 +103,48 @@ ZoomGraphicContext::draw_circles(std::vector<Circle>& circles, Color color)
 }
 
 void
-ZoomGraphicContext::draw_circle(float x, float y, float r, Color color)
+ZoomGraphicContext::draw_circle(geom::fpoint const& pos, float r, Color color)
 {
-  m_parent_gc.draw_circle(m_zoom.world_to_screen_x(x),
-                          m_zoom.world_to_screen_y(y),
+  m_parent_gc.draw_circle(geom::fpoint(m_zoom.world_to_screen_x(pos.x()),
+                                       m_zoom.world_to_screen_y(pos.y())),
                           std::max(2.0f, r * m_zoom.get_scale()),
                           color);
 }
 
 void
-ZoomGraphicContext::draw_fill_circle(float x, float y, float r, Color color)
+ZoomGraphicContext::draw_fill_circle(geom::fpoint const& pos, float r, Color color)
 {
-  m_parent_gc.draw_fill_circle(m_zoom.world_to_screen_x(x),
-                               m_zoom.world_to_screen_y(y),
+  m_parent_gc.draw_fill_circle(geom::fpoint(m_zoom.world_to_screen_x(pos.x()),
+                                            m_zoom.world_to_screen_y(pos.y())),
                                std::max(2.0f, r * m_zoom.get_scale()),
                                color);
 }
 
 void
-ZoomGraphicContext::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
+ZoomGraphicContext::draw_fill_rect(geom::frect const& rect, Color color)
 {
-  m_parent_gc.draw_fill_rect(m_zoom.world_to_screen_x(x1),
-                             m_zoom.world_to_screen_y(y1),
-                             m_zoom.world_to_screen_x(x2),
-                             m_zoom.world_to_screen_y(y2),
+  m_parent_gc.draw_fill_rect(geom::frect(m_zoom.world_to_screen_x(rect.left()),
+                                         m_zoom.world_to_screen_y(rect.top()),
+                                         m_zoom.world_to_screen_x(rect.right()),
+                                         m_zoom.world_to_screen_y(rect.bottom())),
                              color);
 }
 
 void
-ZoomGraphicContext::draw_string_centered(float x, float y, const std::string& str, Color color)
+ZoomGraphicContext::draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color)
 {
-  m_parent_gc.draw_string_centered(m_zoom.world_to_screen_x(x),
-                                   m_zoom.world_to_screen_y(y),
+  m_parent_gc.draw_string_centered(geom::fpoint(m_zoom.world_to_screen_x(pos.x()),
+                                                m_zoom.world_to_screen_y(pos.y())),
                                    str,
                                    color);
 }
 
 void
-ZoomGraphicContext::draw_string(float x, float y, const std::string& str, Color color)
+ZoomGraphicContext::draw_string(geom::fpoint const& pos, const std::string& str, Color color)
 {
-  m_parent_gc.draw_string(m_zoom.world_to_screen_x(x),
-                          m_zoom.world_to_screen_y(y),
-                          str,
-                          color);
+  m_parent_gc.draw_string(geom::fpoint(m_zoom.world_to_screen_x(pos.x()),
+                                       m_zoom.world_to_screen_y(pos.y())),
+                          str, color);
 }
 
 float

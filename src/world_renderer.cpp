@@ -110,14 +110,14 @@ WorldRenderer::draw_grid(ZoomGraphicContext& gc, float grid_size, int grid_const
 
   gc.push_quick_draw();
   for(float y = start_y; y < end_y; y += grid_size) {
-    gc.draw_line(start_x, y,
-                 end_x, y,
+    gc.draw_line(geom::fpoint(start_x, y),
+                 geom::fpoint(end_x, y),
                  ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
   }
 
   for(float x = start_x; x < end_x; x += grid_size) {
-    gc.draw_line(x, start_y,
-                 x, end_y,
+    gc.draw_line(geom::fpoint(x, start_y),
+                 geom::fpoint(x, end_y),
                  ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
   }
 
@@ -131,10 +131,9 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 
   if (gc.zoom().screen_to_world_y(parent_gc.get_height()) >= 599)
   {
-    gc.draw_fill_rect(gc.zoom().screen_to_world_x(0),
-                      599,
-                      gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                      gc.zoom().screen_to_world_y(parent_gc.get_height()),
+    gc.draw_fill_rect(geom::frect(geom::fpoint(gc.zoom().screen_to_world_x(0), 599),
+                                  geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
+                                               gc.zoom().screen_to_world_y(parent_gc.get_height()))),
                       g_style.ground_color);
 
     // draw grid
@@ -150,23 +149,23 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
       float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_y2()), step_size) + step_size;
 
       for(float y = start_y; y < end_y; y += step_size) {
-        gc.draw_line(start_x, y,
-                     end_x, y,
+        gc.draw_line(geom::fpoint(start_x, y),
+                     geom::fpoint(end_x, y),
                      g_style.ground_grid_color, 1);
       }
 
       for(float x = start_x; x < end_x; x += step_size) {
-        gc.draw_line(x, start_y,
-                     x, end_y,
+        gc.draw_line(geom::fpoint(x, start_y),
+                     geom::fpoint(x, end_y),
                      g_style.ground_grid_color, 1);
       }
       gc.pop_quick_draw();
     }
 
-    gc.draw_rect(gc.zoom().screen_to_world_x(0),
-                 599,
-                 gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                 gc.zoom().screen_to_world_y(parent_gc.get_height()),
+    gc.draw_rect(geom::frect(geom::fpoint(gc.zoom().screen_to_world_x(0),
+                                          599),
+                             geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
+                                          gc.zoom().screen_to_world_y(parent_gc.get_height()))),
                  g_style.rect_collider_bg);
   }
 }
@@ -199,8 +198,7 @@ WorldRenderer::draw_particle_highlight(ZoomGraphicContext& gc, Particle const& p
 void
 WorldRenderer::draw_particle_velocity_vector(ZoomGraphicContext& gc, Particle const& particle)
 {
-  gc.draw_line(particle.pos.x, particle.pos.y,
-               particle.pos.x + particle.velocity.x, particle.pos.y + particle.velocity.y,
+  gc.draw_line(particle.pos, particle.pos + particle.velocity,
                Color(0.0f, 0.0f, 1.0f));
 }
 
@@ -215,17 +213,17 @@ WorldRenderer::draw_spring(ZoomGraphicContext& gc, Spring const& spring)
   if (spring.particles.first->pos.y  < 598.5f ||
       spring.particles.second->pos.y < 598.5f)
   {
-    gc.GraphicContext::draw_line(spring.particles.first->pos,
-                                 spring.particles.second->pos,
-                                 Color(color, 1.0f - color, 0.0f),
-                                 2);
+    gc.draw_line(spring.particles.first->pos,
+                 spring.particles.second->pos,
+                 Color(color, 1.0f - color, 0.0f),
+                 2);
   }
 }
 
 void
 WorldRenderer::draw_spring_highlight(ZoomGraphicContext& gc, Spring const& spring)
 {
-  gc.GraphicContext::draw_line(spring.particles.first->pos,
+  gc.draw_line(spring.particles.first->pos,
                                spring.particles.second->pos,
                                g_style.highlight, 4);
 }
@@ -253,15 +251,15 @@ WorldRenderer::draw_collider_highlight(ZoomGraphicContext& gc, Collider const& c
 void
 WorldRenderer::draw_rect_collider(ZoomGraphicContext& gc, RectCollider const& collider)
 {
-  gc.draw_fill_rect(collider.x1, collider.y1, collider.x2, collider.y2, g_style.rect_collider_bg);
-  gc.draw_rect(collider.x1, collider.y1, collider.x2, collider.y2, g_style.rect_collider_fg);
+  gc.draw_fill_rect(geom::frect(collider.x1, collider.y1, collider.x2, collider.y2), g_style.rect_collider_bg);
+  gc.draw_rect(geom::frect(collider.x1, collider.y1, collider.x2, collider.y2), g_style.rect_collider_fg);
 }
 
 void
 WorldRenderer::draw_rect_collider_highlight(ZoomGraphicContext& gc, RectCollider const& collider)
 {
   //gc.draw_fill_rect (x1, y1, x2, y2, g_style.rect_collider_bg);
-  gc.draw_rect(collider.x1, collider.y1, collider.x2, collider.y2, g_style.selection_rect);
+  gc.draw_rect(geom::frect(collider.x1, collider.y1, collider.x2, collider.y2), g_style.selection_rect);
 }
 
 float

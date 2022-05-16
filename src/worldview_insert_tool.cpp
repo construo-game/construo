@@ -68,7 +68,7 @@ WorldViewInsertTool::draw_foreground(ZoomGraphicContext& gc)
 
   if (m_previous_particle)
   {
-    gc.GraphicContext::draw_line(m_previous_particle->pos, new_particle_pos,
+    gc.draw_line(m_previous_particle->pos, new_particle_pos,
                                  g_style.new_spring, 2);
   }
   else

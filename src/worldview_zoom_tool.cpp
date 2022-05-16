@@ -46,10 +46,10 @@ WorldViewZoomTool::draw_foreground(ZoomGraphicContext& gc)
     float const x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x());
     float const y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y());
 
-    gc.draw_rect(std::min(x, m_click_pos.x),
-                 std::min(y, m_click_pos.y),
-                 std::max(x, m_click_pos.x),
-                 std::max(y, m_click_pos.y),
+    gc.draw_rect(geom::frect(std::min(x, m_click_pos.x),
+                             std::min(y, m_click_pos.y),
+                             std::max(x, m_click_pos.x),
+                             std::max(y, m_click_pos.y)),
                  g_style.new_spring);
   }
 }

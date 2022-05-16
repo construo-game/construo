@@ -132,53 +132,55 @@ GlutDisplay::draw_lines(std::vector<Line>& lines, Color color, int wide)
   glBegin(GL_LINES);
   for (std::vector<Line>::const_iterator i = lines.begin(); i != lines.end(); ++i)
   {
-    glVertex2f(i->x1, i->y1);
-    glVertex2f(i->x2, i->y2);
+    glVertex2f(i->p1.x(), i->p1.y());
+    glVertex2f(i->p2.x(), i->p2.y());
   }
   glEnd();
 }
 
 void
-GlutDisplay::draw_line(float x1, float y1, float x2, float y2, Color color, int wide)
+GlutDisplay::draw_line(geom::fpoint const& p1, geom::fpoint const& p2, Color color, int wide)
 {
-  if (g_settings.thick_lines)
+  if (g_settings.thick_lines) {
     glLineWidth(static_cast<float>(wide));
+  }
 
   glColor4f(color.r, color.g, color.b, color.a);
   glBegin(GL_LINES);
-  glVertex2f(x1, y1);
-  glVertex2f(x2, y2);
+  glVertex2f(p1.x(), p1.y());
+  glVertex2f(p2.x(), p2.y());
   glEnd();
 }
 
 void
-GlutDisplay::draw_rect(float x1, float y1, float x2, float y2, Color color)
+GlutDisplay::draw_rect(geom::frect const& rect, Color color)
 {
   if (g_settings.thick_lines)
     glLineWidth(2);
 
   glColor4f(color.r, color.g, color.b, color.a);
   glBegin(GL_LINE_STRIP);
-  glVertex2f(x1, y1);
-  glVertex2f(x2, y1);
-  glVertex2f(x2, y2);
-  glVertex2f(x1, y2);
-  glVertex2f(x1, y1);
+  glVertex2f(rect.left(), rect.top());
+  glVertex2f(rect.right(), rect.top());
+  glVertex2f(rect.right(), rect.bottom());
+  glVertex2f(rect.left(), rect.bottom());
+  glVertex2f(rect.left(), rect.top());
   glEnd();
 }
 
 void
-GlutDisplay::draw_fill_rect(float x1, float y1, float x2, float y2, Color color)
+GlutDisplay::draw_fill_rect(geom::frect const& rect, Color color)
 {
   if (g_settings.thick_lines)
     glLineWidth(.5f);
 
   glColor4f(color.r, color.g, color.b, color.a);
   glBegin(GL_QUADS);
-  glVertex2f(x1, y1);
-  glVertex2f(x2, y1);
-  glVertex2f(x2, y2);
-  glVertex2f(x1, y2);
+  glVertex2f(rect.left(), rect.top());
+  glVertex2f(rect.right(), rect.top());
+  glVertex2f(rect.right(), rect.bottom());
+  glVertex2f(rect.left(), rect.bottom());
+  glVertex2f(rect.left(), rect.top());
   glEnd();
 }
 
@@ -187,12 +189,12 @@ GlutDisplay::draw_circles(std::vector<Circle>& circles, Color color)
 {
   for (auto i = circles.begin(); i != circles.end(); ++i)
   {
-    draw_circle(i->x, i->y, i->r, color);
+    draw_circle(i->pos, i->r, color);
   }
 }
 
 void
-GlutDisplay::draw_circle(float x, float y, float r, Color color)
+GlutDisplay::draw_circle(geom::fpoint const& pos, float r, Color color)
 {
   glColor4f(color.r, color.g, color.b, color.a);
 
@@ -200,7 +202,7 @@ GlutDisplay::draw_circle(float x, float y, float r, Color color)
   gluQuadricDrawStyle(qobj, GLU_SILHOUETTE);
   //gluQuadricNormals(qobj, GLU_FLAT);
   glPushMatrix();
-  glTranslatef(x, y, 0);
+  glTranslatef(pos.x(), pos.y(), 0);
   gluDisk(qobj, 0, r, 8, 1);
   /*draw_rect(x - r, y - r, x + r, y + r,
     color);*/
@@ -209,7 +211,7 @@ GlutDisplay::draw_circle(float x, float y, float r, Color color)
 }
 
 void
-GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
+GlutDisplay::draw_fill_circle(geom::fpoint const& pos, float r, Color color)
 {
   glColor4f(color.r, color.g, color.b, color.a);
   //draw_fill_rect(x - r, y - r, x + r, y + r,
@@ -219,7 +221,7 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
   gluQuadricDrawStyle(qobj, GLU_FILL);
   //gluQuadricNormals(qobj, GLU_FLAT);
   glPushMatrix();
-  glTranslatef(x, y, 0);
+  glTranslatef(pos.x(), pos.y(), 0);
   gluDisk(qobj, 0, r, 8, 1);
   /*draw_rect(x - r, y - r, x + r, y + r,
     color);*/
@@ -228,14 +230,14 @@ GlutDisplay::draw_fill_circle(float x, float y, float r, Color color)
 }
 
 void
-GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
+GlutDisplay::draw_string(geom::fpoint const& pos, const std::string& str, Color color)
 {
   if (g_settings.thick_lines)
     glLineWidth(1.0f);
 
   glColor4f(color.r, color.g, color.b, color.a);
   glPushMatrix();
-  glTranslatef(x , y, 0);
+  glTranslatef(pos.x(), pos.y(), 0);
   glScalef(.07f, -.07f, 0);
 
   for (std::string::const_iterator i = str.begin(); i != str.end(); ++i)
@@ -248,10 +250,11 @@ GlutDisplay::draw_string(float x, float y, const std::string& str, Color color)
 
 
 void
-GlutDisplay::draw_string_centered(float x, float y, const std::string& str, Color color)
+GlutDisplay::draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color)
 {
-  draw_string(x - (7.5f * static_cast<float>(str.length())) / 2.0f,
-              y, str, color);
+  draw_string(geom::fpoint(pos.x() - (7.5f * static_cast<float>(str.length())) / 2.0f,
+                           pos.y()),
+              str, color);
 }
 
 bool
@@ -588,14 +591,14 @@ GlutDisplay::enter_fullscreen()
 }
 
 void
-GlutDisplay::set_clip_rect(float x1, float y1, float x2, float y2)
+GlutDisplay::set_clip_rect(geom::frect const& rect)
 {
   glEnable(GL_SCISSOR_TEST);
   glScissor(
-    static_cast<int>(x1), // x
-    m_height - 1 - static_cast<int>(y2), // y
-    static_cast<int>(x2 - x1), // weight
-    static_cast<int>(y2 - y1) // height
+    static_cast<int>(rect.left()), // x
+    m_height - 1 - static_cast<int>(rect.bottom()), // y
+    static_cast<int>(rect.width()), // weight
+    static_cast<int>(rect.height()) // height
     );
 }
 

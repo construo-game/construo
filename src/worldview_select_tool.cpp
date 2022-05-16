@@ -64,11 +64,11 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 
   if (m_mode == GETTING_SELECTION_MODE)
   {
-    gc.draw_rect (std::min(x, m_click_pos.x),
-                  std::min(y, m_click_pos.y),
-                  std::max(x, m_click_pos.x),
-                  std::max(y, m_click_pos.y),
-                  g_style.selection_rect);
+    gc.draw_rect(geom::frect(std::min(x, m_click_pos.x),
+                             std::min(y, m_click_pos.y),
+                             std::max(x, m_click_pos.x),
+                             std::max(y, m_click_pos.y)),
+                 g_style.selection_rect);
   }
 
   if (!m_selection.empty())
@@ -85,25 +85,23 @@ WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
     }
 
     float border = 20.0f / gc.zoom().get_scale();
-    gc.draw_rect (selection_box.left() - border, selection_box.top() - border,
-                  selection_box.right() + border, selection_box.bottom() + border,
-                  g_style.new_spring);
+    gc.draw_rect(geom::grow(selection_box, border), g_style.new_spring);
 
     if (0) // draw selection rect
     {
       float rsize = 5.0f / gc.zoom().get_scale();
-      gc.draw_fill_rect (selection_box.left() - border - rsize, selection_box.top() - border - rsize,
-                         selection_box.left() - border + rsize, selection_box.top() - border + rsize,
-                         g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.right() + border - rsize, selection_box.top() - border - rsize,
-                         selection_box.right() + border + rsize, selection_box.top() - border + rsize,
-                         g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.left() - border - rsize, selection_box.bottom() + border - rsize,
-                         selection_box.left() - border + rsize, selection_box.bottom() + border + rsize,
-                         g_style.selection_resizer);
-      gc.draw_fill_rect (selection_box.right() + border - rsize, selection_box.bottom() + border - rsize,
-                         selection_box.right() + border + rsize, selection_box.bottom() + border + rsize,
-                         g_style.selection_resizer);
+      gc.draw_fill_rect(geom::frect(selection_box.left() - border - rsize, selection_box.top() - border - rsize,
+                                    selection_box.left() - border + rsize, selection_box.top() - border + rsize),
+                        g_style.selection_resizer);
+      gc.draw_fill_rect(geom::frect(selection_box.right() + border - rsize, selection_box.top() - border - rsize,
+                                    selection_box.right() + border + rsize, selection_box.top() - border + rsize),
+                        g_style.selection_resizer);
+      gc.draw_fill_rect(geom::frect(selection_box.left() - border - rsize, selection_box.bottom() + border - rsize,
+                                    selection_box.left() - border + rsize, selection_box.bottom() + border + rsize),
+                        g_style.selection_resizer);
+      gc.draw_fill_rect(geom::frect(selection_box.right() + border - rsize, selection_box.bottom() + border - rsize,
+                                    selection_box.right() + border + rsize, selection_box.bottom() + border + rsize),
+                        g_style.selection_resizer);
     }
 
     gc.get_parent_gc().draw_circle(gc.zoom().world_to_screen(m_selection.get_center ()),

@@ -39,16 +39,15 @@ public:
   virtual ~X11Display();
 
   // Graphic Context stuff
-  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
-  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
-  void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
-  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
-  void draw_circle(float x, float y, float r, Color color) override;
+  void draw_circle(geom::fpoint const& pos, float r, Color color) override;
   void draw_circles(std::vector<Circle>& circles, Color color) override;
-
-  void draw_fill_circle(float x, float y, float r, Color color) override;
-  void draw_string(float x, float y, const std::string& str, Color color) override;
-  void draw_string_centered(float x, float y, const std::string& str, Color color) override;
+  void draw_fill_circle(geom::fpoint const& pos, float r, Color color) override;
+  void draw_fill_rect(geom::frect const& rect, Color color) override;
+  void draw_line(geom::fpoint const& p1, geom::fpoint const& p2, Color color, int wide = 0) override;
+  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_rect(geom::frect const& rect, Color color) override;
+  void draw_string(geom::fpoint const& pos, const std::string& str, Color color) override;
+  void draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color) override;
 
   geom::frect geometry() const override { return geom::frect(m_geometry); }
   float get_width() override { return static_cast<float>(m_geometry.width()); }
@@ -77,7 +76,7 @@ public:
 
   void run();
 
-  void set_clip_rect(float x1_, float y1_, float x2_, float y2_) override;
+  void set_clip_rect(geom::frect const& rect) override;
   void clear_clip_rect() override;
 
   unsigned int get_color_value(const Color& color);

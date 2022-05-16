@@ -30,18 +30,18 @@ public:
   ZoomGraphicContext(GraphicContext& gc, GCZoomState& zoom);
   virtual ~ZoomGraphicContext();
 
-  void set_clip_rect(float x1_, float y1_, float x2_, float y2_) override;
+  void set_clip_rect(geom::frect const& rect) override;
   void clear_clip_rect() override;
 
-  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
-  void draw_line(float x1, float y1, float x2, float y2, Color color, int wide = 0) override;
-  void draw_rect(float x1, float y1, float x2, float y2, Color color) override;
-  void draw_circle(float x, float y, float r, Color color) override;
+  void draw_circle(geom::fpoint const& pos, float r, Color color) override;
   void draw_circles(std::vector<Circle>& circles, Color color) override;
-  void draw_fill_circle(float x, float y, float r, Color color) override;
-  void draw_fill_rect(float x1, float y1, float x2, float y2, Color color) override;
-  void draw_string(float x, float y, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
-  void draw_string_centered(float x, float y, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
+  void draw_fill_circle(geom::fpoint const& pos, float r, Color color) override;
+  void draw_fill_rect(geom::frect const& rect, Color color) override;
+  void draw_line(geom::fpoint const& p1, geom::fpoint const& p2, Color color, int wide = 0) override;
+  void draw_lines(std::vector<Line>& lines, Color color, int wide = 0) override;
+  void draw_rect(geom::frect const& rect, Color color) override;
+  void draw_string(geom::fpoint const& pos, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
+  void draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
 
   float get_width() override;
   float get_height() override;
