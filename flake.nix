@@ -88,6 +88,7 @@
                libGLU
                xorg.libX11
                zlib
+               libsigcxx30
              ] ++ [
                geomcpp.defaultPackage.${system}
                logmich.defaultPackage.${system}
