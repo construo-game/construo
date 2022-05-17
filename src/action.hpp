@@ -17,7 +17,8 @@
 #ifndef HEADER_CONSTRUO_BUTTONS_HPP
 #define HEADER_CONSTRUO_BUTTONS_HPP
 
-enum ButtonTypes {
+enum Action
+{
   BUTTON_PRIMARY,   // primary mouse button (inserts particles)
   BUTTON_SECONDARY, // secondary mouse button (delete particles, rotate selection)
   BUTTON_TERTIARY,  // scroll around
