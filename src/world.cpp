@@ -37,22 +37,22 @@ World::World() :
 {
 }
 
-// Copy Constructor
-World::World(const World& old_world) :
+
+World::World(const World& other) :
   m_particle_mgr(nullptr),
   m_springs(),
   m_colliders()
 {
-  for (auto i = old_world.m_colliders.begin(); i != old_world.m_colliders.end();
+  for (auto i = other.m_colliders.begin(); i != other.m_colliders.end();
        ++i)
   {
     m_colliders.emplace_back((*i)->duplicate());
   }
 
   // FIXME: Could need optimizations
-  m_particle_mgr = std::make_unique<ParticleFactory>(*old_world.m_particle_mgr);
+  m_particle_mgr = std::make_unique<ParticleFactory>(*other.m_particle_mgr);
 
-  for (auto i = old_world.m_springs.begin (); i != old_world.m_springs.end (); ++i)
+  for (auto i = other.m_springs.begin (); i != other.m_springs.end (); ++i)
   {
     Particle* first  = m_particle_mgr->lookup_particle((*i)->particles.first->get_id());
     Particle* second = m_particle_mgr->lookup_particle((*i)->particles.second->get_id());
@@ -61,6 +61,9 @@ World::World(const World& old_world) :
     {
       // FIXME: Use copy c'tor here maxstiffnes and Co. aren't copied correctly
       m_springs.emplace_back(std::make_unique<Spring>(first, second, (*i)->length));
+      m_springs.back()->stiffness = (*i)->stiffness;
+      m_springs.back()->damping = (*i)->damping;
+      m_springs.back()->max_stretch = (*i)->max_stretch;
     }
     else
     {
@@ -222,7 +225,7 @@ World::find_particles(float x1_, float y1_, float x2_, float y2_) const
   return caputred_particles;
 }
 
-void
+Spring*
 World::add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch)
 {
   Particle* lhs_particle = m_particle_mgr->lookup_particle(lhs);
@@ -243,13 +246,25 @@ World::add_spring(int lhs, int rhs, float length, float stiffness, float damping
   rhs_particle->spring_links += 1;
 
   m_springs.emplace_back(std::make_unique<Spring>(lhs_particle, rhs_particle));
+
+  m_springs.back()->stiffness = stiffness;
+  m_springs.back()->damping = damping;
+  m_springs.back()->max_stretch = max_stretch;
+
+  return m_springs.back().get();
 }
 
-void
-World::add_spring (Particle* last_particle, Particle* particle)
+Spring*
+World::add_spring(Particle* last_particle, Particle* particle, float stiffness)
 {
-  assert (last_particle && particle);
+  assert(last_particle && particle);
   m_springs.emplace_back(std::make_unique<Spring>(last_particle, particle));
+  m_springs.back()->stiffness = stiffness;
+
+  // FIXME: math this properly
+  m_springs.back()->max_stretch = 0.15f * 50.0f / stiffness;
+
+  return m_springs.back().get();
 }
 
 void

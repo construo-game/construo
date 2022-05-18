@@ -55,6 +55,9 @@ WorldGUIManager::WorldGUIManager() :
   m_particle_mass_label(),
   m_particle_mass_increase_button(),
   m_particle_mass_decrease_button(),
+  m_spring_stiffness_label(),
+  m_spring_stiffness_increase_button(),
+  m_spring_stiffness_decrease_button(),
   m_last_geometry()
 {
   instance_  = this;
@@ -149,6 +152,19 @@ WorldGUIManager::WorldGUIManager() :
                                                        Math::round_to_float(Controller::instance()->get_particle_mass() - 0.1f, 0.1f)));
   });
 
+  // spring stiffness
+  m_spring_stiffness_label = create<GUILabel>([]{
+    return fmt::format("Stiffness: {:.0f}", Controller::instance()->get_spring_stiffness());
+  });
+  m_spring_stiffness_increase_button = create<GUIButton>("+", [](){
+    Controller::instance()->set_spring_stiffness(std::max(0.1f,
+                                                       Math::round_to_float(Controller::instance()->get_spring_stiffness() + 1.0f, 1.0f)));
+  });
+  m_spring_stiffness_decrease_button = create<GUIButton>("-", [](){
+    Controller::instance()->set_spring_stiffness(std::max(0.1f,
+                                                       Math::round_to_float(Controller::instance()->get_spring_stiffness() - 1.0f, 1.0f)));
+  });
+
   //create<GUIWindow>("Test Window",   200, 100, 200, 90);
 
   /*
@@ -219,9 +235,14 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
   m_zoomout_button->set_geometry(btn_split(btn_right(8), 1));
 
   // particle mass
-  m_particle_mass_label->set_geometry(btn_right(10));
+  m_particle_mass_label->set_geometry(btn_right(10) - geom::foffset(15.0f, 0.0f));
   m_particle_mass_increase_button->set_geometry(btn_split(btn_right(11), 0));
   m_particle_mass_decrease_button->set_geometry(btn_split(btn_right(11), 1));
+
+  // spring stiffness
+  m_spring_stiffness_label->set_geometry(btn_right(12) - geom::foffset(15.0f, 0.0f));
+  m_spring_stiffness_increase_button->set_geometry(btn_split(btn_right(13), 0));
+  m_spring_stiffness_decrease_button->set_geometry(btn_split(btn_right(13), 1));
 
   m_last_geometry = geometry;
 }

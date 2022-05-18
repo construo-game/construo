@@ -43,8 +43,8 @@ public:
   Collider* find_collider(geom::fpoint const& pos) const;
 
   void add_rect_collider(const glm::vec2&, const glm::vec2&);
-  void add_spring(Particle*, Particle*);
-  void add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch);
+  Spring* add_spring(Particle*, Particle*, float stiffness);
+  Spring* add_spring(int lhs, int rhs, float length, float stiffness, float damping, float max_stretch);
   void add_particle(int id, glm::vec2 const& pos, glm::vec2 const& velocity, float mass, bool fixed);
 
   /** removes the given particle and all objects/springs which

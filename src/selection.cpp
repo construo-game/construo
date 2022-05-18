@@ -145,8 +145,9 @@ Selection::duplicate ()
         &&
         std::find (m_selection.begin(), m_selection.end(), spring->particles.second) != m_selection.end ())
     {
-      m_world->add_spring (p_trans_table[spring->particles.first],
-                           p_trans_table[spring->particles.second]);
+      m_world->add_spring(p_trans_table[spring->particles.first],
+                          p_trans_table[spring->particles.second],
+                          spring->stiffness);
     }
   }
 

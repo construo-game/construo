@@ -118,7 +118,8 @@ WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
     {
       if (m_hover_particle) // connect to particles
       {
-        world.add_spring(m_previous_particle, m_hover_particle);
+        world.add_spring(m_previous_particle, m_hover_particle,
+                         Controller::instance()->get_spring_stiffness());
       }
       else // add a new particle and connect it with the current one
       {
@@ -138,7 +139,8 @@ WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
           Particle* const new_particle = world.get_particle_mgr().add_particle(new_particle_pos,
                                                                                glm::vec2(0.0f, 0.0f),
                                                                                Controller::instance()->get_particle_mass());
-          world.add_spring(m_previous_particle, new_particle);
+          world.add_spring(m_previous_particle, new_particle,
+                           Controller::instance()->get_spring_stiffness());
         }
       }
       // Lower the spring links count, since we have increased it

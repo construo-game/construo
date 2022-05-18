@@ -45,6 +45,9 @@ public:
   void  set_particle_mass(float mass) { m_particle_mass = mass; }
   float get_particle_mass() const { return m_particle_mass; }
 
+  void  set_spring_stiffness(float mass) { m_spring_stiffness = mass; }
+  float get_spring_stiffness() const { return m_spring_stiffness; }
+
   World& get_world() { assert(m_world != nullptr); return *m_world; }
 
   /** Load a world by name, name is relative to the construo user directory */
@@ -86,6 +89,8 @@ private:
 
   /** mass of the particles that are inserted on a primary press */
   float m_particle_mass;
+
+  float m_spring_stiffness;
 
   DeltaManager m_delta_manager;
 

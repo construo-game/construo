@@ -64,6 +64,10 @@ private:
   GUIComponent* m_particle_mass_increase_button;
   GUIComponent* m_particle_mass_decrease_button;
 
+  GUIComponent* m_spring_stiffness_label;
+  GUIComponent* m_spring_stiffness_increase_button;
+  GUIComponent* m_spring_stiffness_decrease_button;
+
   geom::frect m_last_geometry;
 
 public:
