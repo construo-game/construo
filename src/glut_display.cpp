@@ -24,11 +24,59 @@
 #include <logmich/log.hpp>
 #include <geom/rect.hpp>
 
-#include "buttons.hpp"
+#include "action.hpp"
 #include "events.hpp"
 #include "settings.hpp"
 #include "screen_manager.hpp"
 #include "glut_display.hpp"
+
+namespace {
+
+void init_default_keybindings(GlutDisplay& dpy)
+{
+  dpy.bind_key(127, Action::DELETE);
+  dpy.bind_key(32, Action::RUN);
+  dpy.bind_key(9, Action::TOGGLESLOWMO);
+  dpy.bind_key(27, Action::ESCAPE);
+  dpy.bind_key('q', Action::ESCAPE);
+  dpy.bind_key('h', Action::FLIP);
+  dpy.bind_key('f', Action::FIX);
+  dpy.bind_key('d', Action::DUPLICATE);
+  dpy.bind_key('v', Action::SETVELOCITY);
+  dpy.bind_key('c', Action::CLEAR);
+  dpy.bind_key('j', Action::JOIN);
+  dpy.bind_key('s', Action::SCALE);
+  dpy.bind_key('a', Action::ACTIONCAM);
+  dpy.bind_key('o', Action::HIDEDOTS);
+  dpy.bind_key('!', Action::QUICKLOAD1);
+  dpy.bind_key('@', Action::QUICKLOAD2);
+  dpy.bind_key('#', Action::QUICKLOAD3);
+  dpy.bind_key('$', Action::QUICKLOAD4);
+  dpy.bind_key('%', Action::QUICKLOAD5);
+  dpy.bind_key('^', Action::QUICKLOAD6);
+  dpy.bind_key('&', Action::QUICKLOAD7);
+  dpy.bind_key('*', Action::QUICKLOAD8);
+  dpy.bind_key('(', Action::QUICKLOAD9);
+  dpy.bind_key(')', Action::QUICKLOAD0);
+  dpy.bind_key('0', Action::QUICKSAVE0);
+  dpy.bind_key('1', Action::QUICKSAVE1);
+  dpy.bind_key('2', Action::QUICKSAVE2);
+  dpy.bind_key('3', Action::QUICKSAVE3);
+  dpy.bind_key('4', Action::QUICKSAVE4);
+  dpy.bind_key('5', Action::QUICKSAVE5);
+  dpy.bind_key('6', Action::QUICKSAVE6);
+  dpy.bind_key('7', Action::QUICKSAVE7);
+  dpy.bind_key('8', Action::QUICKSAVE8);
+  dpy.bind_key('9', Action::QUICKSAVE9);
+  dpy.bind_key('g', Action::GRID);
+  dpy.bind_key('u', Action::UNDO);
+  dpy.bind_key('r', Action::REDO);
+  dpy.bind_key('+', Action::ZOOM_IN);
+  dpy.bind_key('=', Action::ZOOM_IN);
+  dpy.bind_key('-', Action::ZOOM_OUT);
+}
+
+} // namespace
 
 GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fullscreen) :
   m_window_x_pos(),
@@ -41,7 +89,8 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
   m_mouse_y(),
   m_block(),
   m_update_display(0),
-  m_is_fullscreen()
+  m_is_fullscreen(),
+  m_key_bindings()
 {
   int argc = 1;
   char* argv[2];
@@ -110,6 +159,8 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
   if (fullscreen) {
     enter_fullscreen();
   }
+
+  init_default_keybindings(*this);
 }
 
 GlutDisplay::~GlutDisplay()
@@ -328,19 +379,19 @@ GlutDisplay::mouse_func(int button, int button_state, int x, int y)
   switch (button)
   {
     case 0:
-      event.button.id = BUTTON_PRIMARY;
+      event.button.id = Action::PRIMARY;
       break;
     case 1:
-      event.button.id = BUTTON_TERTIARY;
+      event.button.id = Action::TERTIARY;
       break;
     case 2:
-      event.button.id = BUTTON_SECONDARY;
+      event.button.id = Action::SECONDARY;
       break;
     case 3:
-      event.button.id = BUTTON_ZOOM_IN;
+      event.button.id = Action::ZOOM_IN;
       break;
     case 4:
-      event.button.id = BUTTON_ZOOM_OUT;
+      event.button.id = Action::ZOOM_OUT;
       break;
     default:
       log_debug("GlutDisplay: Unhandle mouse button press: {} {}", button, button_state);
@@ -373,10 +424,14 @@ GlutDisplay::special_func(int key, int x, int y)
   switch (key)
   {
     case GLUT_KEY_F11:
-      if (m_is_fullscreen)
-        leave_fullscreen();
-      else
-        enter_fullscreen();
+      {
+        Event event;
+        event.type = BUTTON_EVENT;
+        event.button.pressed = true;
+        event.button.id = Action::FULLSCREEN;
+
+        events.push(event);
+      }
       break;
   }
 }
@@ -384,162 +439,16 @@ GlutDisplay::special_func(int key, int x, int y)
 void
 GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 {
-  Event event;
-  event.type = BUTTON_EVENT;
-  event.button.pressed = true;
+  if (auto const it = m_key_bindings.find(key); it != m_key_bindings.end()) {
+    log_debug("GlutDisplay: Unhandled keypress: '{}' {}+{}", key, x, y);
+  } else {
+    Event event;
+    event.type = BUTTON_EVENT;
+    event.button.pressed = true;
+    event.button.id = it->second;
 
-  switch (key)
-  {
-    case 127: // Delete
-      event.button.id = BUTTON_DELETE;
-      break;
-    case 32: // Space
-      event.button.id = BUTTON_RUN;
-      break;
-    case 9: // Tab
-      event.button.id = BUTTON_TOGGLESLOWMO;
-      break;
-    case 27: // Escape
-    case 'q':
-      event.button.id = BUTTON_ESCAPE;
-      break;
-    case 'h':
-      event.button.id = BUTTON_FLIP;
-      break;
-    case 'f':
-      event.button.id = BUTTON_FIX;
-      break;
-    case 'd':
-      event.button.id = BUTTON_DUPLICATE;
-      break;
-
-    case 'v':
-      event.button.id = BUTTON_SETVELOCITY;
-      break;
-
-    case 'c':
-      event.button.id = BUTTON_CLEAR;
-      break;
-
-    case 'j':
-      event.button.id = BUTTON_JOIN;
-      break;
-
-    case 's':
-      event.button.id = BUTTON_SCALE;
-      break;
-
-    case 'a':
-      event.button.id = BUTTON_ACTIONCAM;
-      break;
-
-    case 'o':
-      event.button.id = BUTTON_HIDEDOTS;
-      break;
-
-    case '!':
-      event.button.id = BUTTON_QUICKLOAD1;
-      break;
-
-    case '@':
-      event.button.id = BUTTON_QUICKLOAD2;
-      break;
-
-    case '#':
-      event.button.id = BUTTON_QUICKLOAD3;
-      break;
-
-    case '$':
-      event.button.id = BUTTON_QUICKLOAD4;
-      break;
-
-    case '%':
-      event.button.id = BUTTON_QUICKLOAD5;
-      break;
-
-    case '^':
-      event.button.id = BUTTON_QUICKLOAD6;
-      break;
-
-    case '&':
-      event.button.id = BUTTON_QUICKLOAD7;
-      break;
-
-    case '*':
-      event.button.id = BUTTON_QUICKLOAD8;
-      break;
-
-    case '(':
-      event.button.id = BUTTON_QUICKLOAD9;
-      break;
-
-    case ')':
-      event.button.id = BUTTON_QUICKLOAD0;
-      break;
-
-    case '0':
-      event.button.id = BUTTON_QUICKSAVE0;
-      break;
-
-    case '1':
-      event.button.id = BUTTON_QUICKSAVE1;
-      break;
-
-    case '2':
-      event.button.id = BUTTON_QUICKSAVE2;
-      break;
-
-    case '3':
-      event.button.id = BUTTON_QUICKSAVE3;
-      break;
-
-    case '4':
-      event.button.id = BUTTON_QUICKSAVE4;
-      break;
-
-    case '5':
-      event.button.id = BUTTON_QUICKSAVE5;
-      break;
-
-    case '6':
-      event.button.id = BUTTON_QUICKSAVE6;
-      break;
-
-    case '7':
-      event.button.id = BUTTON_QUICKSAVE7;
-      break;
-
-    case '8':
-      event.button.id = BUTTON_QUICKSAVE8;
-      break;
-
-    case '9':
-      event.button.id = BUTTON_QUICKSAVE9;
-      break;
-
-    case 'g':
-      event.button.id = BUTTON_GRID;
-      break;
-
-    case 'u':
-      event.button.id = BUTTON_UNDO;
-      break;
-    case 'r':
-      event.button.id = BUTTON_REDO;
-      break;
-    case '+':
-    case '=': // so that people don't have to press shift
-      event.button.id = BUTTON_ZOOM_IN;
-      break;
-    case '-':
-      event.button.id = BUTTON_ZOOM_OUT;
-      break;
-    default:
-      log_debug("GlutDisplay: Unhandled keypress: '{}' {}+{}", key, x, y);
-      return;
+    events.push(event);
   }
-
-  events.push(event);
 }
 
 void
@@ -547,6 +456,16 @@ GlutDisplay::mouse_motion_func(int x, int y)
 {
   m_mouse_x = x;
   m_mouse_y = y;
+}
+
+void
+GlutDisplay::bind_key(unsigned char key, Action action)
+{
+  if (auto it = m_key_bindings.find(key); it != m_key_bindings.end()) {
+    log_warn("key already bound: {}", static_cast<int>(key));
+  }
+
+  m_key_bindings[key] = action;
 }
 
 void
@@ -560,6 +479,16 @@ GlutDisplay::leave_fullscreen()
   glutPositionWindow(m_window_x_pos, m_window_y_pos);
 
   m_is_fullscreen = false;
+}
+
+void
+GlutDisplay::toggle_fullscreen()
+{
+  if (m_is_fullscreen) {
+    leave_fullscreen();
+  } else {
+    enter_fullscreen();
+  }
 }
 
 void

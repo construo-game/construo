@@ -58,6 +58,8 @@ public:
   /** Leave fullscreen and return to windowed mode */
   virtual void leave_fullscreen() =0;
 
+  virtual void toggle_fullscreen() =0;
+
 private:
   RootGraphicContext (const RootGraphicContext&);
   RootGraphicContext& operator= (const RootGraphicContext&);

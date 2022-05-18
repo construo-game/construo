@@ -269,7 +269,7 @@ GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& off
 }
 
 GUIComponent*
-GUIChildManager::find_component_at(geom::fpoint const& pos)
+GUIChildManager::find_component_at(geom::fpoint const& pos) const
 {
   for (auto& component : m_components)
   {

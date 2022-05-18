@@ -30,6 +30,32 @@
 #define X11_FULLSCREEN_MODE true
 #define X11_WINDOW_MODE     false
 
+struct KeySequence
+{
+  unsigned int m_modifier;
+  KeySym m_key;
+
+  KeySequence(KeySym key) :
+    m_modifier(0),
+    m_key(key)
+  {}
+
+  KeySequence(unsigned int modifier, KeySym key) :
+    m_modifier(modifier),
+    m_key(key)
+  {}
+
+  bool operator==(KeySequence const& other) const = default;
+};
+
+template<>
+struct std::hash<KeySequence>
+{
+  std::size_t operator()(KeySequence const& key) const noexcept {
+    return std::hash<unsigned int>{}(key.m_modifier) ^ std::hash<KeySym>{}(key.m_key);
+  }
+};
+
 /** X11Display driver */
 class X11Display : public RootGraphicContext,
                    public InputContext
@@ -53,7 +79,7 @@ public:
   float get_width() override { return static_cast<float>(m_geometry.width()); }
   float get_height() override { return static_cast<float>(m_geometry.height()); }
 
-  void toggle_fullscreen();
+  void toggle_fullscreen() override;
 
   void clear() override;
 
@@ -84,12 +110,13 @@ public:
 
   void set_cursor_real(CursorType cursor) override;
 
+  void bind_key(KeySequence const& key, Action action);
+
 private:
   void process_event(XEvent& event);
   void process_pending_events();
-  void send_button_press(int i);
-  void send_button_release(int i);
-  void send_load_or_save(int n);
+  void send_button_press(Action action);
+  void send_button_release(Action action);
 
   /** Save the current visual mode for later restoration after leaving
       fullscreen */
@@ -129,7 +156,6 @@ private:
   Drawable m_drawable;
   GC m_gc;
 
-  bool m_shift_pressed;
   int m_mouse_x;
   int m_mouse_y;
 
@@ -140,6 +166,8 @@ private:
   bool m_fullscreen;
 
   std::optional<XConfigureEvent> m_pending_configure_event;
+
+  std::unordered_map<KeySequence, Action> m_key_bindings;
 
 public:
   X11Display(const X11Display&) = delete;

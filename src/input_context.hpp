@@ -22,7 +22,7 @@
 #include <geom/point.hpp>
 
 #include "keys.hpp"
-#include "buttons.hpp"
+#include "action.hpp"
 #include "events.hpp"
 
 class InputContext

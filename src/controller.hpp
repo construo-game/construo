@@ -53,7 +53,7 @@ public:
   /** Save a world by name, name is relative to the construo user directory */
   void save_world(const std::string& name);
 
-  std::string get_slot_filename(int n);
+  std::string get_slot_filename(int slot);
   void save_to_slot(int n);
   void load_from_slot(int n);
 

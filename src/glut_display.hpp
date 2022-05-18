@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_GLUT_DISPLAY_HPP
 #define HEADER_CONSTRUO_GLUT_DISPLAY_HPP
 
+#include <unordered_map>
+
 #include <geom/rect.hpp>
 #include <geom/size.hpp>
 
@@ -74,6 +76,9 @@ public:
 
   void enter_fullscreen() override;
   void leave_fullscreen() override;
+  void toggle_fullscreen() override;
+
+  void bind_key(unsigned char key, Action action);
 
 private:
   /** X-Position of the glut window, used in fullscreen to allow a
@@ -104,6 +109,8 @@ private:
   int m_update_display;
 
   bool m_is_fullscreen;
+
+  std::unordered_map<unsigned char, Action> m_key_bindings;
 
 public:
   GlutDisplay(const GlutDisplay&) = delete;

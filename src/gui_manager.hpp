@@ -65,7 +65,7 @@ public:
 private:
   void process_events ();
   void process_button_events (ButtonEvent&);
-  GUIComponent* find_component_at(geom::fpoint const& pos);
+  GUIComponent* find_component_at(geom::fpoint const& pos) const;
 
 private:
   unsigned int m_frame_count;

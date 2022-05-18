@@ -82,7 +82,7 @@ GUIManager::draw(GraphicContext& gc)
 }
 
 GUIComponent*
-GUIManager::find_component_at(geom::fpoint const& pos)
+GUIManager::find_component_at(geom::fpoint const& pos) const
 {
   GUIComponent* component = nullptr;
   for (auto i = m_components.begin (); i != m_components.end (); ++i)
@@ -104,90 +104,90 @@ GUIManager::process_button_events (ButtonEvent& button)
   {
     switch (button.id)
     {
-      case BUTTON_FULLSCREEN:
-        // graphic_centext->toggle_fullscreen();
+      case Action::FULLSCREEN:
+        g_graphic_context->toggle_fullscreen();
         break;
 
-      case BUTTON_START:
+      case Action::START:
         Controller::instance()->start_simulation();
         break;
 
-      case BUTTON_PRIMARY:
+      case Action::PRIMARY:
         m_current_component->on_primary_button_press(pos);
         break;
 
-      case BUTTON_SECONDARY:
+      case Action::SECONDARY:
         m_current_component->on_secondary_button_press(pos);
         break;
 
-      case BUTTON_TERTIARY:
+      case Action::TERTIARY:
         m_current_component->on_tertiary_button_press(pos);
         break;
 
-      case BUTTON_SCALE:
+      case Action::SCALE:
         m_current_component->on_scale_press(pos);
         break;
 
-      case BUTTON_FIX:
+      case Action::FIX:
         m_current_component->on_fix_press(pos);
         break;
 
-      case BUTTON_JOIN:
+      case Action::JOIN:
         m_current_component->on_join_press(pos);
         break;
 
-      case BUTTON_GRID:
+      case Action::GRID:
         m_current_component->on_grid_press(pos);
         break;
 
-      case BUTTON_DELETE:
+      case Action::DELETE:
         m_current_component->on_delete_press(pos);
         break;
-      case BUTTON_DUPLICATE:
+      case Action::DUPLICATE:
         m_current_component->on_duplicate_press(pos);
         break;
 
-      case BUTTON_SCROLL_LEFT:
+      case Action::SCROLL_LEFT:
         m_current_component->scroll_left();
         break;
 
-      case BUTTON_SCROLL_RIGHT:
+      case Action::SCROLL_RIGHT:
         m_current_component->scroll_right();
         break;
 
-      case BUTTON_SCROLL_UP:
+      case Action::SCROLL_UP:
         m_current_component->scroll_up();
         break;
 
-      case BUTTON_SCROLL_DOWN:
+      case Action::SCROLL_DOWN:
         m_current_component->scroll_down();
         break;
 
-      case BUTTON_CLEAR:
+      case Action::CLEAR:
         Controller::instance()->clear_world();
         break;
 
-      case BUTTON_UNDO:
+      case Action::UNDO:
         Controller::instance()->undo();
         break;
 
-      case BUTTON_REDO:
+      case Action::REDO:
         Controller::instance()->redo();
         break;
 
-      case BUTTON_ACTIONCAM:
+      case Action::ACTIONCAM:
         Controller::instance()->set_action_cam(!Controller::instance()->get_action_cam());
         break;
 
-      case BUTTON_HIDEDOTS:
+      case Action::HIDEDOTS:
         Controller::instance()->set_hide_dots (!Controller::instance()->get_hide_dots());
         break;
 
-      case BUTTON_ESCAPE:
+      case Action::ESCAPE:
         ScreenManager::instance()->quit();
         break;
 
-      case BUTTON_MODE_CHANGE:
+      case Action::MODE_CHANGE:
         if (WorldViewComponent::instance()->get_mode () == WorldViewComponent::INSERT_MODE)
         {
           WorldViewComponent::instance()->set_mode(WorldViewComponent::SELECT_MODE);
@@ -198,50 +198,46 @@ GUIManager::process_button_events (ButtonEvent& button)
         }
         break;
 
-      case BUTTON_TOGGLESLOWMO:
+      case Action::TOGGLESLOWMO:
         Controller::instance()->set_slow_down (!Controller::instance()->slow_down_active());
         break;
 
-      case BUTTON_RUN:
+      case Action::RUN:
         Controller::instance()->start_simulation();
         break;
 
-      case BUTTON_QUICKSAVE0:
-      case BUTTON_QUICKSAVE1:
-      case BUTTON_QUICKSAVE2:
-      case BUTTON_QUICKSAVE3:
-      case BUTTON_QUICKSAVE4:
-      case BUTTON_QUICKSAVE5:
-      case BUTTON_QUICKSAVE6:
-      case BUTTON_QUICKSAVE7:
-      case BUTTON_QUICKSAVE8:
-      case BUTTON_QUICKSAVE9:
-        Controller::instance()->save_to_slot(button.id - BUTTON_QUICKSAVE0);
-        break;
+      case Action::QUICKSAVE0: Controller::instance()->save_to_slot(0); break;
+      case Action::QUICKSAVE1: Controller::instance()->save_to_slot(1); break;
+      case Action::QUICKSAVE2: Controller::instance()->save_to_slot(2); break;
+      case Action::QUICKSAVE3: Controller::instance()->save_to_slot(3); break;
+      case Action::QUICKSAVE4: Controller::instance()->save_to_slot(4); break;
+      case Action::QUICKSAVE5: Controller::instance()->save_to_slot(5); break;
+      case Action::QUICKSAVE6: Controller::instance()->save_to_slot(6); break;
+      case Action::QUICKSAVE7: Controller::instance()->save_to_slot(7); break;
+      case Action::QUICKSAVE8: Controller::instance()->save_to_slot(8); break;
+      case Action::QUICKSAVE9: Controller::instance()->save_to_slot(9); break;
 
-      case BUTTON_QUICKLOAD0:
-      case BUTTON_QUICKLOAD1:
-      case BUTTON_QUICKLOAD2:
-      case BUTTON_QUICKLOAD3:
-      case BUTTON_QUICKLOAD4:
-      case BUTTON_QUICKLOAD5:
-      case BUTTON_QUICKLOAD6:
-      case BUTTON_QUICKLOAD7:
-      case BUTTON_QUICKLOAD8:
-      case BUTTON_QUICKLOAD9:
-        Controller::instance()->load_from_slot(button.id - BUTTON_QUICKLOAD0);
-        break;
+      case Action::QUICKLOAD0: Controller::instance()->load_from_slot(0); break;
+      case Action::QUICKLOAD1: Controller::instance()->load_from_slot(1); break;
+      case Action::QUICKLOAD2: Controller::instance()->load_from_slot(2); break;
+      case Action::QUICKLOAD3: Controller::instance()->load_from_slot(3); break;
+      case Action::QUICKLOAD4: Controller::instance()->load_from_slot(4); break;
+      case Action::QUICKLOAD5: Controller::instance()->load_from_slot(5); break;
+      case Action::QUICKLOAD6: Controller::instance()->load_from_slot(6); break;
+      case Action::QUICKLOAD7: Controller::instance()->load_from_slot(7); break;
+      case Action::QUICKLOAD8: Controller::instance()->load_from_slot(8); break;
+      case Action::QUICKLOAD9: Controller::instance()->load_from_slot(9); break;
 
-      case BUTTON_ZOOM_OUT:
+      case Action::ZOOM_OUT:
         m_current_component->wheel_down(pos);
         break;
 
-      case BUTTON_ZOOM_IN:
+      case Action::ZOOM_IN:
         m_current_component->wheel_up(pos);
         break;
 
       default:
-        m_current_component->on_button_press(button.id, pos);
+        m_current_component->on_button_press(static_cast<int>(button.id), pos);
         break;
     }
   }
@@ -249,20 +245,20 @@ GUIManager::process_button_events (ButtonEvent& button)
   {
     switch (button.id)
     {
-      case BUTTON_PRIMARY:
+      case Action::PRIMARY:
         m_current_component->on_primary_button_release(pos);
         break;
 
-      case BUTTON_SECONDARY:
+      case Action::SECONDARY:
         m_current_component->on_secondary_button_release(pos);
         break;
 
-      case BUTTON_TERTIARY:
+      case Action::TERTIARY:
         m_current_component->on_tertiary_button_release(pos);
         break;
 
       default:
-        log_debug("GUIManager:process_button_events: Got unhandled BUTTON_EVENT release: {}", button.id);
+        log_debug("GUIManager:process_button_events: Got unhandled Action::EVENT release: {}", button.id);
         break;
     }
   }
@@ -322,6 +318,7 @@ GUIManager::process_events()
         case BUTTON_EVENT:
           process_button_events (event.button);
           break;
+
         default:
           log_debug("GUIManager: Unhandled event type: {}", event.type);
           break;

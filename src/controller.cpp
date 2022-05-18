@@ -74,9 +74,9 @@ Controller::save_world (const std::string& filename)
 }
 
 std::string
-Controller::get_slot_filename(int n)
+Controller::get_slot_filename(int slot)
 {
-  return "/user/" + std::string("quicksave") + char('0' + n) + ".construo";
+  return "/user/" + fmt::format("quicksave{:d}.construo", slot);
 }
 
 void

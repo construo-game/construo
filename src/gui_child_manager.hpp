@@ -69,7 +69,7 @@ public:
   void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
 private:
-  GUIComponent* find_component_at(geom::fpoint const& pos);
+  GUIComponent* find_component_at(geom::fpoint const& pos) const;
 
 private:
   std::vector<std::unique_ptr<GUIComponent>> m_components;

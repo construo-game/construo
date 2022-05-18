@@ -32,11 +32,68 @@
 #include "screen_manager.hpp"
 #include "settings.hpp"
 
+namespace {
+
 Atom wm_delete_window;
 
 constexpr long _NET_WM_STATE_REMOVE = 0; /* remove/unset property */
 constexpr long _NET_WM_STATE_ADD = 1;    /* add/set property */
 constexpr long _NET_WM_STATE_TOGGLE = 2; /* toggle property  */
+
+void init_default_keybindings(X11Display& dpy)
+{
+  dpy.bind_key(XK_F11, Action::FULLSCREEN);
+  dpy.bind_key(XK_Left, Action::SCROLL_LEFT);
+  dpy.bind_key(XK_Right, Action::SCROLL_RIGHT);
+  dpy.bind_key(XK_Up, Action::SCROLL_UP);
+  dpy.bind_key(XK_Down, Action::SCROLL_DOWN);
+  dpy.bind_key(XK_a, Action::ACTIONCAM);
+  dpy.bind_key(XK_s, Action::SCALE);
+  dpy.bind_key(XK_j, Action::JOIN);
+  dpy.bind_key(XK_o, Action::HIDEDOTS);
+  dpy.bind_key(XK_v, Action::SETVELOCITY);
+  dpy.bind_key(XK_m, Action::MODE_CHANGE);
+  dpy.bind_key(XK_f, Action::FIX);
+  dpy.bind_key(XK_h, Action::FLIP);
+  dpy.bind_key(XK_c, Action::CLEAR);
+  dpy.bind_key(XK_Delete, Action::DELETE);
+  dpy.bind_key(XK_Escape, Action::ESCAPE);
+  dpy.bind_key(XK_u, Action::UNDO);
+  dpy.bind_key(XK_r, Action::REDO);
+  dpy.bind_key(XK_d, Action::DUPLICATE);
+  dpy.bind_key(XK_space, Action::RUN);
+  dpy.bind_key(XK_g, Action::GRID);
+  dpy.bind_key(XK_Tab, Action::TOGGLESLOWMO);
+  dpy.bind_key(XK_equal, Action::ZOOM_IN);
+  dpy.bind_key(XK_plus, Action::ZOOM_IN);
+  dpy.bind_key(XK_KP_Add,Action::ZOOM_IN);
+  dpy.bind_key(XK_KP_Subtract,Action::ZOOM_OUT);
+  dpy.bind_key(XK_minus, Action::ZOOM_OUT);
+
+  dpy.bind_key(XK_0, Action::QUICKSAVE0);
+  dpy.bind_key(XK_1, Action::QUICKSAVE1);
+  dpy.bind_key(XK_2, Action::QUICKSAVE2);
+  dpy.bind_key(XK_3, Action::QUICKSAVE3);
+  dpy.bind_key(XK_4, Action::QUICKSAVE4);
+  dpy.bind_key(XK_5, Action::QUICKSAVE5);
+  dpy.bind_key(XK_6, Action::QUICKSAVE6);
+  dpy.bind_key(XK_7, Action::QUICKSAVE7);
+  dpy.bind_key(XK_8, Action::QUICKSAVE8);
+  dpy.bind_key(XK_9, Action::QUICKSAVE9);
+
+  dpy.bind_key({ShiftMask, XK_0}, Action::QUICKLOAD0);
+  dpy.bind_key({ShiftMask, XK_1}, Action::QUICKLOAD1);
+  dpy.bind_key({ShiftMask, XK_2}, Action::QUICKLOAD2);
+  dpy.bind_key({ShiftMask, XK_3}, Action::QUICKLOAD3);
+  dpy.bind_key({ShiftMask, XK_4}, Action::QUICKLOAD4);
+  dpy.bind_key({ShiftMask, XK_5}, Action::QUICKLOAD5);
+  dpy.bind_key({ShiftMask, XK_6}, Action::QUICKLOAD6);
+  dpy.bind_key({ShiftMask, XK_7}, Action::QUICKLOAD7);
+  dpy.bind_key({ShiftMask, XK_8}, Action::QUICKLOAD8);
+  dpy.bind_key({ShiftMask, XK_9}, Action::QUICKLOAD9);
+}
+
+} // namespace
 
 X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_) :
   m_cursor_scroll(),
@@ -64,12 +121,12 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   m_colormap(),
   m_drawable(),
   m_gc(),
-  m_shift_pressed (false),
   m_mouse_x(),
   m_mouse_y(),
   m_depth(),
   m_fullscreen(fullscreen_),
-  m_pending_configure_event()
+  m_pending_configure_event(),
+  m_key_bindings()
 {
   log_info("Using X11 display");
   m_display = XOpenDisplay(NULL);
@@ -240,6 +297,8 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   }
 
   set_cursor(CURSOR_INSERT);
+
+  init_default_keybindings(*this);
 }
 
 X11Display::~X11Display()
@@ -492,15 +551,15 @@ X11Display::process_event(XEvent& event)
       {
         // log_info("ButtonID: {} {}", event.xbutton.button, event.xbutton.state);
         if (event.xbutton.button == 1)
-          send_button_press(BUTTON_PRIMARY);
+          send_button_press(Action::PRIMARY);
         else if (event.xbutton.button == 2)
-          send_button_press(BUTTON_TERTIARY);
+          send_button_press(Action::TERTIARY);
         else if (event.xbutton.button == 3)
-          send_button_press(BUTTON_SECONDARY);
+          send_button_press(Action::SECONDARY);
         else if (event.xbutton.button == 4)
-          send_button_press(BUTTON_ZOOM_IN);
+          send_button_press(Action::ZOOM_IN);
         else if (event.xbutton.button == 5)
-          send_button_press(BUTTON_ZOOM_OUT);
+          send_button_press(Action::ZOOM_OUT);
       }
       break;
 
@@ -508,166 +567,34 @@ X11Display::process_event(XEvent& event)
       {
         // log_debug("ButtonID: {} {}", event.xbutton.button, event.xbutton.state);
         if (event.xbutton.button == 1)
-          send_button_release(BUTTON_PRIMARY);
+          send_button_release(Action::PRIMARY);
         else if (event.xbutton.button == 2)
-          send_button_release(BUTTON_TERTIARY);
+          send_button_release(Action::TERTIARY);
         else if (event.xbutton.button == 3)
-          send_button_release(BUTTON_SECONDARY);
+          send_button_release(Action::SECONDARY);
         else if (event.xbutton.button == 4)
-          send_button_release(BUTTON_ZOOM_IN);
+          send_button_release(Action::ZOOM_IN);
         else if (event.xbutton.button == 5)
-          send_button_release(BUTTON_ZOOM_OUT);
+          send_button_release(Action::ZOOM_OUT);
       }
       break;
 
     case KeyPress:
       {
-        KeySym sym = XLookupKeysym(&event.xkey,0);
-
-        switch (sym)
-        {
-          case XK_F11:
-            // FIXME: Shortcut
-            //send_button_press(BUTTON_FULLSCREEN);
-            toggle_fullscreen();
-            break;
-
-          case XK_Left:
-            send_button_press(BUTTON_SCROLL_LEFT);
-            break;
-
-          case XK_Right:
-            send_button_press(BUTTON_SCROLL_RIGHT);
-            break;
-
-          case XK_Up:
-            send_button_press(BUTTON_SCROLL_UP);
-            break;
-
-          case XK_Down:
-            send_button_press(BUTTON_SCROLL_DOWN);
-            break;
-
-          case XK_a:
-            send_button_press(BUTTON_ACTIONCAM);
-            break;
-
-          case XK_s:
-            send_button_press(BUTTON_SCALE);
-            break;
-
-          case XK_j:
-            send_button_press(BUTTON_JOIN);
-            break;
-
-          case XK_o:
-            send_button_press(BUTTON_HIDEDOTS);
-            break;
-
-          case XK_v:
-            send_button_press(BUTTON_SETVELOCITY);
-            break;
-
-          case XK_Shift_L:
-          case XK_Shift_R:
-            m_shift_pressed = true;
-            break;
-          case XK_m:
-            send_button_press(BUTTON_MODE_CHANGE);
-            break;
-          case XK_f:
-            send_button_press(BUTTON_FIX);
-            break;
-          case XK_h:
-            send_button_press(BUTTON_FLIP);
-            break;
-          case XK_c:
-            send_button_press(BUTTON_CLEAR);
-            break;
-          case XK_Delete:
-            send_button_press(BUTTON_DELETE);
-            break;
-          case XK_Escape:
-            send_button_press(BUTTON_ESCAPE);
-            break;
-          case XK_u:
-            send_button_press(BUTTON_UNDO);
-            break;
-          case XK_r:
-            send_button_press(BUTTON_REDO);
-            break;
-          case XK_d:
-            send_button_press(BUTTON_DUPLICATE);
-            break;
-          case XK_space:
-            send_button_press(BUTTON_RUN);
-            break;
-          case XK_g:
-            send_button_press(BUTTON_GRID);
-            break;
-          case XK_Tab:
-            send_button_press(BUTTON_TOGGLESLOWMO);
-            break;
-          case 65451: // FIXME: insert symbol here
-          case XK_equal:
-          case XK_plus:
-            send_button_press(BUTTON_ZOOM_IN);
-            break;
-          case 65453: // FIXME: insert symbol here
-          case XK_minus:
-            send_button_press(BUTTON_ZOOM_OUT);
-            break;
-          case XK_0:
-            send_load_or_save(0);
-            break;
-          case XK_1:
-            send_load_or_save(1);
-            break;
-          case XK_2:
-            send_load_or_save(2);
-            break;
-          case XK_3:
-            send_load_or_save(3);
-            break;
-          case XK_4:
-            send_load_or_save(4);
-            break;
-          case XK_5:
-            send_load_or_save(5);
-            break;
-          case XK_6:
-            send_load_or_save(6);
-            break;
-          case XK_7:
-            send_load_or_save(7);
-            break;
-          case XK_8:
-            send_load_or_save(8);
-            break;
-          case XK_9:
-            send_load_or_save(9);
-            break;
-
-          default:
-            log_debug("X11Display: unhandled keypress: {}", sym);
-            break;
+        KeySym const sym = XLookupKeysym(&event.xkey, 0);
+        if (auto const it = m_key_bindings.find(KeySequence(event.xkey.state, sym)); it != m_key_bindings.end()) {
+          send_button_press(it->second);
+        } else {
+          log_debug("X11Display: unhandled keypress: {}", sym);
         }
       }
       break;
 
     case KeyRelease:
       {
-        KeySym sym = XLookupKeysym(&event.xkey, 0);
-
-        switch (sym)
-        {
-          case XK_Shift_L:
-          case XK_Shift_R:
-            m_shift_pressed = false;
-            break;
-          default:
-            // log_debug("X11Display: unhandled keyrelease: {}", sym);
-            break;
+        KeySym const sym = XLookupKeysym(&event.xkey, 0);
+        if (auto const it = m_key_bindings.find(KeySequence(event.xkey.state, sym)); it != m_key_bindings.end()) {
+          send_button_release(it->second);
         }
       }
       break;
@@ -689,7 +616,7 @@ X11Display::process_event(XEvent& event)
       // Window close request
       if (static_cast<int>(event.xclient.data.l[0]) == static_cast<int>(wm_delete_window)) {
         log_debug("Window is destroyed");
-        send_button_press(BUTTON_ESCAPE);
+        send_button_press(Action::ESCAPE);
       }
       break;
 
@@ -700,30 +627,21 @@ X11Display::process_event(XEvent& event)
 }
 
 void
-X11Display::send_load_or_save(int n)
-{
-  if (m_shift_pressed)
-    send_button_press(BUTTON_QUICKLOAD0 + n);
-  else
-    send_button_press(BUTTON_QUICKSAVE0 + n);
-}
-
-void
-X11Display::send_button_press (int i)
+X11Display::send_button_press(Action action)
 {
   Event ev;
   ev.button.type = BUTTON_EVENT;
-  ev.button.id = i;
+  ev.button.id = action;
   ev.button.pressed = true;
   events.push(ev);
 }
 
 void
-X11Display::send_button_release (int i)
+X11Display::send_button_release(Action action)
 {
   Event ev;
   ev.button.type = BUTTON_EVENT;
-  ev.button.id = i;
+  ev.button.id = action;
   ev.button.pressed = false;
   events.push(ev);
 }
@@ -894,6 +812,16 @@ X11Display::get_xcolor(const Color& color)
 
   return x_color;
 
+}
+
+void
+X11Display::bind_key(KeySequence const& key, Action action)
+{
+  if (auto it = m_key_bindings.find(key); it != m_key_bindings.end()) {
+    log_warn("key already bound: {}", static_cast<int>(key.m_key));
+  }
+
+  m_key_bindings[key] = action;
 }
 
 /* EOF */

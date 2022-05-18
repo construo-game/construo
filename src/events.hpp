@@ -17,12 +17,14 @@
 #ifndef HEADER_CONSTRUO_EVENTS_HPP
 #define HEADER_CONSTRUO_EVENTS_HPP
 
+#include "action.hpp"
+
 enum { BUTTON_EVENT };
 
 struct ButtonEvent
 {
   int  type;
-  int  id;
+  Action id;
   bool pressed;
 };
 

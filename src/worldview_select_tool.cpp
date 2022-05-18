@@ -410,15 +410,15 @@ WorldViewSelectTool::on_button_press(int button_id, geom::fpoint const& screen_p
 {
   geom::fpoint pos = m_worldview.zoom().screen_to_world(screen_pos);
 
-  switch(button_id)
+  switch (static_cast<Action>(button_id))
   {
-    case BUTTON_SETVELOCITY:
+    case Action::SETVELOCITY:
       if (!m_selection.empty()) {
         m_selection.set_velocity(pos.as_vec() - m_selection.get_center());
       }
       break;
 
-    case BUTTON_FLIP:
+    case Action::FLIP:
       m_selection.flip();
       break;
 
