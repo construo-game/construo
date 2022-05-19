@@ -20,6 +20,9 @@
 #include <cassert>
 #include <cmath>
 
+#include <geom/point.hpp>
+#include <geom/size.hpp>
+
 /** A collection of small math helper functions, some of them might be
     equal in functionality to standard STL functions, but provided
     here for portability and broken STL implementations
@@ -41,6 +44,13 @@ inline float round_to_float(float x, float n)
   if (n == 0) { return x; }
 
   return std::round(x / n) * n;
+}
+
+inline
+geom::fpoint round_to(geom::fpoint const& point, geom::fsize const& size)
+{
+  return geom::fpoint(round_to_float(point.x(), size.width()),
+                      round_to_float(point.y(), size.height()));
 }
 
 /** Get exponent of x */

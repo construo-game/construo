@@ -82,18 +82,6 @@ GCZoomState::world_to_screen(geom::fpoint const& pos) const
                       (pos.y() + m_offset.y()) * m_scale + m_bounding_box.top());
 }
 
-float
-GCZoomState::screen_to_world_x(float x) const
-{
-  return (x / m_scale) - m_offset.x();
-}
-
-float
-GCZoomState::screen_to_world_y(float y) const
-{
-  return (y / m_scale) - m_offset.y();
-}
-
 void
 GCZoomState::move_to(geom::fpoint const& pos)
 {
