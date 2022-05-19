@@ -70,11 +70,7 @@ public:
  /** FIXME: What exactly is an offset?! */
   void set_offset(geom::foffset const& offset);
 
-  /** FIXME: What exactly is an offset?! */
-  float get_x_offset() { return m_x_offset; }
-
-  /** FIXME: What exactly is an offset?! */
-  float get_y_offset() { return m_y_offset; }
+  geom::foffset get_offset() const { return m_offset; }
 
   /** @return current zoom factor in use */
   float get_scale() const { return m_scale; }
@@ -103,12 +99,8 @@ public:
   }
 
 private:
-  // bounding box
   geom::frect m_bounding_box;
-
-  // zoom state
-  float m_x_offset;
-  float m_y_offset;
+  geom::foffset m_offset;
   float m_scale;
 };
 

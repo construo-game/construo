@@ -18,8 +18,7 @@
 
 GCZoomState::GCZoomState(geom::frect const& rect) :
   m_bounding_box(rect),
-  m_x_offset(0.0f),
-  m_y_offset(0.0f),
+  m_offset(0.0f, 0.0f),
   m_scale(1.0f)
 {
 }
@@ -33,14 +32,13 @@ GCZoomState::zoom_in(geom::fpoint const& screen_pos)
   {
     float old_zoom = m_scale;
     set_zoom(m_scale * 1.2f);
-    m_x_offset = screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_x_offset;
-    m_y_offset = screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_y_offset;
-
+    m_offset = geom::foffset(screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_offset.x(),
+                             screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_offset.y());
   }
   else
   {
-    m_x_offset = (pos.x() + m_x_offset) / 1.2f - pos.x();
-    m_y_offset = (pos.y() + m_y_offset) / 1.2f - pos.y();
+    m_offset = geom::foffset((pos.x() + m_offset.x()) / 1.2f - pos.x(),
+                             (pos.y() + m_offset.y()) / 1.2f - pos.y());
     m_scale *= 1.2f;
   }
 
@@ -56,13 +54,13 @@ GCZoomState::zoom_out(geom::fpoint const& screen_pos)
   {
     float const old_zoom = m_scale;
     set_zoom(m_scale / 1.2f);
-    m_x_offset = screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_x_offset;
-    m_y_offset = screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_y_offset;
+    m_offset = geom::foffset(screen_pos.x() / m_scale - screen_pos.x() / old_zoom + m_offset.x(),
+                             screen_pos.y() / m_scale - screen_pos.y() / old_zoom + m_offset.y());
   }
   else
   {
-    m_x_offset = (pos.x() + m_x_offset) * 1.2f - pos.x();
-    m_y_offset = (pos.y() + m_y_offset) * 1.2f - pos.y();
+    m_offset = geom::foffset((pos.x() + m_offset.x()) * 1.2f - pos.x(),
+                             (pos.y() + m_offset.y()) * 1.2f - pos.y());
 
     m_scale *= (1.0f/1.2f);
   }
@@ -73,48 +71,46 @@ GCZoomState::zoom_out(geom::fpoint const& screen_pos)
 geom::fpoint
 GCZoomState::screen_to_world(geom::fpoint const& pos) const
 {
-  return geom::fpoint((pos.x() / m_scale) - m_x_offset,
-                      (pos.y() / m_scale) - m_y_offset);
+  return geom::fpoint((pos.x() / m_scale) - m_offset.x(),
+                      (pos.y() / m_scale) - m_offset.y());
 }
 
 geom::fpoint
 GCZoomState::world_to_screen(geom::fpoint const& pos) const
 {
-  return geom::fpoint((pos.x() + m_x_offset) * m_scale + m_bounding_box.left(),
-                      (pos.y() + m_y_offset) * m_scale + m_bounding_box.top());
+  return geom::fpoint((pos.x() + m_offset.x()) * m_scale + m_bounding_box.left(),
+                      (pos.y() + m_offset.y()) * m_scale + m_bounding_box.top());
 }
 
 float
 GCZoomState::screen_to_world_x(float x) const
 {
-  return (x / m_scale) - m_x_offset;
+  return (x / m_scale) - m_offset.x();
 }
 
 float
 GCZoomState::screen_to_world_y(float y) const
 {
-  return (y / m_scale) - m_y_offset;
+  return (y / m_scale) - m_offset.y();
 }
 
 void
 GCZoomState::move_to(geom::fpoint const& pos)
 {
-  m_x_offset = (m_bounding_box.width()  / (2 * m_scale)) + pos.x();
-  m_y_offset = (m_bounding_box.height() / (2 * m_scale)) + pos.y();
+  m_offset = geom::foffset((m_bounding_box.width()  / (2 * m_scale)) + pos.x(),
+                           (m_bounding_box.height() / (2 * m_scale)) + pos.y());
 }
 
 void
 GCZoomState::translate(geom::foffset const& offset)
 {
-  m_x_offset -= offset.x();
-  m_y_offset -= offset.y();
+  m_offset -= offset;
 }
 
 void
 GCZoomState::set_offset(geom::foffset const& offset)
 {
-  m_x_offset = offset.x();
-  m_y_offset = offset.y();
+  m_offset = offset;
 }
 
 bool
@@ -160,8 +156,8 @@ GCZoomState::zoom_to(geom::frect const& rect)
     set_zoom(m_bounding_box.height()/height);
   }
 
-  m_x_offset = (m_bounding_box.width()  / (2 * m_scale)) - center_x;
-  m_y_offset = (m_bounding_box.height() / (2 * m_scale)) - center_y;
+  m_offset = geom::foffset((m_bounding_box.width()  / (2 * m_scale)) - center_x,
+                           (m_bounding_box.height() / (2 * m_scale)) - center_y);
 }
 
 /* EOF */

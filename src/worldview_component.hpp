@@ -103,8 +103,7 @@ private:
 
   geom::fpoint m_scroll_pos;
 
-  float m_x_offset;
-  float m_y_offset;
+  geom::foffset m_offset;
 
   /** If the user clicks in this component, the tool decides what to
       do */
