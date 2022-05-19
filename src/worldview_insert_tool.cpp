@@ -107,8 +107,7 @@ void
 WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
 {
   World& world = Controller::instance()->get_world();
-  float const x = m_worldview.zoom().screen_to_world_x(screen_pos.x());
-  float const y = m_worldview.zoom().screen_to_world_y(screen_pos.y());
+  geom::fpoint const pos = m_worldview.zoom().screen_to_world(screen_pos);
 
   if (m_previous_particle) // create a spring that connects two particles
   {
@@ -127,10 +126,10 @@ WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
 
         float const grid_size = m_worldview.get_snap_size();
         if (m_worldview.uses_grid()) {
-          new_particle_pos = glm::vec2(Math::round_to_float(x, grid_size),
-                                       Math::round_to_float(y, grid_size));
+          new_particle_pos = glm::vec2(Math::round_to_float(pos.x(), grid_size),
+                                       Math::round_to_float(pos.y(), grid_size));
         } else {
-          new_particle_pos = glm::vec2(x, y);
+          new_particle_pos = pos.as_vec();
         }
 
         if (new_particle_pos == m_previous_particle->pos) {
@@ -170,10 +169,10 @@ WorldViewInsertTool::on_primary_button_press(geom::fpoint const& screen_pos)
 
       glm::vec2 new_particle_pos(0.0f, 0.0f);
       if (m_worldview.uses_grid()) {
-        new_particle_pos = glm::vec2(Math::round_to_float(x, grid_size),
-                                     Math::round_to_float(y, grid_size));
+        new_particle_pos = glm::vec2(Math::round_to_float(pos.x(), grid_size),
+                                     Math::round_to_float(pos.y(), grid_size));
       } else {
-        new_particle_pos = glm::vec2(x, y);
+        new_particle_pos = pos.as_vec();
       }
 
       Particle* p = world.get_particle_mgr().add_particle(new_particle_pos,

@@ -119,8 +119,7 @@ WorldViewSelectTool::on_primary_button_press(geom::fpoint const& screen_pos)
   {
     case IDLE_MODE:
       {
-        float x = m_worldview.zoom().screen_to_world_x(screen_pos.x());
-        float y = m_worldview.zoom().screen_to_world_y(screen_pos.y());
+        geom::fpoint pos = m_worldview.zoom().screen_to_world(screen_pos);
 
         World& world = Controller::instance()->get_world();
 
@@ -128,12 +127,12 @@ WorldViewSelectTool::on_primary_button_press(geom::fpoint const& screen_pos)
 
         m_mode = GETTING_SELECTION_MODE;
 
-        m_click_pos = geom::fpoint(x, y);
+        m_click_pos = pos;
 
         float const capture_distance = 20.0f / m_worldview.zoom().get_scale();
 
         // If the mouse clicks on a particle from the selection, we move the selection
-        Particle* new_current_particle = world.find_particle(geom::fpoint(x, y), capture_distance);
+        Particle* new_current_particle = world.find_particle(pos, capture_distance);
         for (auto i = m_selection.begin (); i != m_selection.end (); ++i)
         {
           if (new_current_particle == *i)
@@ -304,8 +303,7 @@ WorldViewSelectTool::on_mouse_move(geom::fpoint const& screen_pos, geom::foffset
   {
     case MOVING_SELECTION_MODE:
       {
-        glm::vec2 const new_pos(m_worldview.zoom().screen_to_world_x(screen_pos.x()),
-                                m_worldview.zoom().screen_to_world_y(screen_pos.y()));
+        glm::vec2 const new_pos(m_worldview.zoom().screen_to_world(screen_pos).as_vec());
 
         glm::vec2 diff = new_pos - m_click_pos.as_vec();
 
@@ -356,8 +354,7 @@ WorldViewSelectTool::on_mouse_move(geom::fpoint const& screen_pos, geom::foffset
 
     case ROTATING_SELECTION_MODE:
       {
-        glm::vec2 new_pos(m_worldview.zoom().screen_to_world_x(screen_pos.x()),
-                          m_worldview.zoom().screen_to_world_y(screen_pos.y()));
+        glm::vec2 new_pos = m_worldview.zoom().screen_to_world(screen_pos).as_vec();
 
         float new_angle = atan2(new_pos.y - m_rotate_center.y,
                                 new_pos.x - m_rotate_center.x);
