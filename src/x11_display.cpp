@@ -295,7 +295,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
                                             cursor_collider_x_hot, cursor_collider_y_hot);
   }
 
-  set_cursor(CURSOR_INSERT);
+  set_cursor(CursorType::INSERT);
 
   init_default_keybindings(*this);
 }
@@ -315,19 +315,19 @@ X11Display::set_cursor_real(CursorType cursor)
 {
   switch(cursor)
   {
-    case CURSOR_INSERT:
+    case CursorType::INSERT:
       XDefineCursor(m_display, m_window, m_cursor_insert);
       break;
-    case CURSOR_SCROLL:
+    case CursorType::SCROLL:
       XDefineCursor(m_display, m_window, m_cursor_scroll);
       break;
-    case CURSOR_ZOOM:
+    case CursorType::ZOOM:
       XDefineCursor(m_display, m_window, m_cursor_zoom);
       break;
-    case CURSOR_COLLIDER:
+    case CursorType::COLLIDER:
       XDefineCursor(m_display, m_window, m_cursor_collider);
       break;
-    case CURSOR_SELECT:
+    case CursorType::SELECT:
       XDefineCursor(m_display, m_window, m_cursor_select);
       break;
     default:

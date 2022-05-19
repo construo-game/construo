@@ -209,7 +209,7 @@ WorldViewSelectTool::on_secondary_button_press (geom::fpoint const& screen_pos)
       {
         Controller::instance()->push_undo();
         g_graphic_context->push_cursor();
-        g_graphic_context->set_cursor(CURSOR_ROTATE);
+        g_graphic_context->set_cursor(CursorType::ROTATE);
 
         m_mode = ROTATING_SELECTION_MODE;
         WorldGUIManager::instance()->grab_mouse(m_worldview);
@@ -380,7 +380,7 @@ WorldViewSelectTool::on_scale_press(geom::fpoint const& pos)
     m_rotate_center = m_selection.get_center();
     Controller::instance()->push_undo();
     g_graphic_context->push_cursor();
-    g_graphic_context->set_cursor(CURSOR_SCALE);
+    g_graphic_context->set_cursor(CursorType::SCALE);
 
     m_click_pos = m_worldview.zoom().screen_to_world(pos);
     WorldGUIManager::instance()->grab_mouse(m_worldview);

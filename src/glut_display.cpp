@@ -537,22 +537,22 @@ GlutDisplay::set_cursor_real(CursorType cursor)
 {
   switch(cursor)
   {
-    case CURSOR_INSERT:
+    case CursorType::INSERT:
       glutSetCursor(GLUT_CURSOR_CROSSHAIR);
       break;
-    case CURSOR_SCROLL:
+    case CursorType::SCROLL:
       glutSetCursor(GLUT_CURSOR_INFO);
       break;
-    case CURSOR_ZOOM:
+    case CursorType::ZOOM:
       glutSetCursor(GLUT_CURSOR_HELP);
       break;
-    case CURSOR_COLLIDER:
+    case CursorType::COLLIDER:
       glutSetCursor(GLUT_CURSOR_CROSSHAIR);
       break;
-    case CURSOR_SELECT:
+    case CursorType::SELECT:
       glutSetCursor(GLUT_CURSOR_INHERIT);
       break;
-    case CURSOR_ROTATE:
+    case CursorType::ROTATE:
       glutSetCursor(GLUT_CURSOR_CYCLE);
       break;
     default:

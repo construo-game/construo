@@ -18,14 +18,14 @@
 #define HEADER_CURSORS_HPP
 
 /** Different cursor types */
-enum CursorType {
-  CURSOR_SELECT,
-  CURSOR_SCROLL,
-  CURSOR_ZOOM,
-  CURSOR_INSERT,
-  CURSOR_ROTATE,
-  CURSOR_SCALE,
-  CURSOR_COLLIDER
+enum class CursorType {
+  SELECT,
+  SCROLL,
+  ZOOM,
+  INSERT,
+  ROTATE,
+  SCALE,
+  COLLIDER
 };
 
 #endif
