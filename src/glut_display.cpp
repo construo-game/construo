@@ -417,7 +417,7 @@ GlutDisplay::special_func(int key, int x, int y)
 void
 GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 {
-  if (auto const it = m_key_bindings.find(key); it != m_key_bindings.end()) {
+  if (auto const it = m_key_bindings.find(key); it == m_key_bindings.end()) {
     log_debug("GlutDisplay: Unhandled keypress: '{}' {}+{}", key, x, y);
   } else {
     Event event;
