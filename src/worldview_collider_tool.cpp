@@ -41,25 +41,24 @@ WorldViewColliderTool::~WorldViewColliderTool()
 }
 
 void
-WorldViewColliderTool::draw_background (ZoomGraphicContext& gc)
+WorldViewColliderTool::draw_background(ZoomGraphicContext& gc)
 {
-  geom::fpoint mouse_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
-  if (m_creating_rect)
-  {
-    gc.draw_rect(geom::normalize(geom::frect(m_click_pos, mouse_pos)), g_style.selection_rect);
-  }
 }
 
 void
-WorldViewColliderTool::draw_foreground (ZoomGraphicContext& gc)
+WorldViewColliderTool::draw_foreground(ZoomGraphicContext& gc)
 {
   World const& world = Controller::instance()->get_world();
 
   geom::fpoint const mouse_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
-  Collider* collider = world.find_collider(mouse_pos);
 
-  if (collider) {
+  if (Collider* collider = world.find_collider(mouse_pos)) {
     WorldRenderer::draw_collider_highlight(gc, *collider);
+  }
+
+  if (m_creating_rect)
+  {
+    gc.draw_rect(geom::normalize(geom::frect(m_click_pos, mouse_pos)), g_style.selection_rect);
   }
 }
 
