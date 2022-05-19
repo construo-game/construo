@@ -96,21 +96,15 @@ public:
   /** Convert a coordinate from world units to screen units */
   geom::fpoint world_to_screen(geom::fpoint const& pos) const;
 
-  geom::frect bounding_box() const { return geom::frect(m_x1, m_y1, m_x2, m_y2); }
+  geom::frect bounding_box() const { return m_bounding_box; }
 
   void set_bounding_box(geom::frect const& rect) {
-    m_x1 = rect.left();
-    m_y1 = rect.top();
-    m_x2 = rect.right();
-    m_y2 = rect.bottom();
+    m_bounding_box = rect;
   }
 
 private:
   // bounding box
-  float m_x1;
-  float m_y1;
-  float m_x2;
-  float m_y2;
+  geom::frect m_bounding_box;
 
   // zoom state
   float m_x_offset;

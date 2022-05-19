@@ -17,10 +17,7 @@
 #include "zoom_state.hpp"
 
 GCZoomState::GCZoomState(geom::frect const& rect) :
-  m_x1(rect.left()),
-  m_y1(rect.top()),
-  m_x2(rect.right()),
-  m_y2(rect.bottom()),
+  m_bounding_box(rect),
   m_x_offset(0.0f),
   m_y_offset(0.0f),
   m_scale(1.0f)
@@ -83,8 +80,8 @@ GCZoomState::screen_to_world(geom::fpoint const& pos) const
 geom::fpoint
 GCZoomState::world_to_screen(geom::fpoint const& pos) const
 {
-  return geom::fpoint((pos.x() + m_x_offset) * m_scale + static_cast<float>(m_x1),
-                      (pos.y() + m_y_offset) * m_scale + m_y1);
+  return geom::fpoint((pos.x() + m_x_offset) * m_scale + m_bounding_box.left(),
+                      (pos.y() + m_y_offset) * m_scale + m_bounding_box.top());
 }
 
 float
@@ -102,8 +99,8 @@ GCZoomState::screen_to_world_y(float y) const
 void
 GCZoomState::move_to(geom::fpoint const& pos)
 {
-  m_x_offset = (bounding_box().width()  / (2 * m_scale)) + pos.x();
-  m_y_offset = (bounding_box().height() / (2 * m_scale)) + pos.y();
+  m_x_offset = (m_bounding_box.width()  / (2 * m_scale)) + pos.x();
+  m_y_offset = (m_bounding_box.height() / (2 * m_scale)) + pos.y();
 }
 
 void
@@ -151,20 +148,20 @@ GCZoomState::zoom_to(geom::frect const& rect)
 
   float const width  = rect.right() - rect.left();
   float const height = rect.bottom() - rect.top();
-  float const screen_relation = bounding_box().height() / bounding_box().width();
+  float const screen_relation = m_bounding_box.height() / m_bounding_box.width();
   float const rect_relation   = height/width;
 
   if (rect_relation < screen_relation) // take width, ignore height
   {
-    set_zoom(bounding_box().width() / width);
+    set_zoom(m_bounding_box.width() / width);
   }
   else // take height, ignore width
   {
-    set_zoom(bounding_box().height()/height);
+    set_zoom(m_bounding_box.height()/height);
   }
 
-  m_x_offset = (bounding_box().width()  / (2 * m_scale)) - center_x;
-  m_y_offset = (bounding_box().height() / (2 * m_scale)) - center_y;
+  m_x_offset = (m_bounding_box.width()  / (2 * m_scale)) - center_x;
+  m_y_offset = (m_bounding_box.height() / (2 * m_scale)) - center_y;
 }
 
 /* EOF */
