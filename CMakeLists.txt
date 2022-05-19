@@ -183,10 +183,6 @@ if(X11_FOUND)
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
   target_link_libraries(construo.x11 libconstruo prio::prio X11::X11)
 
-  if(X11_Xext_FOUND)
-    target_link_libraries(construo.x11 ${X11_Xext_LIB})
-  endif()
-
   install(TARGETS construo.x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   install(FILES
