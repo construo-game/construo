@@ -129,14 +129,13 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 {
   GraphicContext& parent_gc = gc.get_parent_gc();
 
-  if (gc.zoom().screen_to_world_y(parent_gc.get_height()) < 599) {
+  if (gc.zoom().screen_to_world_y(parent_gc.geometry().height()) < 599) {
     // ground is not in view, so skip it
     return;
   }
 
     gc.draw_fill_rect(geom::frect(geom::fpoint(gc.zoom().screen_to_world_x(0), 599),
-                                  geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                                               gc.zoom().screen_to_world_y(parent_gc.get_height()))),
+                                  gc.zoom().screen_to_world(geom::fpoint(parent_gc.geometry().size()))),
                       g_style.ground_color);
 
     // draw grid
@@ -167,8 +166,7 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 
     gc.draw_rect(geom::frect(geom::fpoint(gc.zoom().screen_to_world_x(0),
                                           599),
-                             geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
-                                          gc.zoom().screen_to_world_y(parent_gc.get_height()))),
+                             gc.zoom().screen_to_world(geom::fpoint(parent_gc.geometry().size()))),
                  g_style.rect_collider_bg);
 }
 

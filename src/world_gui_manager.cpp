@@ -132,12 +132,10 @@ WorldGUIManager::WorldGUIManager() :
 
   m_zoomout_button = create<GUIButton>(
     "-",
-    [this]{ m_worldview_component->wheel_up(geom::fpoint(g_graphic_context->get_width()/2,
-                                                         g_graphic_context->get_height()/2)); });
+    [this]{ m_worldview_component->wheel_up(geom::center(g_graphic_context->geometry())); });
   m_zoomin_button = create<GUIButton>(
     "+",
-    [this]{ m_worldview_component->wheel_down(geom::fpoint(g_graphic_context->get_width()/2,
-                                                           g_graphic_context->get_height()/2)); });
+    [this]{ m_worldview_component->wheel_down(geom::center(g_graphic_context->geometry())); });
 
   // particle mass
   m_particle_mass_label = create<GUILabel>([]{
@@ -320,7 +318,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   World& world = Controller::instance()->get_world ();
 
-  float const bottom_line = gc.get_height() - 10;
+  float const bottom_line = gc.geometry().height() - 10;
   gc.draw_string(geom::fpoint(10.0f, bottom_line - 20.0f), "FPS: ");
   gc.draw_string(geom::fpoint(80.0f, bottom_line - 20.0f), fmt::format("{:6.2f}", get_fps()));
 

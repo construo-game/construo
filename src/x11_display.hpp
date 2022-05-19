@@ -76,8 +76,6 @@ public:
   void draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color) override;
 
   geom::frect geometry() const override { return geom::frect(m_geometry); }
-  float get_width() override { return static_cast<float>(m_geometry.width()); }
-  float get_height() override { return static_cast<float>(m_geometry.height()); }
 
   void toggle_fullscreen() override;
 

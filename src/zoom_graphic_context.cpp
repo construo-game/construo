@@ -131,16 +131,10 @@ ZoomGraphicContext::draw_string(geom::fpoint const& pos, const std::string& str,
   m_parent_gc.draw_string(m_zoom.world_to_screen(pos), str, color);
 }
 
-float
-ZoomGraphicContext::get_width()
+geom::frect
+ZoomGraphicContext::geometry() const
 {
-  return m_zoom.bounding_width();
-}
-
-float
-ZoomGraphicContext::get_height()
-{
-  return m_zoom.bounding_height();
+  return m_zoom.bounding_box();
 }
 
 /* EOF */

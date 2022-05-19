@@ -60,7 +60,7 @@ GUIChildManager::clear()
 void
 GUIChildManager::draw(GraphicContext& parent_gc)
 {
-  GCZoomState zoom(geom::frect(geom::fsize(parent_gc.get_width(), parent_gc.get_height())));
+  GCZoomState zoom(geom::frect(parent_gc.geometry().size()));
   zoom.set_offset(m_geometry.topleft());
 
   ZoomGraphicContext gc(parent_gc, zoom);

@@ -41,9 +41,6 @@ public:
   {}
   virtual ~RootGraphicContext() {}
 
-  /** Return the window size and position */
-  virtual geom::frect geometry() const = 0;
-
   void set_cursor(CursorType);
   void push_cursor();
   void pop_cursor();

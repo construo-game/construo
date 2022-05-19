@@ -39,7 +39,7 @@ LoadGUIManager::set_geometry(geom::frect const& geometry)
 void
 LoadGUIManager::draw_overlay(GraphicContext& gc)
 {
-  gc.draw_string(geom::fpoint(10.0f, gc.get_height() - 10.0f),
+  gc.draw_string(geom::fpoint(10.0f, gc.geometry().height() - 10.0f),
                  "Load Dialog");
 }
 

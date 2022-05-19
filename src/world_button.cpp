@@ -62,8 +62,9 @@ WorldButton::draw(GraphicContext& parent_gc)
   else
   {
     // Draw an 'X' for broken levels
-    gc.draw_line(geom::fpoint(0, 0), geom::fpoint(gc.get_width(), gc.get_height()), Color (0xFF00FFFF));
-    gc.draw_line(geom::fpoint(0, gc.get_height()), geom::fpoint(gc.get_width(), 0), Color (0xFF00FFFF));
+    gc.draw_line(geom::fpoint(0, 0), geom::fpoint(gc.geometry().size()), Color (0xFF00FFFF));
+    gc.draw_line(geom::fpoint(0, gc.geometry().height()), geom::fpoint(gc.geometry().width(), 0),
+                 Color (0xFF00FFFF));
   }
 
   gc.unlock();

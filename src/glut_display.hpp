@@ -51,8 +51,6 @@ public:
     return geom::frect(geom::fsize(static_cast<float>(m_width),
                                    static_cast<float>(m_height)));
   }
-  float get_width() override { return static_cast<float>(m_width); }
-  float get_height() override { return static_cast<float>(m_height); }
 
   geom::fpoint get_mouse_pos() const override;
 

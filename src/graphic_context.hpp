@@ -59,8 +59,8 @@ public:
   virtual void set_clip_rect(geom::frect const& rect) = 0;
   virtual void clear_clip_rect() = 0;
 
-  virtual float get_width()  = 0;
-  virtual float get_height() = 0;
+  /** Return the window size and position */
+  virtual geom::frect geometry() const = 0;
 
   virtual void clear() = 0;
 

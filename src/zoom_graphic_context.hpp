@@ -43,8 +43,7 @@ public:
   void draw_string(geom::fpoint const& pos, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
   void draw_string_centered(geom::fpoint const& pos, const std::string& str, Color color = Color(0xFFFFFFFF)) override;
 
-  float get_width() override;
-  float get_height() override;
+  geom::frect geometry() const override;
 
   void clear() override { m_parent_gc.clear(); }
 

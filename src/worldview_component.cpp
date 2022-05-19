@@ -31,7 +31,7 @@ WorldViewComponent* WorldViewComponent::instance_;
 
 WorldViewComponent::WorldViewComponent() :
   GUIComponent(),
-  m_zoom(geom::frect(geom::fsize(g_graphic_context->get_width(), g_graphic_context->get_height()))),
+  m_zoom(g_graphic_context->geometry()),
   m_use_grid(false),
   m_grid_base_size(10),
   m_grid_constant(5),
@@ -153,16 +153,16 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
     switch (m_mode)
     {
       case ZOOM_MODE:
-        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[  Zoom Mode  ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.geometry().height() - 15), "[  Zoom Mode  ]");
         break;
       case INSERT_MODE:
-        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[ Insert Mode ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.geometry().height() - 15), "[ Insert Mode ]");
         break;
       case SELECT_MODE:
-        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[ Select Mode ]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.geometry().height() - 15), "[ Select Mode ]");
         break;
       case COLLIDER_MODE:
-        parent_gc.draw_string(geom::fpoint(10, parent_gc.get_height() - 15), "[Collider Mode]");
+        parent_gc.draw_string(geom::fpoint(10, parent_gc.geometry().height() - 15), "[Collider Mode]");
         break;
     }
   }
