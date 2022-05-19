@@ -90,10 +90,7 @@ public:
   void leave_fullscreen() override;
 
   // Input Context stuff
-  float get_mouse_x() override;
-  float get_mouse_y() override;
-
-  bool get_key(int key) override;
+  geom::fpoint get_mouse_pos() const override;
 
   /** Waits for events to come in, blocks until new events are available */
   void wait_for_events_blocking();
@@ -156,8 +153,7 @@ private:
   Drawable m_drawable;
   GC m_gc;
 
-  int m_mouse_x;
-  int m_mouse_y;
+  geom::ipoint m_mouse_pos;
 
   /** Color Depth of the Display */
   int m_depth;

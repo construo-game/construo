@@ -27,29 +27,20 @@
 
 class InputContext
 {
-protected:
-  std::queue<Event> events;
 public:
   InputContext () : events() {}
   virtual ~InputContext () {}
 
   // Polling functions
 
-  /** @return true if the button with the given keycode is currently
-      pressed, false otherwise */
-  virtual bool get_key (int key) =0;
-
-  /** @return mouse x coordinate */
-  virtual float get_mouse_x () =0;
-
-  /** @return mouse y coordinate */
-  virtual float get_mouse_y () =0;
-
-  geom::fpoint get_mouse_pos() { return geom::fpoint(get_mouse_x(), get_mouse_y()); }
+  virtual geom::fpoint get_mouse_pos() const = 0;
 
   /** If an event is in the queue, copy it to \a event and return
       true, else return false and leave \a event untouched */
   bool get_event(Event* event);
+
+protected:
+  std::queue<Event> events;
 };
 
 #endif

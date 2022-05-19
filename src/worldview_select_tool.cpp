@@ -59,16 +59,11 @@ WorldViewSelectTool::draw_background (ZoomGraphicContext& gc)
 void
 WorldViewSelectTool::draw_foreground (ZoomGraphicContext& gc)
 {
-  float const x = m_worldview.zoom().screen_to_world_x(g_input_context->get_mouse_x ());
-  float const y = m_worldview.zoom().screen_to_world_y(g_input_context->get_mouse_y ());
+  geom::fpoint const pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
 
   if (m_mode == GETTING_SELECTION_MODE)
   {
-    gc.draw_rect(geom::frect(std::min(x, m_click_pos.x()),
-                             std::min(y, m_click_pos.y()),
-                             std::max(x, m_click_pos.x()),
-                             std::max(y, m_click_pos.y())),
-                 g_style.selection_rect);
+    gc.draw_rect(geom::normalize(geom::frect(pos, m_click_pos)), g_style.selection_rect);
   }
 
   if (!m_selection.empty())

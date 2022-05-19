@@ -121,8 +121,7 @@ X11Display::X11Display(std::string const& title, int w, int h, bool fullscreen_)
   m_colormap(),
   m_drawable(),
   m_gc(),
-  m_mouse_x(),
-  m_mouse_y(),
+  m_mouse_pos(0, 0),
   m_depth(),
   m_fullscreen(fullscreen_),
   m_pending_configure_event(),
@@ -437,22 +436,11 @@ X11Display::draw_string_centered(geom::fpoint const& pos, const std::string& str
               str.c_str (), static_cast<int>(str.length()));
 }
 
-float
-X11Display::get_mouse_x ()
-{
-  return static_cast<float>(m_mouse_x);
-}
 
-float
-X11Display::get_mouse_y ()
+geom::fpoint
+X11Display::get_mouse_pos() const
 {
-  return static_cast<float>(m_mouse_y);
-}
-
-bool
-X11Display::get_key (int key)
-{
-  return false;
+  return geom::fpoint(m_mouse_pos);
 }
 
 void
@@ -534,8 +522,7 @@ X11Display::process_event(XEvent& event)
   switch (event.type)
   {
     case MotionNotify:
-      m_mouse_x = event.xmotion.x;
-      m_mouse_y = event.xmotion.y;
+      m_mouse_pos = geom::ipoint(event.xmotion.x, event.xmotion.y);
       break;
 
     case Expose:

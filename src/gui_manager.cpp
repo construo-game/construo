@@ -97,8 +97,7 @@ GUIManager::find_component_at(geom::fpoint const& pos) const
 void
 GUIManager::process_button_events (ButtonEvent& button)
 {
-  geom::fpoint const pos(g_input_context->get_mouse_x(),
-                         g_input_context->get_mouse_y());
+  geom::fpoint const pos = g_input_context->get_mouse_pos();
 
   if (button.pressed)
   {
@@ -267,8 +266,7 @@ GUIManager::process_button_events (ButtonEvent& button)
 void
 GUIManager::process_events()
 {
-  geom::fpoint const pos(g_input_context->get_mouse_x(),
-                         g_input_context->get_mouse_y());
+  geom::fpoint const pos = g_input_context->get_mouse_pos();
 
   if (m_grabbing_component && m_previous_pos != pos)
   {

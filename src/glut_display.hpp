@@ -54,9 +54,7 @@ public:
   float get_width() override { return static_cast<float>(m_width); }
   float get_height() override { return static_cast<float>(m_height); }
 
-  bool get_key(int key) override;
-  float get_mouse_x() override;
-  float get_mouse_y() override;
+  geom::fpoint get_mouse_pos() const override;
 
   void run();
   void set_cursor_real(CursorType) override;
@@ -101,8 +99,7 @@ private:
   /** The actual size of the current screen/window */
   int m_height;
 
-  int m_mouse_x;
-  int m_mouse_y;
+  geom::ipoint m_mouse_pos;
 
   bool m_block;
 

@@ -85,8 +85,7 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
   m_window_height(),
   m_width(width),
   m_height(height),
-  m_mouse_x(),
-  m_mouse_y(),
+  m_mouse_pos(),
   m_block(),
   m_update_display(0),
   m_is_fullscreen(),
@@ -308,22 +307,10 @@ GlutDisplay::draw_string_centered(geom::fpoint const& pos, const std::string& st
               str, color);
 }
 
-bool
-GlutDisplay::get_key(int key)
+geom::fpoint
+GlutDisplay::get_mouse_pos() const
 {
-  return false;
-}
-
-float
-GlutDisplay::get_mouse_x()
-{
-  return static_cast<float>(m_mouse_x);
-}
-
-float
-GlutDisplay::get_mouse_y()
-{
-  return static_cast<float>(m_mouse_y);
+  return geom::fpoint(m_mouse_pos);
 }
 
 void
@@ -365,8 +352,7 @@ GlutDisplay::display_func()
 void
 GlutDisplay::mouse_func(int button, int button_state, int x, int y)
 {
-  m_mouse_x = x;
-  m_mouse_y = y;
+  m_mouse_pos = geom::ipoint(x, y);
 
   Event event;
   event.type = BUTTON_EVENT;
@@ -454,8 +440,7 @@ GlutDisplay::keyboard_func(unsigned char key, int x, int y)
 void
 GlutDisplay::mouse_motion_func(int x, int y)
 {
-  m_mouse_x = x;
-  m_mouse_y = y;
+  m_mouse_pos = geom::ipoint(x, y);
 }
 
 void
