@@ -102,8 +102,8 @@ GCZoomState::screen_to_world_y(float y) const
 void
 GCZoomState::move_to(geom::fpoint const& pos)
 {
-  m_x_offset = (bounding_width()  / (2 * m_scale)) + pos.x();
-  m_y_offset = (bounding_height() / (2 * m_scale)) + pos.y();
+  m_x_offset = (bounding_box().width()  / (2 * m_scale)) + pos.x();
+  m_y_offset = (bounding_box().height() / (2 * m_scale)) + pos.y();
 }
 
 void
@@ -151,20 +151,20 @@ GCZoomState::zoom_to(geom::frect const& rect)
 
   float const width  = rect.right() - rect.left();
   float const height = rect.bottom() - rect.top();
-  float const screen_relation = bounding_height() / bounding_width();
+  float const screen_relation = bounding_box().height() / bounding_box().width();
   float const rect_relation   = height/width;
 
   if (rect_relation < screen_relation) // take width, ignore height
   {
-    set_zoom(bounding_width()/width);
+    set_zoom(bounding_box().width() / width);
   }
   else // take height, ignore width
   {
-    set_zoom(bounding_height()/height);
+    set_zoom(bounding_box().height()/height);
   }
 
-  m_x_offset = (bounding_width()  / (2 * m_scale)) - center_x;
-  m_y_offset = (bounding_height() / (2 * m_scale)) - center_y;
+  m_x_offset = (bounding_box().width()  / (2 * m_scale)) - center_x;
+  m_y_offset = (bounding_box().height() / (2 * m_scale)) - center_y;
 }
 
 /* EOF */

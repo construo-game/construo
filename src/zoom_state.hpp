@@ -96,13 +96,6 @@ public:
   /** Convert a coordinate from world units to screen units */
   geom::fpoint world_to_screen(geom::fpoint const& pos) const;
 
-  float bounding_x1() const { return m_x1; }
-  float bounding_y1() const { return m_y1; }
-  float bounding_x2() const { return m_x2; }
-  float bounding_y2() const { return m_y2; }
-  float bounding_width() const { return m_x2 - m_x1; }
-  float bounding_height() const { return m_y2 - m_y1; }
-
   geom::frect bounding_box() const { return geom::frect(m_x1, m_y1, m_x2, m_y2); }
 
   void set_bounding_box(geom::frect const& rect) {

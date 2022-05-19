@@ -105,8 +105,8 @@ WorldRenderer::draw_grid(ZoomGraphicContext& gc, float grid_size, int grid_const
   geom::fpoint const start(Math::round_to_float(gc.zoom().screen_to_world_x(0), grid_size) - grid_size,
                            Math::round_to_float(gc.zoom().screen_to_world_y(0), grid_size) - grid_size);
 
-  geom::fpoint const end(Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_width()), grid_size) + grid_size,
-                         Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_height()), grid_size) + grid_size);
+  geom::fpoint const end(Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_box().width()), grid_size) + grid_size,
+                         Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_box().height()), grid_size) + grid_size);
 
   gc.push_quick_draw();
   for(float y = start.y(); y < end.y(); y += grid_size) {
@@ -144,11 +144,11 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 
       float const step_size = 100.0f;
 
-      float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x1()), step_size) - step_size;
-      float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_x2()), step_size) + step_size;
+      float const start_x = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_box().left()), step_size) - step_size;
+      float const end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_box().right()), step_size) + step_size;
 
       float const start_y = 599;
-      float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_y2()), step_size) + step_size;
+      float const end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_box().bottom()), step_size) + step_size;
 
       for(float y = start_y; y < end_y; y += step_size) {
         gc.draw_line(geom::fpoint(start_x, y),
