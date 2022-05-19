@@ -46,7 +46,7 @@ WorldViewColliderTool::draw_background (ZoomGraphicContext& gc)
   geom::fpoint mouse_pos = m_worldview.zoom().screen_to_world(g_input_context->get_mouse_pos());
   if (m_creating_rect)
   {
-    gc.draw_rect(geom::frect(m_click_pos, mouse_pos), g_style.selection_rect);
+    gc.draw_rect(geom::normalize(geom::frect(m_click_pos, mouse_pos)), g_style.selection_rect);
   }
 }
 
