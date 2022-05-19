@@ -30,7 +30,7 @@ message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
 include(GNUInstallDirs)
 include(MaximumWarnings)
 
-set(OpenGL_GL_PREFERENCE "LEGACY")
+set(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL)
 find_package(GLUT)
 find_package(X11)
