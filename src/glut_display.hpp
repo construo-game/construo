@@ -48,8 +48,7 @@ public:
   bool get_fullscreen() { return m_is_fullscreen; }
 
   geom::frect geometry() const override {
-    return geom::frect(geom::fsize(static_cast<float>(m_width),
-                                   static_cast<float>(m_height)));
+    return geom::frect(geom::fsize(m_size));
   }
 
   geom::fpoint get_mouse_pos() const override;
@@ -77,25 +76,12 @@ public:
   void bind_key(unsigned char key, Action action);
 
 private:
-  /** X-Position of the glut window, used in fullscreen to allow a
+  /** Position of the glut window, used in fullscreen to allow a
       restore */
-  int m_window_x_pos;
-
-  /** Y-Position of the glut window, used in fullscreen to allow a
-      restore */
-  int m_window_y_pos;
-
-  /** Width of the window, used to restore after fullscreen */
-  int m_window_width;
-
-  /** height of the window, used to restore after fullscreen */
-  int m_window_height;
+  geom::irect m_window_geometry;
 
   /** The actual size of the current screen/window */
-  int m_width;
-
-  /** The actual size of the current screen/window */
-  int m_height;
+  geom::isize m_size;
 
   geom::ipoint m_mouse_pos;
 

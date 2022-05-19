@@ -79,12 +79,8 @@ void init_default_keybindings(GlutDisplay& dpy)
 } // namespace
 
 GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fullscreen) :
-  m_window_x_pos(),
-  m_window_y_pos(),
-  m_window_width(),
-  m_window_height(),
-  m_width(width),
-  m_height(height),
+  m_window_geometry(),
+  m_size(width, height),
   m_mouse_pos(),
   m_block(),
   m_update_display(0),
@@ -99,7 +95,7 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
   free(argv[0]);
 
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowSize(m_width, m_height);
+  glutInitWindowSize(m_size.width(), m_size.height());
   //glutInitWindowPosition(100, 100); don't care
   glutSetWindow(glutCreateWindow(title.c_str()));
 
@@ -150,10 +146,7 @@ GlutDisplay::GlutDisplay(std::string const& title, int width, int height, int fu
 
   glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
-  m_window_x_pos = 0;
-  m_window_y_pos = 0;
-  m_window_width  = width;
-  m_window_height = height;
+  m_window_geometry = geom::irect(geom::ipoint(0, 0), geom::isize(width, height));
 
   if (fullscreen) {
     enter_fullscreen();
@@ -335,12 +328,11 @@ GlutDisplay::reshape_func(int w, int h)
   gluOrtho2D(0, w, h, 0);
 
   glMatrixMode(GL_MODELVIEW);
-  m_width  = w;
-  m_height = h;
+  m_size = geom::isize(w, h);
 
-  glScissor(0, 0, m_width, m_height);
+  glScissor(0, 0, m_size.width(), m_size.height());
 
-  ScreenManager::instance()->set_geometry(geom::fsize(static_cast<float>(m_width), static_cast<float>(m_height)));
+  ScreenManager::instance()->set_geometry(geom::fsize(m_size));
 }
 
 void
@@ -457,11 +449,11 @@ void
 GlutDisplay::leave_fullscreen()
 {
   log_debug("GlutDisplay: leaving fullscreen: restoring to: pos: {}x{}+{}+{}",
-            m_window_width, m_window_height,
-            m_window_x_pos, m_window_y_pos);
+            m_window_geometry.width(), m_window_geometry.height(),
+            m_window_geometry.left(), m_window_geometry.top());
 
-  glutReshapeWindow(m_window_width, m_window_height);
-  glutPositionWindow(m_window_x_pos, m_window_y_pos);
+  glutReshapeWindow(m_window_geometry.width(), m_window_geometry.height());
+  glutPositionWindow(m_window_geometry.left(), m_window_geometry.top());
 
   m_is_fullscreen = false;
 }
@@ -489,14 +481,14 @@ GlutDisplay::enter_fullscreen()
 #else
   log_debug("GlutDisplay: Entering fullscreen");
 
-  m_window_x_pos  = glutGet((GLenum)GLUT_WINDOW_X);
-  m_window_y_pos  = glutGet((GLenum)GLUT_WINDOW_Y);
-  m_window_width  = glutGet((GLenum)GLUT_WINDOW_WIDTH);
-  m_window_height = glutGet((GLenum)GLUT_WINDOW_HEIGHT);
+  m_window_geometry = geom::irect(geom::ipoint(glutGet((GLenum)GLUT_WINDOW_X),
+                                               glutGet((GLenum)GLUT_WINDOW_Y)),
+                                  geom::isize(glutGet((GLenum)GLUT_WINDOW_WIDTH),
+                                              glutGet((GLenum)GLUT_WINDOW_HEIGHT)));
 
   log_debug("Saving window: {}x{}+{}+{}",
-            m_window_width, m_window_height,
-            m_window_x_pos, m_window_y_pos);
+            m_window_geometry.width(), m_window_geometry.height(),
+            m_window_geometry.left(), m_window_geometry.top());
 
   glutFullScreen();
 
@@ -510,7 +502,7 @@ GlutDisplay::set_clip_rect(geom::frect const& rect)
   glEnable(GL_SCISSOR_TEST);
   glScissor(
     static_cast<int>(rect.left()), // x
-    m_height - 1 - static_cast<int>(rect.bottom()), // y
+    m_size.height() - 1 - static_cast<int>(rect.bottom()), // y
     static_cast<int>(rect.width()), // weight
     static_cast<int>(rect.height()) // height
     );
