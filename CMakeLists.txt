@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 project(construo)
 
 set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
@@ -164,8 +164,7 @@ if(GLUT_FOUND AND OPENGL_FOUND)
       CXX_EXTENSIONS OFF)
   target_compile_options(construo.glut PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
-  target_include_directories(construo.glut SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-  target_link_libraries(construo.glut libconstruo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+  target_link_libraries(construo.glut libconstruo OpenGL::GL OpenGL::GLU GLUT::GLUT)
 
   install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -182,8 +181,7 @@ if(X11_FOUND)
     CXX_EXTENSIONS OFF)
   target_compile_options(construo.x11 PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
-  target_include_directories(construo.x11 SYSTEM PUBLIC ${X11_INCLUDE_DIR})
-  target_link_libraries(construo.x11 libconstruo prio::prio ${X11_LIBRARIES})
+  target_link_libraries(construo.x11 libconstruo prio::prio X11::X11)
 
   if(X11_Xext_FOUND)
     target_link_libraries(construo.x11 ${X11_Xext_LIB})
