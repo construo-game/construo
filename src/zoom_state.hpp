@@ -90,12 +90,6 @@ public:
   /** Convert a coordinate from screen units to world units */
   float screen_to_world_y(float y) const;
 
-  /** Convert a coordinate from world units to screen units */
-  float world_to_screen_x(float x) const;
-
-  /** Convert a coordinate from world units to screen units */
-  float world_to_screen_y(float y) const;
-
   /** Convert a coordinate from screen units to world units */
   geom::fpoint screen_to_world(geom::fpoint const& pos) const;
 

@@ -101,8 +101,7 @@ private:
       scroll mode */
   bool m_scrolling;
 
-  float m_scroll_pos_x;
-  float m_scroll_pos_y;
+  geom::fpoint m_scroll_pos;
 
   float m_x_offset;
   float m_y_offset;

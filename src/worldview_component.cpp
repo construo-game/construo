@@ -38,8 +38,7 @@ WorldViewComponent::WorldViewComponent() :
   m_grid_scale_factor(1),
   m_grid_snap_factor(2),
   m_scrolling(false),
-  m_scroll_pos_x(0.0f),
-  m_scroll_pos_y(0.0f),
+  m_scroll_pos(0.0f, 0.0f),
   m_x_offset(0.0f),
   m_y_offset(0.0f),
   m_select_tool(std::make_unique<WorldViewSelectTool>(*this)),
@@ -273,8 +272,7 @@ WorldViewComponent::on_tertiary_button_press(geom::fpoint const& pos)
   m_y_offset = m_zoom.get_y_offset();
   WorldGUIManager::instance()->grab_mouse(*this);
 
-  m_scroll_pos_x = m_zoom.screen_to_world_x(pos.x());
-  m_scroll_pos_y = m_zoom.screen_to_world_y(pos.y());
+  m_scroll_pos = m_zoom.screen_to_world(pos);
 }
 
 void
@@ -290,11 +288,11 @@ WorldViewComponent::on_mouse_move(geom::fpoint const& pos, geom::foffset const& 
 {
   if (m_scrolling)
   {
-    float const new_scroll_pos_x = pos.x() / m_zoom.get_scale() - m_x_offset;
-    float const new_scroll_pos_y = pos.y() / m_zoom.get_scale() - m_y_offset;
+    geom::fpoint const new_scroll_pos(pos.x() / m_zoom.get_scale() - m_x_offset,
+                                      pos.y() / m_zoom.get_scale() - m_y_offset);
 
-    m_zoom.set_offset(geom::foffset(m_x_offset + (new_scroll_pos_x - m_scroll_pos_x),
-                                    m_y_offset + (new_scroll_pos_y - m_scroll_pos_y)));
+    m_zoom.set_offset(geom::foffset(m_x_offset + (new_scroll_pos.x() - m_scroll_pos.x()),
+                                    m_y_offset + (new_scroll_pos.y() - m_scroll_pos.y())));
 
   }
   else

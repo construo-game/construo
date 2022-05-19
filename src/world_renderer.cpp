@@ -102,22 +102,22 @@ WorldRenderer::draw_grid(ZoomGraphicContext& gc, float grid_size, int grid_const
   Color color = g_style.grid_color;
   Color color2 = g_style.grid_color2;
 
-  float start_x = Math::round_to_float(gc.zoom().screen_to_world_x(0), grid_size) - grid_size;
-  float end_x   = Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_width()), grid_size) + grid_size;
+  geom::fpoint const start(Math::round_to_float(gc.zoom().screen_to_world_x(0), grid_size) - grid_size,
+                           Math::round_to_float(gc.zoom().screen_to_world_y(0), grid_size) - grid_size);
 
-  float start_y = Math::round_to_float(gc.zoom().screen_to_world_y(0), grid_size) - grid_size;
-  float end_y   = Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_height()), grid_size) + grid_size;
+  geom::fpoint const end(Math::round_to_float(gc.zoom().screen_to_world_x(gc.zoom().bounding_width()), grid_size) + grid_size,
+                         Math::round_to_float(gc.zoom().screen_to_world_y(gc.zoom().bounding_height()), grid_size) + grid_size);
 
   gc.push_quick_draw();
-  for(float y = start_y; y < end_y; y += grid_size) {
-    gc.draw_line(geom::fpoint(start_x, y),
-                 geom::fpoint(end_x, y),
+  for(float y = start.y(); y < end.y(); y += grid_size) {
+    gc.draw_line(geom::fpoint(start.x(), y),
+                 geom::fpoint(end.x(), y),
                  ((int(y / grid_size) % grid_constant) == 0) ? color2 : color, 1);
   }
 
-  for(float x = start_x; x < end_x; x += grid_size) {
-    gc.draw_line(geom::fpoint(x, start_y),
-                 geom::fpoint(x, end_y),
+  for(float x = start.x(); x < end.x(); x += grid_size) {
+    gc.draw_line(geom::fpoint(x, start.y()),
+                 geom::fpoint(x, end.y()),
                  ((int(x / grid_size) % grid_constant) == 0) ? color2 : color, 1);
   }
 
@@ -129,8 +129,11 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
 {
   GraphicContext& parent_gc = gc.get_parent_gc();
 
-  if (gc.zoom().screen_to_world_y(parent_gc.get_height()) >= 599)
-  {
+  if (gc.zoom().screen_to_world_y(parent_gc.get_height()) < 599) {
+    // ground is not in view, so skip it
+    return;
+  }
+
     gc.draw_fill_rect(geom::frect(geom::fpoint(gc.zoom().screen_to_world_x(0), 599),
                                   geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
                                                gc.zoom().screen_to_world_y(parent_gc.get_height()))),
@@ -167,7 +170,6 @@ WorldRenderer::draw_ground(ZoomGraphicContext& gc) const
                              geom::fpoint(gc.zoom().screen_to_world_x(parent_gc.get_width()),
                                           gc.zoom().screen_to_world_y(parent_gc.get_height()))),
                  g_style.rect_collider_bg);
-  }
 }
 
 void
