@@ -66,10 +66,6 @@ public:
   GCZoomState const& zoom() const { return m_zoom; }
 
 private:
-  float translate_x(float x);
-  float translate_y(float y);
-
-private:
   GraphicContext& m_parent_gc;
   GCZoomState& m_zoom;
 
