@@ -20,14 +20,12 @@
 
 GUILabel::GUILabel(const std::string& title) :
   GUIComponent(),
-  m_title(title),
-  m_title_func()
+  m_title_func([=]{ return title; })
 {
 }
 
 GUILabel::GUILabel(std::function<std::string ()> title_func) :
   GUIComponent(),
-  m_title(),
   m_title_func(std::move(title_func))
 {
 }
@@ -35,11 +33,7 @@ GUILabel::GUILabel(std::function<std::string ()> title_func) :
 void
 GUILabel::draw (GraphicContext& gc)
 {
-  if (m_title_func) {
-    gc.draw_string(m_geometry.topleft() + geom::foffset(10, 15), m_title_func());
-  } else {
-    gc.draw_string(m_geometry.topleft() + geom::foffset(10, 15), m_title);
-  }
+  gc.draw_string(m_geometry.topleft() + geom::foffset(10, 15), m_title_func());
 }
 
 /* EOF */

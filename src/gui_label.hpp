@@ -32,7 +32,6 @@ public:
   bool is_at(geom::fpoint const& pos) const override { return false; }
 
 private:
-  std::string m_title;
   std::function<std::string ()> m_title_func;
 };
 
