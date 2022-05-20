@@ -122,7 +122,6 @@ set(CONSTRUO_SOURCES_CXX
   src/worldview_collider_tool.cpp
   src/worldview_insert_tool.cpp
   src/worldview_select_tool.cpp
-  src/worldview_tool.cpp
   src/worldview_widget.cpp
   src/worldview_zoom_tool.cpp
   src/writer.cpp
