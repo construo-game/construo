@@ -130,11 +130,13 @@ set(CONSTRUO_SOURCES_CXX
   )
 
 set(CONSTRUO_GLUT_SOURCES_CXX
+  src/main.cpp
   src/construo_main.cpp
   src/glut_display.cpp
   )
 
 set(CONSTRUO_X11_SOURCES_CXX
+  src/main.cpp
   src/construo_main.cpp
   src/x11_display.cpp
   )

@@ -140,10 +140,5 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
   return 0;
 }
 
-int main (int argc, char** argv)
-{
-  ConstruoMain app;
-  return app.main(argc, argv);
-}
 
 /* EOF */
