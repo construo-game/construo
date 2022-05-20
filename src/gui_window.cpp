@@ -21,6 +21,8 @@
 #include "gui_label.hpp"
 #include "gui_button.hpp"
 
+namespace construo {
+
 void yes_press()
 {
 }
@@ -59,5 +61,7 @@ GUIWindow::draw(GraphicContext& gc)
 
   WidgetGroup::draw(gc);
 }
+
+} // namespace construo
 
 /* EOF */

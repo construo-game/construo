@@ -26,6 +26,8 @@
 #include "system_context.hpp"
 #include "world.hpp"
 
+namespace construo {
+
 WorldReader::WorldReader() :
   m_world(),
   m_version(0)
@@ -147,5 +149,7 @@ WorldReader::parse_particles(ReaderCollection const& collection)
     m_world->add_particle(id, pos, velocity, mass, fixed);
   }
 }
+
+} // namespace construo
 
 /* EOF */

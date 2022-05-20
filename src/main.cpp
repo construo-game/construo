@@ -18,7 +18,7 @@
 
 int main (int argc, char** argv)
 {
-  ConstruoMain app;
+  construo::ConstruoMain app;
   return app.main(argc, argv);
 }
 

@@ -25,6 +25,8 @@
 #include "particle.hpp"
 #include "graphic_context.hpp"
 
+namespace construo {
+
 class Collider
 {
 private:
@@ -46,6 +48,8 @@ public:
 
   virtual geom::frect get_bounding_box() const =0;
 };
+
+} // namespace construo
 
 #endif
 

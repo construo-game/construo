@@ -19,6 +19,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 class WorldRenderer
 {
 public:
@@ -57,6 +59,8 @@ private:
   WorldRenderer(const WorldRenderer&) = delete;
   WorldRenderer& operator=(const WorldRenderer&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

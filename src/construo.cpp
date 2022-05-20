@@ -18,6 +18,8 @@
 
 /* Global variables, mainly the different system components */
 
+namespace construo {
+
 SystemContext*  g_system_context      = nullptr;
 InputContext*   g_input_context       = nullptr;
 RootGraphicContext* g_graphic_context = nullptr;
@@ -26,6 +28,9 @@ RootGraphicContext* g_graphic_context = nullptr;
 const float g_back_force = 500.0f;
 const float g_max_stretch = 0.1f;
 #else
+
 #endif
+
+} // namespace construo
 
 /* EOF */

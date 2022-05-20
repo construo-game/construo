@@ -21,6 +21,8 @@
 #include "delta_manager.hpp"
 
 /** Holds all the different World states, handles undo and things like that */
+namespace construo {
+
 class Controller
 {
 private:
@@ -98,6 +100,8 @@ public:
   Controller(const Controller&) = delete;
   Controller& operator=(const Controller&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

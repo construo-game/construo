@@ -19,6 +19,8 @@
 
 #include "worldview_tool.hpp"
 
+namespace construo {
+
 class WorldViewInsertTool : public WorldViewTool
 {
 public:
@@ -51,6 +53,8 @@ public:
   WorldViewInsertTool(const WorldViewInsertTool&) = delete;
   WorldViewInsertTool& operator=(const WorldViewInsertTool&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

@@ -16,10 +16,14 @@
 
 #include "gui_widget.hpp"
 
+namespace construo {
+
 bool
 GUIWidget::is_at(geom::fpoint const& pos) const
 {
   return geom::contains(m_geometry, pos);
 }
+
+} // namespace construo
 
 /* EOF */

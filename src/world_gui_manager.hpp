@@ -21,6 +21,8 @@
 
 #include <geom/rect.hpp>
 
+namespace construo {
+
 class WorldGUIManager : public GUIManager
 {
 private:
@@ -74,6 +76,8 @@ public:
   WorldGUIManager(const WorldGUIManager&) = delete;
   WorldGUIManager& operator=(const WorldGUIManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

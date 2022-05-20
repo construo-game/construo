@@ -23,6 +23,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 class ScreenManager
 {
 private:
@@ -58,6 +60,8 @@ public:
   ScreenManager(const ScreenManager&) = delete;
   ScreenManager& operator=(const ScreenManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

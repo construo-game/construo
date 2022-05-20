@@ -21,6 +21,8 @@
 
 #include <geom/point.hpp>
 
+namespace construo {
+
 class WorldViewTool
 {
 public:
@@ -57,6 +59,8 @@ public:
 protected:
   WorldViewWidget& m_worldview;
 };
+
+} // namespace construo
 
 #endif
 

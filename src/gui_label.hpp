@@ -22,6 +22,8 @@
 
 #include "gui_widget.hpp"
 
+namespace construo {
+
 class GUILabel : public GUIWidget
 {
 public:
@@ -34,6 +36,8 @@ public:
 private:
   std::function<std::string ()> m_title_func;
 };
+
+} // namespace construo
 
 #endif
 

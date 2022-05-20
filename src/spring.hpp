@@ -20,6 +20,8 @@
 #include "particle.hpp"
 #include "world.hpp"
 
+namespace construo {
+
 class Spring
 {
 public:
@@ -48,6 +50,8 @@ public:
   float damping;
   float max_stretch;
 };
+
+} // namespace construo
 
 #endif
 

@@ -20,6 +20,8 @@
 #include "construo.hpp"
 #include "system_context.hpp"
 
+namespace construo {
+
 class DeltaManager
 {
 public:
@@ -50,6 +52,8 @@ private:
   unsigned long m_last_time;
   float m_maximum_delta;
 };
+
+} // namespace construo
 
 #endif
 

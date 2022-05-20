@@ -25,6 +25,8 @@
 #include "particle_factory.hpp"
 #include "spring.hpp"
 
+namespace construo {
+
 class World
 {
 public:
@@ -75,6 +77,8 @@ private:
   World(World const& other);
   World& operator=(World const& other) = delete;
 };
+
+} // namespace construo
 
 #endif
 

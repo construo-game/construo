@@ -28,6 +28,8 @@
 #include "color.hpp"
 
 /** Graphic abstraction interface */
+namespace construo {
+
 class GraphicContext
 {
 public:
@@ -74,6 +76,8 @@ public:
   /** Goes out of quickdraw mode, restoring previous settings */
   virtual void pop_quick_draw() {}
 };
+
+} // namespace construo
 
 #endif
 

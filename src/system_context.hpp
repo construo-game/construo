@@ -32,6 +32,8 @@ enum FileType {
 };
 
 /** System stuff like file-IO and time */
+namespace construo {
+
 class SystemContext
 {
 private:
@@ -65,6 +67,8 @@ public:
 
   virtual std::filesystem::path translate_filename (const std::string&) =0;
 };
+
+} // namespace construo
 
 #endif
 

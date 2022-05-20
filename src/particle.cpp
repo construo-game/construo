@@ -22,6 +22,8 @@
 #include "math.hpp"
 #include "particle.hpp"
 
+namespace construo {
+
 Particle::Particle (int i, const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float m, bool f)
   : id (i),
     pos (arg_pos),
@@ -105,5 +107,7 @@ Particle::update (float delta)
     }
 }
 
+
+} // namespace construo
 
 /* EOF */

@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_ACTION_HPP
 #define HEADER_CONSTRUO_ACTION_HPP
 
+namespace construo {
+
 enum class Action
 {
   NONE,
@@ -76,6 +78,8 @@ enum class Action
   QUICKSAVE8,
   QUICKSAVE9,
 };
+
+} // namespace construo
 
 #endif
 

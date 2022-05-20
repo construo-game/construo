@@ -21,6 +21,8 @@
 
 #include "construo.hpp"
 
+namespace construo {
+
 class Particle
 {
   friend class ParticleFactory;
@@ -83,6 +85,8 @@ public:
   Particle (int id_, const glm::vec2& arg_pos, const glm::vec2& arg_velocity, float mass_, bool fixed_);
   Particle (const Particle&);
 };
+
+} // namespace construo
 
 #endif
 

@@ -25,6 +25,8 @@
 #  define ConstruoAssert(expr, str) assert(expr && str)
 #endif
 
+namespace construo {
+
 class ConstruoError : public std::exception
 {
 public:
@@ -52,6 +54,8 @@ void print_exception(std::exception const& err, int level = 0)
     std::cerr << "unknown exception\n";
   }
 }
+
+} // namespace construo
 
 #endif
 

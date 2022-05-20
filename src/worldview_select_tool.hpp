@@ -17,10 +17,11 @@
 #ifndef HEADER_CONSTRUO_WORLDVIEW_SELECT_TOOL_HPP
 #define HEADER_CONSTRUO_WORLDVIEW_SELECT_TOOL_HPP
 
+#include "fwd.hpp"
 #include "selection.hpp"
 #include "worldview_tool.hpp"
 
-class Particle;
+namespace construo {
 
 class WorldViewSelectTool : public WorldViewTool
 {
@@ -83,6 +84,8 @@ public:
   WorldViewSelectTool(const WorldViewSelectTool&) = delete;
   WorldViewSelectTool& operator=(const WorldViewSelectTool&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

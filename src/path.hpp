@@ -19,9 +19,13 @@
 
 #include <string>
 
+namespace construo {
+
 std::string path_join(std::string const& lhs, std::string const& rhs);
 std::string path_dirname(std::string const& path);
 std::string path_basename(std::string const& path);
+
+} // namespace construo
 
 #endif
 

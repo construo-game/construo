@@ -16,6 +16,8 @@
 
 #include "gui_file_button.hpp"
 
+namespace construo {
+
 GUIFileButton::GUIFileButton(const std::string& path) :
   GUIWidget(),
   m_path(path),
@@ -37,5 +39,7 @@ void
 GUIFileButton::on_primary_button_release(geom::fpoint const& pos)
 {
 }
+
+} // namespace construo
 
 /* EOF */

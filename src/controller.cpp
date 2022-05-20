@@ -23,6 +23,8 @@
 #include "world_reader.hpp"
 #include "world_writer.hpp"
 
+namespace construo {
+
 Controller* Controller::instance_ = nullptr;
 
 Controller::Controller() :
@@ -203,5 +205,7 @@ Controller::get_hide_dots ()
 {
   return m_hide_dots;
 }
+
+} // namespace construo
 
 /* EOF */

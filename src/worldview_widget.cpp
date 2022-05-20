@@ -27,6 +27,8 @@
 #include "worldview_zoom_tool.hpp"
 #include "worldview_collider_tool.hpp"
 
+namespace construo {
+
 WorldViewWidget* WorldViewWidget::instance_;
 
 WorldViewWidget::WorldViewWidget() :
@@ -331,5 +333,7 @@ WorldViewWidget::on_world_change()
   m_zoom.zoom_out(geom::fpoint(geometry().width()/2, geometry().height()/2));
   m_zoom.zoom_out(geom::fpoint(geometry().width()/2, geometry().height()/2));
 }
+
+} // namespace construo
 
 /* EOF */

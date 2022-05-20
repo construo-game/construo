@@ -22,6 +22,8 @@
 #include "math.hpp"
 #include "root_graphic_context.hpp"
 
+namespace construo {
+
 ZoomGraphicContext::ZoomGraphicContext(GraphicContext& gc, GCZoomState& zoom) :
   m_parent_gc(gc),
   m_zoom(zoom)
@@ -136,5 +138,7 @@ ZoomGraphicContext::geometry() const
 {
   return m_zoom.bounding_box();
 }
+
+} // namespace construo
 
 /* EOF */

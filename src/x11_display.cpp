@@ -32,6 +32,8 @@
 #include "screen_manager.hpp"
 #include "settings.hpp"
 
+namespace construo {
+
 namespace {
 
 Atom wm_delete_window;
@@ -810,5 +812,7 @@ X11Display::bind_key(KeySequence const& key, Action action)
 
   m_key_bindings[key] = action;
 }
+
+} // namespace construo
 
 /* EOF */

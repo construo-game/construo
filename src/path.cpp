@@ -16,6 +16,8 @@
 
 #include "path.hpp"
 
+namespace construo {
+
 std::string path_join(std::string const& lhs, std::string const& rhs)
 {
   if (lhs.empty()) {
@@ -58,5 +60,7 @@ std::string path_basename(std::string const& path)
     return path.substr(p + 1);
   }
 }
+
+} // namespace construo
 
 /* EOF */

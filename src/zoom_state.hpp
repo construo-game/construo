@@ -20,6 +20,8 @@
 #include <glm/glm.hpp>
 #include <geom/rect.hpp>
 
+namespace construo {
+
 // FIXME: ZoomState name conflicts with X11
 class GCZoomState
 {
@@ -97,6 +99,8 @@ private:
   geom::foffset m_offset;
   float m_scale;
 };
+
+} // namespace construo
 
 #endif
 

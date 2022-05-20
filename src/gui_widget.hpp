@@ -21,6 +21,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 /** A thing that is under the controll of the GUIManager */
 class GUIWidget
 {
@@ -83,6 +85,8 @@ public:
   GUIWidget(const GUIWidget&) = delete;
   GUIWidget& operator=(const GUIWidget&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

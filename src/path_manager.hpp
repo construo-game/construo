@@ -21,6 +21,8 @@
 #include <string>
 #include <list>
 
+namespace construo {
+
 class PathManager
 {
 public:
@@ -58,6 +60,8 @@ private:
 };
 
 extern PathManager path_manager;
+
+} // namespace construo
 
 #endif
 

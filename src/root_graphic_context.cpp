@@ -18,6 +18,8 @@
 
 #include <logmich/log.hpp>
 
+namespace construo {
+
 void
 RootGraphicContext::set_cursor(CursorType cursor)
 {
@@ -44,5 +46,7 @@ RootGraphicContext::pop_cursor()
       log_debug("RootGraphicContext::pop_cursor(): Stack empty!");
     }
 }
+
+} // namespace construo
 
 /* EOF */

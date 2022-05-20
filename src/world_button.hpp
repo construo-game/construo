@@ -21,6 +21,8 @@
 #include "fwd.hpp"
 
 /** button in the load/save dialog */
+namespace construo {
+
 class WorldButton : public GUIFileButton
 {
 public:
@@ -42,6 +44,8 @@ private:
   WorldButton (const WorldButton&);
   WorldButton& operator= (const WorldButton&);
 };
+
+} // namespace construo
 
 #endif
 

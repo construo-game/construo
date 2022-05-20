@@ -22,6 +22,8 @@
 #include "zoom_graphic_context.hpp"
 #include "widget_group.hpp"
 
+namespace construo {
+
 class GUIWindow : public WidgetGroup
 {
 public:
@@ -40,6 +42,8 @@ public:
   GUIWindow(const GUIWindow&) = delete;
   GUIWindow& operator=(const GUIWindow&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

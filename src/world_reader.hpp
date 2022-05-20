@@ -22,6 +22,8 @@
 #include "fwd.hpp"
 #include "reader.hpp"
 
+namespace construo {
+
 class WorldReader
 {
 public:
@@ -44,6 +46,8 @@ private:
   WorldReader(const WorldReader&) = delete;
   WorldReader& operator=(const WorldReader&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

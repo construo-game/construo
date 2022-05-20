@@ -26,6 +26,8 @@
 #include "fwd.hpp"
 
 /** The GUIManager is basically the place where the main loop runs */
+namespace construo {
+
 class GUIManager
 {
 public:
@@ -87,6 +89,8 @@ public:
   GUIManager(const GUIManager&) = delete;
   GUIManager& operator=(const GUIManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

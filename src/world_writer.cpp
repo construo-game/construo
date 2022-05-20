@@ -25,6 +25,8 @@
 #include "world.hpp"
 #include "writer.hpp"
 
+namespace construo {
+
 WorldWriter::WorldWriter(World const& world) :
   m_world(const_cast<World&>(world))
 {
@@ -87,5 +89,7 @@ WorldWriter::write(std::string const& filename)
 
   writer.end_object();
 }
+
+} // namespace construo
 
 /* EOF */

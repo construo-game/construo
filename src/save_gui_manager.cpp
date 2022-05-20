@@ -23,6 +23,8 @@
 #include "system_context.hpp"
 #include "root_graphic_context.hpp"
 
+namespace construo {
+
 SaveGUIManager::SaveGUIManager() :
   m_file_manager()
 {
@@ -49,5 +51,7 @@ SaveGUIManager::run_once(GraphicContext& gc)
   GUIManager::run_once(gc);
   g_system_context->sleep (1000);
 }
+
+} // namespace construo
 
 /* EOF */

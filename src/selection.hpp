@@ -24,7 +24,11 @@
 
 #include "fwd.hpp"
 
-/** A class to keep track of a group of selected particles */
+/** A namespace construo {
+
+class to keep track of a group of selected particles */
+namespace construo {
+
 class Selection
 {
 public:
@@ -89,6 +93,8 @@ private:
   Selection (const Selection&);
   Selection& operator=(const Selection&);
 };
+
+} // namespace construo
 
 #endif
 

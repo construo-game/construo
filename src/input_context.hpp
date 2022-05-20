@@ -25,6 +25,8 @@
 #include "action.hpp"
 #include "events.hpp"
 
+namespace construo {
+
 class InputContext
 {
 public:
@@ -42,6 +44,8 @@ public:
 protected:
   std::queue<Event> events;
 };
+
+} // namespace construo
 
 #endif
 

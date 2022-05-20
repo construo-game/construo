@@ -21,10 +21,14 @@
 
 #include <prio/reader.hpp>
 
+namespace construo {
+
 using ReaderCollection = prio::ReaderCollection;
 using ReaderDocument = prio::ReaderDocument;
 using ReaderMapping = prio::ReaderMapping;
 using ReaderObject = prio::ReaderObject;
+
+} // namespace construo
 
 namespace prio {
 

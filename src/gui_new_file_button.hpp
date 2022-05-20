@@ -19,6 +19,8 @@
 
 #include "gui_file_button.hpp"
 
+namespace construo {
+
 class GUINewFileButton : public GUIFileButton
 {
 public:
@@ -34,6 +36,8 @@ public:
   GUINewFileButton(const GUINewFileButton&) = delete;
   GUINewFileButton& operator=(const GUINewFileButton&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

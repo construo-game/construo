@@ -28,6 +28,8 @@
 #include "particle.hpp"
 #include "particle_factory.hpp"
 
+namespace construo {
+
 Selection::Selection() :
   m_selection(),
   m_world(nullptr)
@@ -236,5 +238,7 @@ Selection::join_doubles(float toleranz)
   }
   clear();
 }
+
+} // namespace construo
 
 /* EOF */

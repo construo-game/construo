@@ -22,6 +22,8 @@
 #include "world.hpp"
 #include "particle_factory.hpp"
 
+namespace construo {
+
 ParticleFactory::ParticleFactory() :
   m_particles(),
   m_particle_id_count(0)
@@ -102,5 +104,7 @@ ParticleFactory::clear ()
 {
   m_particles.clear ();
 }
+
+} // namespace construo
 
 /* EOF */

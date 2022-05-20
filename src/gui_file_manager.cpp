@@ -24,6 +24,8 @@
 #include "screen_manager.hpp"
 #include "zoom_graphic_context.hpp"
 
+namespace construo {
+
 GUIFileManager::GUIFileManager(Mode m) :
   WidgetGroup(),
   m_mode(m),
@@ -129,5 +131,7 @@ GUIFileManager::update_current_directory()
 {
   open_directory(m_directory->get_path());
 }
+
+} // namespace construo
 
 /* EOF */

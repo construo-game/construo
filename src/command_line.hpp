@@ -21,6 +21,8 @@
 #include <string>
 
 /** Parses the command line */
+namespace construo {
+
 class CommandLine
 {
 public:
@@ -31,6 +33,8 @@ public:
 private:
   static void error(const std::string& msg);
 };
+
+} // namespace construo
 
 #endif
 

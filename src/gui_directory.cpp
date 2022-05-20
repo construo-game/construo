@@ -28,6 +28,8 @@
 #include "world_button.hpp"
 #include "worldview_collider_tool.hpp"
 
+namespace construo {
+
 GUIDirectory::GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode) :
   WidgetGroup(),
   m_file_manager(file_manager),
@@ -164,5 +166,7 @@ GUIDirectory::wheel_down (geom::fpoint const& pos)
 {
   move_down();
 }
+
+} // namespace construo
 
 /* EOF */

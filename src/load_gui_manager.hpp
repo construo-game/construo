@@ -19,6 +19,8 @@
 
 #include "gui_manager.hpp"
 
+namespace construo {
+
 class LoadGUIManager : public GUIManager
 {
 public:
@@ -35,6 +37,8 @@ public:
   LoadGUIManager(const LoadGUIManager&) = delete;
   LoadGUIManager& operator=(const LoadGUIManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

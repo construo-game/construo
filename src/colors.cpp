@@ -16,6 +16,8 @@
 
 #include "colors.hpp"
 
+namespace construo {
+
 GUIStyle const g_style = {
   .button_fg_pressed = Color(0xFFFFFFFF),
   .button_fg_hover   = Color(0x009f9fFF),
@@ -42,5 +44,7 @@ GUIStyle const g_style = {
   .grid_color2       = Color(0x666666FF),
 
 };
+
+} // namespace construo
 
 /* EOF */

@@ -23,6 +23,8 @@
 #include "colors.hpp"
 #include "gui_widget.hpp"
 
+namespace construo {
+
 class GUIButton : public GUIWidget
 {
 public:
@@ -54,6 +56,8 @@ protected:
   OnClickSignal m_sig_on_click;
   HighlightPred m_sig_highlight_p;
 };
+
+} // namespace construo
 
 #endif
 

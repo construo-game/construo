@@ -16,6 +16,8 @@
 
 #include "zoom_state.hpp"
 
+namespace construo {
+
 GCZoomState::GCZoomState(geom::frect const& rect) :
   m_bounding_box(rect),
   m_offset(0.0f, 0.0f),
@@ -147,5 +149,7 @@ GCZoomState::zoom_to(geom::frect const& rect)
   m_offset = geom::foffset((m_bounding_box.width()  / (2 * m_scale)) - center_x,
                            (m_bounding_box.height() / (2 * m_scale)) - center_y);
 }
+
+} // namespace construo
 
 /* EOF */

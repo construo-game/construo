@@ -23,6 +23,8 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_widget.hpp"
 
+namespace construo {
+
 /** GUI Widget that manages the view and the editing of the
     world, this is the main widget of Construo */
 class WorldViewWidget : public GUIWidget
@@ -118,6 +120,8 @@ public:
   WorldViewWidget(const WorldViewWidget&) = delete;
   WorldViewWidget& operator=(const WorldViewWidget&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

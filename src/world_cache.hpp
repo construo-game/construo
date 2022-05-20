@@ -23,6 +23,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 class WorldCache
 {
 public:
@@ -38,6 +40,8 @@ private:
   WorldCache(const WorldCache&) = delete;
   WorldCache& operator=(const WorldCache&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

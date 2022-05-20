@@ -21,6 +21,8 @@
 
 #include "worldview_tool.hpp"
 
+namespace construo {
+
 class WorldViewZoomTool : public WorldViewTool
 {
 public:
@@ -47,6 +49,8 @@ private:
       click_pos is set, false otherwise */
   bool m_creating_zoom_rectangle;
 };
+
+} // namespace construo
 
 #endif
 

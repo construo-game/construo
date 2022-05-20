@@ -19,6 +19,8 @@
 
 #include "collider.hpp"
 
+namespace construo {
+
 class RectCollider : public Collider
 {
 public:
@@ -40,6 +42,8 @@ public:
   float x2;                     /**< right border */
   float y2;                     /**< bottom border */
 };
+
+} // namespace construo
 
 #endif
 

@@ -24,6 +24,8 @@
 #include "world_cache.hpp"
 #include "world_renderer.hpp"
 
+namespace construo {
+
 WorldButton::WorldButton (WorldCache& world_cache, const std::string& filename, Mode m) :
   GUIFileButton(filename),
   m_world_cache(world_cache),
@@ -92,5 +94,7 @@ WorldButton::on_click ()
     ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
   }
 }
+
+} // namespace construo
 
 /* EOF */

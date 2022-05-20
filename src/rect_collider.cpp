@@ -23,6 +23,8 @@
 #include "controller.hpp"
 #include "construo_error.hpp"
 
+namespace construo {
+
 std::unique_ptr<Collider>
 RectCollider::duplicate() const
 {
@@ -115,5 +117,7 @@ RectCollider::get_bounding_box() const
 {
   return geom::frect(x1, y1, x2, y2);
 }
+
+} // namespace construo
 
 /* EOF */

@@ -16,6 +16,8 @@
 
 #include "input_context.hpp"
 
+namespace construo {
+
 bool
 InputContext::get_event(Event* event)
 {
@@ -30,5 +32,7 @@ InputContext::get_event(Event* event)
       return false;
     }
 }
+
+} // namespace construo
 
 /* EOF */

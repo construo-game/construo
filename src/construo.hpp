@@ -19,6 +19,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 /** Global accessor to the system functions */
 extern SystemContext*  g_system_context;
 
@@ -27,6 +29,8 @@ extern InputContext*   g_input_context;
 
 /** Global accessor to the graphic device */
 extern RootGraphicContext* g_graphic_context;
+
+} // namespace construo
 
 #endif
 

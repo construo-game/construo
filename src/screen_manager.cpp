@@ -23,6 +23,8 @@
 #include "save_gui_manager.hpp"
 #include "world_gui_manager.hpp"
 
+namespace construo {
+
 std::unique_ptr<ScreenManager> ScreenManager::s_instance;
 
 ScreenManager::ScreenManager() :
@@ -92,5 +94,7 @@ ScreenManager::instance ()
 
   return s_instance.get();
 }
+
+} // namespace construo
 
 /* EOF */

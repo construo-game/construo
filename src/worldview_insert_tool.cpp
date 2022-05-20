@@ -28,6 +28,8 @@
 #include "worldview_widget.hpp"
 #include "world_gui_manager.hpp"
 
+namespace construo {
+
 WorldViewInsertTool::WorldViewInsertTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_previous_particle(nullptr),
@@ -242,5 +244,7 @@ WorldViewInsertTool::on_fix_press (geom::fpoint const& screen_pos)
     m_hover_particle->set_fixed(!m_hover_particle->get_fixed());
   }
 }
+
+} // namespace construo
 
 /* EOF */

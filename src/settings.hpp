@@ -19,6 +19,8 @@
 
 #include <string>
 
+namespace construo {
+
 class Settings
 {
 public:
@@ -54,6 +56,8 @@ public:
 };
 
 extern Settings g_settings;
+
+} // namespace construo
 
 #endif
 

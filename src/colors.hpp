@@ -19,6 +19,8 @@
 
 #include "color.hpp"
 
+namespace construo {
+
 struct GUIStyle
 {
   Color button_fg_pressed;
@@ -51,6 +53,8 @@ struct GUIStyle
 };
 
 extern GUIStyle const g_style;
+
+} // namespace construo
 
 #endif
 

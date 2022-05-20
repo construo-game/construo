@@ -20,6 +20,8 @@
 
 #include "path_manager.hpp"
 
+namespace construo {
+
 PathManager path_manager;
 
 PathManager::PathManager () :
@@ -99,5 +101,7 @@ PathManager::set_path(const std::string& path)
 {
   m_base_path = path;
 }
+
+} // namespace construo
 
 /* EOF */

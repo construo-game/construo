@@ -30,6 +30,8 @@
 #include "screen_manager.hpp"
 #include "glut_display.hpp"
 
+namespace construo {
+
 namespace {
 
 void init_default_keybindings(GlutDisplay& dpy)
@@ -559,7 +561,8 @@ GlutDisplay::set_cursor_real(CursorType cursor)
       log_debug("GlutDisplay: Unhandled cursor type: {}", static_cast<int>(cursor));
       break;
   }
-
 }
+
+} // namespace construo
 
 /* EOF */

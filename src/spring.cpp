@@ -22,6 +22,8 @@
 #include "construo_error.hpp"
 #include "particle_factory.hpp"
 
+namespace construo {
+
 Spring::Spring(Particle* f, Particle* s, float l) :
   particles(f, s),
   length(l),
@@ -86,5 +88,7 @@ Spring::recalc_length ()
 {
   length = std::fabs(glm::length(particles.first->pos - particles.second->pos));
 }
+
+} // namespace construo
 
 /* EOF */

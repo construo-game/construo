@@ -25,6 +25,8 @@
 #include "world_cache.hpp"
 
 /** Widget which shows a complete directory */
+namespace construo {
+
 class GUIDirectory : public WidgetGroup
 {
 public:
@@ -61,6 +63,8 @@ public:
   GUIDirectory(const GUIDirectory&) = delete;
   GUIDirectory& operator=(const GUIDirectory&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

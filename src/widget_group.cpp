@@ -21,6 +21,8 @@
 #include "graphic_context.hpp"
 #include "colors.hpp"
 
+namespace construo {
+
 WidgetGroup::WidgetGroup() :
   GUIWidget(),
   m_widgets(),
@@ -279,5 +281,7 @@ WidgetGroup::find_widget_at(geom::fpoint const& pos) const
   }
   return nullptr;
 }
+
+} // namespace construo
 
 /* EOF */

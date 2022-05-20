@@ -28,6 +28,8 @@
  * it provides ways to set the title the cursor, etc. in addition to
  * the stuff that a normal GraphicContext provides.
  */
+namespace construo {
+
 class RootGraphicContext : public GraphicContext
 {
 private:
@@ -61,6 +63,8 @@ private:
   RootGraphicContext (const RootGraphicContext&);
   RootGraphicContext& operator= (const RootGraphicContext&);
 };
+
+} // namespace construo
 
 #endif
 

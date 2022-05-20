@@ -23,6 +23,8 @@
 
 #include "fwd.hpp"
 
+namespace construo {
+
 class ConstruoMain
 {
 public:
@@ -54,6 +56,8 @@ public:
   ConstruoMain(const ConstruoMain&) = delete;
   ConstruoMain& operator=(const ConstruoMain&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

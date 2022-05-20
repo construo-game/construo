@@ -21,6 +21,8 @@
 #include "zoom_graphic_context.hpp"
 #include "gui_widget.hpp"
 
+namespace construo {
+
 class GUIFileButton : public GUIWidget
 {
 public:
@@ -39,6 +41,8 @@ protected:
   std::string m_path;
   bool m_mouse_over;
 };
+
+} // namespace construo
 
 #endif
 

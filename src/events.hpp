@@ -19,6 +19,8 @@
 
 #include "action.hpp"
 
+namespace construo {
+
 enum { BUTTON_EVENT };
 
 struct ButtonEvent
@@ -33,6 +35,8 @@ union Event
   int type;
   ButtonEvent button;
 };
+
+} // namespace construo
 
 #endif
 

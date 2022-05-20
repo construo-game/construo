@@ -27,6 +27,8 @@
 #include "world.hpp"
 #include "zoom_graphic_context.hpp"
 
+namespace construo {
+
 WorldRenderer::WorldRenderer(World const& world) :
   m_world(const_cast<World&>(world))
 {
@@ -263,5 +265,7 @@ WorldRenderer::mass_to_radius(float mass)
   float const scale_factor = 5.0f;
   return std::sqrt(mass) * scale_factor;
 }
+
+} // namespace construo
 
 /* EOF */

@@ -21,6 +21,8 @@
 #include "world.hpp"
 #include "world_reader.hpp"
 
+namespace construo {
+
 WorldCache::WorldCache() :
   m_worlds()
 {
@@ -44,5 +46,7 @@ WorldCache::get(std::string const& filename)
     }
   }
 }
+
+} // namespace construo
 
 /* EOF */

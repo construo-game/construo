@@ -24,6 +24,8 @@
 #include "gui_widget.hpp"
 #include "zoom_graphic_context.hpp"
 
+namespace construo {
+
 class WidgetGroup : public GUIWidget
 {
 public:
@@ -79,6 +81,8 @@ public:
   WidgetGroup(const WidgetGroup&) = delete;
   WidgetGroup& operator=(const WidgetGroup&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

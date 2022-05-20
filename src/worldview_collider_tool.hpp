@@ -21,6 +21,8 @@
 
 #include "worldview_tool.hpp"
 
+namespace construo {
+
 class WorldViewColliderTool : public WorldViewTool
 {
 public:
@@ -49,6 +51,8 @@ public:
   WorldViewColliderTool(const WorldViewColliderTool&) = delete;
   WorldViewColliderTool& operator=(const WorldViewColliderTool&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

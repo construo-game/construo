@@ -17,10 +17,14 @@
 #ifndef HEADER_CONSTRUO_KEYS_HPP
 #define HEADER_CONSTRUO_KEYS_HPP
 
+namespace construo {
+
 enum {
   KEY_ESCAPE,
   KEY_ENTER
 };
+
+} // namespace construo
 
 #endif
 

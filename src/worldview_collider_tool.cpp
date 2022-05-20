@@ -27,6 +27,8 @@
 #include "world_gui_manager.hpp"
 #include "worldview_widget.hpp"
 
+namespace construo {
+
 WorldViewColliderTool::WorldViewColliderTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_creating_rect(false),
@@ -141,5 +143,7 @@ WorldViewColliderTool::on_secondary_button_release (geom::fpoint const& pos)
   }
   m_to_delete_collider = nullptr;
 }
+
+} // namespace construo
 
 /* EOF */

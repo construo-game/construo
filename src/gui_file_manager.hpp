@@ -24,6 +24,8 @@
 #include "widget_group.hpp"
 #include "gui_directory.hpp"
 
+namespace construo {
+
 class GUIFileManager : public WidgetGroup
 {
 public:
@@ -64,6 +66,8 @@ public:
   GUIFileManager(const GUIFileManager&) = delete;
   GUIFileManager& operator=(const GUIFileManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

@@ -17,6 +17,8 @@
 #include "gui_file_manager.hpp"
 #include "gui_directory_button.hpp"
 
+namespace construo {
+
 GUIDirectoryButton::GUIDirectoryButton(const std::string& pathname,
                                        std::function<void ()> callback) :
   GUIFileButton(pathname),
@@ -48,5 +50,7 @@ GUIDirectoryButton::on_click()
 {
   m_callback();
 }
+
+} // namespace construo
 
 /* EOF */

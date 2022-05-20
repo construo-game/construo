@@ -32,6 +32,8 @@
 #include "screen_manager.hpp"
 #include "root_graphic_context.hpp"
 
+namespace construo {
+
 WorldGUIManager* WorldGUIManager::instance_ = nullptr;
 
 WorldGUIManager::WorldGUIManager() :
@@ -338,5 +340,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(610, bottom_line), "Construo " VERSION);
   //gc.draw_string(680, bottom_line, std::to_string(m_worldview_widget->get_scale()));
 }
+
+} // namespace construo
 
 /* EOF */

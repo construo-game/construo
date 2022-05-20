@@ -18,6 +18,8 @@
 #include "colors.hpp"
 #include "gui_label.hpp"
 
+namespace construo {
+
 GUILabel::GUILabel(const std::string& title) :
   GUIWidget(),
   m_title_func([=]{ return title; })
@@ -35,5 +37,7 @@ GUILabel::draw (GraphicContext& gc)
 {
   gc.draw_string(m_geometry.topleft() + geom::foffset(10, 15), m_title_func());
 }
+
+} // namespace construo
 
 /* EOF */

@@ -21,6 +21,8 @@
 #include "settings.hpp"
 #include "command_line.hpp"
 
+namespace construo {
+
 void
 CommandLine::error (const std::string& msg)
 {
@@ -138,6 +140,8 @@ CommandLine::print_version ()
             << "This is free software; see the source for copying conditions.  There is NO\n"
             << "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\n";
 }
+
+} // namespace construo
 
 /* EOF */
 

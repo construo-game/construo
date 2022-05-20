@@ -30,6 +30,8 @@
 #include "root_graphic_context.hpp"
 #include "screen_manager.hpp"
 
+namespace construo {
+
 GUIManager::GUIManager() :
   m_frame_count(0),
   m_start_time(g_system_context->get_time()),
@@ -350,5 +352,7 @@ GUIManager::add(std::unique_ptr<GUIWidget> widget)
   assert(widget != nullptr);
   m_widgets.emplace_back(std::move(widget));
 }
+
+} // namespace construo
 
 /* EOF */

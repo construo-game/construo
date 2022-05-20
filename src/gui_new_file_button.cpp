@@ -24,6 +24,8 @@
 #include "screen_manager.hpp"
 #include "path.hpp"
 
+namespace construo {
+
 GUINewFileButton::GUINewFileButton(const std::string& filename) :
   GUIFileButton(filename)
 {
@@ -64,5 +66,7 @@ GUINewFileButton::on_click()
   Controller::instance()->save_world (filename);
   ScreenManager::instance()->set_gui(ScreenManager::WORLD_GUI);
 }
+
+} // namespace construo
 
 /* EOF */

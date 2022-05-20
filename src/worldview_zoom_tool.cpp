@@ -21,6 +21,8 @@
 #include "worldview_widget.hpp"
 #include "worldview_zoom_tool.hpp"
 
+namespace construo {
+
 WorldViewZoomTool::WorldViewZoomTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_click_pos(0.0f, 0.0f),
@@ -81,5 +83,7 @@ WorldViewZoomTool::on_secondary_button_release(geom::fpoint const& pos)
 {
 
 }
+
+} // namespace construo
 
 /* EOF */

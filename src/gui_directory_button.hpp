@@ -19,6 +19,8 @@
 
 #include "gui_file_button.hpp"
 
+namespace construo {
+
 class GUIDirectoryButton : public GUIFileButton
 {
 public:
@@ -31,6 +33,8 @@ public:
 private:
   std::function<void ()> m_callback;
 };
+
+} // namespace construo
 
 #endif
 

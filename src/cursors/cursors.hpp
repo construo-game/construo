@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_CURSORS_CURSORS_HXX
 #define HEADER_CONSTRUO_CURSORS_CURSORS_HXX
 
+namespace construo {
+
 #include "cursor_insert.xbm"
 #include "cursor_insert_mask.xbm"
 
@@ -31,6 +33,8 @@
 
 #include "cursor_collider.xbm"
 #include "cursor_collider_mask.xbm"
+
+} // namespace construo
 
 #endif
 

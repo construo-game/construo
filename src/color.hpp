@@ -19,13 +19,11 @@
 
 #include <stdint.h>
 
-struct Color
-{
-  float r;
-  float g;
-  float b;
-  float a;
+namespace construo {
 
+class Color
+{
+public:
   Color() :
     r(0.0f), g(0.0f), b(0.0f), a(0.0f)
   {}
@@ -47,7 +45,15 @@ struct Color
       |   ((static_cast<unsigned int>(255.0f * g)) << 8)
       |   ((static_cast<unsigned int>(255.0f * r)) << 16);
   }
+
+public:
+  float r;
+  float g;
+  float b;
+  float a;
 };
+
+} // namespace construo
 
 #endif
 

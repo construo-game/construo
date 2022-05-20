@@ -14,13 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_ZOOM_GRAPHIC_CONTEXT_HPP
-#define HEADER_ZOOM_GRAPHIC_CONTEXT_HPP
+#ifndef HEADER_CONSTRUO_ZOOM_GRAPHIC_CONTEXT_HPP
+#define HEADER_CONSTRUO_ZOOM_GRAPHIC_CONTEXT_HPP
 
 #include <glm/glm.hpp>
 
 #include "graphic_context.hpp"
 #include "zoom_state.hpp"
+
+namespace construo {
 
 /** A GraphicContext, that wraps another GraphicContext and adds
     coordinate translation like zoom and scrolling */
@@ -73,6 +75,8 @@ public:
   ZoomGraphicContext(const ZoomGraphicContext&) = delete;
   ZoomGraphicContext& operator=(const ZoomGraphicContext&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

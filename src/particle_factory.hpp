@@ -28,6 +28,8 @@
 typedef int ParticleId;
 
 /** Its really more a particle manager, but lets see */
+namespace construo {
+
 class ParticleFactory
 {
 public:
@@ -70,6 +72,8 @@ private:
 private:
   ParticleFactory& operator=(const ParticleFactory&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

@@ -23,6 +23,8 @@
 #include <geom/point.hpp>
 #include <geom/size.hpp>
 
+namespace construo {
+
 /** A collection of small math helper functions, some of them might be
     equal in functionality to standard STL functions, but provided
     here for portability and broken STL implementations
@@ -71,6 +73,8 @@ inline int get_exp_n(float x, int n)
 }
 
 } // namespace Math
+
+} // namespace construo
 
 #endif
 

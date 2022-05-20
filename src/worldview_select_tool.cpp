@@ -29,6 +29,8 @@
 #include "worldview_widget.hpp"
 #include "worldview_select_tool.hpp"
 
+namespace construo {
+
 WorldViewSelectTool::WorldViewSelectTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_selection(),
@@ -424,5 +426,7 @@ WorldViewSelectTool::on_join_press(geom::fpoint const& pos)
 {
   m_selection.join_doubles(5.0f);
 }
+
+} // namespace construo
 
 /* EOF */

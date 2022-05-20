@@ -25,6 +25,8 @@
 #include "root_graphic_context.hpp"
 #include "input_context.hpp"
 
+namespace construo {
+
 class GlutDisplay : public RootGraphicContext,
                     public InputContext
 {
@@ -97,6 +99,8 @@ public:
   GlutDisplay(const GlutDisplay&) = delete;
   GlutDisplay& operator=(const GlutDisplay&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

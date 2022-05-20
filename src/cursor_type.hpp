@@ -17,6 +17,8 @@
 #ifndef HEADER_CURSORS_HPP
 #define HEADER_CURSORS_HPP
 
+namespace construo {
+
 /** Different cursor types */
 enum class CursorType {
   SELECT,
@@ -27,6 +29,8 @@ enum class CursorType {
   SCALE,
   COLLIDER
 };
+
+} // namespace construo
 
 #endif
 

@@ -16,6 +16,8 @@
 
 #include "settings.hpp"
 
+namespace construo {
+
 Settings g_settings;
 
 Settings::Settings () :
@@ -30,5 +32,7 @@ Settings::Settings () :
   datadir()
 {
 }
+
+} // namespace construo
 
 /* EOF */

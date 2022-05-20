@@ -2,6 +2,8 @@
 
 #include "path.hpp"
 
+using namespace construo;
+
 TEST(PathTest, path_join)
 {
   EXPECT_EQ(path_join("", "bar"), "bar");

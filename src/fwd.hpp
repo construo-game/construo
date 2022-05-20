@@ -17,6 +17,8 @@
 #ifndef HEADER_CONSTRUO_FWD_HPP
 #define HEADER_CONSTRUO_FWD_HPP
 
+namespace construo {
+
 class Collider;
 class GUIButton;
 class GUIWidget;
@@ -47,6 +49,8 @@ class WorldViewZoomTool;
 class X11Display;
 class ZoomGraphicContext;
 struct ButtonEvent;
+
+} // namespace construo
 
 #endif
 

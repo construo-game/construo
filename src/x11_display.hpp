@@ -57,6 +57,8 @@ struct std::hash<KeySequence>
 };
 
 /** X11Display driver */
+namespace construo {
+
 class X11Display : public RootGraphicContext,
                    public InputContext
 {
@@ -167,6 +169,8 @@ public:
   X11Display(const X11Display&) = delete;
   X11Display& operator=(const X11Display&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

@@ -23,6 +23,8 @@
 #include "world_gui_manager.hpp"
 #include "worldview_widget.hpp"
 
+namespace construo {
+
 #define BUTTON_POS(n) (80 + n * 30)
 #define BUTTON_WIDTH  75
 #define BUTTON_HEIGHT 25
@@ -121,5 +123,7 @@ GUIButton::draw_border_normal(GraphicContext& gc)
 {
   gc.draw_rect(m_geometry, g_style.button_fg_passive);
 }
+
+} // namespace construo
 
 /* EOF */

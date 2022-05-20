@@ -19,6 +19,8 @@
 
 #include "gui_manager.hpp"
 
+namespace construo {
+
 class SaveGUIManager : public GUIManager
 {
 public:
@@ -35,6 +37,8 @@ public:
   SaveGUIManager(const SaveGUIManager&) = delete;
   SaveGUIManager& operator=(const SaveGUIManager&) = delete;
 };
+
+} // namespace construo
 
 #endif
 

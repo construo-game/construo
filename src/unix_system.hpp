@@ -21,6 +21,8 @@
 
 /** This class wraps a bunch of unix functions to provide file-io and
     the current time */
+namespace construo {
+
 class UnixSystem : public SystemContext
 {
 public:
@@ -50,6 +52,8 @@ private:
       the name contains a trailing slash */
   std::filesystem::path m_construo_rc_path;
 };
+
+} // namespace construo
 
 #endif
 

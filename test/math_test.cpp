@@ -2,6 +2,8 @@
 
 #include "math.hpp"
 
+using namespace construo;
+
 TEST(MathTest, round_to)
 {
   // zero

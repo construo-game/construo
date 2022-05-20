@@ -39,6 +39,8 @@
 #include "path.hpp"
 #include "path_manager.hpp"
 
+namespace construo {
+
 UnixSystem::UnixSystem () :
   start_time(0),
   m_construo_rc_path()
@@ -283,5 +285,7 @@ UnixSystem::read_directory(const std::string& arg_pathname)
     return dir_lst;
   }
 }
+
+} // namespace construo
 
 /* EOF */

@@ -30,6 +30,8 @@
 #include "controller.hpp"
 #include "rect_collider.hpp"
 
+namespace construo {
+
 World::World() :
   m_particle_mgr(std::make_unique<ParticleFactory>()),
   m_springs(),
@@ -336,5 +338,7 @@ World::add_rect_collider(const glm::vec2& pos1, const glm::vec2& pos2)
 
   m_colliders.emplace_back(std::make_unique<RectCollider>(rect.left(), rect.top(), rect.right(), rect.bottom()));
 }
+
+} // namespace construo
 
 /* EOF */

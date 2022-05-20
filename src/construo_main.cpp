@@ -39,6 +39,8 @@
 #include "gui_manager.hpp"
 #include "screen_manager.hpp"
 
+namespace construo {
+
 ConstruoMain::ConstruoMain () :
   m_display(),
   m_system(),
@@ -140,5 +142,6 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
   return 0;
 }
 
+} // namespace construo
 
 /* EOF */
