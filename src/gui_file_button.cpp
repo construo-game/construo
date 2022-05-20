@@ -17,7 +17,7 @@
 #include "gui_file_button.hpp"
 
 GUIFileButton::GUIFileButton(const std::string& path) :
-  GUIComponent(),
+  GUIWidget(),
   m_path(path),
   m_mouse_over(false)
 {

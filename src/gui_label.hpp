@@ -20,9 +20,9 @@
 #include <functional>
 #include <string>
 
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 
-class GUILabel : public GUIComponent
+class GUILabel : public GUIWidget
 {
 public:
   GUILabel(std::string const& title);

@@ -19,13 +19,13 @@
 #include "gui_label.hpp"
 
 GUILabel::GUILabel(const std::string& title) :
-  GUIComponent(),
+  GUIWidget(),
   m_title_func([=]{ return title; })
 {
 }
 
 GUILabel::GUILabel(std::function<std::string ()> title_func) :
-  GUIComponent(),
+  GUIWidget(),
   m_title_func(std::move(title_func))
 {
 }

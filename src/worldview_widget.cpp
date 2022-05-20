@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 
 #include "colors.hpp"
 #include "controller.hpp"
@@ -27,10 +27,10 @@
 #include "worldview_zoom_tool.hpp"
 #include "worldview_collider_tool.hpp"
 
-WorldViewComponent* WorldViewComponent::instance_;
+WorldViewWidget* WorldViewWidget::instance_;
 
-WorldViewComponent::WorldViewComponent() :
-  GUIComponent(),
+WorldViewWidget::WorldViewWidget() :
+  GUIWidget(),
   m_zoom(g_graphic_context->geometry()),
   m_use_grid(false),
   m_grid_base_size(10),
@@ -51,7 +51,7 @@ WorldViewComponent::WorldViewComponent() :
 }
 
 void
-WorldViewComponent::set_mode(Mode m)
+WorldViewWidget::set_mode(Mode m)
 {
   m_current_tool->deactivate();
 
@@ -81,32 +81,32 @@ WorldViewComponent::set_mode(Mode m)
   }
   else
   {
-    assert(false && "WorldViewComponent: unknown mode");
+    assert(false && "WorldViewWidget: unknown mode");
   }
 
   m_current_tool->activate ();
 }
 
-WorldViewComponent::~WorldViewComponent()
+WorldViewWidget::~WorldViewWidget()
 {
   instance_ = nullptr;
 }
 
 float
-WorldViewComponent::get_grid_size()
+WorldViewWidget::get_grid_size()
 {
   return m_grid_base_size / powf(static_cast<float>(m_grid_constant),
                                  static_cast<float>(Math::get_exp_n(m_zoom.get_scale() * m_grid_scale_factor, m_grid_constant)));
 }
 
 float
-WorldViewComponent::get_snap_size()
+WorldViewWidget::get_snap_size()
 {
   return get_grid_size() / m_grid_snap_factor;
 }
 
 void
-WorldViewComponent::draw(GraphicContext& parent_gc)
+WorldViewWidget::draw(GraphicContext& parent_gc)
 {
   m_zoom.set_bounding_box(m_geometry);
   ZoomGraphicContext gc(parent_gc, m_zoom);
@@ -171,97 +171,97 @@ WorldViewComponent::draw(GraphicContext& parent_gc)
 }
 
 void
-WorldViewComponent::wheel_up(geom::fpoint const& pos)
+WorldViewWidget::wheel_up(geom::fpoint const& pos)
 {
   m_zoom.zoom_in(pos);
 }
 
 void
-WorldViewComponent::wheel_down(geom::fpoint const& pos)
+WorldViewWidget::wheel_down(geom::fpoint const& pos)
 {
   m_zoom.zoom_out(pos);
 }
 
 void
-WorldViewComponent::on_button_press(int button_id, geom::fpoint const& pos)
+WorldViewWidget::on_button_press(int button_id, geom::fpoint const& pos)
 {
   m_current_tool->on_button_press(button_id, pos);
 }
 
 void
-WorldViewComponent::on_primary_button_press(geom::fpoint const& screen_pos)
+WorldViewWidget::on_primary_button_press(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_primary_button_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_primary_button_release(geom::fpoint const& screen_pos)
+WorldViewWidget::on_primary_button_release(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_primary_button_release(screen_pos);
 }
 
 void
-WorldViewComponent::on_secondary_button_press(geom::fpoint const& screen_pos)
+WorldViewWidget::on_secondary_button_press(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_secondary_button_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_secondary_button_release(geom::fpoint const& screen_pos)
+WorldViewWidget::on_secondary_button_release(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_secondary_button_release(screen_pos);
 }
 
 void
-WorldViewComponent::on_delete_press(geom::fpoint const& screen_pos)
+WorldViewWidget::on_delete_press(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_delete_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_duplicate_press(geom::fpoint const& screen_pos)
+WorldViewWidget::on_duplicate_press(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_duplicate_press(screen_pos);
 }
 
 void
-WorldViewComponent::on_join_press(geom::fpoint const& pos)
+WorldViewWidget::on_join_press(geom::fpoint const& pos)
 {
   m_current_tool->on_join_press(pos);
 }
 
 void
-WorldViewComponent::on_fix_press(geom::fpoint const& screen_pos)
+WorldViewWidget::on_fix_press(geom::fpoint const& screen_pos)
 {
   m_current_tool->on_fix_press(screen_pos);
 }
 
 void
-WorldViewComponent::scroll_left()
+WorldViewWidget::scroll_left()
 {
   m_zoom.translate(geom::foffset(-20, 0));
 }
 
 void
-WorldViewComponent::scroll_right()
+WorldViewWidget::scroll_right()
 {
   m_zoom.translate(geom::foffset(20, 0));
 }
 
 void
-WorldViewComponent::scroll_up()
+WorldViewWidget::scroll_up()
 {
   m_zoom.translate(geom::foffset(0, -20));
 }
 
 void
-WorldViewComponent::scroll_down()
+WorldViewWidget::scroll_down()
 {
   m_zoom.translate(geom::foffset(0, 20));
 }
 
 void
-WorldViewComponent::on_tertiary_button_press(geom::fpoint const& pos)
+WorldViewWidget::on_tertiary_button_press(geom::fpoint const& pos)
 {
   m_scrolling = true;
   g_graphic_context->push_cursor();
@@ -275,7 +275,7 @@ WorldViewComponent::on_tertiary_button_press(geom::fpoint const& pos)
 }
 
 void
-WorldViewComponent::on_tertiary_button_release(geom::fpoint const& pos)
+WorldViewWidget::on_tertiary_button_release(geom::fpoint const& pos)
 {
   g_graphic_context->pop_cursor();
   m_scrolling = false;
@@ -283,7 +283,7 @@ WorldViewComponent::on_tertiary_button_release(geom::fpoint const& pos)
 }
 
 void
-WorldViewComponent::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
+WorldViewWidget::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
 {
   if (m_scrolling)
   {
@@ -301,25 +301,25 @@ WorldViewComponent::on_mouse_move(geom::fpoint const& pos, geom::foffset const& 
 }
 
 void
-WorldViewComponent::on_scale_press(geom::fpoint const& pos)
+WorldViewWidget::on_scale_press(geom::fpoint const& pos)
 {
   m_current_tool->on_scale_press(pos);
 }
 
 void
-WorldViewComponent::on_grid_press(geom::fpoint const& pos)
+WorldViewWidget::on_grid_press(geom::fpoint const& pos)
 {
   m_use_grid = !m_use_grid;
 }
 
 float
-WorldViewComponent::get_scale ()
+WorldViewWidget::get_scale ()
 {
   return m_zoom.get_scale();
 }
 
 void
-WorldViewComponent::on_world_change()
+WorldViewWidget::on_world_change()
 {
   World& world = Controller::instance()->get_world();
 

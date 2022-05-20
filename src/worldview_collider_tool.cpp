@@ -25,9 +25,9 @@
 #include "world.hpp"
 #include "world_renderer.hpp"
 #include "world_gui_manager.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 
-WorldViewColliderTool::WorldViewColliderTool(WorldViewComponent& worldview) :
+WorldViewColliderTool::WorldViewColliderTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_creating_rect(false),
   m_click_pos(0.0f, 0.0f),

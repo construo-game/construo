@@ -25,10 +25,10 @@
 #include "world.hpp"
 #include "controller.hpp"
 #include "world_renderer.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 #include "world_gui_manager.hpp"
 
-WorldViewInsertTool::WorldViewInsertTool(WorldViewComponent& worldview) :
+WorldViewInsertTool::WorldViewInsertTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_previous_particle(nullptr),
   m_hover_spring(nullptr),

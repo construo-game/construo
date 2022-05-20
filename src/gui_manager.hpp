@@ -38,7 +38,7 @@ public:
   /** Launches a single run from the games main loop */
   virtual void run_once(GraphicContext& gc);
 
-  /** Draw all the GUI components */
+  /** Draw all the GUI widgets */
   void draw(GraphicContext& gc);
   virtual void update() {}
 
@@ -49,7 +49,7 @@ public:
   /** Stops the GUIManager */
   void quit();
 
-  void add(std::unique_ptr<GUIComponent> component);
+  void add(std::unique_ptr<GUIWidget> widget);
 
   template<typename T, typename... Args>
   T* create(Args&&... args) {
@@ -59,29 +59,29 @@ public:
     return ptr;
   }
 
-  void grab_mouse(GUIComponent& component);
-  void ungrab_mouse(GUIComponent& component);
+  void grab_mouse(GUIWidget& widget);
+  void ungrab_mouse(GUIWidget& widget);
 
 private:
   void process_events ();
   void process_button_events (ButtonEvent&);
-  GUIComponent* find_component_at(geom::fpoint const& pos) const;
+  GUIWidget* find_widget_at(geom::fpoint const& pos) const;
 
 private:
   unsigned int m_frame_count;
   unsigned long m_start_time;
   float m_current_fps;
 
-  /** component where the mouse is currently over */
-  GUIComponent* m_last_component;
-  GUIComponent* m_current_component;
+  /** widget where the mouse is currently over */
+  GUIWidget* m_last_widget;
+  GUIWidget* m_current_widget;
 
-  GUIComponent* m_grabbing_component;
+  GUIWidget* m_grabbing_widget;
 
   geom::fpoint m_previous_pos;
 
-  /** A collection of GUI components aka widgets */
-  std::vector<std::unique_ptr<GUIComponent> > m_components;
+  /** A collection of GUI widgets aka widgets */
+  std::vector<std::unique_ptr<GUIWidget> > m_widgets;
 
 public:
   GUIManager(const GUIManager&) = delete;

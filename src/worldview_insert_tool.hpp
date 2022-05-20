@@ -22,7 +22,7 @@
 class WorldViewInsertTool : public WorldViewTool
 {
 public:
-  WorldViewInsertTool(WorldViewComponent& worldview);
+  WorldViewInsertTool(WorldViewWidget& worldview);
   ~WorldViewInsertTool();
 
   void draw_background(ZoomGraphicContext& gc) override;

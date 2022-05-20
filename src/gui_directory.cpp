@@ -39,7 +39,7 @@ GUIDirectory::GUIDirectory(GUIFileManager& file_manager, const std::string& path
   m_row_offset(0)
 {
   read_directory();
-  place_components();
+  place_widgets();
 }
 
 GUIDirectory::~GUIDirectory ()
@@ -89,11 +89,11 @@ GUIDirectory::read_directory()
 }
 
 void
-GUIDirectory::place_components()
+GUIDirectory::place_widgets()
 {
   if (m_items.empty()) { return; }
 
-  // Remove all file components
+  // Remove all file widgets
   clear();
 
   int const columns = static_cast<int>(m_geometry.width() / 320.0f) + 1;
@@ -117,7 +117,7 @@ GUIDirectory::place_components()
       i < m_items.size() && count < (columns * rows);
       ++i)
   {
-    std::unique_ptr<GUIComponent> comp = m_items[i]();
+    std::unique_ptr<GUIWidget> comp = m_items[i]();
     comp->set_geometry(geom::frect(geom::fpoint(static_cast<float>(column) * (thumb_size.width() + spacing) + padding,
                                                 static_cast<float>(row) * (thumb_size.height() + spacing) + padding),
                                    thumb_size));
@@ -136,21 +136,21 @@ void
 GUIDirectory::set_geometry(geom::frect const& geometry)
 {
   GUIChildManager::set_geometry(geometry);
-  place_components();
+  place_widgets();
 }
 
 void
 GUIDirectory::move_up ()
 {
   m_row_offset = std::clamp(m_row_offset - 1, 0, m_last_row);
-  place_components ();
+  place_widgets ();
 }
 
 void
 GUIDirectory::move_down ()
 {
   m_row_offset = std::clamp(m_row_offset + 1, 0, m_last_row);
-  place_components ();
+  place_widgets ();
 }
 
 void

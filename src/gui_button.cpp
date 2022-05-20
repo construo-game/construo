@@ -21,7 +21,7 @@
 #include "graphic_context.hpp"
 #include "screen_manager.hpp"
 #include "world_gui_manager.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 
 #define BUTTON_POS(n) (80 + n * 30)
 #define BUTTON_WIDTH  75
@@ -30,7 +30,7 @@
 GUIButton::GUIButton(const std::string& title,
           OnClickSignal sig_on_click,
           HighlightPred sig_highlight_p) :
-  GUIComponent(),
+  GUIWidget(),
   m_title(title),
   m_mouse_over(false),
   m_pressed(false),

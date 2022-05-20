@@ -24,7 +24,7 @@
 class WorldViewZoomTool : public WorldViewTool
 {
 public:
-  WorldViewZoomTool(WorldViewComponent& worldview);
+  WorldViewZoomTool(WorldViewWidget& worldview);
   ~WorldViewZoomTool();
 
   void activate() override;

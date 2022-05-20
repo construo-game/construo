@@ -24,7 +24,7 @@
 class WorldViewTool
 {
 public:
-  WorldViewTool(WorldViewComponent& worldview) :
+  WorldViewTool(WorldViewWidget& worldview) :
     m_worldview(worldview)
   {}
   virtual ~WorldViewTool() {}
@@ -55,7 +55,7 @@ public:
   virtual void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) {}
 
 protected:
-  WorldViewComponent& m_worldview;
+  WorldViewWidget& m_worldview;
 };
 
 #endif

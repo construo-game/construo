@@ -24,7 +24,7 @@
 #include "controller.hpp"
 #include "construo.hpp"
 #include "graphic_context.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 #include "worldview_insert_tool.hpp"
 #include "gui_button.hpp"
 #include "gui_window.hpp"
@@ -35,7 +35,7 @@
 WorldGUIManager* WorldGUIManager::instance_ = nullptr;
 
 WorldGUIManager::WorldGUIManager() :
-  m_worldview_component(),
+  m_worldview_widget(),
   m_run_button(),
   m_slowmo_button(),
   m_load_button(),
@@ -62,7 +62,7 @@ WorldGUIManager::WorldGUIManager() :
 {
   instance_  = this;
 
-  m_worldview_component = create<WorldViewComponent>();
+  m_worldview_widget = create<WorldViewWidget>();
 
   // simulation
   m_run_button = create<GUIButton>(
@@ -102,8 +102,8 @@ WorldGUIManager::WorldGUIManager() :
 
   m_grid_button = create<GUIButton>(
     "Use Grid",
-    [this]{ m_worldview_component->on_grid_press(geom::fpoint(0, 0)); },
-    [this]{ return m_worldview_component->uses_grid(); });
+    [this]{ m_worldview_widget->on_grid_press(geom::fpoint(0, 0)); },
+    [this]{ return m_worldview_widget->uses_grid(); });
 
   m_quit_button = create<GUIButton>("Quit", []{
     ScreenManager::instance()->quit();
@@ -112,30 +112,30 @@ WorldGUIManager::WorldGUIManager() :
   // toolbar
   m_insert_button = create<GUIButton>(
     "Insert",
-    [this]{ m_worldview_component->set_mode (WorldViewComponent::INSERT_MODE); },
-    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::INSERT_MODE; });
+    [this]{ m_worldview_widget->set_mode (WorldViewWidget::INSERT_MODE); },
+    [this]{ return m_worldview_widget->get_mode() == WorldViewWidget::INSERT_MODE; });
 
   m_select_button = create<GUIButton>(
     "Select",
-    [this]{ m_worldview_component->set_mode (WorldViewComponent::SELECT_MODE); },
-    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::SELECT_MODE; });
+    [this]{ m_worldview_widget->set_mode (WorldViewWidget::SELECT_MODE); },
+    [this]{ return m_worldview_widget->get_mode() == WorldViewWidget::SELECT_MODE; });
 
   m_collider_button = create<GUIButton>(
     "Collider",
-    [this]{ m_worldview_component->set_mode (WorldViewComponent::COLLIDER_MODE); },
-    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::COLLIDER_MODE; });
+    [this]{ m_worldview_widget->set_mode (WorldViewWidget::COLLIDER_MODE); },
+    [this]{ return m_worldview_widget->get_mode() == WorldViewWidget::COLLIDER_MODE; });
 
   m_zoom_button = create<GUIButton>(
     "Zoom",
-    [this]{ m_worldview_component->set_mode (WorldViewComponent::ZOOM_MODE); },
-    [this]{ return m_worldview_component->get_mode() == WorldViewComponent::ZOOM_MODE; });
+    [this]{ m_worldview_widget->set_mode (WorldViewWidget::ZOOM_MODE); },
+    [this]{ return m_worldview_widget->get_mode() == WorldViewWidget::ZOOM_MODE; });
 
   m_zoomout_button = create<GUIButton>(
     "-",
-    [this]{ m_worldview_component->wheel_up(geom::center(g_graphic_context->geometry())); });
+    [this]{ m_worldview_widget->wheel_up(geom::center(g_graphic_context->geometry())); });
   m_zoomin_button = create<GUIButton>(
     "+",
-    [this]{ m_worldview_component->wheel_down(geom::center(g_graphic_context->geometry())); });
+    [this]{ m_worldview_widget->wheel_down(geom::center(g_graphic_context->geometry())); });
 
   // particle mass
   m_particle_mass_label = create<GUILabel>([]{
@@ -185,9 +185,9 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
     // Do clever enlarging of the viewport only when the window is
     // resized, but avoid it when the window is moved
     auto const offset = m_last_geometry.topleft().as_vec() - geometry.topleft().as_vec();
-    m_worldview_component->zoom().set_offset(
-      geom::foffset(m_worldview_component->zoom().get_offset().x() + offset.x / m_worldview_component->zoom().get_scale(),
-                    m_worldview_component->zoom().get_offset().y() + offset.y / m_worldview_component->zoom().get_scale()));
+    m_worldview_widget->zoom().set_offset(
+      geom::foffset(m_worldview_widget->zoom().get_offset().x() + offset.x / m_worldview_widget->zoom().get_scale(),
+                    m_worldview_widget->zoom().get_offset().y() + offset.y / m_worldview_widget->zoom().get_scale()));
   }
 
   GUIManager::set_geometry(geometry);
@@ -209,7 +209,7 @@ WorldGUIManager::set_geometry(geom::frect const& geometry)
                        rect.bottom());
   };
 
-  m_worldview_component->set_geometry(geom::frect(geometry.size()));
+  m_worldview_widget->set_geometry(geom::frect(geometry.size()));
 
   m_run_button->set_geometry(btn_left(0));
   m_slowmo_button->set_geometry(btn_left(1));
@@ -276,9 +276,9 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   column += 2; row = 0;
 
-  switch (m_worldview_component->get_mode())
+  switch (m_worldview_widget->get_mode())
     {
-    case WorldViewComponent::INSERT_MODE:
+    case WorldViewWidget::INSERT_MODE:
       gc.draw_string(pos(), "  [left] - insert/connect spots");
       gc.draw_string(pos(), "[middle] - scroll");
       gc.draw_string(pos(), " [right] - remove spot");
@@ -286,7 +286,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
       gc.draw_string(pos(), "     [f] - fix current dot");
       break;
 
-    case WorldViewComponent::SELECT_MODE:
+    case WorldViewWidget::SELECT_MODE:
       gc.draw_string(pos(), "  [left] - create/move selection");
       gc.draw_string(pos(), "[middle] - scroll");
       gc.draw_string(pos(), " [right] - rotate selection");
@@ -300,13 +300,13 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
       gc.draw_string(pos(), "     [s] - scale selection");
       break;
 
-    case WorldViewComponent::ZOOM_MODE:
+    case WorldViewWidget::ZOOM_MODE:
       gc.draw_string(pos(), "  [left] - zoom into region");
       gc.draw_string(pos(), "[middle] - scroll");
       gc.draw_string(pos(), " [right] - zoom out");
       break;
 
-    case WorldViewComponent::COLLIDER_MODE:
+    case WorldViewWidget::COLLIDER_MODE:
       gc.draw_string(pos(), "  [left] - create/move collider");
       gc.draw_string(pos(), "[middle] - scroll");
       gc.draw_string(pos(), " [right] - remove collider");
@@ -323,7 +323,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(80.0f, bottom_line - 20.0f), fmt::format("{:6.2f}", get_fps()));
 
   gc.draw_string(geom::fpoint(10.0f, bottom_line), "Pos: ");
-  auto const& p = m_worldview_component->zoom().screen_to_world(g_input_context->get_mouse_pos());
+  auto const& p = m_worldview_widget->zoom().screen_to_world(g_input_context->get_mouse_pos());
   gc.draw_string(geom::fpoint(80.0f, bottom_line), fmt::format("{:6.2f} {:6.2f}", p.x(), p.y()));
 
   gc.draw_string(geom::fpoint(210.0f, bottom_line - 20.0f), "Particles: ");
@@ -333,10 +333,10 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(280.0f, bottom_line), std::to_string(world.springs().size()));
 
   gc.draw_string(geom::fpoint(410.0f, bottom_line), "Zoom: ");
-  gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_component->get_scale()));
+  gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_widget->get_scale()));
 
   gc.draw_string(geom::fpoint(610, bottom_line), "Construo " VERSION);
-  //gc.draw_string(680, bottom_line, std::to_string(m_worldview_component->get_scale()));
+  //gc.draw_string(680, bottom_line, std::to_string(m_worldview_widget->get_scale()));
 }
 
 /* EOF */

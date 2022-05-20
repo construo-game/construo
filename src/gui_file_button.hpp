@@ -19,9 +19,9 @@
 
 #include <string>
 #include "zoom_graphic_context.hpp"
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 
-class GUIFileButton : public GUIComponent
+class GUIFileButton : public GUIWidget
 {
 public:
   GUIFileButton(std::string const& path);

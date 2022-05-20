@@ -25,7 +25,7 @@ class Particle;
 class WorldViewSelectTool : public WorldViewTool
 {
 public:
-  WorldViewSelectTool(WorldViewComponent& worldview);
+  WorldViewSelectTool(WorldViewWidget& worldview);
   ~WorldViewSelectTool();
 
   void deactivate() override;

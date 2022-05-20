@@ -21,9 +21,9 @@
 #include <string>
 
 #include "colors.hpp"
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 
-class GUIButton : public GUIComponent
+class GUIButton : public GUIWidget
 {
 public:
   using OnClickSignal = std::function<void ()>;

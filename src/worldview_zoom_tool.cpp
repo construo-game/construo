@@ -18,10 +18,10 @@
 #include "construo.hpp"
 #include "input_context.hpp"
 #include "math.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 #include "worldview_zoom_tool.hpp"
 
-WorldViewZoomTool::WorldViewZoomTool(WorldViewComponent& worldview) :
+WorldViewZoomTool::WorldViewZoomTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_click_pos(0.0f, 0.0f),
   m_creating_zoom_rectangle(false)

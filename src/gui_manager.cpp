@@ -24,8 +24,8 @@
 #include "system_context.hpp"
 #include "controller.hpp"
 #include "events.hpp"
-#include "gui_component.hpp"
-#include "worldview_component.hpp"
+#include "gui_widget.hpp"
+#include "worldview_widget.hpp"
 #include "worldview_insert_tool.hpp"
 #include "root_graphic_context.hpp"
 #include "screen_manager.hpp"
@@ -34,11 +34,11 @@ GUIManager::GUIManager() :
   m_frame_count(0),
   m_start_time(g_system_context->get_time()),
   m_current_fps(0.0f),
-  m_last_component(nullptr),
-  m_current_component(nullptr),
-  m_grabbing_component(nullptr),
+  m_last_widget(nullptr),
+  m_current_widget(nullptr),
+  m_grabbing_widget(nullptr),
   m_previous_pos(),
-  m_components()
+  m_widgets()
 {
 }
 
@@ -72,7 +72,7 @@ void
 GUIManager::draw(GraphicContext& gc)
 {
   gc.clear();
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  for (auto i = m_widgets.begin (); i != m_widgets.end (); ++i)
   {
     (*i)->draw(gc);
   }
@@ -81,17 +81,17 @@ GUIManager::draw(GraphicContext& gc)
   gc.flip();
 }
 
-GUIComponent*
-GUIManager::find_component_at(geom::fpoint const& pos) const
+GUIWidget*
+GUIManager::find_widget_at(geom::fpoint const& pos) const
 {
-  GUIComponent* component = nullptr;
-  for (auto i = m_components.begin (); i != m_components.end (); ++i)
+  GUIWidget* widget = nullptr;
+  for (auto i = m_widgets.begin (); i != m_widgets.end (); ++i)
   {
     if ((*i)->is_at(pos)) {
-      component = i->get();
+      widget = i->get();
     }
   }
-  return component;
+  return widget;
 }
 
 void
@@ -112,54 +112,54 @@ GUIManager::process_button_events (ButtonEvent& button)
         break;
 
       case Action::PRIMARY:
-        m_current_component->on_primary_button_press(pos);
+        m_current_widget->on_primary_button_press(pos);
         break;
 
       case Action::SECONDARY:
-        m_current_component->on_secondary_button_press(pos);
+        m_current_widget->on_secondary_button_press(pos);
         break;
 
       case Action::TERTIARY:
-        m_current_component->on_tertiary_button_press(pos);
+        m_current_widget->on_tertiary_button_press(pos);
         break;
 
       case Action::SCALE:
-        m_current_component->on_scale_press(pos);
+        m_current_widget->on_scale_press(pos);
         break;
 
       case Action::FIX:
-        m_current_component->on_fix_press(pos);
+        m_current_widget->on_fix_press(pos);
         break;
 
       case Action::JOIN:
-        m_current_component->on_join_press(pos);
+        m_current_widget->on_join_press(pos);
         break;
 
       case Action::GRID:
-        m_current_component->on_grid_press(pos);
+        m_current_widget->on_grid_press(pos);
         break;
 
       case Action::DELETE:
-        m_current_component->on_delete_press(pos);
+        m_current_widget->on_delete_press(pos);
         break;
       case Action::DUPLICATE:
-        m_current_component->on_duplicate_press(pos);
+        m_current_widget->on_duplicate_press(pos);
         break;
 
       case Action::SCROLL_LEFT:
-        m_current_component->scroll_left();
+        m_current_widget->scroll_left();
         break;
 
       case Action::SCROLL_RIGHT:
-        m_current_component->scroll_right();
+        m_current_widget->scroll_right();
         break;
 
       case Action::SCROLL_UP:
-        m_current_component->scroll_up();
+        m_current_widget->scroll_up();
         break;
 
       case Action::SCROLL_DOWN:
-        m_current_component->scroll_down();
+        m_current_widget->scroll_down();
         break;
 
       case Action::CLEAR:
@@ -187,13 +187,13 @@ GUIManager::process_button_events (ButtonEvent& button)
         break;
 
       case Action::MODE_CHANGE:
-        if (WorldViewComponent::instance()->get_mode () == WorldViewComponent::INSERT_MODE)
+        if (WorldViewWidget::instance()->get_mode () == WorldViewWidget::INSERT_MODE)
         {
-          WorldViewComponent::instance()->set_mode(WorldViewComponent::SELECT_MODE);
+          WorldViewWidget::instance()->set_mode(WorldViewWidget::SELECT_MODE);
         }
         else
         {
-          WorldViewComponent::instance()->set_mode(WorldViewComponent::INSERT_MODE);
+          WorldViewWidget::instance()->set_mode(WorldViewWidget::INSERT_MODE);
         }
         break;
 
@@ -228,15 +228,15 @@ GUIManager::process_button_events (ButtonEvent& button)
       case Action::QUICKLOAD9: Controller::instance()->load_from_slot(9); break;
 
       case Action::ZOOM_OUT:
-        m_current_component->wheel_down(pos);
+        m_current_widget->wheel_down(pos);
         break;
 
       case Action::ZOOM_IN:
-        m_current_component->wheel_up(pos);
+        m_current_widget->wheel_up(pos);
         break;
 
       default:
-        m_current_component->on_button_press(static_cast<int>(button.id), pos);
+        m_current_widget->on_button_press(static_cast<int>(button.id), pos);
         break;
     }
   }
@@ -245,15 +245,15 @@ GUIManager::process_button_events (ButtonEvent& button)
     switch (button.id)
     {
       case Action::PRIMARY:
-        m_current_component->on_primary_button_release(pos);
+        m_current_widget->on_primary_button_release(pos);
         break;
 
       case Action::SECONDARY:
-        m_current_component->on_secondary_button_release(pos);
+        m_current_widget->on_secondary_button_release(pos);
         break;
 
       case Action::TERTIARY:
-        m_current_component->on_tertiary_button_release(pos);
+        m_current_widget->on_tertiary_button_release(pos);
         break;
 
       default:
@@ -268,48 +268,48 @@ GUIManager::process_events()
 {
   geom::fpoint const pos = g_input_context->get_mouse_pos();
 
-  if (m_grabbing_component && m_previous_pos != pos)
+  if (m_grabbing_widget && m_previous_pos != pos)
   {
-    m_grabbing_component->on_mouse_move(pos, geom::foffset(pos.as_vec() - m_previous_pos.as_vec()));
+    m_grabbing_widget->on_mouse_move(pos, geom::foffset(pos.as_vec() - m_previous_pos.as_vec()));
   }
-  if (m_current_component != m_grabbing_component)
+  if (m_current_widget != m_grabbing_widget)
   {
-    m_current_component->on_mouse_move(pos, geom::foffset(pos.x() - m_previous_pos.x(),
+    m_current_widget->on_mouse_move(pos, geom::foffset(pos.x() - m_previous_pos.x(),
                                                           pos.y() - m_previous_pos.y()));
   }
 
-  if (!m_grabbing_component)
+  if (!m_grabbing_widget)
   {
-    m_current_component = find_component_at(pos);
+    m_current_widget = find_widget_at(pos);
 
-    if (m_last_component != m_current_component)
+    if (m_last_widget != m_current_widget)
     {
-      if (m_current_component) m_current_component->on_mouse_enter();
-      if (m_last_component)
-        m_last_component->on_mouse_leave();
+      if (m_current_widget) m_current_widget->on_mouse_enter();
+      if (m_last_widget)
+        m_last_widget->on_mouse_leave();
 
-      m_last_component = m_current_component;
+      m_last_widget = m_current_widget;
     }
   }
   else
   {
-    GUIComponent* comp = find_component_at(pos);
+    GUIWidget* comp = find_widget_at(pos);
 
-    if (comp != m_grabbing_component)
+    if (comp != m_grabbing_widget)
     {
-      m_grabbing_component->on_mouse_leave();
-      m_last_component = comp;
+      m_grabbing_widget->on_mouse_leave();
+      m_last_widget = comp;
     }
-    else if (m_last_component != m_grabbing_component)
+    else if (m_last_widget != m_grabbing_widget)
     {
-      m_grabbing_component->on_mouse_enter();
+      m_grabbing_widget->on_mouse_enter();
     }
   }
 
   Event event;
   while (g_input_context->get_event(&event))
   {
-    if (m_current_component)
+    if (m_current_widget)
     {
       switch (event.type)
       {
@@ -328,27 +328,27 @@ GUIManager::process_events()
 }
 
 void
-GUIManager::grab_mouse(GUIComponent& component)
+GUIManager::grab_mouse(GUIWidget& widget)
 {
-  m_grabbing_component = &component;
-  m_current_component  = &component;
+  m_grabbing_widget = &widget;
+  m_current_widget  = &widget;
 }
 
 void
-GUIManager::ungrab_mouse(GUIComponent& component)
+GUIManager::ungrab_mouse(GUIWidget& widget)
 {
-  if (m_grabbing_component != &component) {
-    log_error("GUIManager: ungrab mismatch: {} != {}", static_cast<void*>(m_grabbing_component), static_cast<void*>(&component));
+  if (m_grabbing_widget != &widget) {
+    log_error("GUIManager: ungrab mismatch: {} != {}", static_cast<void*>(m_grabbing_widget), static_cast<void*>(&widget));
   }
 
-  m_grabbing_component = nullptr;
+  m_grabbing_widget = nullptr;
 }
 
 void
-GUIManager::add(std::unique_ptr<GUIComponent> component)
+GUIManager::add(std::unique_ptr<GUIWidget> widget)
 {
-  assert(component != nullptr);
-  m_components.emplace_back(std::move(component));
+  assert(widget != nullptr);
+  m_widgets.emplace_back(std::move(widget));
 }
 
 /* EOF */

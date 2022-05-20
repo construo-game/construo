@@ -22,9 +22,9 @@
 #include "colors.hpp"
 
 GUIChildManager::GUIChildManager() :
-  GUIComponent(),
-  m_components(),
-  m_current_component(nullptr)
+  GUIWidget(),
+  m_widgets(),
+  m_current_widget(nullptr)
 {
 }
 
@@ -33,28 +33,28 @@ GUIChildManager::~GUIChildManager ()
 }
 
 void
-GUIChildManager::add(std::unique_ptr<GUIComponent> comp)
+GUIChildManager::add(std::unique_ptr<GUIWidget> comp)
 {
-  m_components.push_back(std::move(comp));
+  m_widgets.push_back(std::move(comp));
 }
 
 void
-GUIChildManager::remove(GUIComponent* comp)
+GUIChildManager::remove(GUIWidget* comp)
 {
-  std::erase_if(m_components, [comp](auto&& item){
+  std::erase_if(m_widgets, [comp](auto&& item){
     return item.get() == comp;
   });
 
-  if (m_current_component == comp) {
-    m_current_component = nullptr;
+  if (m_current_widget == comp) {
+    m_current_widget = nullptr;
   }
 }
 
 void
 GUIChildManager::clear()
 {
-  m_components.clear();
-  m_current_component = nullptr;
+  m_widgets.clear();
+  m_current_widget = nullptr;
 }
 
 void
@@ -71,7 +71,7 @@ GUIChildManager::draw(GraphicContext& parent_gc)
   parent_gc.draw_fill_rect(m_geometry, g_style.button_bg_hover);
   parent_gc.draw_rect(m_geometry, g_style.button_fg_passive);
 
-  for (auto i = m_components.rbegin(); i != m_components.rend(); ++i)
+  for (auto i = m_widgets.rbegin(); i != m_widgets.rend(); ++i)
   {
     (*i)->draw(gc);
   }
@@ -82,7 +82,7 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 void
 GUIChildManager::on_primary_button_press(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -95,7 +95,7 @@ GUIChildManager::on_primary_button_press(geom::fpoint const& pos)
 void
 GUIChildManager::on_primary_button_release(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -108,7 +108,7 @@ GUIChildManager::on_primary_button_release(geom::fpoint const& pos)
 void
 GUIChildManager::on_secondary_button_press(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -121,7 +121,7 @@ GUIChildManager::on_secondary_button_press(geom::fpoint const& pos)
 void
 GUIChildManager::on_secondary_button_release(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -134,7 +134,7 @@ GUIChildManager::on_secondary_button_release(geom::fpoint const& pos)
 void
 GUIChildManager::on_delete_press(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -147,7 +147,7 @@ GUIChildManager::on_delete_press(geom::fpoint const& pos)
 void
 GUIChildManager::on_fix_press(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -170,7 +170,7 @@ GUIChildManager::on_mouse_leave()
 void
 GUIChildManager::wheel_up(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -183,7 +183,7 @@ GUIChildManager::wheel_up(geom::fpoint const& pos)
 void
 GUIChildManager::wheel_down(geom::fpoint const& pos)
 {
-  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -196,7 +196,7 @@ GUIChildManager::wheel_down(geom::fpoint const& pos)
 void
 GUIChildManager::scroll_left()
 {
-  /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  /*  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
       {
       if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
       {
@@ -210,7 +210,7 @@ void
 GUIChildManager::scroll_right()
 {
   /*
-    for (auto i = m_components.begin(); i != m_components.end(); ++i)
+    for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
     {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -223,7 +223,7 @@ GUIChildManager::scroll_right()
 void
 GUIChildManager::scroll_up()
 {
-  /*  for (auto i = m_components.begin(); i != m_components.end(); ++i)
+  /*  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
       {
       if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
       {
@@ -237,7 +237,7 @@ void
 GUIChildManager::scroll_down()
 {
   /*
-    for (auto i = m_components.begin(); i != m_components.end(); ++i)
+    for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
     {
     if ((*i)->is_at(pos - geom::foffset(m_geometry.topleft())))
     {
@@ -250,17 +250,17 @@ GUIChildManager::scroll_down()
 void
 GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
 {
-  GUIComponent* const comp = find_component_at(pos);
+  GUIWidget* const comp = find_widget_at(pos);
 
-  if (comp != m_current_component)
+  if (comp != m_current_widget)
   {
     if (comp) {
       comp->on_mouse_enter();
     }
-    if (m_current_component) {
-      m_current_component->on_mouse_leave();
+    if (m_current_widget) {
+      m_current_widget->on_mouse_leave();
     }
-    m_current_component = comp;
+    m_current_widget = comp;
   }
   else if (comp)
   {
@@ -268,13 +268,13 @@ GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& off
   }
 }
 
-GUIComponent*
-GUIChildManager::find_component_at(geom::fpoint const& pos) const
+GUIWidget*
+GUIChildManager::find_widget_at(geom::fpoint const& pos) const
 {
-  for (auto& component : m_components)
+  for (auto& widget : m_widgets)
   {
-    if (component->is_at(pos - geom::foffset(m_geometry.topleft()))) {
-      return component.get();
+    if (widget->is_at(pos - geom::foffset(m_geometry.topleft()))) {
+      return widget.get();
     }
   }
   return nullptr;

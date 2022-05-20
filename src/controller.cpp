@@ -18,7 +18,7 @@
 
 #include <logmich/log.hpp>
 
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 #include "construo_error.hpp"
 #include "world_reader.hpp"
 #include "world_writer.hpp"
@@ -61,8 +61,8 @@ Controller::load_world(const std::string& filename)
 
   m_world = std::move(new_world);
 
-  if (WorldViewComponent::instance()) {
-    WorldViewComponent::instance()->on_world_change();
+  if (WorldViewWidget::instance()) {
+    WorldViewWidget::instance()->on_world_change();
   }
 
   m_running = false;

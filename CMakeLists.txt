@@ -88,7 +88,7 @@ set(CONSTRUO_SOURCES_CXX
   src/cursors/cursor_zoom_mask.xbm
   src/gui_button.cpp
   src/gui_child_manager.cpp
-  src/gui_component.cpp
+  src/gui_widget.cpp
   src/gui_directory.cpp
   src/gui_directory_button.cpp
   src/gui_file_button.cpp
@@ -120,7 +120,7 @@ set(CONSTRUO_SOURCES_CXX
   src/world_renderer.cpp
   src/world_writer.cpp
   src/worldview_collider_tool.cpp
-  src/worldview_component.cpp
+  src/worldview_widget.cpp
   src/worldview_insert_tool.cpp
   src/worldview_select_tool.cpp
   src/worldview_tool.cpp

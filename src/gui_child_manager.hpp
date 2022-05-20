@@ -21,17 +21,17 @@
 #include <string>
 #include <vector>
 
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 #include "zoom_graphic_context.hpp"
 
-class GUIChildManager : public GUIComponent
+class GUIChildManager : public GUIWidget
 {
 public:
   GUIChildManager();
   ~GUIChildManager();
 
-  void add(std::unique_ptr<GUIComponent>);
-  void remove(GUIComponent*);
+  void add(std::unique_ptr<GUIWidget>);
+  void remove(GUIWidget*);
   void clear();
 
   template<typename T, typename... Args>
@@ -69,11 +69,11 @@ public:
   void on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset) override;
 
 private:
-  GUIComponent* find_component_at(geom::fpoint const& pos) const;
+  GUIWidget* find_widget_at(geom::fpoint const& pos) const;
 
 private:
-  std::vector<std::unique_ptr<GUIComponent>> m_components;
-  GUIComponent* m_current_component;
+  std::vector<std::unique_ptr<GUIWidget>> m_widgets;
+  GUIWidget* m_current_widget;
 
 public:
   GUIChildManager(const GUIChildManager&) = delete;

@@ -46,14 +46,14 @@ public:
 
 private:
   void read_directory();
-  void place_components();
+  void place_widgets();
 
 private:
   GUIFileManager& m_file_manager;
   std::string m_pathname;
   Mode m_mode;
   WorldCache m_world_cache;
-  std::vector<std::function<std::unique_ptr<GUIComponent>()>> m_items;
+  std::vector<std::function<std::unique_ptr<GUIWidget>()>> m_items;
   int m_last_row;
   int m_row_offset;
 

@@ -26,10 +26,10 @@
 #include "world.hpp"
 #include "world_renderer.hpp"
 #include "world_gui_manager.hpp"
-#include "worldview_component.hpp"
+#include "worldview_widget.hpp"
 #include "worldview_select_tool.hpp"
 
-WorldViewSelectTool::WorldViewSelectTool(WorldViewComponent& worldview) :
+WorldViewSelectTool::WorldViewSelectTool(WorldViewWidget& worldview) :
   WorldViewTool(worldview),
   m_selection(),
   m_mode(IDLE_MODE),

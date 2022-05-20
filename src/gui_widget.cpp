@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 
 bool
-GUIComponent::is_at(geom::fpoint const& pos) const
+GUIWidget::is_at(geom::fpoint const& pos) const
 {
   return geom::contains(m_geometry, pos);
 }

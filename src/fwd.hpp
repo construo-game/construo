@@ -19,7 +19,7 @@
 
 class Collider;
 class GUIButton;
-class GUIComponent;
+class GUIWidget;
 class GUIFileButton;
 class GUIFileManager;
 class GUIManager;
@@ -39,7 +39,7 @@ class World;
 class WorldCache;
 class WorldGUIManager;
 class WorldViewColliderTool;
-class WorldViewComponent;
+class WorldViewWidget;
 class WorldViewInsertTool;
 class WorldViewSelectTool;
 class WorldViewTool;

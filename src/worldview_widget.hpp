@@ -14,30 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_WORLDVIEW_COMPONENT_HPP
-#define HEADER_WORLDVIEW_COMPONENT_HPP
+#ifndef HEADER_WORLDVIEW_WIDGET_HPP
+#define HEADER_WORLDVIEW_WIDGET_HPP
 
 #include <memory>
 
 #include "input_context.hpp"
 #include "zoom_graphic_context.hpp"
-#include "gui_component.hpp"
+#include "gui_widget.hpp"
 
-/** GUI Component that manages the view and the editing of the
-    world, this is the main component of Construo */
-class WorldViewComponent : public GUIComponent
+/** GUI Widget that manages the view and the editing of the
+    world, this is the main widget of Construo */
+class WorldViewWidget : public GUIWidget
 {
 public:
   enum Mode { INSERT_MODE, SELECT_MODE, ZOOM_MODE, COLLIDER_MODE };
 
 private:
-  static WorldViewComponent* instance_;
+  static WorldViewWidget* instance_;
 
 public:
-  WorldViewComponent();
-  ~WorldViewComponent();
+  WorldViewWidget();
+  ~WorldViewWidget();
 
-  static inline WorldViewComponent* instance() { return instance_; }
+  static inline WorldViewWidget* instance() { return instance_; }
 
   WorldViewInsertTool* get_insert_tool() { return m_insert_tool.get(); }
 
@@ -105,7 +105,7 @@ private:
 
   geom::foffset m_offset;
 
-  /** If the user clicks in this component, the tool decides what to
+  /** If the user clicks in this widget, the tool decides what to
       do */
   std::unique_ptr<WorldViewSelectTool> m_select_tool;
   std::unique_ptr<WorldViewInsertTool> m_insert_tool;
@@ -115,8 +115,8 @@ private:
   Mode m_mode;
 
 public:
-  WorldViewComponent(const WorldViewComponent&) = delete;
-  WorldViewComponent& operator=(const WorldViewComponent&) = delete;
+  WorldViewWidget(const WorldViewWidget&) = delete;
+  WorldViewWidget& operator=(const WorldViewWidget&) = delete;
 };
 
 #endif

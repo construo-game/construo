@@ -24,7 +24,7 @@
 class WorldViewColliderTool : public WorldViewTool
 {
 public:
-  WorldViewColliderTool(WorldViewComponent& worldview);
+  WorldViewColliderTool(WorldViewWidget& worldview);
   ~WorldViewColliderTool();
 
   void draw_background (ZoomGraphicContext& gc) override;

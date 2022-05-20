@@ -37,36 +37,36 @@ public:
   void draw_overlay(GraphicContext& gc) override;
 
 private:
-  WorldViewComponent* m_worldview_component;
+  WorldViewWidget* m_worldview_widget;
 
-  GUIComponent* m_run_button;
-  GUIComponent* m_slowmo_button;
-  GUIComponent* m_load_button;
-  GUIComponent* m_save_button;
+  GUIWidget* m_run_button;
+  GUIWidget* m_slowmo_button;
+  GUIWidget* m_load_button;
+  GUIWidget* m_save_button;
 
-  GUIComponent* m_undo_button;
-  GUIComponent* m_redo_button;
+  GUIWidget* m_undo_button;
+  GUIWidget* m_redo_button;
 
-  GUIComponent* m_actioncam_button;
-  GUIComponent* m_dots_button;
-  GUIComponent* m_grid_button;
-  GUIComponent* m_quit_button;
+  GUIWidget* m_actioncam_button;
+  GUIWidget* m_dots_button;
+  GUIWidget* m_grid_button;
+  GUIWidget* m_quit_button;
 
-  GUIComponent* m_insert_button;
-  GUIComponent* m_select_button;
-  GUIComponent* m_collider_button;
-  GUIComponent* m_zoom_button;
+  GUIWidget* m_insert_button;
+  GUIWidget* m_select_button;
+  GUIWidget* m_collider_button;
+  GUIWidget* m_zoom_button;
 
-  GUIComponent* m_zoomout_button;
-  GUIComponent* m_zoomin_button;
+  GUIWidget* m_zoomout_button;
+  GUIWidget* m_zoomin_button;
 
-  GUIComponent* m_particle_mass_label;
-  GUIComponent* m_particle_mass_increase_button;
-  GUIComponent* m_particle_mass_decrease_button;
+  GUIWidget* m_particle_mass_label;
+  GUIWidget* m_particle_mass_increase_button;
+  GUIWidget* m_particle_mass_decrease_button;
 
-  GUIComponent* m_spring_stiffness_label;
-  GUIComponent* m_spring_stiffness_increase_button;
-  GUIComponent* m_spring_stiffness_decrease_button;
+  GUIWidget* m_spring_stiffness_label;
+  GUIWidget* m_spring_stiffness_increase_button;
+  GUIWidget* m_spring_stiffness_decrease_button;
 
   geom::frect m_last_geometry;
 

@@ -14,25 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_CONSTRUO_GUI_COMPONENT_HPP
-#define HEADER_CONSTRUO_GUI_COMPONENT_HPP
+#ifndef HEADER_CONSTRUO_GUI_WIDGET_HPP
+#define HEADER_CONSTRUO_GUI_WIDGET_HPP
 
 #include <geom/rect.hpp>
 
 #include "fwd.hpp"
 
 /** A thing that is under the controll of the GUIManager */
-class GUIComponent
+class GUIWidget
 {
 public:
-  GUIComponent() :
+  GUIWidget() :
     m_geometry()
   {}
-  virtual ~GUIComponent() {}
+  virtual ~GUIWidget() {}
 
   virtual void draw(GraphicContext& gc) = 0;
 
-  /** @return true if the component is present at the given location */
+  /** @return true if the widget is present at the given location */
   virtual bool is_at(geom::fpoint const& pos) const;
 
   virtual void set_geometry(geom::frect const& geometry) {
@@ -80,8 +80,8 @@ protected:
   geom::frect m_geometry;
 
 public:
-  GUIComponent(const GUIComponent&) = delete;
-  GUIComponent& operator=(const GUIComponent&) = delete;
+  GUIWidget(const GUIWidget&) = delete;
+  GUIWidget& operator=(const GUIWidget&) = delete;
 };
 
 #endif
