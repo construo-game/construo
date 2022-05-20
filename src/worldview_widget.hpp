@@ -87,10 +87,10 @@ public:
 
   bool is_at(geom::fpoint const& pos) const override { return true; }
 
-  GCZoomState& zoom() { return m_zoom; }
+  ZoomState& zoom() { return m_zoom; }
 
 private:
-  GCZoomState m_zoom;
+  ZoomState m_zoom;
 
   /** If set to true, display a grid and align dots to it */
   bool m_use_grid;

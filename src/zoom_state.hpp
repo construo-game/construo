@@ -22,11 +22,10 @@
 
 namespace construo {
 
-// FIXME: ZoomState name conflicts with X11
-class GCZoomState
+class ZoomState
 {
 public:
-  GCZoomState(geom::frect const& rect);
+  ZoomState(geom::frect const& rect);
 
   /**
    * Zoom Out the GraphicContext by one 'unit', using the x and y

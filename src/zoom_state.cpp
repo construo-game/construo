@@ -18,7 +18,7 @@
 
 namespace construo {
 
-GCZoomState::GCZoomState(geom::frect const& rect) :
+ZoomState::ZoomState(geom::frect const& rect) :
   m_bounding_box(rect),
   m_offset(0.0f, 0.0f),
   m_scale(1.0f)
@@ -26,7 +26,7 @@ GCZoomState::GCZoomState(geom::frect const& rect) :
 }
 
 bool
-GCZoomState::zoom_in(geom::fpoint const& screen_pos)
+ZoomState::zoom_in(geom::fpoint const& screen_pos)
 {
   geom::fpoint const pos = screen_to_world(screen_pos);
 
@@ -48,7 +48,7 @@ GCZoomState::zoom_in(geom::fpoint const& screen_pos)
 }
 
 bool
-GCZoomState::zoom_out(geom::fpoint const& screen_pos)
+ZoomState::zoom_out(geom::fpoint const& screen_pos)
 {
   geom::fpoint const pos = screen_to_world(screen_pos);
 
@@ -71,40 +71,40 @@ GCZoomState::zoom_out(geom::fpoint const& screen_pos)
 }
 
 geom::fpoint
-GCZoomState::screen_to_world(geom::fpoint const& pos) const
+ZoomState::screen_to_world(geom::fpoint const& pos) const
 {
   return geom::fpoint((pos.x() / m_scale) - m_offset.x(),
                       (pos.y() / m_scale) - m_offset.y());
 }
 
 geom::fpoint
-GCZoomState::world_to_screen(geom::fpoint const& pos) const
+ZoomState::world_to_screen(geom::fpoint const& pos) const
 {
   return geom::fpoint((pos.x() + m_offset.x()) * m_scale + m_bounding_box.left(),
                       (pos.y() + m_offset.y()) * m_scale + m_bounding_box.top());
 }
 
 void
-GCZoomState::move_to(geom::fpoint const& pos)
+ZoomState::move_to(geom::fpoint const& pos)
 {
   m_offset = geom::foffset((m_bounding_box.width()  / (2 * m_scale)) + pos.x(),
                            (m_bounding_box.height() / (2 * m_scale)) + pos.y());
 }
 
 void
-GCZoomState::translate(geom::foffset const& offset)
+ZoomState::translate(geom::foffset const& offset)
 {
   m_offset -= offset;
 }
 
 void
-GCZoomState::set_offset(geom::foffset const& offset)
+ZoomState::set_offset(geom::foffset const& offset)
 {
   m_offset = offset;
 }
 
 bool
-GCZoomState::set_zoom(const float& z)
+ZoomState::set_zoom(const float& z)
 {
   const float max_zoom = 20.0f;
   const float min_zoom = 0.05f;
@@ -127,7 +127,7 @@ GCZoomState::set_zoom(const float& z)
 }
 
 void
-GCZoomState::zoom_to(geom::frect const& rect)
+ZoomState::zoom_to(geom::frect const& rect)
 {
   float const center_x = (rect.left() + rect.right()) / 2.0f;
   float const center_y = (rect.top() + rect.bottom()) / 2.0f;

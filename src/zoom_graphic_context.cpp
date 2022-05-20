@@ -24,7 +24,7 @@
 
 namespace construo {
 
-ZoomGraphicContext::ZoomGraphicContext(GraphicContext& gc, GCZoomState& zoom) :
+ZoomGraphicContext::ZoomGraphicContext(GraphicContext& gc, ZoomState& zoom) :
   m_parent_gc(gc),
   m_zoom(zoom)
 {

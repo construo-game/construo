@@ -62,7 +62,7 @@ WidgetGroup::clear()
 void
 WidgetGroup::draw(GraphicContext& parent_gc)
 {
-  GCZoomState zoom(geom::frect(parent_gc.geometry().size()));
+  ZoomState zoom(geom::frect(parent_gc.geometry().size()));
   zoom.set_offset(m_geometry.topleft());
 
   ZoomGraphicContext gc(parent_gc, zoom);

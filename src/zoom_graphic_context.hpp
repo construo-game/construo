@@ -29,7 +29,7 @@ namespace construo {
 class ZoomGraphicContext : public GraphicContext
 {
 public:
-  ZoomGraphicContext(GraphicContext& gc, GCZoomState& zoom);
+  ZoomGraphicContext(GraphicContext& gc, ZoomState& zoom);
   virtual ~ZoomGraphicContext();
 
   void set_clip_rect(geom::frect const& rect) override;
@@ -65,11 +65,11 @@ public:
       case it wants to draw elements which should not get scaled */
   GraphicContext& get_parent_gc() { return m_parent_gc; }
 
-  GCZoomState const& zoom() const { return m_zoom; }
+  ZoomState const& zoom() const { return m_zoom; }
 
 private:
   GraphicContext& m_parent_gc;
-  GCZoomState& m_zoom;
+  ZoomState& m_zoom;
 
 public:
   ZoomGraphicContext(const ZoomGraphicContext&) = delete;

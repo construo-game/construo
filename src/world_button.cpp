@@ -45,7 +45,7 @@ WorldButton::draw(GraphicContext& parent_gc)
 
   parent_gc.draw_fill_rect(m_geometry, Color(0xBB0000FF));
 
-  GCZoomState zoom(m_geometry);
+  ZoomState zoom(m_geometry);
 
   if (world) {
     zoom.zoom_to(world->calc_bounding_box());
