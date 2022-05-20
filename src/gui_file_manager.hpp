@@ -21,10 +21,10 @@
 #include <string>
 
 #include "fwd.hpp"
-#include "gui_child_manager.hpp"
+#include "widget_group.hpp"
 #include "gui_directory.hpp"
 
-class GUIFileManager : public GUIChildManager
+class GUIFileManager : public WidgetGroup
 {
 public:
   enum Mode { LOAD_MANAGER, SAVE_MANAGER };

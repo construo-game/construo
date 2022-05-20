@@ -30,7 +30,7 @@ void no_press()
 }
 
 GUIWindow::GUIWindow(std::string const& title) :
-  GUIChildManager(),
+  WidgetGroup(),
   m_title(title),
   m_mouse_over(true)
 {
@@ -57,7 +57,7 @@ GUIWindow::draw(GraphicContext& gc)
       gc.draw_rect(x_pos, y_pos, x_pos + width, y_pos + height, g_style.button_fg_passive);
     }*/
 
-  GUIChildManager::draw(gc);
+  WidgetGroup::draw(gc);
 }
 
 /* EOF */

@@ -14,32 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "gui_child_manager.hpp"
+#include "widget_group.hpp"
 
 #include <algorithm>
 
 #include "graphic_context.hpp"
 #include "colors.hpp"
 
-GUIChildManager::GUIChildManager() :
+WidgetGroup::WidgetGroup() :
   GUIWidget(),
   m_widgets(),
   m_current_widget(nullptr)
 {
 }
 
-GUIChildManager::~GUIChildManager ()
+WidgetGroup::~WidgetGroup ()
 {
 }
 
 void
-GUIChildManager::add(std::unique_ptr<GUIWidget> comp)
+WidgetGroup::add(std::unique_ptr<GUIWidget> comp)
 {
   m_widgets.push_back(std::move(comp));
 }
 
 void
-GUIChildManager::remove(GUIWidget* comp)
+WidgetGroup::remove(GUIWidget* comp)
 {
   std::erase_if(m_widgets, [comp](auto&& item){
     return item.get() == comp;
@@ -51,14 +51,14 @@ GUIChildManager::remove(GUIWidget* comp)
 }
 
 void
-GUIChildManager::clear()
+WidgetGroup::clear()
 {
   m_widgets.clear();
   m_current_widget = nullptr;
 }
 
 void
-GUIChildManager::draw(GraphicContext& parent_gc)
+WidgetGroup::draw(GraphicContext& parent_gc)
 {
   GCZoomState zoom(geom::frect(parent_gc.geometry().size()));
   zoom.set_offset(m_geometry.topleft());
@@ -80,7 +80,7 @@ GUIChildManager::draw(GraphicContext& parent_gc)
 }
 
 void
-GUIChildManager::on_primary_button_press(geom::fpoint const& pos)
+WidgetGroup::on_primary_button_press(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -93,7 +93,7 @@ GUIChildManager::on_primary_button_press(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_primary_button_release(geom::fpoint const& pos)
+WidgetGroup::on_primary_button_release(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -106,7 +106,7 @@ GUIChildManager::on_primary_button_release(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_secondary_button_press(geom::fpoint const& pos)
+WidgetGroup::on_secondary_button_press(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -119,7 +119,7 @@ GUIChildManager::on_secondary_button_press(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_secondary_button_release(geom::fpoint const& pos)
+WidgetGroup::on_secondary_button_release(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -132,7 +132,7 @@ GUIChildManager::on_secondary_button_release(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_delete_press(geom::fpoint const& pos)
+WidgetGroup::on_delete_press(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -145,7 +145,7 @@ GUIChildManager::on_delete_press(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_fix_press(geom::fpoint const& pos)
+WidgetGroup::on_fix_press(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -158,17 +158,17 @@ GUIChildManager::on_fix_press(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::on_mouse_enter()
+WidgetGroup::on_mouse_enter()
 {
 }
 
 void
-GUIChildManager::on_mouse_leave()
+WidgetGroup::on_mouse_leave()
 {
 }
 
 void
-GUIChildManager::wheel_up(geom::fpoint const& pos)
+WidgetGroup::wheel_up(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -181,7 +181,7 @@ GUIChildManager::wheel_up(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::wheel_down(geom::fpoint const& pos)
+WidgetGroup::wheel_down(geom::fpoint const& pos)
 {
   for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
   {
@@ -194,7 +194,7 @@ GUIChildManager::wheel_down(geom::fpoint const& pos)
 }
 
 void
-GUIChildManager::scroll_left()
+WidgetGroup::scroll_left()
 {
   /*  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
       {
@@ -207,7 +207,7 @@ GUIChildManager::scroll_left()
 }
 
 void
-GUIChildManager::scroll_right()
+WidgetGroup::scroll_right()
 {
   /*
     for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
@@ -221,7 +221,7 @@ GUIChildManager::scroll_right()
 }
 
 void
-GUIChildManager::scroll_up()
+WidgetGroup::scroll_up()
 {
   /*  for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
       {
@@ -234,7 +234,7 @@ GUIChildManager::scroll_up()
 }
 
 void
-GUIChildManager::scroll_down()
+WidgetGroup::scroll_down()
 {
   /*
     for (auto i = m_widgets.begin(); i != m_widgets.end(); ++i)
@@ -248,7 +248,7 @@ GUIChildManager::scroll_down()
 }
 
 void
-GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
+WidgetGroup::on_mouse_move(geom::fpoint const& pos, geom::foffset const& offset)
 {
   GUIWidget* const comp = find_widget_at(pos);
 
@@ -269,7 +269,7 @@ GUIChildManager::on_mouse_move(geom::fpoint const& pos, geom::foffset const& off
 }
 
 GUIWidget*
-GUIChildManager::find_widget_at(geom::fpoint const& pos) const
+WidgetGroup::find_widget_at(geom::fpoint const& pos) const
 {
   for (auto& widget : m_widgets)
   {

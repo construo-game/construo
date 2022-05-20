@@ -20,9 +20,9 @@
 #include <vector>
 #include <string>
 #include "zoom_graphic_context.hpp"
-#include "gui_child_manager.hpp"
+#include "widget_group.hpp"
 
-class GUIWindow : public GUIChildManager
+class GUIWindow : public WidgetGroup
 {
 public:
   GUIWindow(std::string const& title);

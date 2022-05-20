@@ -25,7 +25,7 @@
 #include "zoom_graphic_context.hpp"
 
 GUIFileManager::GUIFileManager(Mode m) :
-  GUIChildManager(),
+  WidgetGroup(),
   m_mode(m),
   m_btn_up_directory(),
   m_btn_close(),
@@ -68,7 +68,7 @@ GUIFileManager::~GUIFileManager ()
 void
 GUIFileManager::set_geometry(geom::frect const& geometry)
 {
-  GUIChildManager::set_geometry(geometry);
+  WidgetGroup::set_geometry(geometry);
 
   geom::fsize const btn_size(100.0f, 25.0f);
   m_btn_up_directory->set_geometry(geom::frect(btn_size));

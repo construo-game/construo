@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_CONSTRUO_GUI_CHILDMANAGER_HPP
-#define HEADER_CONSTRUO_GUI_CHILDMANAGER_HPP
+#ifndef HEADER_CONSTRUO_WIDGET_GROUP_HPP
+#define HEADER_CONSTRUO_WIDGET_GROUP_HPP
 
 #include <memory>
 #include <string>
@@ -24,11 +24,11 @@
 #include "gui_widget.hpp"
 #include "zoom_graphic_context.hpp"
 
-class GUIChildManager : public GUIWidget
+class WidgetGroup : public GUIWidget
 {
 public:
-  GUIChildManager();
-  ~GUIChildManager();
+  WidgetGroup();
+  ~WidgetGroup();
 
   void add(std::unique_ptr<GUIWidget>);
   void remove(GUIWidget*);
@@ -76,8 +76,8 @@ private:
   GUIWidget* m_current_widget;
 
 public:
-  GUIChildManager(const GUIChildManager&) = delete;
-  GUIChildManager& operator=(const GUIChildManager&) = delete;
+  WidgetGroup(const WidgetGroup&) = delete;
+  WidgetGroup& operator=(const WidgetGroup&) = delete;
 };
 
 #endif

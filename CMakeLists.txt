@@ -87,8 +87,6 @@ set(CONSTRUO_SOURCES_CXX
   src/cursors/cursor_zoom.xbm
   src/cursors/cursor_zoom_mask.xbm
   src/gui_button.cpp
-  src/gui_child_manager.cpp
-  src/gui_widget.cpp
   src/gui_directory.cpp
   src/gui_directory_button.cpp
   src/gui_file_button.cpp
@@ -96,6 +94,7 @@ set(CONSTRUO_SOURCES_CXX
   src/gui_label.cpp
   src/gui_manager.cpp
   src/gui_new_file_button.cpp
+  src/gui_widget.cpp
   src/gui_window.cpp
   src/input_context.cpp
   src/load_gui_manager.cpp
@@ -112,6 +111,7 @@ set(CONSTRUO_SOURCES_CXX
   src/settings.cpp
   src/spring.cpp
   src/unix_system.cpp
+  src/widget_group.cpp
   src/world.cpp
   src/world_button.cpp
   src/world_cache.cpp
@@ -120,10 +120,10 @@ set(CONSTRUO_SOURCES_CXX
   src/world_renderer.cpp
   src/world_writer.cpp
   src/worldview_collider_tool.cpp
-  src/worldview_widget.cpp
   src/worldview_insert_tool.cpp
   src/worldview_select_tool.cpp
   src/worldview_tool.cpp
+  src/worldview_widget.cpp
   src/worldview_zoom_tool.cpp
   src/writer.cpp
   src/zoom_graphic_context.cpp

@@ -21,11 +21,11 @@
 #include <vector>
 
 #include "fwd.hpp"
-#include "gui_child_manager.hpp"
+#include "widget_group.hpp"
 #include "world_cache.hpp"
 
 /** Widget which shows a complete directory */
-class GUIDirectory : public GUIChildManager
+class GUIDirectory : public WidgetGroup
 {
 public:
   enum Mode { LOAD_DIRECTORY, SAVE_DIRECTORY };

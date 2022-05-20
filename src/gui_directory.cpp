@@ -29,7 +29,7 @@
 #include "worldview_collider_tool.hpp"
 
 GUIDirectory::GUIDirectory(GUIFileManager& file_manager, const std::string& pathname, Mode mode) :
-  GUIChildManager(),
+  WidgetGroup(),
   m_file_manager(file_manager),
   m_pathname(pathname),
   m_mode(mode),
@@ -135,7 +135,7 @@ GUIDirectory::place_widgets()
 void
 GUIDirectory::set_geometry(geom::frect const& geometry)
 {
-  GUIChildManager::set_geometry(geometry);
+  WidgetGroup::set_geometry(geometry);
   place_widgets();
 }
 
