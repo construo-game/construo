@@ -483,10 +483,10 @@ GlutDisplay::enter_fullscreen()
 #else
   log_debug("GlutDisplay: Entering fullscreen");
 
-  m_window_geometry = geom::irect(geom::ipoint(glutGet((GLenum)GLUT_WINDOW_X),
-                                               glutGet((GLenum)GLUT_WINDOW_Y)),
-                                  geom::isize(glutGet((GLenum)GLUT_WINDOW_WIDTH),
-                                              glutGet((GLenum)GLUT_WINDOW_HEIGHT)));
+  m_window_geometry = geom::irect(geom::ipoint(glutGet(static_cast<GLenum>(GLUT_WINDOW_X)),
+                                               glutGet(static_cast<GLenum>(GLUT_WINDOW_Y))),
+                                  geom::isize(glutGet(static_cast<GLenum>(GLUT_WINDOW_WIDTH)),
+                                              glutGet(static_cast<GLenum>(GLUT_WINDOW_HEIGHT))));
 
   log_debug("Saving window: {}x{}+{}+{}",
             m_window_geometry.width(), m_window_geometry.height(),
