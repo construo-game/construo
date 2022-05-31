@@ -1,12 +1,18 @@
 [submodule "external/priocpp"]
 	path = external/priocpp
-	url = https://gitlab.com/grumbel/priocpp.git
-[submodule "external/cmake-modules"]
-	path = external/cmake-modules
-	url = https://gitlab.com/grumbel/cmake-modules.git
+	url = https://github.com/grumbel/priocpp.git
+[submodule "external/tinycmmc"]
+	path = external/tinycmmc
+	url = https://github.com/grumbel/tinycmmc.git
 [submodule "external/xdgcpp"]
 	path = external/xdgcpp
-	url = https://gitlab.com/grumbel/xdgcpp.git
+	url = https://github.com/grumbel/xdgcpp.git
 [submodule "external/geomcpp"]
 	path = external/geomcpp
-	url = https://gitlab.com/grumbel/geomcpp.git
+	url = https://github.com/grumbel/geomcpp.git
+[submodule "external/logmich"]
+	path = external/logmich
+	url = https://github.com/logmich/logmich.git
+[submodule "external/sexpcpp"]
+	path = external/sexpcpp
+	url = https://github.com/lispparser/sexp-cpp.git

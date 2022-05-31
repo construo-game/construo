@@ -2,11 +2,11 @@
   "nodes": {
     "flake-utils": {
       "locked": {
-        "lastModified": 1649676176,
-        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
+        "lastModified": 1653893745,
+        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
+        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
         "type": "github"
       },
       "original": {
@@ -28,17 +28,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1647114362,
-        "narHash": "sha256-MH7uYhLGrPwOW0W9L9w7D2zeZrmWvgGMT9u0f51Rw/E=",
+        "lastModified": 1654008785,
+        "narHash": "sha256-QNXk1tbkE6ROxC6NY5ld4y4L5iM7lneEe2ytZhKtVtA=",
         "owner": "grumbel",
         "repo": "geomcpp",
-        "rev": "51c5c4ebb46b130db9064155513f7b6d1c82e8ac",
-        "type": "gitlab"
+        "rev": "d68e33814fbd32404b39621621a8d49d6be41652",
+        "type": "github"
       },
       "original": {
         "owner": "grumbel",
         "repo": "geomcpp",
-        "type": "gitlab"
+        "type": "github"
       }
     },
     "logmich": {
@@ -54,31 +54,31 @@
         ]
       },
       "locked": {
-        "lastModified": 1647108752,
-        "narHash": "sha256-l2jWi0/mNVMqXQF3THQPEa9+EubkEW5HXvg2untN4/I=",
+        "lastModified": 1653991001,
+        "narHash": "sha256-JWlI7nJykeXPkeq4zdUOvcScMnp386UW3tyRQgkxMtk=",
         "owner": "logmich",
         "repo": "logmich",
-        "rev": "41b8edfd97c2a0834f210bbebe75050f6e336d6f",
-        "type": "gitlab"
+        "rev": "866b33191bc9378191519b0342ebb1da66142ac2",
+        "type": "github"
       },
       "original": {
         "owner": "logmich",
         "repo": "logmich",
-        "type": "gitlab"
+        "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1651848520,
-        "narHash": "sha256-KkJ28fShdd78+zal5HlHsXUICOCtO7Bdvylc5zlp5Mk=",
+        "lastModified": 1653920503,
+        "narHash": "sha256-BBeCZwZImtjP3oYy4WogkQYy5OxNyfNciVSc1AfZgLQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5656d7f92aa8264eb06ba68ad94c87ac5b5312e8",
+        "rev": "a634c8f6c1fbf9b9730e01764999666f3436f10a",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-21.11",
+        "ref": "nixos-22.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -102,17 +102,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1651339641,
-        "narHash": "sha256-Lb0dT8HGA0XJSe/ZsMPrirOF3/SJm7w+kmXQDCy7iM4=",
+        "lastModified": 1654008717,
+        "narHash": "sha256-KJFTHb9G3YQ+/lqWwl1tUHMQUGDju6Ly7geEag9ICIE=",
         "owner": "grumbel",
         "repo": "priocpp",
-        "rev": "2c9d409d64a860e842b5179b84b1e8b0d4b78980",
-        "type": "gitlab"
+        "rev": "545b8d93d7b9596d2afd2266818dd1dcaac18705",
+        "type": "github"
       },
       "original": {
         "owner": "grumbel",
         "repo": "priocpp",
-        "type": "gitlab"
+        "type": "github"
       }
     },
     "root": {
@@ -140,17 +140,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1647119281,
-        "narHash": "sha256-syTS3p2eidPmAW2Arj5oStmCl3zpuynBaFEwzpPA09g=",
+        "lastModified": 1654007251,
+        "narHash": "sha256-DFdDwY03pXbpsdHyTWsVS+MMQbGJsuOVGmBHc2/MuwU=",
         "owner": "lispparser",
         "repo": "sexp-cpp",
-        "rev": "7fec5e32b6b3ac1226494f3f3f295b540c8589f5",
-        "type": "gitlab"
+        "rev": "4b4e4518af0c6f9b7b92d7e393d2919eec357b9b",
+        "type": "github"
       },
       "original": {
         "owner": "lispparser",
         "repo": "sexp-cpp",
-        "type": "gitlab"
+        "type": "github"
       }
     },
     "tinycmmc": {
@@ -163,17 +163,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1651061750,
-        "narHash": "sha256-UHX7IFAcb8dmcZj5W9YE+y5/p7TY2U3o1re84xgM27c=",
+        "lastModified": 1654000716,
+        "narHash": "sha256-aCfXSXWVki7moiSR/oFaZRnRdO/5jhZbJ39jEI8fi5I=",
         "owner": "grumbel",
-        "repo": "cmake-modules",
-        "rev": "820041251099f94d107de9a2f16fd23154621cbc",
-        "type": "gitlab"
+        "repo": "tinycmmc",
+        "rev": "22c77404937829f4b2da539c6c2e0e99545440e8",
+        "type": "github"
       },
       "original": {
         "owner": "grumbel",
-        "repo": "cmake-modules",
-        "type": "gitlab"
+        "repo": "tinycmmc",
+        "type": "github"
       }
     },
     "xdgcpp": {
@@ -186,17 +186,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1646074656,
-        "narHash": "sha256-dOZ4ERQwtU37pIGnhzXst7C9avBacJzGacS9aYhP8Ig=",
+        "lastModified": 1654003821,
+        "narHash": "sha256-Y1TSvoHjUQJ5svMg9dKaqFFaUmnXG01lJsQHwLoc7mc=",
         "owner": "grumbel",
         "repo": "xdgcpp",
-        "rev": "47b94da0739cec5793984ca8e02615969cbf8bf3",
-        "type": "gitlab"
+        "rev": "e2e50c0c78abfaf4647d9640638e5bed0fa7250d",
+        "type": "github"
       },
       "original": {
         "owner": "grumbel",
         "repo": "xdgcpp",
-        "type": "gitlab"
+        "type": "github"
       }
     }
   },

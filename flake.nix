@@ -2,36 +2,36 @@
   description = "Masses and springs simulation game";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     flake-utils.url = "github:numtide/flake-utils";
 
-    tinycmmc.url = "gitlab:grumbel/cmake-modules";
+    tinycmmc.url = "github:grumbel/tinycmmc";
     tinycmmc.inputs.nixpkgs.follows = "nixpkgs";
     tinycmmc.inputs.flake-utils.follows = "flake-utils";
 
-    logmich.url = "gitlab:logmich/logmich";
+    logmich.url = "github:logmich/logmich";
     logmich.inputs.nixpkgs.follows = "nixpkgs";
     logmich.inputs.flake-utils.follows = "flake-utils";
     logmich.inputs.tinycmmc.follows = "tinycmmc";
 
-    sexpcpp.url = "gitlab:lispparser/sexp-cpp";
+    sexpcpp.url = "github:lispparser/sexp-cpp";
     sexpcpp.inputs.nixpkgs.follows = "nixpkgs";
     sexpcpp.inputs.flake-utils.follows = "flake-utils";
     sexpcpp.inputs.tinycmmc.follows = "tinycmmc";
 
-    priocpp.url = "gitlab:grumbel/priocpp";
+    priocpp.url = "github:grumbel/priocpp";
     priocpp.inputs.nixpkgs.follows = "nixpkgs";
     priocpp.inputs.flake-utils.follows = "flake-utils";
     priocpp.inputs.sexpcpp.follows = "sexpcpp";
     priocpp.inputs.tinycmmc.follows = "tinycmmc";
     priocpp.inputs.logmich.follows = "logmich";
 
-    geomcpp.url = "gitlab:grumbel/geomcpp";
+    geomcpp.url = "github:grumbel/geomcpp";
     geomcpp.inputs.nixpkgs.follows = "nixpkgs";
     geomcpp.inputs.flake-utils.follows = "flake-utils";
     geomcpp.inputs.tinycmmc.follows = "tinycmmc";
 
-    xdgcpp.url = "gitlab:grumbel/xdgcpp";
+    xdgcpp.url = "github:grumbel/xdgcpp";
     xdgcpp.inputs.nixpkgs.follows = "nixpkgs";
     xdgcpp.inputs.flake-utils.follows = "flake-utils";
     xdgcpp.inputs.tinycmmc.follows = "tinycmmc";
