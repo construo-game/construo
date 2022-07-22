@@ -46,7 +46,7 @@
         construo_version = if !construo_has_version
                            then ("0.2.3-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
-       in rec {
+       in {
          packages = flake-utils.lib.flattenTree rec {
            construo = pkgs.stdenv.mkDerivation rec {
              pname = "construo";
@@ -90,14 +90,15 @@
                zlib
                libsigcxx30
              ] ++ [
-               geomcpp.defaultPackage.${system}
-               logmich.defaultPackage.${system}
-               priocpp.defaultPackage.${system}
-               tinycmmc.defaultPackage.${system}
-               xdgcpp.defaultPackage.${system}
+               geomcpp.packages.${system}.default
+               logmich.packages.${system}.default
+               priocpp.packages.${system}.default
+               tinycmmc.packages.${system}.default
+               xdgcpp.packages.${system}.default
              ];
            };
+           default = construo;
         };
-        defaultPackage = packages.construo;
-      });
+       }
+    );
 }
