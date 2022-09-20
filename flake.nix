@@ -47,7 +47,7 @@
                            then ("0.2.3-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
        in {
-         packages = flake-utils.lib.flattenTree rec {
+         packages = rec {
            construo = pkgs.stdenv.mkDerivation rec {
              pname = "construo";
              version = construo_version;
@@ -80,7 +80,7 @@
                appstream-glib
              ];
              buildInputs = with pkgs; [
-               fmt
+               fmt_8
                freeglut
                glm
                gtest
