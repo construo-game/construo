@@ -259,7 +259,7 @@ GUIManager::process_button_events (ButtonEvent& button)
         break;
 
       default:
-        log_debug("GUIManager:process_button_events: Got unhandled Action::EVENT release: {}", button.id);
+        log_debug("GUIManager:process_button_events: Got unhandled Action::EVENT release: {}", static_cast<int>(button.id));
         break;
     }
   }
