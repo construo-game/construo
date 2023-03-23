@@ -2,7 +2,7 @@
   description = "Masses and springs simulation game";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     flake-utils.url = "github:numtide/flake-utils";
 
     tinycmmc.url = "github:grumbel/tinycmmc";
@@ -11,7 +11,6 @@
 
     logmich.url = "github:logmich/logmich";
     logmich.inputs.nixpkgs.follows = "nixpkgs";
-    logmich.inputs.flake-utils.follows = "flake-utils";
     logmich.inputs.tinycmmc.follows = "tinycmmc";
 
     sexpcpp.url = "github:lispparser/sexp-cpp";
@@ -28,13 +27,11 @@
 
     geomcpp.url = "github:grumbel/geomcpp";
     geomcpp.inputs.nixpkgs.follows = "nixpkgs";
-    geomcpp.inputs.flake-utils.follows = "flake-utils";
     geomcpp.inputs.tinycmmc.follows = "tinycmmc";
 
     xdgcpp.url = "github:grumbel/xdgcpp";
     xdgcpp.inputs.nixpkgs.follows = "nixpkgs";
     xdgcpp.inputs.flake-utils.follows = "flake-utils";
-    xdgcpp.inputs.tinycmmc.follows = "tinycmmc";
   };
 
   outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, geomcpp, xdgcpp }:
@@ -48,7 +45,7 @@
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
        in {
          packages = rec {
-           construo = pkgs.stdenv.mkDerivation rec {
+           construo = pkgs.gcc12Stdenv.mkDerivation rec {
              pname = "construo";
              version = construo_version;
              src = nixpkgs.lib.cleanSource ./.;
