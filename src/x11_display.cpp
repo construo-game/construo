@@ -16,6 +16,8 @@
 
 #include "x11_display.hpp"
 
+#include <array>
+
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
