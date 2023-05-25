@@ -2,7 +2,7 @@
   description = "Masses and springs simulation game";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     tinycmmc.url = "github:grumbel/tinycmmc";
@@ -45,10 +45,14 @@
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
        in {
          packages = rec {
+           default = construo;
+
            construo = pkgs.gcc12Stdenv.mkDerivation rec {
              pname = "construo";
              version = construo_version;
-             src = nixpkgs.lib.cleanSource ./.;
+
+             src = ./.;
+
              postPatch = ''
                 if ${if construo_has_version then "false" else "true"}; then
                   echo "${version}" > VERSION
@@ -56,26 +60,28 @@
                 substituteInPlace CMakeLists.txt \
                   --replace "appstream-util" "appstream-util --nonet"
              '';
+
              cmakeFlags = [
                "-DWARNINGS=ON"
                "-DWERROR=ON"
                "-DBUILD_TESTS=ON"
              ];
+
              doCheck = true;
+
              postFixup = ''
-               wrapProgram $out/bin/construo.glut \
-                  --prefix LIBGL_DRIVERS_PATH ":" "${pkgs.mesa.drivers}/lib/dri" \
-                  --prefix LD_LIBRARY_PATH ":" "${pkgs.mesa.drivers}/lib"
                ln -s $out/bin/construo.x11 $out/bin/construo
              '';
+
              nativeBuildInputs = with pkgs; [
                cmake
-               makeWrapper
                pkgconfig
              ];
+
              checkInputs = with pkgs; [
                appstream-glib
              ];
+
              buildInputs = with pkgs; [
                fmt_8
                freeglut
@@ -94,7 +100,6 @@
                xdgcpp.packages.${system}.default
              ];
            };
-           default = construo;
         };
        }
     );
