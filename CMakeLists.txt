@@ -197,15 +197,7 @@ install(FILES
   construo.svg
   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
-configure_file(construo.appdata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
-
 if (BUILD_TESTS)
-  add_test(NAME construo.appdata.xml
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMAND appstream-util validate-relax ${CMAKE_CURRENT_BINARY_DIR}/construo.appdata.xml)
-
   # compile tests
   find_package(GTest REQUIRED)
 

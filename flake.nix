@@ -78,10 +78,6 @@
                pkgconfig
              ];
 
-             checkInputs = with pkgs; [
-               appstream-glib
-             ];
-
              buildInputs = with pkgs; [
                fmt_8
                freeglut
