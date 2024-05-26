@@ -2,7 +2,7 @@
   description = "Masses and springs simulation game";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     tinycmmc.url = "github:grumbel/tinycmmc";
@@ -47,7 +47,7 @@
          packages = rec {
            default = construo;
 
-           construo = pkgs.gcc12Stdenv.mkDerivation rec {
+           construo = pkgs.stdenv.mkDerivation rec {
              pname = "construo";
              version = construo_version;
 
