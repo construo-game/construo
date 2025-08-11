@@ -17,6 +17,7 @@
 #include <unistd.h>
 
 #include <logmich/log.hpp>
+#include <fmt/std.h>
 
 #include "path_manager.hpp"
 

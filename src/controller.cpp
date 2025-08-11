@@ -17,6 +17,7 @@
 #include "controller.hpp"
 
 #include <logmich/log.hpp>
+#include <fmt/std.h>
 
 #include "worldview_widget.hpp"
 #include "construo_error.hpp"

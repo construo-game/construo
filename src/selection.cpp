@@ -23,6 +23,7 @@
 #include <geom/rect.hpp>
 #include <glm/gtx/io.hpp>
 #include <logmich/log.hpp>
+#include <fmt/std.h>
 
 #include "controller.hpp"
 #include "particle.hpp"
@@ -212,7 +213,7 @@ Selection::join_doubles(float toleranz)
       if (glm::distance((*j)->pos, (*i)->pos) < toleranz)
       {
         // Join two particles
-        log_debug("joining particles: {} {}", (*j)->pos, (*i)->pos);
+        log_debug("joining particles: {} {}", fmt::streamed((*j)->pos), fmt::streamed((*i)->pos));
 
         (*j)->pos      = ((*j)->pos + (*i)->pos) * 0.5f;
         (*j)->velocity = ((*j)->velocity + (*i)->velocity) * 0.5f;
