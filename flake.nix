@@ -85,7 +85,7 @@
                gtest
                libGL
                libGLU
-               xorg.libX11
+               libX11
                zlib
                libsigcxx30
              ] ++ [
