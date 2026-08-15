@@ -342,6 +342,22 @@ SDL2Display::handle_key(SDL_Keycode key, bool pressed)
   events.push(ev);
 }
 
+
+geom::ipoint
+SDL2Display::window_to_drawable(int x, int y) const
+{
+  int win_w = 0, win_h = 0;
+  SDL_GetWindowSize(m_window, &win_w, &win_h);
+  if (win_w <= 0 || win_h <= 0) {
+    return geom::ipoint(x, y);
+  }
+  // m_size is the GL drawable size (may differ under HiDPI).
+  float sx = static_cast<float>(m_size.width()) / static_cast<float>(win_w);
+  float sy = static_cast<float>(m_size.height()) / static_cast<float>(win_h);
+  return geom::ipoint(static_cast<int>(static_cast<float>(x) * sx + 0.5f),
+                      static_cast<int>(static_cast<float>(y) * sy + 0.5f));
+}
+
 void
 SDL2Display::process_event(SDL_Event const& ev)
 {
@@ -370,11 +386,11 @@ SDL2Display::process_event(SDL_Event const& ev)
       handle_key(ev.key.keysym.sym, false);
       break;
     case SDL_MOUSEMOTION:
-      m_mouse_pos = geom::ipoint(ev.motion.x, ev.motion.y);
+      m_mouse_pos = window_to_drawable(ev.motion.x, ev.motion.y);
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP: {
-      m_mouse_pos = geom::ipoint(ev.button.x, ev.button.y);
+      m_mouse_pos = window_to_drawable(ev.button.x, ev.button.y);
       Action id = Action::NONE;
       if (ev.button.button == SDL_BUTTON_LEFT) {
         id = Action::PRIMARY;
@@ -404,11 +420,9 @@ SDL2Display::process_event(SDL_Event const& ev)
     case SDL_FINGERUP:
     case SDL_FINGERMOTION: {
       // Normalized 0..1 → window pixels
-      int w = 0, h = 0;
-      SDL_GetWindowSize(m_window, &w, &h);
       m_mouse_pos = geom::ipoint(
-        static_cast<int>(ev.tfinger.x * static_cast<float>(w)),
-        static_cast<int>(ev.tfinger.y * static_cast<float>(h)));
+        static_cast<int>(ev.tfinger.x * static_cast<float>(m_size.width())),
+        static_cast<int>(ev.tfinger.y * static_cast<float>(m_size.height())));
       if (ev.type == SDL_FINGERDOWN || ev.type == SDL_FINGERUP) {
         Event e;
         e.button.type = BUTTON_EVENT;

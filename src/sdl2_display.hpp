@@ -63,6 +63,8 @@ public:
 private:
   void process_event(SDL_Event const& ev);
   void handle_key(SDL_Keycode key, bool pressed);
+  /** Map window-space coordinates to drawable (framebuffer) pixels. */
+  geom::ipoint window_to_drawable(int x, int y) const;
 
   SDL_Window* m_window = nullptr;
   SDL_GLContext m_gl = nullptr;

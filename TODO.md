@@ -61,7 +61,9 @@ appropriate section.
 
 - [x] `nix/android.nix` + `mk/android/` skeleton (manifest, Android.mk, scripts)
 - [x] Touch input (finger → PRIMARY/SECONDARY)
-- [ ] Full APK packaging / NDK source staging
+- [x] HiDPI mouse/touch → drawable coordinate mapping
+- [x] Android.mk source list + Application.mk (NDK staging still manual)
+- [ ] Full APK packaging scripts
 
 #### Win32 / Win64 (MinGW)
 
@@ -74,7 +76,8 @@ appropriate section.
 
 - [x] `nix/r36s.nix` + aarch64/armhf toolchains under `mk/r36s/`
 - [x] `CROSSCOMPILE.md` sysroot notes
-- [ ] Device package layout validation
+- [x] `mk/r36s/scripts/package-port.sh` layout helper
+- [ ] Device package layout validation on hardware
 
 ---
 
