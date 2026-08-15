@@ -343,6 +343,9 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     # Emit .html so --shell-file is applied (otherwise only .js is produced).
     set_target_properties(construo.sdl PROPERTIES SUFFIX ".html")
     target_compile_definitions(construo.sdl PRIVATE CONSTRUO_DATADIR="/")
+    # Exceptions enabled at compile + link (DISABLE_EXCEPTION_CATCHING=0).
+    target_compile_options(construo.sdl PRIVATE -fexceptions)
+    target_compile_options(libconstruo PRIVATE -fexceptions)
     target_link_options(construo.sdl PRIVATE
       "SHELL:-sFULL_ES2=1"
       "SHELL:-sALLOW_MEMORY_GROWTH=1"

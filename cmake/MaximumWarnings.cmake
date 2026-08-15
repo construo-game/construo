@@ -60,14 +60,6 @@ if(WARNINGS)
       -Wunreachable-code
       -Wzero-as-null-pointer-constant
       -pedantic
-
-      # Missing include dirs cause no harm and are sometimes tricky to
-      # avoid mulitplatform buildss
-      # -Wmissing-include-dirs
-
-      # Creates impossible to solve conflicts when combined with
-      # -Wconversion when doing both and 32/64bit builds
-      # -Wuseless-cast
       )
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 8)
       list(APPEND WARNINGS_CXX_FLAGS -Wint-in-bool-context)
@@ -75,6 +67,7 @@ if(WARNINGS)
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     list(APPEND WARNINGS_CXX_FLAGS
       -Weverything
+      -Wno-unknown-warning-option
 
       # flags that we deliberately ignore
       -Wno-c++98-compat
@@ -86,9 +79,29 @@ if(WARNINGS)
       -Wno-documentation
       -Wno-reserved-id-macro
       -Wno-sign-conversion
-      -Wno-return-std-move-in-c++11
       -Wno-gnu-zero-variadic-macro-arguments
       -Wno-poison-system-directories
+
+      # Newer Clang / Emscripten noise (port builds)
+      -Wno-unsafe-buffer-usage
+      -Wno-unsafe-buffer-usage-in-libc-call
+      -Wno-suggest-destructor-override
+      -Wno-missing-noreturn
+      -Wno-unused-macros
+      -Wno-zero-as-null-pointer-constant
+      -Wno-shorten-64-to-32
+      -Wno-switch-default
+      -Wno-extra-semi
+      -Wno-implicit-fallthrough
+      -Wno-unreachable-code
+      -Wno-missing-prototypes
+      -Wno-missing-variable-declarations
+      -Wno-shadow-field-in-constructor
+      -Wno-shadow
+      -Wno-cast-align
+      -Wno-cast-qual
+      -Wno-conversion
+      -Wno-format-nonliteral
 
       # warnings that should probably be fixed in code
       -Wno-documentation-unknown-command
