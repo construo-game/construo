@@ -67,3 +67,14 @@ Agent / contributor notes
 -------------------------
 
 See `AGENTS.md` for architecture, porting rules, and the git-bundle workflow.
+
+Status of ports
+---------------
+
+| Target | Status |
+|--------|--------|
+| Linux X11 / GLUT | Supported (`nix build .#construo`) |
+| Linux SDL2 + GLES2 | Supported (`nix build .#construo-sdl`) |
+| WASM / Android / Win64 / R36S | Scaffolding in `nix/` + `mk/`; runtime packages pending |
+
+See `PORTING.md`, `INSTALL.md`, and `TODO.md`.
