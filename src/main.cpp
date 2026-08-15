@@ -14,19 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// Declare ConstruoMain::main before SDL.h maps main→SDL_main (Android).
 #include "construo_main.hpp"
 
 #include <SDL.h>
 
 // On Android, SDL.h maps main → SDL_main so SDLActivity can dlsym it from
-// libmain.so. Undef after the entry declarator so app.main() stays the
-// ConstruoMain method (declared above, before the macro).
+// libmain.so. App logic lives in ConstruoMain::run (not named main) so the
+// macro cannot rewrite the method.
 int main(int argc, char** argv)
 {
-#undef main
   construo::ConstruoMain app;
-  return app.main(argc, argv);
+  return app.run(argc, argv);
 }
 
 /* EOF */

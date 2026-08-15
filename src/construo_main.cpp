@@ -96,7 +96,7 @@ ConstruoMain::deinit_system()
 }
 
 int
-ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
+ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
 {
   CommandLine::parse(argc, argv);
 

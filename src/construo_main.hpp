@@ -29,7 +29,8 @@ public:
   ConstruoMain();
   virtual ~ConstruoMain();
 
-  int main(int argc, char* argv[]);
+  /** App entry (not SDL_main / process main). */
+  int run(int argc, char* argv[]);
 
 private:
   void init_system();
