@@ -59,7 +59,10 @@ appropriate section.
 - [x] Emscripten main loop in `SDL2Display::run()`
 - [x] CMake `EMSCRIPTEN` link options (FULL_ES2, shell, preload examples)
 - [x] `mk/wasm/scripts/build-sdl2.sh` + `serve.sh` for local wasm toolchain
-- [ ] Prebuilt SDL2 + static deps in Nix; real `.#construo-wasm` package
+- [x] `mk/wasm/scripts/build-zlib.sh` (static zlib for wasm)
+- [x] `nix/wasm.nix`: glmPrefix, sigcWasm, zlibWasmLibs, sdl2WasmLibs, construo-wasm derivation
+- [x] Flake input `sdl2-src` (SDL 2.30.3) and `packages.construo-wasm` wiring
+- [ ] Static wasm builds of fmt + external helpers (geom, logmich, prio, sexp) for full link
 - [ ] Runtime validation in browser
 
 #### Android

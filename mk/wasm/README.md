@@ -29,15 +29,17 @@ registers an Emscripten main loop when `__EMSCRIPTEN__` is defined.
 
 ## Status
 
-Scaffolding is in place; a full flake output `.#construo-wasm` still needs a
-prebuilt SDL2 wasm prefix and dependency wiring (fmt, glm, sigc++, priocpp, …)
-similar to Pingus `nix/wasm.nix`.
+`nix/wasm.nix` builds static SDL2, zlib, libsigc++-2, and glm headers for
+wasm32-emscripten and exposes `construo-wasm`. Full link still needs static
+wasm builds of fmt and the external helpers (geomcpp, logmich, priocpp,
+sexpcpp). Local testing works via the scripts below once a prefix is staged.
 
 ## Scripts
 
 | Script | Role |
 |--------|------|
 | `scripts/build-sdl2.sh` | Static SDL2 for wasm (`SDL_SRC`, `PREFIX`) |
+| `scripts/build-zlib.sh` | Static zlib for wasm (`ZLIB_SRC`) |
 | `scripts/build-app.sh` | emcmake configure + build |
 | `scripts/serve.sh` | HTTP server for local browser test |
 

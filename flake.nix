@@ -34,9 +34,15 @@
     xdgcpp.url = "github:grumbel/xdgcpp";
     xdgcpp.inputs.nixpkgs.follows = "nixpkgs";
     xdgcpp.inputs.flake-utils.follows = "flake-utils";
+
+    # SDL2 source tarball for wasm static builds (same release as Pingus).
+    sdl2-src = {
+      url = "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, geomcpp, xdgcpp }:
+  outputs = { self, nixpkgs, flake-utils, tinycmmc, logmich, sexpcpp, priocpp, geomcpp, xdgcpp, sdl2-src }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -153,14 +159,30 @@
             '';
           };
 
-          # Cross / embedded ports — scaffolding under nix/*.nix and mk/*/.
-          # Real outputs need prebuilt SDL2 + static cross deps; until then these
-          # stubs fail with a clear message instead of being missing attributes.
-          construo-wasm = pkgs.runCommand "construo-wasm-stub" {} ''
-            echo "construo-wasm is not packaged yet." >&2
-            echo "See nix/wasm.nix, mk/wasm/, and TODO.md (prebuilt SDL2 + static deps)." >&2
-            exit 1
-          '';
+          # Cross / embedded ports — see nix/*.nix and mk/*/.
+          # WASM: derivation from nix/wasm.nix (needs static helper libs for full link).
+          construo-wasm =
+            let
+              wasm = import ./nix/wasm.nix {
+                inherit pkgs;
+                sdlSrc = sdl2-src;
+                sdlVersion = "2.30.3";
+              };
+            in
+            if wasm.construo-wasm != null then
+              wasm.construo-wasm.overrideAttrs (old: {
+                version = construo_version;
+                env = (old.env or {}) // {
+                  PROJECT_VERSION_FULL = construo_version;
+                };
+              })
+            else
+              pkgs.runCommand "construo-wasm-stub" {} ''
+                echo "construo-wasm is not packaged yet." >&2
+                echo "See nix/wasm.nix, mk/wasm/, and TODO.md." >&2
+                exit 1
+              '';
+
           construo-android = pkgs.runCommand "construo-android-stub" {} ''
             echo "construo-android is not packaged yet." >&2
             echo "See nix/android.nix, mk/android/, and TODO.md." >&2
