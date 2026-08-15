@@ -126,9 +126,29 @@
             '';
           };
 
-          # Cross / embedded ports — see nix/{wasm,android,r36s,win32}.nix.
-          # Win32 uses SDL2-win32 + pkgsCross.mingwW64 once helper libs cross-build.
-          #   construo-wasm, construo-android, construo-win32/win64, construo-r36s
+          # Cross / embedded ports — scaffolding under nix/*.nix and mk/*/.
+          # Real outputs need prebuilt SDL2 + static cross deps; until then these
+          # stubs fail with a clear message instead of being missing attributes.
+          construo-wasm = pkgs.runCommand "construo-wasm-stub" {} ''
+            echo "construo-wasm is not packaged yet." >&2
+            echo "See nix/wasm.nix, mk/wasm/, and TODO.md (prebuilt SDL2 + static deps)." >&2
+            exit 1
+          '';
+          construo-android = pkgs.runCommand "construo-android-stub" {} ''
+            echo "construo-android is not packaged yet." >&2
+            echo "See nix/android.nix, mk/android/, and TODO.md." >&2
+            exit 1
+          '';
+          construo-win64 = pkgs.runCommand "construo-win64-stub" {} ''
+            echo "construo-win64 is not packaged yet." >&2
+            echo "See nix/win32.nix, mk/win32/, and TODO.md (MinGW + SDL2-win32)." >&2
+            exit 1
+          '';
+          construo-r36s = pkgs.runCommand "construo-r36s-stub" {} ''
+            echo "construo-r36s is not packaged yet." >&2
+            echo "See nix/r36s.nix, mk/r36s/, and TODO.md (ArkOS sysroot)." >&2
+            exit 1
+          '';
         };
       }
     );

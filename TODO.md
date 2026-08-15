@@ -44,7 +44,8 @@ appropriate section.
 - [x] Simple 8×8 bitmap font atlas for `draw_string`
 - [x] Clipping (scissor), clear, flip via SDL swap
 - [ ] Validate on Emscripten (`FULL_ES2`), Android, R36S
-- [ ] Improve font (TTF or denser atlas) if needed
+- [x] Complete 8×8 ASCII bitmap font atlas for GLES2
+- [ ] Optional TTF/denser atlas later if needed
 
 ### Platform packaging
 
@@ -90,7 +91,7 @@ appropriate section.
 - [x] Emscripten FIND_ROOT_PATH_MODE BOTH for package/include/library
 - [x] CMake accepts sigc++-3 or 2; glm/fmt via prefix (still need wasm builds of deps)
 - [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
-- [ ] Prefer system packages on native Linux
+- [x] Prefer system packages on native Linux (`find_package` / pkg-config)
 
 ---
 
