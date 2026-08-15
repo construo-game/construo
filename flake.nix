@@ -252,6 +252,8 @@ TXT
             in
             if wasm.construo-wasm != null then
               wasm.construo-wasm.overrideAttrs (old: {
+                # Source tree is the flake; only the reported version string changes.
+                __intentionallyOverridingVersion = true;
                 version = construo_version;
                 env = (old.env or {}) // {
                   PROJECT_VERSION_FULL = construo_version;
@@ -343,14 +345,23 @@ EOF
           default = {
             type = "app";
             program = "${packages.default}/bin/construo";
+            meta = {
+              description = "Construo (default: X11 binary when available)";
+            };
           };
           construo = {
             type = "app";
             program = "${packages.construo}/bin/construo";
+            meta = {
+              description = "Construo X11/GLUT package";
+            };
           };
           construo-sdl = {
             type = "app";
             program = "${packages.construo-sdl}/bin/construo";
+            meta = {
+              description = "Construo SDL2 + GLES2 package";
+            };
           };
         };
       }
