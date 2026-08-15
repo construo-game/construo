@@ -227,14 +227,14 @@ TXT
             android = import ./nix/android.nix {
               pkgs = androidPkgs;
               sdlSrc = sdl2-src;
-              sdlVersion = "2.30.3";
+              sdlVersion = "2.32.8";
               inherit androidSdk buildToolsVersion packagePlatform compilePlatform targetAbis;
             };
 
             wasm = import ./nix/wasm.nix {
               inherit pkgs;
               sdlSrc = sdl2-src;
-              sdlVersion = "2.30.3";
+              sdlVersion = "2.32.8";
             };
 
             construoWasm =
