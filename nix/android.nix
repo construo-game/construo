@@ -100,6 +100,28 @@ MK
         mkdir -p $out/java
         cp -a "${sdlSrc}/android-project/app/src/main/java"/. $out/java/
       fi
+      # Compile SDLActivity → classes.dex (needed for aapt APK packaging).
+      if [ -d $out/java ]; then
+        export ANDROID_SDK_ROOT="${androidSdk}/libexec/android-sdk"
+        BT="$ANDROID_SDK_ROOT/build-tools/${buildToolsVersion}"
+        COMPILE_JAR="$ANDROID_SDK_ROOT/platforms/android-${compilePlatform}/android.jar"
+        if [ ! -f "$COMPILE_JAR" ]; then
+          COMPILE_JAR="$ANDROID_SDK_ROOT/platforms/android-${packagePlatform}/android.jar"
+        fi
+        mkdir -p classes
+        find $out/java -name '*.java' > java-list.txt
+        javac -encoding UTF-8 --release 8 -classpath "$COMPILE_JAR" -d classes @java-list.txt
+        if [ -x "$BT/d8" ]; then
+          "$BT/d8" --output classes --min-api ${packagePlatform} $(find classes -name '*.class')
+        elif [ -x "$BT/dx" ]; then
+          "$BT/dx" --dex --output=classes/classes.dex $(find classes -name '*.class')
+        else
+          echo "error: neither d8 nor dx found under $BT" >&2
+          exit 1
+        fi
+        mkdir -p $out/dex
+        cp classes/classes.dex $out/dex/classes.dex
+      fi
       runHook postInstall
     '';
     meta = with lib; {
@@ -229,12 +251,73 @@ CFG
         echo "==> ndk-build libmain + prebuilt SDL2"
         ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} NDK_DEBUG=0
 
-        if command -v aapt >/dev/null 2>&1; then
-          echo "ndk-build finished; full aapt/apksigner packaging can extend this phase"
+        # --- Package APK (Pingus-style aapt + zipalign + apksigner) ---
+        export ANDROID_HOME="$ANDROID_SDK_ROOT"
+        BT="$ANDROID_SDK_ROOT/build-tools/${buildToolsVersion}"
+        PACKAGE_JAR="$ANDROID_SDK_ROOT/platforms/android-${packagePlatform}/android.jar"
+        mkdir -p out work/pkg/res work/pkg/assets
+        if [ -d work/app/res ]; then cp -a work/app/res/. work/pkg/res/; fi
+        if [ -d work/app/src/main/assets ]; then cp -a work/app/src/main/assets/. work/pkg/assets/; fi
+        # Stamp versionName in a writable manifest copy
+        cp work/app/AndroidManifest.xml work/pkg/AndroidManifest.xml
+        sed -i "s/android:versionName=\"[^\"]*\"/android:versionName=\"${gameVersion}\"/" work/pkg/AndroidManifest.xml || true
+        chmod -R u+w work/pkg out
+
+        "$BT/aapt" package -f \
+          -M work/pkg/AndroidManifest.xml \
+          -S work/pkg/res \
+          -I "$PACKAGE_JAR" \
+          -F out/base.apk
+
+        if [ -f ${sdlAndroidLibs}/dex/classes.dex ]; then
+          cp ${sdlAndroidLibs}/dex/classes.dex out/classes.dex
+        else
+          echo "error: missing classes.dex in sdlAndroidLibs" >&2
+          exit 1
         fi
+        for abi in ${targetAbisStr}; do
+          mkdir -p out/lib/$abi
+          if [ -d work/app/libs/$abi ]; then
+            cp -a work/app/libs/$abi/*.so out/lib/$abi/ || true
+          fi
+        done
+        ( cd out && "$BT/aapt" add base.apk classes.dex )
+        ( cd out && zip -r base.apk lib )
+        if [ -d work/pkg/assets ] && [ "$(find work/pkg/assets -type f | wc -l)" -gt 0 ]; then
+          ( cd work/pkg && zip -r -9 ../../out/base.apk assets )
+        fi
+
+        "$BT/zipalign" -f 4 out/base.apk out/aligned.apk
+
+        KS="${keystore}"
+        if [ -z "$KS" ] || [ ! -f "$KS" ]; then
+          KS="$PWD/debug.keystore"
+          keytool -genkeypair -keystore "$KS" -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+        fi
+        "$BT/apksigner" sign \
+          --ks "$KS" --ks-pass pass:android --key-pass pass:android \
+          --ks-key-alias androiddebugkey \
+          --out "out/${outApkName}" out/aligned.apk
+
+        echo "Final APK: out/${outApkName} ($(du -h out/${outApkName} | awk '{print $1}'))"
+        "$BT/aapt" dump badging "out/${outApkName}" || true
         runHook postBuild
       '';
+      # Android .so / .o are not host ELF — skip patchelf fixup noise.
+      dontFixup = true;
       installPhase = ''
+        runHook preInstall
+        mkdir -p $out/lib $out
+        if [ -d work/app/libs ]; then cp -a work/app/libs/. $out/lib/; fi
+        if [ -f out/${outApkName} ]; then cp out/${outApkName} $out/${outApkName}; fi
+        echo "Construo Android ${gameVersion}" > $out/README.txt
+        echo "APK: $out/${outApkName}" >> $out/README.txt
+        find $out/lib -name '*.so' 2>/dev/null | sort >> $out/README.txt || true
+        runHook postInstall
+      
         runHook preInstall
         mkdir -p $out/lib $out/share/construo-android
         if [ -d work/app/libs ]; then cp -a work/app/libs/. $out/lib/; fi
@@ -247,13 +330,21 @@ CFG
         runHook postInstall
       '';
       meta = with lib; {
-        description = "Construo Android native libraries (NDK)";
+        description = "Construo Android APK (SDL2 + GLES2)";
         license = licenses.gpl3Plus;
         platforms = platforms.linux;
         hydraPlatforms = [ ];
       };
     };
 
+  mkInstallApp = { pkg, apkFileName ? "construo.apk", description ? "Install ${apkFileName} via adb" }: {
+    type = "app";
+    program = toString (pkgs.writeShellScript "adb-install-${apkFileName}" ''
+      exec ${pkgs.android-tools}/bin/adb install -r ${pkg}/${apkFileName}
+    '');
+    meta.description = description;
+  };
+
 in {
-  inherit sdlAndroidLibs mkApk applicationMk topAndroidMk sdlPrebuiltAndroidMk;
+  inherit sdlAndroidLibs mkApk mkInstallApp applicationMk topAndroidMk sdlPrebuiltAndroidMk;
 }

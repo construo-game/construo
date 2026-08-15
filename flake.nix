@@ -247,6 +247,17 @@ TXT
                   };
                 })
               else null;
+          construoAndroidPkg = android.mkApk {
+            appName = "construo";
+            appDir = ./mk/android/app;
+            outApkName = "construo.apk";
+            keystore = ./mk/android/keystore/debug.keystore;
+            gameSrcDir = ./src;
+            gameExternalDir = ./external;
+            glmIncludeDir = "${libs.glm}/include";
+            gameExamplesDir = ./examples;
+            gameVersion = construo_version;
+          };
           in {
             packages = {
               arkos-sysroot = r36s.arkosSysroot;
@@ -258,33 +269,32 @@ TXT
                 pname = "construo-r36s-portmaster-zip";
               };
               android-sdl-libs = android.sdlAndroidLibs;
-              construo-android = android.mkApk {
-                appName = "construo";
-                appDir = ./mk/android/app;
-                outApkName = "construo.apk";
-                gameSrcDir = ./src;
-                gameExternalDir = ./external;
-                glmIncludeDir = "${libs.glm}/include";
-                gameExamplesDir = ./examples;
-                gameVersion = construo_version;
-              };
+              construo-android = construoAndroidPkg;
               wasm-sdl-libs = wasm.sdlWasmLibs;
               wasm-sdl2 = wasm.sdl2WasmLibs;
             } // lib.optionalAttrs (construoWasm != null) {
               construo-wasm = construoWasm;
             };
-            apps = lib.optionalAttrs (construoWasm != null) (
-              let
-                open = wasm.mkOpenBrowserApp {
-                  pkg = construoWasm;
-                  appName = "construo";
-                  description = "Serve Construo wasm and open in a browser";
+            apps =
+              (lib.optionalAttrs (construoWasm != null) (
+                let
+                  open = wasm.mkOpenBrowserApp {
+                    pkg = construoWasm;
+                    appName = "construo";
+                    description = "Serve Construo wasm and open in a browser";
+                  };
+                in {
+                  construo-wasm = open;
+                  construo-wasm-serve = open;
+                }
+              ))
+              // {
+                construo-android = android.mkInstallApp {
+                  pkg = construoAndroidPkg;
+                  apkFileName = "construo.apk";
+                  description = "Install Construo APK via adb";
                 };
-              in {
-                construo-wasm = open;
-                construo-wasm-serve = open;
-              }
-            );
+              };
           };
 
         packages = rec {
