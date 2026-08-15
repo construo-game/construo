@@ -34,6 +34,8 @@ if [ -n "${EXTRA_PREFIX:-}" ]; then
   CMAKE_PREFIX_ARGS+=("-DCMAKE_PREFIX_PATH=${EXTRA_PREFIX}")
 fi
 
+# Emscripten defaults FIND_ROOT_PATH_MODE_*=ONLY, which hides host
+# CMAKE_PREFIX_PATH packages (logmich/sexp installed as sibling prefixes).
 # shellcheck disable=SC2086
 emcmake cmake "../src-$NAME" \
   -DCMAKE_BUILD_TYPE=Release \
@@ -43,6 +45,9 @@ emcmake cmake "../src-$NAME" \
   -DBUILD_EXTRA=OFF \
   -DWARNINGS=OFF \
   -DWERROR=OFF \
+  -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \
+  -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
+  -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
   ${CMAKE_PREFIX_ARGS[@]+"${CMAKE_PREFIX_ARGS[@]}"} \
   ${CMAKE_ARGS:-}
 

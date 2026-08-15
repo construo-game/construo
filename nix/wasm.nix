@@ -190,10 +190,12 @@ set(geom_FOUND TRUE)
 EOF
   '';
 
+  # sexpcpp installs the cmake package "sexp" (sexp::sexp). FIND_ROOT BOTH
+  # (see build-cmake-lib.sh) so CMAKE_PREFIX_PATH resolves those prefixes.
   priocppWasm = mkCmakeWasmLib {
     pname = "priocpp-wasm";
     src = ../external/priocpp;
-    extraCmakeArgs = "-DBUILD_TESTS=OFF -DBUILD_EXTRA=OFF -DPRIO_USE_JSONCPP=OFF -DPRIO_USE_SEXPCPP=ON -DWARNINGS=OFF";
+    extraCmakeArgs = "-DBUILD_TESTS=OFF -DBUILD_EXTRA=OFF -DPRIO_USE_JSONCPP=OFF -DPRIO_USE_SEXPCPP=ON -DWARNINGS=OFF -Dsexp_DIR=${sexpcppWasm}/lib/cmake/sexp -Dlogmich_DIR=${logmichWasm}/lib/cmake/logmich";
     extraPrefix = "${logmichWasm}:${sexpcppWasm}";
   };
 
