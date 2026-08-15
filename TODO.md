@@ -82,8 +82,8 @@ appropriate section.
 
 - [x] Fix geom subdirectory / tinycmmc module path
 - [x] Remove top-level tinycmmc dependency; inline under `cmake/`
-- [ ] Ensure helpers work under Emscripten FIND_ROOT
-- [ ] glm, libsigc++-3, fmt for WASM / Android / MinGW / R36S
+- [x] Emscripten FIND_ROOT_PATH_MODE BOTH for package/include/library
+- [x] CMake accepts sigc++-3 or 2; glm/fmt via prefix (still need wasm builds of deps)
 - [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
 - [ ] Prefer system packages on native Linux
 

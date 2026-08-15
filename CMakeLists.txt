@@ -38,6 +38,20 @@ if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(CONSTRUO_USE_X11 OFF CACHE BOOL "Build X11 software backend" FORCE)
 endif()
 
+if(EMSCRIPTEN OR ANDROID)
+  set(CONSTRUO_USE_SDL2 ON CACHE BOOL "Build SDL2 + GLES2 backend" FORCE)
+  set(CONSTRUO_USE_GLUT OFF CACHE BOOL "Build GLUT/OpenGL backend" FORCE)
+  set(CONSTRUO_USE_X11 OFF CACHE BOOL "Build X11 software backend" FORCE)
+endif()
+
+# Emscripten: allow finding host-provided prefixes (glm headers, static libs)
+# staged via CMAKE_PREFIX_PATH / EXTRA_PREFIX_PATH (see nix/wasm.nix).
+if(EMSCRIPTEN)
+  set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+endif()
+
 include(GetProjectVersion)
 message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
 
@@ -64,7 +78,12 @@ endif()
 find_package(fmt REQUIRED)
 find_package(glm REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_search_module(SIGCXX REQUIRED sigc++-3.0 IMPORTED_TARGET)
+# Prefer sigc++-3; fall back to 2.x for constrained cross toolchains (wasm).
+pkg_search_module(SIGCXX IMPORTED_TARGET sigc++-3.0 sigc++-2.0)
+if(NOT SIGCXX_FOUND)
+  message(FATAL_ERROR "libsigc++ not found (tried sigc++-3.0 and sigc++-2.0)")
+endif()
+message(STATUS "Using libsigc++ via pkg-config: ${SIGCXX_MODULE_NAME}")
 
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
