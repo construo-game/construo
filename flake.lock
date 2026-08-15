@@ -1,5 +1,40 @@
 {
   "nodes": {
+    "SDL2-win32": {
+      "inputs": {
+        "SDL2_src": "SDL2_src",
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786297641,
+        "narHash": "sha256-yu4LwoIC0TCh8EhZzyDj1u99WnkqslMNp5rrg3hqAWM=",
+        "ref": "refs/heads/master",
+        "rev": "8ca7fe1bc9ef1201f1247fbcc8b560a1a06da8b1",
+        "revCount": 8,
+        "type": "git",
+        "url": "https://github.com/grumnix/SDL2-win32.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/grumnix/SDL2-win32.git"
+      }
+    },
+    "SDL2_src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748906407,
+        "narHash": "sha256-aakdhaTL0dgt2BQEtv3w6pp1mwOrmNzEorh3lLxJgyo=",
+        "type": "tarball",
+        "url": "https://libsdl.org/release/SDL2-devel-2.32.8-mingw.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://libsdl.org/release/SDL2-devel-2.32.8-mingw.tar.gz"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -18,59 +53,31 @@
         "type": "github"
       }
     },
-    "geomcpp": {
+    "flake-utils_2": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "tinycmmc": [
-          "tinycmmc"
-        ]
+        "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1775758053,
-        "narHash": "sha256-HYD1Fpz2JlIJM/QqZ56eHfFVR5T1bg2Pp5mc+YN6iq8=",
-        "owner": "grumbel",
-        "repo": "geomcpp",
-        "rev": "717bea5e23cfd35fa3ef8206219b1e85b87c2a96",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
-        "owner": "grumbel",
-        "repo": "geomcpp",
-        "type": "github"
-      }
-    },
-    "logmich": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "tinycmmc": [
-          "tinycmmc"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775758246,
-        "narHash": "sha256-2PrrrybeNySSJj7jJJjzmr46f4RdFWD9NUFAB362dgk=",
-        "owner": "logmich",
-        "repo": "logmich",
-        "rev": "2610fad6768e5b493b52ff08d60d1eb8825f1ab6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "logmich",
-        "repo": "logmich",
+        "owner": "numtide",
+        "repo": "flake-utils",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1783224372,
-        "narHash": "sha256-8i/87eeoqiGE4yOTjwSA3Eh/ziJRQEmd/unYU+K27sk=",
+        "lastModified": 1786599213,
+        "narHash": "sha256-yNJd40f11EzXBjSByCB7IPpeFFAdeoSKKM67dGkfFoU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d407951447dcd00442e97087bf374aad70c04cea",
+        "rev": "0e251e24a4f24e036a084b6b4b2d2491af4167f4",
         "type": "github"
       },
       "original": {
@@ -80,74 +87,25 @@
         "type": "github"
       }
     },
-    "priocpp": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "logmich": [
-          "logmich"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "sexpcpp": [
-          "sexpcpp"
-        ],
-        "tinycmmc": [
-          "tinycmmc"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775758282,
-        "narHash": "sha256-cpOKbHD129Lf18BnPkG4RCSNyHIkycS06/aPAj+T1Bw=",
-        "owner": "grumbel",
-        "repo": "priocpp",
-        "rev": "6163ea81df05e5ff08cf21f39868175f0f578360",
-        "type": "github"
-      },
-      "original": {
-        "owner": "grumbel",
-        "repo": "priocpp",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "flake-utils": "flake-utils",
-        "geomcpp": "geomcpp",
-        "logmich": "logmich",
+        "SDL2-win32": "SDL2-win32",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs",
-        "priocpp": "priocpp",
-        "sexpcpp": "sexpcpp",
-        "tinycmmc": "tinycmmc",
-        "xdgcpp": "xdgcpp"
+        "sdl2-src": "sdl2-src"
       }
     },
-    "sexpcpp": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "tinycmmc": [
-          "tinycmmc"
-        ]
-      },
+    "sdl2-src": {
+      "flake": false,
       "locked": {
-        "lastModified": 1775758176,
-        "narHash": "sha256-H74KlewiOhyXDXZsbCmHU4n0YP0ZsRMdpL4WsRrqK80=",
-        "owner": "lispparser",
-        "repo": "sexp-cpp",
-        "rev": "af9455d4612f87f44ab7ec4c56ffdb1dbf6502e3",
-        "type": "github"
+        "lastModified": 1748905239,
+        "narHash": "sha256-wv+Sj0GryLLgJ/ZX0HF6oAHkYhXHf1wNY8kyxfiEjRU=",
+        "type": "tarball",
+        "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.32.8/SDL2-2.32.8.tar.gz"
       },
       "original": {
-        "owner": "lispparser",
-        "repo": "sexp-cpp",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.32.8/SDL2-2.32.8.tar.gz"
       }
     },
     "systems": {
@@ -165,49 +123,18 @@
         "type": "github"
       }
     },
-    "tinycmmc": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
+    "systems_2": {
       "locked": {
-        "lastModified": 1783197069,
-        "narHash": "sha256-NI2pxYz9w+4yZrwOVr8g0a4B8iFAmrWCsrjlHZEfskE=",
-        "owner": "grumbel",
-        "repo": "tinycmmc",
-        "rev": "d7549879e3232909e124f25d33a33ce7dff153b6",
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
         "type": "github"
       },
       "original": {
-        "owner": "grumbel",
-        "repo": "tinycmmc",
-        "type": "github"
-      }
-    },
-    "xdgcpp": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763261245,
-        "narHash": "sha256-hKVjwMh7KwZdGHGX3DrLh1ZuY6K68mMB4+7DF3X6S/w=",
-        "owner": "grumbel",
-        "repo": "xdgcpp",
-        "rev": "1c685dda3f94851be1af3d6d5971df15085c645c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "grumbel",
-        "repo": "xdgcpp",
+        "owner": "nix-systems",
+        "repo": "default",
         "type": "github"
       }
     }
