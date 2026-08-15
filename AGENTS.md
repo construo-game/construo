@@ -59,6 +59,8 @@ Port / flake progress checklist: **`TODO.md`** (keep it current).
    **SDL2 + GLES2** for WASM, Android, Win32, and R36S.
 5. Keep the dependency surface manageable. Helper libraries live under
    `external/` as squashed git subtrees (not submodules).
+   The flake builds them with `callPackage` on those trees (no remote helper
+   flake inputs).
 
 ---
 

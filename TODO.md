@@ -81,10 +81,12 @@ appropriate section.
 - [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
 - [x] Portable `path_manager` (no POSIX `access()`)
 - [x] UnixSystem HOME fallbacks for Emscripten/Android
-- [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
+- [x] `nix/win32.nix` / `mk/win32/` scaffolding
 - [x] Win32 `package-zip.sh` layout helper
 - [x] `mk/win32/scripts/cross-cmake.sh` MinGW configure helper
-- [ ] Cross-build helper libs + real `.#construo-win64` package
+- [x] Flake input `SDL2-win32` + `mkLibs` for `pkgsCross.mingwW64`
+- [x] `packages.construo-win64` / `construo-win64-bin` (cross derivation)
+- [ ] Validate Win64 link (GLESv2 / ANGLE / system GL) on a real MinGW run
 
 #### R36S (ArkOS)
 
@@ -99,6 +101,7 @@ appropriate section.
 
 - [x] Convert `external/*` from git submodules to squashed subtrees (latest master)
 - [x] Replace `{fmt}` with C++20 `std::format` + optional `print.hpp` polyfill
+- [x] Flake builds helpers from vendored `external/*` (no remote helper flake inputs)
 
 - [x] Fix geom subdirectory / tinycmmc module path
 - [x] Remove top-level tinycmmc dependency; inline under `cmake/`

@@ -33,10 +33,14 @@ GraphicContext / RootGraphicContext / InputContext
 ## Status
 
 Shared runtime (SDL2 + GLES2) and Linux validation (`construo.sdl`) are in
-tree. `.#construo-wasm` is wired via `nix/wasm.nix` + flake input `sdl2-src`
-(static SDL2, zlib, libsigc++-2, glm). Remaining: static wasm builds of
-external helpers, plus full Android / Win64 / R36S packages. Tracked in
-`TODO.md`.
+tree. Helper libraries are squashed subtrees under `external/`; the flake
+builds them via `callPackage` (no remote helper flake inputs).
+
+- `.#construo-wasm` — `nix/wasm.nix` + `sdl2-src` (static SDL2/zlib/sigc++/glm)
+- `.#construo-win64` — `pkgsCross.mingwW64` + `SDL2-win32` (grumnix)
+- Android / R36S packages still scaffolding
+
+Tracked in `TODO.md`.
 
 Reference: [Pingus](https://github.com/pingus/pingus) `nix/` and `mk/` layouts.
 

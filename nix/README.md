@@ -1,9 +1,14 @@
 # Nix packaging for Construo ports
 
-These files mirror the layout used by [Pingus](https://github.com/pingus/pingus)
-(`nix/wasm.nix`, `nix/android.nix`, `nix/r36s.nix`). `wasm.nix` is wired into
-`flake.nix` as `packages.construo-wasm` (static SDL2/zlib/sigc++/glm); full
-link still needs static wasm helper libraries. Other targets remain stubs.
+These files mirror the layout used by [Pingus](https://github.com/pingus/pingus).
+Helper libraries are vendored under `external/` and built by the flake via
+`callPackage` (see `mkLibs` in `flake.nix`).
+
+| Output | Status |
+|--------|--------|
+| `construo-wasm` | Derivation present; needs static wasm helpers for full link |
+| `construo-win64` | Cross derivation + flat package via `SDL2-win32` |
+| `construo-android` / `construo-r36s` | Stubs |
 
 | File | Target |
 |------|--------|

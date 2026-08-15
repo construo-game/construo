@@ -1,12 +1,29 @@
-# MinGW Win32/Win64 packaging scaffolding for Construo.
-# Pattern: pingus flake (SDL2-win32 from grumnix) + pkgsCross.mingwW64 / mingw32.
-{ pkgs }:
+# MinGW Win32/Win64 packaging for Construo (SDL2 + GLES2 only).
+# Wired from flake.nix via pkgsCross.mingwW64 + SDL2-win32 (grumnix).
+#
+# Flake outputs:
+#   packages.construo-win64-bin  — cross-built binary
+#   packages.construo-win64      — flat tree (exe + examples)
+#
+{ pkgs
+, SDL2-win32 ? null
+}:
+
 {
   notes = ''
-    Next steps for .#construo-win64 / .#construo-win32:
-    1. Add flake input (when wiring the package): git+https://github.com/grumnix/SDL2-win32.git
-    2. Cross-build with pkgs.pkgsCross.mingwW64 / mingw32
-    3. CMake: CONSTRUO_USE_SDL2=ON, CONSTRUO_NO_XDGCPP=ON (auto on WIN32)
-    4. Ship construo.sdl.exe + examples/ in a flat zip (see Pingus mkWinFlat)
+    Cross-build on a Linux host:
+
+      nix build .#construo-win64
+
+    Manual MinGW without Nix:
+
+      mk/win32/scripts/cross-cmake.sh
+      cmake --build build-win64
+      mk/win32/scripts/package-zip.sh build-win64/construo.sdl.exe examples /tmp/out
+
+    CMake forces CONSTRUO_USE_SDL2=ON and CONSTRUO_NO_XDGCPP=ON on WIN32.
   '';
+
+  packageZip = ../mk/win32/scripts/package-zip.sh;
+  crossCmake = ../mk/win32/scripts/cross-cmake.sh;
 }

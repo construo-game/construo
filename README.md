@@ -47,8 +47,8 @@ nix build .#construo-sdl   # SDL2 + GLES2 (desktop validation)
 nix build .#construo-all   # X11 + GLUT + SDL2
 ```
 
-WASM / Android / Win32 / R36S packaging is under development; see `PORTING.md`,
-`TODO.md`, `nix/`, and `mk/` (layout adapted from Pingus).
+WASM and Win64 flake packages are wired; Android / R36S still scaffolding.
+See `PORTING.md`, `TODO.md`, `nix/`, and `mk/` (layout adapted from Pingus).
 
 
 Running
@@ -75,6 +75,8 @@ Status of ports
 |--------|--------|
 | Linux X11 / GLUT | Supported (`nix build .#construo`) |
 | Linux SDL2 + GLES2 | Supported (`nix build .#construo-sdl`) |
-| WASM / Android / Win64 / R36S | Scaffolding in `nix/` + `mk/`; runtime packages pending |
+| WASM | `nix build .#construo-wasm` (needs static helper libs for full link) |
+| Win64 (MinGW) | `nix build .#construo-win64` (SDL2-win32 + pkgsCross) |
+| Android / R36S | Scaffolding in `nix/` + `mk/` |
 
 See `PORTING.md`, `INSTALL.md`, and `TODO.md`.
