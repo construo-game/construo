@@ -44,7 +44,11 @@ private:
 #elif defined(USE_SDL2_DISPLAY)
   std::unique_ptr<SDL2Display> m_display;
 #endif
+#if defined(USE_SDL2_DISPLAY) && (defined(_WIN32) || defined(WIN32))
+  std::unique_ptr<Win32System> m_system;
+#else
   std::unique_ptr<UnixSystem> m_system;
+#endif
 
   bool m_do_quit;
 

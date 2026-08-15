@@ -9,6 +9,7 @@ the SDL2 + GLES2 ports and are not yet wired into `flake.nix` outputs.
 | `wasm.nix` | Emscripten / WebAssembly |
 | `android.nix` | Android APK helpers |
 | `r36s.nix` | ArkOS handheld (R36S) |
+| `win32.nix` | MinGW Win32/Win64 (SDL2-win32) |
 
 Corresponding scripts and toolchains will live under `mk/wasm/`, `mk/android/`,
 and `mk/r36s/` (also adapted from Pingus).

@@ -31,6 +31,13 @@ if(EMSCRIPTEN OR ANDROID OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(CONSTRUO_NO_XDGCPP ON CACHE BOOL "Omit xdgcpp (embedded / Win32 / Android)" FORCE)
 endif()
 
+if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  # Force SDL2 on Windows: no X11/GLUT.
+  set(CONSTRUO_USE_SDL2 ON CACHE BOOL "Build SDL2 + GLES2 backend" FORCE)
+  set(CONSTRUO_USE_GLUT OFF CACHE BOOL "Build GLUT/OpenGL backend" FORCE)
+  set(CONSTRUO_USE_X11 OFF CACHE BOOL "Build X11 software backend" FORCE)
+endif()
+
 include(GetProjectVersion)
 message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
 
@@ -133,7 +140,6 @@ set(CONSTRUO_SOURCES_CXX
   src/selection.cpp
   src/settings.cpp
   src/spring.cpp
-  src/unix_system.cpp
   src/widget_group.cpp
   src/world.cpp
   src/world_button.cpp
@@ -151,6 +157,12 @@ set(CONSTRUO_SOURCES_CXX
   src/zoom_graphic_context.cpp
   src/zoom_state.cpp
 )
+
+if(WIN32)
+  list(APPEND CONSTRUO_SOURCES_CXX src/win32_system.cpp)
+else()
+  list(APPEND CONSTRUO_SOURCES_CXX src/unix_system.cpp)
+endif()
 
 set(CONSTRUO_GLUT_SOURCES_CXX
   src/main.cpp

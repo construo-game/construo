@@ -37,6 +37,7 @@ class SaveGUIManager;
 class Spring;
 class SystemContext;
 class UnixSystem;
+class Win32System;
 class World;
 class WorldCache;
 class WorldGUIManager;

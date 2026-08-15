@@ -31,7 +31,11 @@
 #  include "unix_system.hpp"
 #elif defined(USE_SDL2_DISPLAY)
 #  include "sdl2_display.hpp"
-#  include "unix_system.hpp"
+#  if defined(_WIN32) || defined(WIN32)
+#    include "win32_system.hpp"
+#  else
+#    include "unix_system.hpp"
+#  endif
 #else
 #  error "No Display target defined!"
 #endif
@@ -60,7 +64,11 @@ ConstruoMain::init_system()
 {
   std::string const title = "Construo " VERSION;
 
+#if defined(USE_SDL2_DISPLAY) && (defined(_WIN32) || defined(WIN32))
+  m_system = std::make_unique<Win32System>();
+#else
   m_system = std::make_unique<UnixSystem>();
+#endif
 #ifdef USE_X11_DISPLAY
   m_display = std::make_unique<X11Display>(title, g_settings.screen_width, g_settings.screen_height,
                                          g_settings.fullscreen);

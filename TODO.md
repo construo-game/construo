@@ -65,8 +65,9 @@ appropriate section.
 
 #### Win32 / Win64 (MinGW)
 
-- [ ] Flake outputs + SDL2 MinGW packages (grumnix / Pingus pattern)
-- [ ] No X11/GLUT on Windows; SDL2 + GLES2 (or desktop GL)
+- [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
+- [x] Flake input `SDL2-win32` + `nix/win32.nix` / `mk/win32/` scaffolding
+- [ ] Cross-build helper libs + real `.#construo-win64` package
 
 #### R36S (ArkOS)
 

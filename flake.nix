@@ -126,8 +126,8 @@
             '';
           };
 
-          # Cross / embedded ports — see nix/*.nix, mk/{wasm,android,r36s}/.
-          # Enable when SDL2 sysroots / MinGW packages are wired:
+          # Cross / embedded ports — see nix/{wasm,android,r36s,win32}.nix.
+          # Win32 uses SDL2-win32 + pkgsCross.mingwW64 once helper libs cross-build.
           #   construo-wasm, construo-android, construo-win32/win64, construo-r36s
         };
       }
