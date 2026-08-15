@@ -431,8 +431,10 @@ GLES2Renderer::draw_circles(std::vector<GraphicContext::Circle> const& circles, 
 void
 GLES2Renderer::draw_string(geom::fpoint const& pos, std::string const& str, Color color)
 {
+  // Match X11/GLUT convention: pos.y is the text baseline (glyphs extend upward).
+  // GUI call sites were written against XDrawString / stroke fonts.
   float x = pos.x();
-  float y = pos.y();
+  float baseline = pos.y();
   float const atlas_w = static_cast<float>(k_num_chars * k_glyph);
   float const gw = static_cast<float>(m_glyph_w);
   float const gh = static_cast<float>(m_glyph_h);
@@ -443,7 +445,7 @@ GLES2Renderer::draw_string(geom::fpoint const& pos, std::string const& str, Colo
   for (unsigned char ch : str) {
     if (ch == '\n') {
       x = pos.x();
-      y += gh;
+      baseline += gh;
       continue;
     }
     int idx = static_cast<int>(ch) - k_first_char;
@@ -451,22 +453,26 @@ GLES2Renderer::draw_string(geom::fpoint const& pos, std::string const& str, Colo
       x += gw;
       continue;
     }
-    float u0 = (static_cast<float>(idx) * gw) / atlas_w;
-    float u1 = (static_cast<float>(idx + 1) * gw) / atlas_w;
-    float v0 = 0.0f;
-    float v1 = 1.0f;
+    // Half-texel inset keeps NEAREST samples inside the glyph cell.
+    float u0 = (static_cast<float>(idx) * gw + 0.5f) / atlas_w;
+    float u1 = (static_cast<float>(idx + 1) * gw - 0.5f) / atlas_w;
+    // Texture row 0 is the top of the glyph in our atlas packing; with the
+    // GL convention (first uploaded row = texture bottom) v=0 maps to glyph top
+    // when the quad top uses v0 — see build_font_atlas().
+    float tv0 = 0.0f;
+    float tv1 = 1.0f;
 
     float x0 = x;
-    float y0 = y;
     float x1 = x + gw;
-    float y1 = y + gh;
+    float y0 = baseline - gh; // top of cell
+    float y1 = baseline;      // baseline
 
-    v.push_back({x0, y0, color.r, color.g, color.b, color.a, u0, v0});
-    v.push_back({x1, y0, color.r, color.g, color.b, color.a, u1, v0});
-    v.push_back({x1, y1, color.r, color.g, color.b, color.a, u1, v1});
-    v.push_back({x0, y0, color.r, color.g, color.b, color.a, u0, v0});
-    v.push_back({x1, y1, color.r, color.g, color.b, color.a, u1, v1});
-    v.push_back({x0, y1, color.r, color.g, color.b, color.a, u0, v1});
+    v.push_back({x0, y0, color.r, color.g, color.b, color.a, u0, tv0});
+    v.push_back({x1, y0, color.r, color.g, color.b, color.a, u1, tv0});
+    v.push_back({x1, y1, color.r, color.g, color.b, color.a, u1, tv1});
+    v.push_back({x0, y0, color.r, color.g, color.b, color.a, u0, tv0});
+    v.push_back({x1, y1, color.r, color.g, color.b, color.a, u1, tv1});
+    v.push_back({x0, y1, color.r, color.g, color.b, color.a, u0, tv1});
 
     x += gw;
   }
