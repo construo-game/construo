@@ -110,6 +110,8 @@ LOCAL_C_INCLUDES := \
   $(CONSTRUO_INC_ROOT)/external/logmich/include \
   $(CONSTRUO_INC_ROOT)/external/sexpcpp/include \
   $(CONSTRUO_INC_ROOT)/external/priocpp/include \
+  $(CONSTRUO_INC_ROOT)/external/priocpp/include/prio \
+  $(CONSTRUO_INC_ROOT)/external/priocpp/src \
   $(CONSTRUO_INC_ROOT)/external/geomcpp/include \
   $(LOCAL_PATH)/../SDL/include \
   $(LOCAL_PATH)/../SDL/include/SDL2
