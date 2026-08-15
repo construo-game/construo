@@ -290,26 +290,32 @@ TXT
               construo-wasm = construoWasm;
             };
             apps =
-              (lib.optionalAttrs (construoWasm != null) (
-                let
-                  open = wasm.mkOpenBrowserApp {
-                    pkg = construoWasm;
-                    appName = "construo";
-                    description = "Serve Construo wasm and open in a browser";
-                  };
-                in {
-                  construo-wasm = open;
-                  construo-wasm-serve = open;
-                }
-              ))
+              (lib.optionalAttrs (construoWasm != null) {
+                construo-wasm = wasm.mkOpenBrowserApp {
+                  pkg = construoWasm;
+                  appName = "construo";
+                  description = "Serve Construo wasm and open in a browser";
+                };
+              })
               // {
-                construo-android = android.mkInstallApp {
+                # Match Pingus naming: install-android-<game>
+                install-android-construo = android.mkInstallApp {
                   pkg = construoAndroidPkg;
                   apkFileName = "construo.apk";
                   description = "Install Construo APK via adb";
                 };
               };
           };
+
+        # Zip a flat Windows tree for redistribution (Pingus-style).
+        mkWinZip = pkg: name: winsys:
+          pkgs.runCommand "${name}-${winsys}-zip" { } ''
+            mkdir -p $out
+            WORKDIR=$(mktemp -d)
+            cp --no-preserve=mode,ownership -R ${pkg}/. "$WORKDIR"/
+            cd "$WORKDIR"
+            ${pkgs.zip}/bin/zip -r $out/${name}-${construo_version}-${winsys}.zip .
+          '';
 
         packages = rec {
           default = construo;
@@ -375,8 +381,9 @@ TXT
 
         }
           // lib.optionalAttrs (!isWin) {
+            # Flat redistributable (exe + DLLs + examples). Binary-only is internal.
             construo-win64 = construo-win64;
-            construo-win64-bin = construo-win64-bin;
+            construo-win64-zip = mkWinZip construo-win64 "construo" "win64";
           }
           // linuxExtras.packages;
 
@@ -413,17 +420,17 @@ TXT
             default = {
               type = "app";
               program = "${packages.default}/bin/construo";
-              meta.description = "Construo (default: X11 binary when available)";
+              meta.description = "Construo (native X11/GLUT)";
             };
             construo = {
               type = "app";
               program = "${packages.construo}/bin/construo";
-              meta.description = "Construo X11/GLUT package";
+              meta.description = "Construo (native X11/GLUT)";
             };
             construo-sdl = {
               type = "app";
               program = "${packages.construo-sdl}/bin/construo";
-              meta.description = "Construo SDL2 + GLES2 package";
+              meta.description = "Construo (native SDL2 + GLES2)";
             };
           }
           // lib.optionalAttrs (!isWin && pkgs.stdenv.hostPlatform.isLinux) {

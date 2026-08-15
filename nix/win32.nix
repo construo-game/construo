@@ -2,8 +2,9 @@
 # Wired from flake.nix via pkgsCross.mingwW64 + SDL2-win32 (grumnix).
 #
 # Flake outputs:
-#   packages.construo-win64-bin  — cross-built binary
-#   packages.construo-win64      — flat tree (exe + examples)
+#   packages.construo-win64      — flat tree (exe + DLLs + examples)
+#   packages.construo-win64-zip  — zip of the flat tree
+#   apps.construo-win64          — run via Wine on Linux
 #
 { pkgs
 , SDL2-win32 ? null
