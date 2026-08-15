@@ -100,6 +100,12 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
 {
   CommandLine::parse(argc, argv);
 
+  // Android: prefer fullscreen so the SDL surface matches the display.
+  // R36S geometry is set by the package launcher (see mk/r36s/scripts).
+#if defined(__ANDROID__)
+  g_settings.fullscreen = true;
+#endif
+
   try {
     // Init the System
     init_system();

@@ -29,3 +29,15 @@ cmake --build build-r36s
 Install `construo.sdl` plus the `examples/` tree (e.g. under `/roms/ports/construo/` or similar). Launch with working directory set so relative paths resolve, or set datadir accordingly.
 
 See also Pingus `mk/r36s/` for sysroot extraction scripts if needed later.
+
+## Launcher defaults
+
+`mk/r36s/scripts/package-port.sh` writes `construo.sh` that starts with:
+
+```bash
+./construo.sdl -f -g 640x480
+```
+
+Override geometry on the command line if needed. Controller mapping is
+documented in `controls.txt` inside the package.
+

@@ -86,9 +86,9 @@ CommandLine::parse (int argc, char** argv)
                 {
                   char c;
                   if (sscanf(argv[i], "%d%c%d",
-                             &g_settings.screen_width, &c, &g_settings.screen_height) != 3 && c != 'x')
+                             &g_settings.screen_width, &c, &g_settings.screen_height) != 3 || c != 'x')
                     {
-                      error ("geometry string must WIDTHxHEIGHT");
+                      error ("geometry string must be WIDTHxHEIGHT");
                     }
                 }
               else

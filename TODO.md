@@ -76,6 +76,8 @@ appropriate section.
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
 - [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
 - [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
+- [x] `mk/android/scripts/install-sdl-libs.sh` to stage SDL2 under jni/
+- [x] Android default fullscreen when `__ANDROID__`
 - [ ] Full signed APK release flow / CI artifact
 
 #### Win32 / Win64 (MinGW)
@@ -95,6 +97,7 @@ appropriate section.
 - [x] `nix/r36s.nix` + aarch64/armhf toolchains under `mk/r36s/`
 - [x] `CROSSCOMPILE.md` sysroot notes
 - [x] `mk/r36s/scripts/package-port.sh` layout helper
+- [x] R36S launcher defaults (`-f -g 640x480`), controls.txt, README in package
 - [ ] Device package layout validation on hardware
 
 ---
@@ -111,6 +114,7 @@ appropriate section.
 - [x] CMake accepts sigc++-3 or 2; glm via prefix (still need wasm builds of deps)
 - [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
 - [x] Prefer system packages on native Linux (`find_package` / pkg-config)
+- [x] Fix `-g/--geometry` parse (`WIDTHxHEIGHT` required correctly)
 
 ---
 
