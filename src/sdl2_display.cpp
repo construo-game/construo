@@ -89,9 +89,10 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   m_cursor_zoom(nullptr),
   m_cursor_insert(nullptr),
   m_cursor_collider(nullptr),
-  m_active_cursor(nullptr)
+  m_active_cursor(nullptr),
+  m_controller(nullptr)
 {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
   }
 
@@ -155,12 +156,14 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   init_default_keybindings(*this);
   load_cursors();
+  open_controller();
   set_cursor(CursorType::INSERT);
   log_info("SDL2Display ready ({}x{}, GLES2)", m_size.width(), m_size.height());
 }
 
 SDL2Display::~SDL2Display()
 {
+  close_controller();
   free_cursors();
   m_renderer.shutdown();
   if (m_gl) {
@@ -469,10 +472,78 @@ SDL2Display::window_to_drawable(int x, int y) const
                       static_cast<int>(static_cast<float>(y) * sy + 0.5f));
 }
 
+
+void
+SDL2Display::open_controller()
+{
+  int const n = SDL_NumJoysticks();
+  for (int i = 0; i < n; ++i) {
+    if (!SDL_IsGameController(i)) {
+      continue;
+    }
+    m_controller = SDL_GameControllerOpen(i);
+    if (m_controller) {
+      log_info("Opened game controller: {}", SDL_GameControllerName(m_controller));
+      return;
+    }
+  }
+}
+
+void
+SDL2Display::close_controller()
+{
+  if (m_controller) {
+    SDL_GameControllerClose(m_controller);
+    m_controller = nullptr;
+  }
+}
+
+void
+SDL2Display::handle_controller_button(SDL_GameControllerButton button, bool pressed)
+{
+  Action action = Action::NONE;
+  switch (button) {
+    case SDL_CONTROLLER_BUTTON_A: action = Action::PRIMARY; break;
+    case SDL_CONTROLLER_BUTTON_B: action = Action::SECONDARY; break;
+    case SDL_CONTROLLER_BUTTON_X: action = Action::FIX; break;
+    case SDL_CONTROLLER_BUTTON_Y: action = Action::RUN; break;
+    case SDL_CONTROLLER_BUTTON_START: action = Action::ESCAPE; break;
+    case SDL_CONTROLLER_BUTTON_BACK: action = Action::UNDO; break;
+    case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: action = Action::ZOOM_OUT; break;
+    case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: action = Action::ZOOM_IN; break;
+    case SDL_CONTROLLER_BUTTON_DPAD_UP: action = Action::SCROLL_UP; break;
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN: action = Action::SCROLL_DOWN; break;
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT: action = Action::SCROLL_LEFT; break;
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: action = Action::SCROLL_RIGHT; break;
+    default: return;
+  }
+  Event e;
+  e.button.type = BUTTON_EVENT;
+  e.button.id = action;
+  e.button.pressed = pressed;
+  events.push(e);
+}
+
 void
 SDL2Display::process_event(SDL_Event const& ev)
 {
   switch (ev.type) {
+    case SDL_CONTROLLERDEVICEADDED:
+      if (!m_controller) {
+        open_controller();
+      }
+      break;
+    case SDL_CONTROLLERDEVICEREMOVED:
+      close_controller();
+      break;
+    case SDL_CONTROLLERBUTTONDOWN:
+      handle_controller_button(
+        static_cast<SDL_GameControllerButton>(ev.cbutton.button), true);
+      break;
+    case SDL_CONTROLLERBUTTONUP:
+      handle_controller_button(
+        static_cast<SDL_GameControllerButton>(ev.cbutton.button), false);
+      break;
     case SDL_QUIT: {
       Event e;
       e.button.type = BUTTON_EVENT;

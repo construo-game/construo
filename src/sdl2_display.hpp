@@ -83,6 +83,7 @@ private:
   SDL_Cursor* m_cursor_insert = nullptr;
   SDL_Cursor* m_cursor_collider = nullptr;
   SDL_Cursor* m_active_cursor = nullptr;
+  SDL_GameController* m_controller = nullptr;
 
   static SDL_Cursor* make_xbm_cursor(unsigned char const* bits,
                                      unsigned char const* mask_bits,
@@ -90,6 +91,9 @@ private:
                                      int hot_x, int hot_y);
   void load_cursors();
   void free_cursors();
+  void open_controller();
+  void close_controller();
+  void handle_controller_button(SDL_GameControllerButton button, bool pressed);
 
 public:
   SDL2Display(const SDL2Display&) = delete;
