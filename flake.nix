@@ -180,14 +180,26 @@
             ls -la ${construo-win64-bin}/bin 2>/dev/null || true
             exit 1
           fi
-          # SDL2 and any other runtime DLLs shipped next to the exe.
-          cp -a ${construo-win64-bin}/bin/*.dll $out/ 2>/dev/null || true
+          # Runtime DLLs next to the exe. autoPatchelf puts symlink farms in
+          # bin/; dereference so Wine sees real PE files (cp -a leaves links
+          # into the nix store that Wine cannot load).
+          find ${construo-win64-bin}/bin -maxdepth 1 -name '*.dll' -print0 \
+            | xargs -0 -r -I{} cp -L {} $out/
           if [ -d ${win64Sdl}/bin ]; then
-            cp -a ${win64Sdl}/bin/*.dll $out/ 2>/dev/null || true
+            find ${win64Sdl}/bin -maxdepth 1 -name '*.dll' -print0 \
+              | xargs -0 -r -I{} cp -L {} $out/ || true
           fi
           if [ -d ${win64Sdl}/lib ]; then
-            cp -a ${win64Sdl}/lib/*.dll $out/ 2>/dev/null || true
+            find ${win64Sdl}/lib -maxdepth 1 -name '*.dll' -print0 \
+              | xargs -0 -r -I{} cp -L {} $out/ || true
           fi
+          if [ ! -f $out/SDL2.dll ]; then
+            echo "error: SDL2.dll missing from flat package" >&2
+            ls -la $out >&2
+            exit 1
+          fi
+          echo "Win64 flat DLLs:"
+          ls -la $out/*.dll
           cp -a ${./examples} $out/examples
           cat > $out/README.txt <<'TXT'
 Construo (Win64 SDL2 + GLES2)
