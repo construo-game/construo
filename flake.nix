@@ -309,6 +309,12 @@ EOF
           construo = packages.construo;
           construo-sdl = packages.construo-sdl;
           construo-all = packages.construo-all;
+          construo-win64 = packages.construo-win64;
+          construo-win64-bin = packages.construo-win64-bin;
+          construo-android = packages.construo-android;
+          construo-r36s = packages.construo-r36s;
+          # Optional heavy check — enable when EMSDK wasm package is stable:
+          # construo-wasm = packages.construo-wasm;
 
           version-smoke = pkgs.runCommand "construo-version-smoke" {} ''
             export SDL_VIDEODRIVER=dummy
@@ -317,12 +323,24 @@ EOF
             grep -q "Construo " $out
             grep -q "${construo_version}" $out
           '';
+
+          port-layout-smoke = pkgs.runCommand "construo-port-layout-smoke" {
+            nativeBuildInputs = [ pkgs.bash pkgs.coreutils pkgs.gnugrep ];
+          } ''
+            cp -a ${./.} src
+            cd src
+            bash scripts/check-port-layouts.sh
+            bash scripts/ci-smoke.sh
+            touch $out
+          '';
         };
       in {
         inherit packages checks;
 
         hydraJobs = checks // {
-          inherit (packages) construo construo-sdl construo-all;
+          inherit (packages)
+            construo construo-sdl construo-all
+            construo-win64 construo-android construo-r36s;
         };
 
         devShells.default = pkgs.mkShell {
