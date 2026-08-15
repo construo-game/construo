@@ -22,3 +22,5 @@ cmake -S . -B build-win \
   -DCMAKE_TOOLCHAIN_FILE=...mingw... \
   -DCONSTRUO_USE_SDL2=ON
 ```
+
+See `scripts/package-zip.sh` to assemble a redistributable folder.

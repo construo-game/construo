@@ -11,3 +11,5 @@ Layout adapted from Pingus `mk/android/`.
 Nix glue: `nix/android.nix`. Preferred long-term: `nix build .#construo-android`.
 
 Touch input is handled in `SDL2Display` (finger → primary/secondary actions).
+
+See `scripts/package-apk.sh` after SDL2 NDK libs are staged.
