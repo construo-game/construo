@@ -52,12 +52,9 @@ void main() {
 }
 )";
 
-// "precision" is GLES-only; enabled via CONSTRUO_IS_GLES (never #define GL_ES —
-// names starting with GL_ are reserved and WebGL/ES already predefine GL_ES).
+// Fragment source without precision — compile_shader prepends
+// "precision mediump float;" on OpenGL ES / WebGL only (desktop GL rejects it).
 char const* k_fs = R"(
-#ifdef CONSTRUO_IS_GLES
-precision mediump float;
-#endif
 varying vec4 v_color;
 varying vec2 v_uv;
 uniform sampler2D u_tex;
@@ -103,14 +100,15 @@ GLES2Renderer::compile_shader(unsigned type, char const* source)
 {
   unsigned s = glCreateShader(type);
 
-  // Desktop compatibility contexts reject GLES-only "precision". Prepend a
-  // non-reserved define when the GL version string indicates OpenGL ES / WebGL.
-  // Do not #define GL_ES: macro names starting with "GL_" are reserved, and
-  // real ES/WebGL compilers already predefine GL_ES (redefinition fails).
+  // Desktop compatibility contexts reject GLES-only "precision mediump float".
+  // On OpenGL ES / WebGL, inject it for fragment shaders only. Never #define
+  // GL_ES — names starting with "GL_" are reserved and ES/WebGL already
+  // predefine that macro (redefinition fails at compile time).
   char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
   bool const is_es = version && (std::strstr(version, "OpenGL ES") != nullptr ||
                                  std::strstr(version, "WebGL") != nullptr);
-  char const* prefix = is_es ? "#define CONSTRUO_IS_GLES 1\n" : "";
+  bool const need_precision = is_es && type == GL_FRAGMENT_SHADER;
+  char const* prefix = need_precision ? "precision mediump float;\n" : "";
   char const* sources[2] = { prefix, source };
   glShaderSource(s, 2, sources, nullptr);
   glCompileShader(s);
@@ -176,7 +174,12 @@ GLES2Renderer::init()
   glDisable(GL_CULL_FACE);
 
   m_ready = true;
-  log_info("GLES2Renderer initialized");
+  {
+    char const* ver = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+    char const* renderer = reinterpret_cast<char const*>(glGetString(GL_RENDERER));
+    log_info("GLES2Renderer initialized (GL_VERSION="{}", GL_RENDERER="{}")",
+             ver ? ver : "?", renderer ? renderer : "?");
+  }
 }
 
 void
