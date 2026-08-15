@@ -574,6 +574,7 @@ EOF_README
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 BIN="$DIR/../bin/construo"
+if [ ! -x "$BIN" ]; then BIN="$DIR/../bin/construo.sdl"; fi
 if [ ! -x "$BIN" ]; then BIN="$DIR/construo"; fi
 # Without PortMaster control.txt, set SDL_GAMECONTROLLERCONFIG for GO-Super
 # or the pad stays joystick-only (see mk/r36s/CROSSCOMPILE.md).
@@ -626,13 +627,15 @@ LAUNCH
         gamedir="$root/${portDirName}"
         mkdir -p "$gamedir/data" "$gamedir/licenses" "$gamedir/conf"
 
-        # Real ELF in bin/ (CONSTRUO_DATADIR is baked in; PortMaster passes --datadir).
+        # Real ELF in bin/ (CMake installs construo.sdl for SDL2 builds).
+        # PortMaster layout expects a plain "construo" name next to the launcher.
         if [ -x "${r36sPkg}/bin/construo" ]; then
           install -m755 "${r36sPkg}/bin/construo" "$gamedir/construo"
+        elif [ -x "${r36sPkg}/bin/construo.sdl" ]; then
+          install -m755 "${r36sPkg}/bin/construo.sdl" "$gamedir/construo"
         else
           echo "portmaster: no construo binary under ${r36sPkg}/bin" >&2
           ls -la "${r36sPkg}/bin" 2>/dev/null || true
-          head -3 "${r36sPkg}/bin/construo" 2>/dev/null || true
           exit 1
         fi
 
