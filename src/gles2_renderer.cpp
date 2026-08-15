@@ -71,8 +71,7 @@ void main() {
 }
 )";
 
-// Minimal 8x8 ASCII font (space..~), 1 bit per pixel, row-major MSB left.
-// Generated as a compact glyph strip; missing glyphs render empty.
+// 8x8 ASCII font (space..~), 1 bit per pixel, row-major MSB left.
 constexpr int k_first_char = 32;
 constexpr int k_num_chars = 95;
 constexpr int k_glyph = 8;
