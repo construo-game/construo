@@ -74,7 +74,12 @@ LOCAL_C_INCLUDES := \
   $(CONSTRUO_SRC_ROOT)/src \
   $(LOCAL_PATH)/SDL/include
 
-LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP -DVERSION=\"0.2.3\" -DPACKAGE=\"construo\"
+ifndef CONSTRUO_VERSION
+  CONSTRUO_VERSION := $(shell cat $(CONSTRUO_SRC_ROOT)/VERSION 2>/dev/null | tr -d '\n' || echo unknown)
+endif
+LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP \
+  -DCONSTRUO_VERSION=\"$(CONSTRUO_VERSION)\" -DVERSION=\"$(CONSTRUO_VERSION)\" \
+  -DPACKAGE=\"construo\"
 LOCAL_CPPFLAGS := -std=c++20 -frtti -fexceptions
 LOCAL_LDLIBS := -lGLESv2 -llog -landroid
 
