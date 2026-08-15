@@ -1,64 +1,57 @@
-# Copyright Ingo Ruhnke <grumbel@gmail.com>
+# SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# This software is provided 'as-is', without any express or implied
-# warranty.  In no event will the authors be held liable for any damages
-# arising from the use of this software.
-#
-# Permission is granted to anyone to use this software for any purpose,
-# including commercial applications, and to alter it and redistribute it
-# freely, subject to the following restrictions:
-#
-# 1. The origin of this software must not be misrepresented; you must not
-#    claim that you wrote the original software. If you use this software
-#    in a product, an acknowledgment in the product documentation would be
-#    appreciated but is not required.
-# 2. Altered source versions must be plainly marked as such, and must not be
-#    misrepresented as being the original software.
-# 3. This notice may not be removed or altered from any source distribution.
+# Version is defined solely by the top-level VERSION file.
+# Development versions contain a "-dev" suffix and, when built from a git
+# checkout (or when packaging supplies PROJECT_VERSION_FULL), append
+# .<revCount>+g<shortHash>[-dirty].
 
-# Requires the following files from
-# https://github.com/rpavlik/cmake-modules:
-# * GetGitRevisionDescription.cmake
-# * GetGitRevisionDescription.cmake.in
+# Packaging (e.g. Nix) may pass -DPROJECT_VERSION_FULL=... with the full
+# development or release string already expanded.
+if(NOT DEFINED PROJECT_VERSION_FULL OR PROJECT_VERSION_FULL STREQUAL "")
+  if(NOT EXISTS "${CMAKE_SOURCE_DIR}/VERSION")
+    message(FATAL_ERROR "VERSION file missing at ${CMAKE_SOURCE_DIR}/VERSION")
+  endif()
+  file(STRINGS "${CMAKE_SOURCE_DIR}/VERSION" PROJECT_VERSION_FULL LIMIT_COUNT 1)
+  string(STRIP "${PROJECT_VERSION_FULL}" PROJECT_VERSION_FULL)
 
-include(GetGitRevisionDescription)
-
-function(get_project_version _outputvar)
-  if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    git_describe(GIT_REPO_VERSION "--tags" "--match" "v[0-9]*.[0-9]*.[0-9]*")
-    string(REGEX REPLACE "^v([0-9].*)" "\\1" CLEANED_GIT_REPO_VERSION "${GIT_REPO_VERSION}")
-
-    if(CLEANED_GIT_REPO_VERSION)
-      set(${_outputvar} "${CLEANED_GIT_REPO_VERSION}" PARENT_SCOPE)
-    else()
-      set(${_outputvar} "${GIT_REPO_VERSION}" PARENT_SCOPE)
-    endif()
-  elseif(EXISTS "${CMAKE_SOURCE_DIR}/VERSION")
-    file(STRINGS "${CMAKE_SOURCE_DIR}/VERSION" PROJECT_VERSION)
-
-    if(PROJECT_VERSION MATCHES "^\\$")
-      # gitattribute $Format$ was not expanded
-      set(${_outputvar} "unknown-version" PARENT_SCOPE)
-    else()
-      # strip leading 'v', in case VERSION is generated from "git describe"
-      string(REGEX REPLACE "^v(.*)" "\\1" PROJECT_VERSION "${PROJECT_VERSION}")
-      set(${_outputvar} "${PROJECT_VERSION}" PARENT_SCOPE)
-    endif()
-  else()
-    # optain version from directory
-    get_filename_component(BASENAME "${CMAKE_SOURCE_DIR}" NAME)
-    string(REGEX REPLACE "^${PROJECT_NAME}[-_]v?(.*)" "\\1" DIRECTORY_VERSION "${BASENAME}")
-    if(NOT "${DIRECTORY_VERSION}" STREQUAL "${BASENAME}")
-      set(${_outputvar} "${DIRECTORY_VERSION}" PARENT_SCOPE)
-    else()
-      set(${_outputvar} "unknown-version" PARENT_SCOPE)
+  # Expand development builds from a git working tree.
+  if(PROJECT_VERSION_FULL MATCHES "-dev" AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    find_package(Git QUIET)
+    if(Git_FOUND)
+      execute_process(
+        COMMAND "${GIT_EXECUTABLE}" rev-list --count HEAD
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_rev_count
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET)
+      execute_process(
+        COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_short
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET)
+      execute_process(
+        COMMAND "${GIT_EXECUTABLE}" status --porcelain
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_status
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET)
+      if(_git_rev_count AND _git_short)
+        set(PROJECT_VERSION_FULL "${PROJECT_VERSION_FULL}.${_git_rev_count}+g${_git_short}")
+        if(_git_status)
+          set(PROJECT_VERSION_FULL "${PROJECT_VERSION_FULL}-dirty")
+        endif()
+      endif()
     endif()
   endif()
-endfunction()
+endif()
 
-get_project_version(PROJECT_VERSION)
+# CMake project() / packaging numeric version: leading X.Y.Z only.
+string(REGEX MATCH "^[0-9]+(\\.[0-9]+)*" PROJECT_VERSION "${PROJECT_VERSION_FULL}")
+if(NOT PROJECT_VERSION)
+  set(PROJECT_VERSION "0.0.0")
+endif()
 
 message(STATUS "Project Name: ${PROJECT_NAME}")
-message(STATUS "Project Version: ${PROJECT_VERSION}")
-
-# EOF #
+message(STATUS "Project Version: ${PROJECT_VERSION_FULL}")

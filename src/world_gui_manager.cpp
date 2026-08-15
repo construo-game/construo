@@ -337,7 +337,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(410.0f, bottom_line), "Zoom: ");
   gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_widget->get_scale()));
 
-  gc.draw_string(geom::fpoint(610, bottom_line), "Construo " VERSION);
+  gc.draw_string(geom::fpoint(610, bottom_line), "Construo " CONSTRUO_VERSION);
   //gc.draw_string(680, bottom_line, std::to_string(m_worldview_widget->get_scale()));
 }
 

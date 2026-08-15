@@ -62,7 +62,7 @@ ConstruoMain::~ConstruoMain ()
 void
 ConstruoMain::init_system()
 {
-  std::string const title = "Construo " VERSION;
+  std::string const title = "Construo " CONSTRUO_VERSION;
 
 #if defined(USE_SDL2_DISPLAY) && (defined(_WIN32) || defined(WIN32))
   m_system = std::make_unique<Win32System>();

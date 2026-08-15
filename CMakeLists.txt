@@ -53,7 +53,8 @@ if(EMSCRIPTEN)
 endif()
 
 include(GetProjectVersion)
-message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
+# PROJECT_VERSION_FULL is the single expanded version string (from VERSION /
+# -DPROJECT_VERSION_FULL). PROJECT_VERSION is the leading numeric component.
 
 include(GNUInstallDirs)
 include(MaximumWarnings)
@@ -204,9 +205,11 @@ set(CONSTRUO_SDL2_SOURCES_CXX
 
 include_directories(src/)
 
-add_definitions(-DVERSION="${PROJECT_VERSION}")
+add_definitions(-DCONSTRUO_VERSION="${PROJECT_VERSION_FULL}")
+# Keep VERSION as an alias for existing call sites.
+add_definitions(-DVERSION="${PROJECT_VERSION_FULL}")
 add_definitions(-DPACKAGE="construo")
-add_definitions(-DPACKAGE_STRING="${PROJECT_VERSION}")
+add_definitions(-DPACKAGE_STRING="${PROJECT_VERSION_FULL}")
 add_definitions(-DCONSTRUO_DATADIR="${CONSTRUO_DATADIR}")
 
 add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})

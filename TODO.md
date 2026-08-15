@@ -8,6 +8,7 @@ appropriate section.
 ## Immediate (agent bootstrap)
 
 - [x] Add `AGENTS.md` (project rules, architecture, git/bundle workflow)
+- [x] Single-source `VERSION` → CMake `PROJECT_VERSION_FULL` / `CONSTRUO_VERSION` + flake
 - [x] Add this `TODO.md`
 - [x] Bundles `construo-001` … `construo-003` (agents, CMake options, TODO)
 - [x] Inline tinycmmc CMake helpers under `cmake/` (no top-level tinycmmc dep)

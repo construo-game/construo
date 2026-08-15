@@ -40,11 +40,15 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        version_file = pkgs.lib.fileContents ./VERSION;
-        construo_has_version = ((builtins.substring 0 1) version_file) == "v";
-        construo_version = if !construo_has_version
-                           then ("0.2.3-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
-                           else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
+        lib = pkgs.lib;
+        # Single source of truth: top-level VERSION (e.g. "0.2.3-dev").
+        versionBase = lib.strings.removeSuffix "\n" (builtins.readFile ./VERSION);
+        gitRev = self.shortRev or self.dirtyShortRev or "unknown";
+        # Development builds append .<revCount>+g<shortRev>[-dirty].
+        construo_version =
+          if lib.strings.hasInfix "-dev" versionBase
+          then "${versionBase}.${toString self.revCount}+g${gitRev}"
+          else versionBase;
 
         commonNative = with pkgs; [ cmake pkg-config ];
         commonLibs = with pkgs; [
@@ -66,16 +70,13 @@
             version = construo_version;
             src = ./.;
 
-            postPatch = ''
-              if ${if construo_has_version then "false" else "true"}; then
-                echo "${version}" > VERSION
-              fi
-            '';
-
+            # Pass the fully expanded version into CMake so binaries report the
+            # same string as the Nix package (revCount + shortRev).
             cmakeFlags = [
               "-DWARNINGS=ON"
               "-DWERROR=ON"
               "-DBUILD_TESTS=ON"
+              "-DPROJECT_VERSION_FULL=${version}"
             ] ++ extraCmakeFlags;
 
             doCheck = true;
