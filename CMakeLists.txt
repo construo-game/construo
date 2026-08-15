@@ -17,12 +17,20 @@
 cmake_minimum_required(VERSION 3.14)
 project(construo)
 
-set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
-find_package(tinycmmc CONFIG)
-message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
-list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
+# Prefer tinycmmc from the environment / Nix; fall back to the vendored copy.
+set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/tinycmmc/modules/")
+find_package(tinycmmc CONFIG QUIET)
+if(tinycmmc_FOUND)
+  message(STATUS "tinycmmc found via find_package")
+else()
+  message(STATUS "tinycmmc module path (vendored): ${TINYCMMC_MODULE_PATH}")
+  list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
+endif()
 
 option(BUILD_TESTS "Build test cases" OFF)
+option(CONSTRUO_USE_SDL2 "Build SDL2 + GLES2 backend" OFF)
+option(CONSTRUO_USE_GLUT "Build GLUT/OpenGL backend" ON)
+option(CONSTRUO_USE_X11 "Build X11 software backend" ON)
 
 include(GetProjectVersion)
 message(STATUS "Version: ${PROJECT_NAME} ${PROJECT_VERSION}")
@@ -31,9 +39,16 @@ include(GNUInstallDirs)
 include(MaximumWarnings)
 
 set(OpenGL_GL_PREFERENCE "GLVND")
-find_package(OpenGL)
-find_package(GLUT)
-find_package(X11)
+if(CONSTRUO_USE_GLUT)
+  find_package(OpenGL)
+  find_package(GLUT)
+endif()
+if(CONSTRUO_USE_X11)
+  find_package(X11)
+endif()
+if(CONSTRUO_USE_SDL2)
+  find_package(SDL2 REQUIRED)
+endif()
 find_package(fmt REQUIRED)
 find_package(glm REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -45,13 +60,13 @@ if (BUILD_TESTS)
   enable_testing()
 endif(BUILD_TESTS)
 
-# Build dependencies
+# Build dependencies from external/ when not provided by the environment.
 function(build_dependencies)
   set(BUILD_TESTS OFF)
 
-  find_package(prio QUIET)
-  if(NOT TARGET prio::prio)
-    add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+  find_package(logmich QUIET)
+  if(NOT TARGET logmich::logmich)
+    add_subdirectory(external/logmich/ EXCLUDE_FROM_ALL)
   endif()
 
   find_package(prio QUIET)
@@ -61,7 +76,7 @@ function(build_dependencies)
 
   find_package(geom QUIET)
   if(NOT TARGET geom::geom)
-    add_subdirectory(external/priocpp/ EXCLUDE_FROM_ALL)
+    add_subdirectory(external/geomcpp/ EXCLUDE_FROM_ALL)
   endif()
 
   find_package(xdgcpp QUIET)
@@ -157,7 +172,7 @@ set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 target_link_libraries(libconstruo PUBLIC prio::prio geom::geom fmt::fmt xdgcpp PkgConfig::SIGCXX)
 target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS} -Wuseless-cast)
 
-if(GLUT_FOUND AND OPENGL_FOUND)
+if(CONSTRUO_USE_GLUT AND GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})
   set_target_properties(construo.glut PROPERTIES
       CXX_STANDARD 20
@@ -174,7 +189,7 @@ if(GLUT_FOUND AND OPENGL_FOUND)
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
-if(X11_FOUND)
+if(CONSTRUO_USE_X11 AND X11_FOUND)
   add_executable(construo.x11 ${CONSTRUO_X11_SOURCES_CXX})
   set_target_properties(construo.x11 PROPERTIES
     CXX_STANDARD 20
@@ -189,6 +204,12 @@ if(X11_FOUND)
   install(FILES
     construo.x11.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+endif()
+
+# SDL2 + GLES2 backend (WASM / Android / Win32 / R36S / desktop validation).
+# Sources and full target wiring will be added once the GLES2 renderer lands.
+if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
+  message(STATUS "SDL2 backend enabled (renderer implementation pending)")
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})
