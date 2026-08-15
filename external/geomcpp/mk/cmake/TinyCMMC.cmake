@@ -21,16 +21,25 @@ if(tinycmmc_FOUND)
   message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
   list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 else()
-  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/tinycmmc/CMakeLists.txt")
+  # Nested submodule, or monorepo sibling (e.g. construo/external/{geomcpp,tinycmmc}).
+  set(_tinycmmc_candidates
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/tinycmmc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../tinycmmc")
+  set(_tinycmmc_root "")
+  foreach(_cand IN LISTS _tinycmmc_candidates)
+    if(EXISTS "${_cand}/CMakeLists.txt" OR EXISTS "${_cand}/modules")
+      set(_tinycmmc_root "${_cand}")
+      break()
+    endif()
+  endforeach()
+  if(NOT _tinycmmc_root)
     message(FATAL_ERROR
-      "The git submodule \"external/tinycmmc\" could not be found. "
-      "To retrieve it, run:\n"
-      "    git submodule update --init --recursive\n")
-  else()
-    set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/tinycmmc/modules/")
-    message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
-    list(APPEND CMAKE_MODULE_PATH "${TINYCMMC_MODULE_PATH}")
+      "tinycmmc could not be found (tried external/tinycmmc and ../tinycmmc). "
+      "Run: git submodule update --init --recursive\n")
   endif()
+  set(TINYCMMC_MODULE_PATH "${_tinycmmc_root}/modules/")
+  message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
+  list(APPEND CMAKE_MODULE_PATH "${TINYCMMC_MODULE_PATH}")
 endif()
 
 include(TinyCMMC)
