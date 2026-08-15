@@ -25,7 +25,7 @@ endif()
 
 # PROJECT_VERSION is used by write_basic_package_version_file; keep it
 # free of the optional +g<rev> suffix that packaging may append.
-if(NOT DEFINED PROJECT_VERSION)
+if(NOT PROJECT_VERSION)
   string(REGEX REPLACE "\\+g.*" "" PROJECT_VERSION "${PROJECT_VERSION_FULL}")
 endif()
 
