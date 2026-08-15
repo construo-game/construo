@@ -261,8 +261,8 @@ TXT
                 exit 1
               '';
 
-          inherit construo-win64;
-          construo-win64-bin = construo-win64-bin;
+          # inherit pulls from the enclosing let (not the rec set).
+          inherit construo-win64 construo-win64-bin;
 
           construo-android = pkgs.runCommand "construo-android-stub" {} ''
             echo "construo-android is not packaged yet." >&2

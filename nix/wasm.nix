@@ -179,11 +179,11 @@ EOF_GLM
     mkdir -p $out/include $out/lib/cmake/geom
     cp -a ${../external/geomcpp}/include/. $out/include/
     cat > $out/lib/cmake/geom/geomConfig.cmake <<'EOF'
-set(_geom_inc "${CMAKE_CURRENT_LIST_DIR}/../../../include")
+set(_geom_inc "''${CMAKE_CURRENT_LIST_DIR}/../../../include")
 if(NOT TARGET geom::geom)
   add_library(geom::geom INTERFACE IMPORTED)
   set_target_properties(geom::geom PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_geom_inc}"
+    INTERFACE_INCLUDE_DIRECTORIES "''${_geom_inc}"
     INTERFACE_COMPILE_DEFINITIONS "GLM_ENABLE_EXPERIMENTAL")
 endif()
 set(geom_FOUND TRUE)
