@@ -52,14 +52,17 @@ void main() {
 }
 )";
 
+// "precision" is GLES-only; stripped at compile time on desktop GL.
 char const* k_fs = R"(
+#ifdef GL_ES
 precision mediump float;
+#endif
 varying vec4 v_color;
 varying vec2 v_uv;
 uniform sampler2D u_tex;
-uniform int u_use_tex;
+uniform float u_use_tex;
 void main() {
-  if (u_use_tex != 0) {
+  if (u_use_tex > 0.5) {
     float a = texture2D(u_tex, v_uv).a;
     gl_FragColor = vec4(v_color.rgb, v_color.a * a);
   } else {
@@ -99,7 +102,15 @@ unsigned
 GLES2Renderer::compile_shader(unsigned type, char const* source)
 {
   unsigned s = glCreateShader(type);
-  glShaderSource(s, 1, &source, nullptr);
+
+  // Desktop compatibility contexts reject GLES-only "precision" without GL_ES.
+  // Prepend a define when the GL version string indicates OpenGL ES / WebGL.
+  char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+  bool const is_es = version && (std::strstr(version, "OpenGL ES") != nullptr ||
+                                 std::strstr(version, "WebGL") != nullptr);
+  char const* prefix = is_es ? "#define GL_ES 1\n" : "";
+  char const* sources[2] = { prefix, source };
+  glShaderSource(s, 2, sources, nullptr);
   glCompileShader(s);
   int ok = 0;
   glGetShaderiv(s, GL_COMPILE_STATUS, &ok);
@@ -242,7 +253,7 @@ GLES2Renderer::draw_arrays(unsigned mode, std::vector<Vertex> const& verts, bool
   glUniform2f(m_u_screen,
               static_cast<float>(m_viewport.width()),
               static_cast<float>(m_viewport.height()));
-  glUniform1i(m_u_use_tex, textured ? 1 : 0);
+  glUniform1f(m_u_use_tex, textured ? 1.0f : 0.0f);
 
   if (textured) {
     glActiveTexture(GL_TEXTURE0);
