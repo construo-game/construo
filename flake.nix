@@ -183,6 +183,21 @@
           construo-sdl = self.packages.${system}.construo-sdl;
           construo-all = self.packages.${system}.construo-all;
         };
+
+        apps = {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/construo";
+          };
+          construo = {
+            type = "app";
+            program = "${self.packages.${system}.construo}/bin/construo";
+          };
+          construo-sdl = {
+            type = "app";
+            program = "${self.packages.${system}.construo-sdl}/bin/construo";
+          };
+        };
       }
     );
 }
