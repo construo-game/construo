@@ -1,0 +1,70 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 16, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "linux-x11-glut",
+      "displayName": "Linux X11 + GLUT",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/x11-glut",
+      "cacheVariables": {
+        "CONSTRUO_USE_X11": "ON",
+        "CONSTRUO_USE_GLUT": "ON",
+        "CONSTRUO_USE_SDL2": "OFF",
+        "BUILD_TESTS": "ON",
+        "WARNINGS": "ON",
+        "WERROR": "ON"
+      }
+    },
+    {
+      "name": "linux-sdl2",
+      "displayName": "Linux SDL2 + GLES2",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/sdl2",
+      "cacheVariables": {
+        "CONSTRUO_USE_X11": "OFF",
+        "CONSTRUO_USE_GLUT": "OFF",
+        "CONSTRUO_USE_SDL2": "ON",
+        "BUILD_TESTS": "ON",
+        "WARNINGS": "ON",
+        "WERROR": "ON"
+      }
+    },
+    {
+      "name": "linux-all",
+      "displayName": "Linux all backends",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/all",
+      "cacheVariables": {
+        "CONSTRUO_USE_X11": "ON",
+        "CONSTRUO_USE_GLUT": "ON",
+        "CONSTRUO_USE_SDL2": "ON",
+        "BUILD_TESTS": "ON",
+        "WARNINGS": "ON",
+        "WERROR": "ON"
+      }
+    },
+    {
+      "name": "emscripten",
+      "displayName": "Emscripten WASM",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/wasm",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CONSTRUO_USE_X11": "OFF",
+        "CONSTRUO_USE_GLUT": "OFF",
+        "CONSTRUO_USE_SDL2": "ON",
+        "CONSTRUO_NO_XDGCPP": "ON",
+        "BUILD_TESTS": "OFF",
+        "WARNINGS": "ON",
+        "WERROR": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "linux-x11-glut", "configurePreset": "linux-x11-glut" },
+    { "name": "linux-sdl2", "configurePreset": "linux-sdl2" },
+    { "name": "linux-all", "configurePreset": "linux-all" },
+    { "name": "emscripten", "configurePreset": "emscripten" }
+  ]
+}
