@@ -123,12 +123,14 @@ if(NOT glm_FOUND AND NOT TARGET glm::glm)
   endif()
 endif()
 find_package(PkgConfig REQUIRED)
-# Prefer sigc++-3; fall back to 2.x for constrained cross toolchains (wasm).
+# Prefer sigc++-3; fall back to 2.x. Optional on constrained sysroots
+# (ArkOS/R36S, some Android images) — construo itself does not #include sigc++.
 pkg_search_module(SIGCXX IMPORTED_TARGET sigc++-3.0 sigc++-2.0)
-if(NOT SIGCXX_FOUND)
-  message(FATAL_ERROR "libsigc++ not found (tried sigc++-3.0 and sigc++-2.0)")
+if(SIGCXX_FOUND)
+  message(STATUS "Using libsigc++ via pkg-config: ${SIGCXX_MODULE_NAME}")
+else()
+  message(STATUS "libsigc++ not found; continuing without it (R36S/Android OK)")
 endif()
-message(STATUS "Using libsigc++ via pkg-config: ${SIGCXX_MODULE_NAME}")
 
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
@@ -273,9 +275,15 @@ set_target_properties(libconstruo PROPERTIES
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 if(CONSTRUO_NO_XDGCPP)
   target_compile_definitions(libconstruo PUBLIC -DCONSTRUO_NO_XDGCPP)
-  target_link_libraries(libconstruo PUBLIC prio::prio geom::geom PkgConfig::SIGCXX)
+  target_link_libraries(libconstruo PUBLIC prio::prio geom::geom)
+  if(SIGCXX_FOUND)
+    target_link_libraries(libconstruo PUBLIC PkgConfig::SIGCXX)
+  endif()
 else()
-  target_link_libraries(libconstruo PUBLIC prio::prio geom::geom xdgcpp PkgConfig::SIGCXX)
+  target_link_libraries(libconstruo PUBLIC prio::prio geom::geom xdgcpp)
+  if(SIGCXX_FOUND)
+    target_link_libraries(libconstruo PUBLIC PkgConfig::SIGCXX)
+  endif()
 endif()
 target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS})
 
