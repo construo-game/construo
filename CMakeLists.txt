@@ -292,6 +292,8 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
       "SHELL:-sFULL_ES2=1"
       "SHELL:-sALLOW_MEMORY_GROWTH=1"
       "SHELL:-sDISABLE_EXCEPTION_CATCHING=0"
+      "SHELL:-sFORCE_FILESYSTEM=1"
+      "SHELL:-sASSERTIONS=1"
       -fexceptions
     )
     # Prefer the wasm shell when present (browser builds).
