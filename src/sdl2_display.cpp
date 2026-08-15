@@ -540,12 +540,21 @@ SDL2Display::handle_controller_axis()
   constexpr Sint16 dead = 16000;
   struct AxisMap { SDL_GameControllerAxis axis; Action neg; Action pos; bool* state_neg; bool* state_pos; };
   static bool left=false, right=false, up=false, down=false;
-  static bool zin=false, zout=false;
+  static bool zin=false, zout=false, ltrig=false, rtrig=false;
   AxisMap maps[] = {
     { SDL_CONTROLLER_AXIS_LEFTX, Action::SCROLL_LEFT, Action::SCROLL_RIGHT, &left, &right },
     { SDL_CONTROLLER_AXIS_LEFTY, Action::SCROLL_UP, Action::SCROLL_DOWN, &up, &down },
     { SDL_CONTROLLER_AXIS_RIGHTY, Action::ZOOM_IN, Action::ZOOM_OUT, &zin, &zout },
   };
+  // Triggers are 0..32767 (never negative). Treat as "pos" only.
+  {
+    Sint16 lt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+    Sint16 rt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+    bool l = lt > dead;
+    bool r = rt > dead;
+    if (l != ltrig) { emit_button(Action::UNDO, l); ltrig = l; }
+    if (r != rtrig) { emit_button(Action::REDO, r); rtrig = r; }
+  }
   for (auto& m : maps) {
     Sint16 v = SDL_GameControllerGetAxis(m_controller, m.axis);
     bool neg = v < -dead;

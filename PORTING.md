@@ -64,3 +64,4 @@ Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).
 | D-pad | SCROLL_* |
 | Left stick | SCROLL_* (analog threshold) |
 | Right stick Y | ZOOM_IN / ZOOM_OUT |
+| Triggers L/R | UNDO / REDO |
