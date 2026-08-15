@@ -16,6 +16,7 @@
 #include "events.hpp"
 #include "screen_manager.hpp"
 #include "settings.hpp"
+#include "cursors/cursors.hpp"
 
 namespace construo {
 
@@ -71,7 +72,13 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   m_mouse_pos(),
   m_is_fullscreen(fullscreen),
   m_title(title),
-  m_key_bindings()
+  m_key_bindings(),
+  m_cursor_select(nullptr),
+  m_cursor_scroll(nullptr),
+  m_cursor_zoom(nullptr),
+  m_cursor_insert(nullptr),
+  m_cursor_collider(nullptr),
+  m_active_cursor(nullptr)
 {
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
@@ -133,11 +140,14 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   m_renderer.set_viewport(m_size);
 
   init_default_keybindings(*this);
+  load_cursors();
+  set_cursor(CursorType::INSERT);
   log_info("SDL2Display ready ({}x{}, GLES2)", m_size.width(), m_size.height());
 }
 
 SDL2Display::~SDL2Display()
 {
+  free_cursors();
   m_renderer.shutdown();
   if (m_gl) {
     SDL_GL_DeleteContext(m_gl);
@@ -259,44 +269,92 @@ SDL2Display::pop_quick_draw()
   m_renderer.pop_quick_draw();
 }
 
+SDL_Cursor*
+SDL2Display::make_xbm_cursor(unsigned char const* bits,
+                             unsigned char const* mask_bits,
+                             int width, int height,
+                             int hot_x, int hot_y)
+{
+  // SDL_CreateCursor expects MSB-first bitmaps (same layout as XBM).
+  SDL_Cursor* c = SDL_CreateCursor(bits, mask_bits, width, height, hot_x, hot_y);
+  if (!c) {
+    log_warn("SDL_CreateCursor failed: {}", SDL_GetError());
+  }
+  return c;
+}
+
+void
+SDL2Display::load_cursors()
+{
+  m_cursor_select = make_xbm_cursor(
+    cursor_select_bits, cursor_select_mask_bits,
+    cursor_select_width, cursor_select_height,
+    cursor_select_x_hot, cursor_select_y_hot);
+  m_cursor_scroll = make_xbm_cursor(
+    cursor_scroll_bits, cursor_scroll_mask_bits,
+    cursor_scroll_width, cursor_scroll_height,
+    cursor_scroll_x_hot, cursor_scroll_y_hot);
+  m_cursor_zoom = make_xbm_cursor(
+    cursor_zoom_bits, cursor_zoom_mask_bits,
+    cursor_zoom_width, cursor_zoom_height,
+    cursor_zoom_x_hot, cursor_zoom_y_hot);
+  m_cursor_insert = make_xbm_cursor(
+    cursor_insert_bits, cursor_insert_mask_bits,
+    cursor_insert_width, cursor_insert_height,
+    cursor_insert_x_hot, cursor_insert_y_hot);
+  m_cursor_collider = make_xbm_cursor(
+    cursor_collider_bits, cursor_collider_mask_bits,
+    cursor_collider_width, cursor_collider_height,
+    cursor_collider_x_hot, cursor_collider_y_hot);
+}
+
+void
+SDL2Display::free_cursors()
+{
+  // Do not free the active cursor while it is still set.
+  SDL_SetCursor(SDL_GetDefaultCursor());
+  m_active_cursor = nullptr;
+  auto free_one = [](SDL_Cursor*& c) {
+    if (c) {
+      SDL_FreeCursor(c);
+      c = nullptr;
+    }
+  };
+  free_one(m_cursor_select);
+  free_one(m_cursor_scroll);
+  free_one(m_cursor_zoom);
+  free_one(m_cursor_insert);
+  free_one(m_cursor_collider);
+}
+
 void
 SDL2Display::set_cursor_real(CursorType cursor)
 {
-  SDL_SystemCursor id = SDL_SYSTEM_CURSOR_ARROW;
+  SDL_Cursor* c = nullptr;
   switch (cursor) {
     case CursorType::SELECT:
-      id = SDL_SYSTEM_CURSOR_ARROW;
+      c = m_cursor_select;
       break;
     case CursorType::SCROLL:
-      id = SDL_SYSTEM_CURSOR_SIZEALL;
+      c = m_cursor_scroll;
       break;
     case CursorType::ZOOM:
-      id = SDL_SYSTEM_CURSOR_SIZEALL;
+      c = m_cursor_zoom;
       break;
     case CursorType::INSERT:
-      id = SDL_SYSTEM_CURSOR_CROSSHAIR;
-      break;
-    case CursorType::ROTATE:
-      id = SDL_SYSTEM_CURSOR_SIZEALL;
-      break;
-    case CursorType::SCALE:
-      id = SDL_SYSTEM_CURSOR_SIZENWSE;
+      c = m_cursor_insert;
       break;
     case CursorType::COLLIDER:
-      id = SDL_SYSTEM_CURSOR_CROSSHAIR;
+      c = m_cursor_collider;
+      break;
+    case CursorType::ROTATE:
+    case CursorType::SCALE:
+      c = m_cursor_scroll;
       break;
   }
-  SDL_Cursor* c = SDL_CreateSystemCursor(id);
   if (c) {
     SDL_SetCursor(c);
-    // SDL keeps the previous cursor until replaced; free the old one if we tracked it.
-    // For simplicity, leak is avoided by SDL_FreeCursor after SetCursor is unsafe for
-    // the active cursor — store and free previous on next change.
-    static SDL_Cursor* s_prev = nullptr;
-    if (s_prev) {
-      SDL_FreeCursor(s_prev);
-    }
-    s_prev = c;
+    m_active_cursor = c;
   }
 }
 

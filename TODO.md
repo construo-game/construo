@@ -34,7 +34,7 @@ appropriate section.
 - [x] `SDL2Display` implementing `RootGraphicContext` + `InputContext`
 - [x] Map SDL events to existing `Action` / mouse tools
 - [x] Window title, fullscreen toggle (basic)
-- [x] System cursors mapped for SDL2 (bitmap cursors still optional)
+- [x] XBM tool cursors for SDL2 (same assets as X11)
 - [x] Keep GLUT and X11 backends selectable and working
 
 ### GLES2 renderer

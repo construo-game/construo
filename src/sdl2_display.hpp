@@ -77,6 +77,20 @@ private:
 
   std::unordered_map<SDL_Keycode, Action> m_key_bindings;
 
+  SDL_Cursor* m_cursor_select = nullptr;
+  SDL_Cursor* m_cursor_scroll = nullptr;
+  SDL_Cursor* m_cursor_zoom = nullptr;
+  SDL_Cursor* m_cursor_insert = nullptr;
+  SDL_Cursor* m_cursor_collider = nullptr;
+  SDL_Cursor* m_active_cursor = nullptr;
+
+  static SDL_Cursor* make_xbm_cursor(unsigned char const* bits,
+                                     unsigned char const* mask_bits,
+                                     int width, int height,
+                                     int hot_x, int hot_y);
+  void load_cursors();
+  void free_cursors();
+
 public:
   SDL2Display(const SDL2Display&) = delete;
   SDL2Display& operator=(const SDL2Display&) = delete;
