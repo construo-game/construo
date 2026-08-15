@@ -1,8 +1,12 @@
 [Desktop Entry]
 Name=Construo (SDL2)
+GenericName=Construction Toy
 Comment=Wire-frame construction toy (SDL2 + GLES2)
-Exec=construo.sdl
+Exec=construo.sdl %f
 Icon=construo
 Terminal=false
 Type=Application
-Categories=Game;Simulation;
+Categories=Game;LogicGame;Simulation;
+StartupNotify=false
+MimeType=application/x-construo;
+Keywords=physics;springs;particles;construction;
