@@ -47,3 +47,18 @@ cmake --build --preset linux-sdl2
 ```
 
 Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).
+
+## Game controllers (handheld / TV)
+
+`SDL2Display` opens the first SDL game controller. Default mapping:
+
+| Control | Action |
+|---------|--------|
+| A | PRIMARY |
+| B | SECONDARY |
+| X | FIX |
+| Y | RUN |
+| Start | ESCAPE |
+| Back | UNDO |
+| Shoulders | ZOOM_IN / ZOOM_OUT |
+| D-pad | SCROLL_* |

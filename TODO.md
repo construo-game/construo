@@ -62,6 +62,7 @@ appropriate section.
 
 - [x] `nix/android.nix` + `mk/android/` skeleton (manifest, Android.mk, scripts)
 - [x] Touch input (finger → PRIMARY/SECONDARY)
+- [x] SDL2 game controller mapping (handheld / R36S)
 - [x] HiDPI mouse/touch → drawable coordinate mapping
 - [x] Android.mk source list + Application.mk (NDK staging still manual)
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
@@ -71,6 +72,7 @@ appropriate section.
 
 - [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
 - [x] Portable `path_manager` (no POSIX `access()`)
+- [x] UnixSystem HOME fallbacks for Emscripten/Android
 - [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
 - [x] Win32 `package-zip.sh` layout helper
 - [ ] Cross-build helper libs + real `.#construo-win64` package
