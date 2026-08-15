@@ -87,3 +87,18 @@ when the simulation is running (pause), and `SDL_APP_TERMINATING` /
 `SDL_QUIT` as escape. The WASM shell focuses the canvas on click so
 keyboard events reach SDL (`SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT`).
 
+## Flake packaging (Pingus-aligned)
+
+Linux hosts expose port packages via a `linuxExtras` attrset (same idea as
+`pingus/flake.nix`):
+
+| Attribute | Role |
+|-----------|------|
+| `arkos-sysroot` | Published ArkOS aarch64 rootfs (see `nix/r36s.nix` URL/hash) |
+| `construo-r36s` | Cross-built `construo.sdl` against that sysroot |
+| `construo-r36s-portmaster` | PortMaster tree under `/roms/ports` |
+| `android-sdl-libs` / `construo-android` | NDK SDL2 + game native libs (`androidenv`) |
+| `wasm-sdl-libs` / `construo-wasm` | Emscripten static SDL2 + game |
+
+`checks` is `packages // appChecks` so `nix flake check` builds every package.
+

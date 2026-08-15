@@ -181,6 +181,110 @@ Run construo.exe. Example constructions are under examples/.
 TXT
         '';
 
+        isWin = pkgs.stdenv.hostPlatform.isWindows;
+
+        # Linux-only: Android + wasm + R36S (same layout as pingus/flake.nix).
+        linuxExtras =
+          if isWin || !(pkgs.stdenv.hostPlatform.isLinux) then { packages = { }; apps = { }; }
+          else
+          let
+            androidPkgs = import nixpkgs {
+              system = pkgs.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+              config.android_sdk.accept_license = true;
+            };
+            buildToolsVersion = "30.0.3";
+            packagePlatform = "22";
+            compilePlatform = "33";
+            ndkVersion = "27.0.12077973";
+            targetAbis = [ "armeabi-v7a" "arm64-v8a" ];
+            androidSdk = (androidPkgs.androidenv.composeAndroidPackages {
+              platformVersions = [ packagePlatform compilePlatform ];
+              buildToolsVersions = [ buildToolsVersion ];
+              includeNDK = true;
+              inherit ndkVersion;
+              includeEmulator = false;
+              includeSources = false;
+            }).androidsdk;
+
+            r36s = import ./nix/r36s.nix {
+              inherit (pkgs) lib stdenv stdenvNoCC fetchurl cmake pkg-config writeShellScript zip;
+              pkgsCross = pkgs.pkgsCross;
+              glm = libs.glm;
+            };
+            construoR36s = r36s.mkConstruoR36s {
+              src = lib.cleanSource ./.;
+              version = construo_version;
+              pname = "construo-r36s";
+            };
+            construoR36sPortMaster = r36s.mkConstruoR36sPortMaster {
+              r36sPkg = construoR36s;
+              version = construo_version;
+              pname = "construo-r36s-portmaster";
+            };
+
+            android = import ./nix/android.nix {
+              pkgs = androidPkgs;
+              sdlSrc = sdl2-src;
+              sdlVersion = "2.30.3";
+              inherit androidSdk buildToolsVersion packagePlatform compilePlatform targetAbis;
+            };
+
+            wasm = import ./nix/wasm.nix {
+              inherit pkgs;
+              sdlSrc = sdl2-src;
+              sdlVersion = "2.30.3";
+            };
+
+            construoWasm =
+              if wasm.construo-wasm != null then
+                wasm.construo-wasm.overrideAttrs (old: {
+                  __intentionallyOverridingVersion = true;
+                  version = construo_version;
+                  env = (old.env or { }) // {
+                    PROJECT_VERSION_FULL = construo_version;
+                  };
+                })
+              else null;
+          in {
+            packages = {
+              arkos-sysroot = r36s.arkosSysroot;
+              construo-r36s = construoR36s;
+              construo-r36s-portmaster = construoR36sPortMaster;
+              construo-r36s-portmaster-zip = r36s.mkConstruoR36sPortMasterZip {
+                portMasterPkg = construoR36sPortMaster;
+                version = construo_version;
+                pname = "construo-r36s-portmaster-zip";
+              };
+              android-sdl-libs = android.sdlAndroidLibs;
+              construo-android = android.mkApk {
+                appName = "construo";
+                appDir = ./mk/android/app;
+                outApkName = "construo.apk";
+                gameSrcDir = ./src;
+                gameExternalDir = ./external;
+                glmIncludeDir = "${libs.glm}/include";
+                gameExamplesDir = ./examples;
+                gameVersion = construo_version;
+              };
+              wasm-sdl-libs = wasm.sdlWasmLibs;
+              wasm-sdl2 = wasm.sdl2WasmLibs;
+            } // lib.optionalAttrs (construoWasm != null) {
+              construo-wasm = construoWasm;
+            };
+            apps = lib.optionalAttrs (construoWasm != null) {
+              construo-wasm-serve = {
+                type = "app";
+                program = "${pkgs.writeShellScript "construo-wasm-serve" ''
+                  set -euo pipefail
+                  cd "${construoWasm}"
+                  exec ${pkgs.python3}/bin/python3 -m http.server "''${CONSTRUO_WASM_PORT:-8765}" --bind 127.0.0.1
+                ''}";
+                meta.description = "Serve construo-wasm over HTTP";
+              };
+            };
+          };
+
         packages = rec {
           default = construo;
 
@@ -242,106 +346,66 @@ TXT
             '';
           };
 
-          construo-wasm =
-            let
-              wasm = import ./nix/wasm.nix {
-                inherit pkgs;
-                sdlSrc = sdl2-src;
-                sdlVersion = "2.30.3";
-              };
-            in
-            if wasm.construo-wasm != null then
-              wasm.construo-wasm.overrideAttrs (old: {
-                # Source tree is the flake; only the reported version string changes.
-                __intentionallyOverridingVersion = true;
-                version = construo_version;
-                env = (old.env or {}) // {
-                  PROJECT_VERSION_FULL = construo_version;
-                };
-              })
-            else
-              pkgs.runCommand "construo-wasm-stub" {} ''
-                echo "construo-wasm is not packaged yet." >&2
+
+        }
+          // lib.optionalAttrs (!isWin) {
+            construo-win64 = construo-win64;
+            construo-win64-bin = construo-win64-bin;
+          }
+          // linuxExtras.packages;
+
+        apps =
+          {
+            default = {
+              type = "app";
+              program = "${packages.default}/bin/construo";
+              meta.description = "Construo (default: X11 binary when available)";
+            };
+            construo = {
+              type = "app";
+              program = "${packages.construo}/bin/construo";
+              meta.description = "Construo X11/GLUT package";
+            };
+            construo-sdl = {
+              type = "app";
+              program = "${packages.construo-sdl}/bin/construo";
+              meta.description = "Construo SDL2 + GLES2 package";
+            };
+          }
+          // linuxExtras.apps;
+
+        # Like pingus: every package is a check; verify app program paths.
+        appChecks = lib.mapAttrs' (name: app:
+          lib.nameValuePair "app-${name}" (
+            pkgs.runCommand "check-app-${name}" {
+              meta.description = "flake check: apps.${name} program exists";
+            } ''
+              set -euo pipefail
+              if [ ! -e "${app.program}" ]; then
+                echo "apps.${name}: program missing: ${app.program}" >&2
                 exit 1
-              '';
+              fi
+              touch "$out"
+            ''
+          )
+        ) apps;
 
-          # inherit pulls from the enclosing let (not the rec set).
-          inherit construo-win64 construo-win64-bin;
+        version-smoke = pkgs.runCommand "construo-version-smoke" {} ''
+          export SDL_VIDEODRIVER=dummy
+          export SDL_AUDIODRIVER=dummy
+          ${packages.construo-sdl}/bin/construo --version | tee $out
+          grep -q "Construo " $out
+          grep -q "${construo_version}" $out
+        '';
 
-          # Packaging helpers + docs (full APK / device binary need NDK / sysroot).
-          construo-android = pkgs.runCommand "construo-android" {
-            meta.description = "Construo Android packaging helpers (NDK/Gradle)";
-          } ''
-            mkdir -p $out/share/construo/android $out/bin
-            cp -a ${./mk/android} $out/share/construo/android/mk
-            cp -a ${./nix/android.nix} $out/share/construo/android/
-            cat > $out/share/construo/android/README.txt <<'EOF'
-Construo Android packaging helpers
-==================================
-1. SDL_SRC=/path/to/SDL2 $out/share/construo/android/mk/scripts/install-sdl-libs.sh
-2. ANDROID_NDK_HOME=… $out/share/construo/android/mk/scripts/package-apk.sh
-3. Optional: push-examples.sh via adb
-See mk/android/README.md in the source tree.
-EOF
-            ln -s $out/share/construo/android/mk/scripts/package-apk.sh $out/bin/construo-android-package-apk
-            ln -s $out/share/construo/android/mk/scripts/install-sdl-libs.sh $out/bin/construo-android-install-sdl
-          '';
-
-          construo-r36s = pkgs.runCommand "construo-r36s" {
-            meta.description = "Construo R36S/ArkOS packaging helpers";
-          } ''
-            mkdir -p $out/share/construo/r36s $out/bin
-            cp -a ${./mk/r36s} $out/share/construo/r36s/mk
-            cp -a ${./nix/r36s.nix} $out/share/construo/r36s/
-            cat > $out/share/construo/r36s/README.txt <<'EOF'
-Construo R36S (ArkOS) packaging helpers
-=======================================
-Cross-build with ARKOS_SYSROOT and:
-  cmake -DCMAKE_TOOLCHAIN_FILE=$out/share/construo/r36s/mk/toolchain-arkos-aarch64.cmake …
-Package with:
-  $out/share/construo/r36s/mk/scripts/package-port.sh construo.sdl examples /tmp/port
-EOF
-            ln -s $out/share/construo/r36s/mk/scripts/package-port.sh $out/bin/construo-r36s-package-port
-          '';
-        };
-
-        checks = {
-          construo = packages.construo;
-          construo-sdl = packages.construo-sdl;
-          construo-all = packages.construo-all;
-          construo-win64 = packages.construo-win64;
-          construo-win64-bin = packages.construo-win64-bin;
-          construo-android = packages.construo-android;
-          construo-r36s = packages.construo-r36s;
-          # Optional heavy check — enable when EMSDK wasm package is stable:
-          # construo-wasm = packages.construo-wasm;
-
-          version-smoke = pkgs.runCommand "construo-version-smoke" {} ''
-            export SDL_VIDEODRIVER=dummy
-            export SDL_AUDIODRIVER=dummy
-            ${packages.construo-sdl}/bin/construo --version | tee $out
-            grep -q "Construo " $out
-            grep -q "${construo_version}" $out
-          '';
-
-          port-layout-smoke = pkgs.runCommand "construo-port-layout-smoke" {
-            nativeBuildInputs = [ pkgs.bash pkgs.coreutils pkgs.gnugrep ];
-          } ''
-            cp -a ${./.} src
-            cd src
-            bash scripts/check-port-layouts.sh
-            bash scripts/ci-smoke.sh
-            touch $out
-          '';
+        checks = packages // appChecks // {
+          inherit version-smoke;
         };
       in {
-        inherit packages checks;
+        inherit packages apps checks;
 
-        hydraJobs = checks // {
-          inherit (packages)
-            construo construo-sdl construo-all
-            construo-win64 construo-android construo-r36s;
-        };
+        hydraJobs = checks;
+
 
         devShells.default = pkgs.mkShell {
           packages = commonNative ++ commonLibs ++ (with pkgs; [
@@ -359,29 +423,6 @@ EOF
           '';
         };
 
-        apps = {
-          default = {
-            type = "app";
-            program = "${packages.default}/bin/construo";
-            meta = {
-              description = "Construo (default: X11 binary when available)";
-            };
-          };
-          construo = {
-            type = "app";
-            program = "${packages.construo}/bin/construo";
-            meta = {
-              description = "Construo X11/GLUT package";
-            };
-          };
-          construo-sdl = {
-            type = "app";
-            program = "${packages.construo-sdl}/bin/construo";
-            meta = {
-              description = "Construo SDL2 + GLES2 package";
-            };
-          };
-        };
       }
     );
 }

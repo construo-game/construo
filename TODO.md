@@ -77,6 +77,7 @@ appropriate section.
 - [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
 - [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
 - [x] Flake `construo-android` / `construo-r36s` helper packages (full APK/device binary still external)
+- [x] Align flake with Pingus `linuxExtras` (android SDK, arkos-sysroot, wasm packages in checks)
 - [x] `mk/android/scripts/install-sdl-libs.sh` to stage SDL2 under jni/
 - [x] Android default fullscreen when `__ANDROID__`
 - [x] SDL app lifecycle: pause sim on background, ESC on terminate
