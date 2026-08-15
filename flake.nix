@@ -126,11 +126,9 @@
             '';
           };
 
-          # Placeholders for cross / embedded ports (see nix/*.nix and TODO.md).
-          # construo-wasm = ...;
-          # construo-android = ...;
-          # construo-win32 = ...;
-          # construo-r36s = ...;
+          # Cross / embedded ports — see nix/*.nix, mk/{wasm,android,r36s}/.
+          # Enable when SDL2 sysroots / MinGW packages are wired:
+          #   construo-wasm, construo-android, construo-win32/win64, construo-r36s
         };
       }
     );

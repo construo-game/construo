@@ -381,6 +381,25 @@ SDL2Display::process_event(SDL_Event const& ev)
       events.push(e);
       break;
     }
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+    case SDL_FINGERMOTION: {
+      // Normalized 0..1 → window pixels
+      int w = 0, h = 0;
+      SDL_GetWindowSize(m_window, &w, &h);
+      m_mouse_pos = geom::ipoint(
+        static_cast<int>(ev.tfinger.x * static_cast<float>(w)),
+        static_cast<int>(ev.tfinger.y * static_cast<float>(h)));
+      if (ev.type == SDL_FINGERDOWN || ev.type == SDL_FINGERUP) {
+        Event e;
+        e.button.type = BUTTON_EVENT;
+        // One finger = primary; two-finger contact tracked roughly via fingerId
+        e.button.id = (ev.tfinger.fingerId == 0) ? Action::PRIMARY : Action::SECONDARY;
+        e.button.pressed = (ev.type == SDL_FINGERDOWN);
+        events.push(e);
+      }
+      break;
+    }
     default:
       break;
   }

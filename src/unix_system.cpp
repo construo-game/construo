@@ -31,7 +31,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifndef CONSTRUO_NO_XDGCPP
 #include <xdg.h>
+#endif
 #include <logmich/log.hpp>
 #include <fmt/std.h>
 
@@ -58,9 +60,11 @@ UnixSystem::UnixSystem () :
   }
 
   {
-    std::filesystem::path const legacy_path = std::filesystem::path(home) / std::filesystem::path(".construo");
+    std::filesystem::path const legacy_path = std::filesystem::path(home) / ".construo";
+#ifdef CONSTRUO_NO_XDGCPP
+    m_construo_rc_path = legacy_path;
+#else
     std::filesystem::path const xdg_path = xdg::config().home() / PACKAGE;
-
     if (std::filesystem::is_directory(xdg_path)) {
       m_construo_rc_path = xdg_path;
     } else if (std::filesystem::is_directory(legacy_path)) {
@@ -68,6 +72,7 @@ UnixSystem::UnixSystem () :
     } else {
       m_construo_rc_path = xdg_path;
     }
+#endif
   }
 
   // create $HOME directory if not already there

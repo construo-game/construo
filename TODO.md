@@ -21,8 +21,8 @@ appropriate section.
 - [x] `construo.glut` — OpenGL + GLUT
 - [x] `construo.x11` — Xlib software rendering
 - [x] `construo.sdl` — SDL2 + GLES2 (desktop validation)
-- [ ] Document all three clearly in README
-- [ ] Optional desktop install of `.desktop` for `construo.sdl`
+- [x] Document all three clearly in README
+- [x] Optional desktop install of `.desktop` for `construo.sdl`
 
 ---
 
@@ -59,9 +59,9 @@ appropriate section.
 
 #### Android
 
-- [ ] `nix/android.nix` + `mk/android/` from Pingus
-- [ ] Touch input defaults
-- [ ] APK packaging
+- [x] `nix/android.nix` + `mk/android/` skeleton (manifest, Android.mk, scripts)
+- [x] Touch input (finger → PRIMARY/SECONDARY)
+- [ ] Full APK packaging / NDK source staging
 
 #### Win32 / Win64 (MinGW)
 
@@ -70,8 +70,9 @@ appropriate section.
 
 #### R36S (ArkOS)
 
-- [ ] `nix/r36s.nix` + toolchain under `mk/r36s/`
-- [ ] SDL2 + GLES2 binary + examples layout
+- [x] `nix/r36s.nix` + aarch64/armhf toolchains under `mk/r36s/`
+- [x] `CROSSCOMPILE.md` sysroot notes
+- [ ] Device package layout validation
 
 ---
 
@@ -81,7 +82,7 @@ appropriate section.
 - [x] Remove top-level tinycmmc dependency; inline under `cmake/`
 - [ ] Ensure helpers work under Emscripten FIND_ROOT
 - [ ] glm, libsigc++-3, fmt for WASM / Android / MinGW / R36S
-- [ ] Gate `xdgcpp` on platforms where it does not apply
+- [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
 - [ ] Prefer system packages on native Linux
 
 ---
