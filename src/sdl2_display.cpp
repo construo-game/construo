@@ -74,14 +74,21 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
   }
 
+  auto set_common_gl_attrs = []() {
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+  };
+
+  // Prefer OpenGL ES 2.0 (WASM / Android / R36S / desktop GLES).
+  // On desktop hosts without an ES driver, fall back to a compatibility
+  // GL 2.1 context — shaders remain GLES2-style and work under that profile.
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+  set_common_gl_attrs();
 
   Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
   if (fullscreen) {
@@ -98,7 +105,16 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   m_gl = SDL_GL_CreateContext(m_window);
   if (!m_gl) {
+    log_info("GLES2 context failed ({}), trying desktop GL 2.1 compatibility", SDL_GetError());
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    set_common_gl_attrs();
+    m_gl = SDL_GL_CreateContext(m_window);
+  }
+  if (!m_gl) {
     SDL_DestroyWindow(m_window);
+    m_window = nullptr;
     SDL_Quit();
     throw std::runtime_error(std::string("SDL_GL_CreateContext failed: ") + SDL_GetError());
   }

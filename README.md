@@ -44,8 +44,8 @@ nix build .#construo       # X11 + GLUT
 nix build .#construo-sdl   # SDL2 + GLES2 (desktop validation)
 ```
 
-WASM / Android / Win32 / R36S packaging is under development; see `TODO.md`,
-`nix/`, and `mk/` (layout adapted from Pingus).
+WASM / Android / Win32 / R36S packaging is under development; see `PORTING.md`,
+`TODO.md`, `nix/`, and `mk/` (layout adapted from Pingus).
 
 
 Running

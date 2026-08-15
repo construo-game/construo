@@ -66,7 +66,7 @@ appropriate section.
 #### Win32 / Win64 (MinGW)
 
 - [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
-- [x] Flake input `SDL2-win32` + `nix/win32.nix` / `mk/win32/` scaffolding
+- [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
 - [ ] Cross-build helper libs + real `.#construo-win64` package
 
 #### R36S (ArkOS)
@@ -90,6 +90,8 @@ appropriate section.
 
 ## Documentation
 
+- [x] `PORTING.md` overview of SDL2/GLES2 targets
+
 - [x] Update `README.md` with SDL2 / GLES2 build instructions
-- [ ] Note in `NEWS` when first WASM / Android / Win / R36S builds ship
+- [x] Note in `NEWS` (ports in progress); update again when packages ship
 - [x] Keep `AGENTS.md` and this file in sync with reality

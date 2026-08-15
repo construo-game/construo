@@ -1,3 +1,17 @@
+Construo (ports in progress)
+============================
+
+  * SDL2 + OpenGL ES 2.0 backend (`construo.sdl`) for shared ports
+
+  * GLES2 renderer with line/circle/rect primitives and bitmap font
+
+  * Packaging scaffolding for WASM, Android, Win32/MinGW, and R36S (ArkOS)
+
+  * Optional `CONSTRUO_NO_XDGCPP` for embedded and Windows builds
+
+  * tinycmmc CMake helpers inlined under `cmake/` (no top-level dependency)
+
+
 Construo 0.2.3
 ==============
 

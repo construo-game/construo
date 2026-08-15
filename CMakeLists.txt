@@ -242,10 +242,14 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
   if(GLESV2_LIBRARY)
     target_link_libraries(construo.sdl PRIVATE ${GLESV2_LIBRARY})
   endif()
-  # Desktop may need EGL as well for GLES contexts.
+  # Desktop may need EGL for GLES contexts; Windows needs opengl32 for the
+  # compatibility fallback path.
   find_library(EGL_LIBRARY EGL)
   if(EGL_LIBRARY)
     target_link_libraries(construo.sdl PRIVATE ${EGL_LIBRARY})
+  endif()
+  if(WIN32)
+    target_link_libraries(construo.sdl PRIVATE opengl32)
   endif()
   install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
