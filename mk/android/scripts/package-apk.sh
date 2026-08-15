@@ -20,6 +20,13 @@ if [[ -z "${ANDROID_NDK_HOME:-}" ]]; then
   exit 1
 fi
 
+# Stage example constructions into APK assets (readable via asset manager / extracts).
+ASSETS="$APP/src/main/assets"
+mkdir -p "$ASSETS"
+rm -rf "$ASSETS/examples"
+cp -a "$ROOT/examples" "$ASSETS/examples"
+echo "Staged examples → $ASSETS/examples"
+
 # Point Android.mk at the real source tree via absolute path already in Android.mk
 "$ANDROID_NDK_HOME/ndk-build" -C "$APP" "$@"
 

@@ -122,6 +122,17 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     path_manager.add_path("/");
     path_manager.add_path("/examples");
 #endif
+#if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
+    // Prefer app-private storage, then external (user can push examples there).
+    if (char const* internal = SDL_AndroidGetInternalStoragePath()) {
+      path_manager.add_path(internal);
+      path_manager.add_path(std::string(internal) + "/examples");
+    }
+    if (char const* external = SDL_AndroidGetExternalStoragePath()) {
+      path_manager.add_path(external);
+      path_manager.add_path(std::string(external) + "/examples");
+    }
+#endif
     path_manager.add_path(".");
     path_manager.add_path("..");
     path_manager.add_path(CONSTRUO_DATADIR);
@@ -129,7 +140,12 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     if (!path_manager.find_path("examples"))
     {
       std::cerr << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
+#if defined(__ANDROID__)
+      // Still allow startup with an empty world; user can load files later.
+      std::cerr << "Android: continuing without examples (push them under the app storage path)." << std::endl;
+#else
       ::exit(EXIT_FAILURE);
+#endif
     }
 
     std::unique_ptr<Controller> controller = std::make_unique<Controller>();

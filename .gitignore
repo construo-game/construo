@@ -24,3 +24,4 @@ mk/android/app/jni/SDL2
 mk/android/app/.gradle/
 mk/android/.gradle/
 mk/android/local.properties
+mk/android/app/src/

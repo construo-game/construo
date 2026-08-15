@@ -38,3 +38,15 @@ cd mk/android && gradle :app:assembleRelease
 
 Without a keystore, `assembleRelease` still builds an unsigned release APK.
 
+## Examples on device
+
+`package-apk.sh` stages `examples/` into APK assets. Directory listing still
+needs a real filesystem path, so either:
+
+```bash
+mk/android/scripts/push-examples.sh
+```
+
+or copy constructions under the app external files dir. Construo also searches
+`SDL_AndroidGetInternalStoragePath()` / `ExternalStoragePath()`.
+
