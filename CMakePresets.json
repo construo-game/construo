@@ -1,6 +1,10 @@
 {
   "version": 6,
-  "cmakeMinimumRequired": { "major": 3, "minor": 16, "patch": 0 },
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 16,
+    "patch": 0
+  },
   "configurePresets": [
     {
       "name": "linux-x11-glut",
@@ -59,12 +63,48 @@
         "WARNINGS": "ON",
         "WERROR": "OFF"
       }
+    },
+    {
+      "name": "mingw-win64",
+      "displayName": "MinGW Win64 (SDL2)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/win64",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME": "Windows",
+        "CONSTRUO_USE_SDL2": "ON",
+        "CONSTRUO_USE_X11": "OFF",
+        "CONSTRUO_USE_GLUT": "OFF",
+        "CONSTRUO_NO_XDGCPP": "ON",
+        "BUILD_TESTS": "OFF",
+        "WARNINGS": "ON",
+        "WERROR": "OFF"
+      },
+      "environment": {
+        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++"
+      }
     }
   ],
   "buildPresets": [
-    { "name": "linux-x11-glut", "configurePreset": "linux-x11-glut" },
-    { "name": "linux-sdl2", "configurePreset": "linux-sdl2" },
-    { "name": "linux-all", "configurePreset": "linux-all" },
-    { "name": "emscripten", "configurePreset": "emscripten" }
+    {
+      "name": "linux-x11-glut",
+      "configurePreset": "linux-x11-glut"
+    },
+    {
+      "name": "linux-sdl2",
+      "configurePreset": "linux-sdl2"
+    },
+    {
+      "name": "linux-all",
+      "configurePreset": "linux-all"
+    },
+    {
+      "name": "emscripten",
+      "configurePreset": "emscripten"
+    },
+    {
+      "name": "mingw-win64",
+      "configurePreset": "mingw-win64"
+    }
   ]
 }

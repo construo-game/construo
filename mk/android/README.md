@@ -24,3 +24,17 @@ ANDROID_NDK_HOME=… mk/android/scripts/package-apk.sh
 
 The app starts fullscreen on Android (`__ANDROID__` default in `ConstruoMain`).
 
+## Signed release (optional)
+
+```bash
+export CONSTRUO_KEYSTORE=/path/to/keystore.jks
+export CONSTRUO_KEY_ALIAS=construo
+export CONSTRUO_KEYSTORE_PASSWORD=…
+export CONSTRUO_KEY_PASSWORD=…   # defaults to keystore password
+# VERSION is read automatically; override with CONSTRUO_VERSION if needed
+mk/android/scripts/stamp-version.sh
+cd mk/android && gradle :app:assembleRelease
+```
+
+Without a keystore, `assembleRelease` still builds an unsigned release APK.
+

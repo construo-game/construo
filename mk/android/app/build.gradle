@@ -1,15 +1,24 @@
 plugins {
     id 'com.android.application'
 }
+
+def construoVersion = {
+    def v = System.getenv("CONSTRUO_VERSION")
+    if (v) return v.trim()
+    def f = file("${rootProject.projectDir}/../../VERSION")
+    if (f.exists()) return f.text.trim()
+    return "0.2.3-dev"
+}()
+
 android {
-    namespace 'org.construo.app'
+    namespace 'org.construo.game'
     compileSdk 34
     defaultConfig {
-        applicationId "org.construo.app"
+        applicationId "org.construo.game"
         minSdk 22
         targetSdk 34
         versionCode 1
-        versionName "0.2.3-dev"
+        versionName construoVersion
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
@@ -19,13 +28,28 @@ android {
             }
         }
     }
+    signingConfigs {
+        release {
+            // Optional signed release: set CONSTRUO_KEYSTORE, CONSTRUO_KEY_ALIAS,
+            // CONSTRUO_KEYSTORE_PASSWORD, CONSTRUO_KEY_PASSWORD.
+            def ks = System.getenv("CONSTRUO_KEYSTORE")
+            if (ks != null && file(ks).exists()) {
+                storeFile file(ks)
+                storePassword System.getenv("CONSTRUO_KEYSTORE_PASSWORD") ?: ""
+                keyAlias System.getenv("CONSTRUO_KEY_ALIAS") ?: "construo"
+                keyPassword System.getenv("CONSTRUO_KEY_PASSWORD") ?: storePassword
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
+            if (signingConfigs.release.storeFile != null) {
+                signingConfig signingConfigs.release
+            }
         }
         debug {
             debuggable true
         }
     }
 }
-// versionName should be injected from the top-level VERSION file by CI.

@@ -6,6 +6,10 @@ ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 APP="$ROOT/mk/android/app"
 JNI="$APP/jni"
 
+"$ROOT/mk/android/scripts/stamp-version.sh"
+export CONSTRUO_VERSION="$(tr -d '
+' < "$ROOT/VERSION")"
+
 echo "Construo Android packaging helper"
 echo "  ROOT=$ROOT"
 echo "  Ensure SDL2 is installed under $JNI (see install-sdl-libs.sh from Pingus)."

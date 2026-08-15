@@ -78,7 +78,9 @@ appropriate section.
 - [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
 - [x] `mk/android/scripts/install-sdl-libs.sh` to stage SDL2 under jni/
 - [x] Android default fullscreen when `__ANDROID__`
-- [ ] Full signed APK release flow / CI artifact
+- [x] Align package id `org.construo.game`; stamp VERSION; optional release signing env
+- [x] CMake preset `mingw-win64` for MinGW cross configures
+- [ ] Full signed APK release flow / CI artifact (needs keystore + NDK CI image)
 
 #### Win32 / Win64 (MinGW)
 
