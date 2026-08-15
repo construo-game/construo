@@ -9,7 +9,8 @@ appropriate section.
 
 - [x] Add `AGENTS.md` (project rules, architecture, git/bundle workflow)
 - [x] Add this `TODO.md`
-- [ ] First git bundle: `construo-001-…` containing the two files above
+- [x] First git bundle: `construo-001-agents-todo.bundle`
+- [x] CMake: fix tinycmmc path, geom subdirectory, backend options (`construo-002-…`)
 
 ---
 
@@ -84,8 +85,8 @@ Reference: `pingus` repo (`nix/*.nix`, `mk/wasm/`, `mk/android/`, `mk/r36s/`).
 
 ## Dependencies & CMake hygiene
 
-- [ ] Clean up duplicate / broken `find_package` / `add_subdirectory` blocks in
-      `CMakeLists.txt` (prio/geom currently look copy-pasted incorrectly)
+- [x] Clean up duplicate / broken `find_package` / `add_subdirectory` blocks in
+      `CMakeLists.txt` (prio/geom fixed; tinycmmc path corrected)
 - [ ] Ensure `tinycmmc` module path and `external/` fallbacks work for all
       new targets (including Emscripten FIND_ROOT)
 - [ ] glm, libsigc++-3 (or 2 if forced by platform), fmt — available for
