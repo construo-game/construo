@@ -17,6 +17,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(construo)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Inlined CMake helpers (formerly provided by tinycmmc). No find_package(tinycmmc).
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
