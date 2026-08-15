@@ -377,6 +377,8 @@ let
         "-DCONSTRUO_USE_X11=OFF"
         "-DCONSTRUO_USE_GLUT=OFF"
         "-DCONSTRUO_NO_XDGCPP=ON"
+        # ArkOS has no jsoncpp; construo only needs sexp via prio.
+        "-DPRIO_USE_JSONCPP=OFF"
         # glm headers via flake-provided package (not in ArkOS sysroot).
         "-DCMAKE_PREFIX_PATH=${glm}"
         # Forced cross-compiler cannot try_compile pthread; ArkOS glibc has it.
