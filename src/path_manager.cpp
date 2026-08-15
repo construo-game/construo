@@ -1,5 +1,5 @@
-// Pingus - A free Lemmings clone
-// Copyright (C) 2000 Ingo Ruhnke <grumbel@gmail.com>
+// Construo - A wire-frame construction game
+// Copyright (C) 2000–2026 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,16 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <unistd.h>
+#include "path_manager.hpp"
+
+#include <filesystem>
 
 #include <logmich/log.hpp>
 #include <fmt/std.h>
 
-#include "path_manager.hpp"
-
 namespace construo {
 
 PathManager path_manager;
+
+namespace {
+
+bool path_readable(std::filesystem::path const& p)
+{
+  std::error_code ec;
+  // Prefer exists+is_regular_file/is_directory over POSIX access() for Win32/WASM.
+  return std::filesystem::exists(p, ec) && !ec;
+}
+
+} // namespace
 
 PathManager::PathManager () :
   m_path_list(),
@@ -56,7 +67,7 @@ PathManager::find_path(const std::list<std::filesystem::path>& file_list)
     bool found_file = true;
     for (auto f = file_list.begin (); found_file && f != file_list.end (); ++f)
     {
-      if (!(access((*i / *f).c_str(), R_OK) == 0))
+      if (!path_readable(*i / *f))
         found_file = false;
     }
     if (found_file)
@@ -81,7 +92,7 @@ PathManager::find_path(const std::filesystem::path& file)
 {
   for (auto i = m_path_list.begin (); !m_path_found && i != m_path_list.end (); ++i)
   {
-    if ((access((*i / file).c_str(), R_OK) == 0))
+    if (path_readable(*i / file))
     {
       m_path_found = true;
       m_base_path = *i;

@@ -110,6 +110,11 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     if (!g_settings.datadir.empty()) {
       path_manager.add_path(g_settings.datadir);
     }
+#ifdef __EMSCRIPTEN__
+    // Virtual FS layout from --preload-file examples@/examples
+    path_manager.add_path("/");
+    path_manager.add_path("/examples");
+#endif
     path_manager.add_path(".");
     path_manager.add_path("..");
     path_manager.add_path(CONSTRUO_DATADIR);

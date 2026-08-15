@@ -66,6 +66,7 @@ appropriate section.
 #### Win32 / Win64 (MinGW)
 
 - [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
+- [x] Portable `path_manager` (no POSIX `access()`)
 - [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
 - [ ] Cross-build helper libs + real `.#construo-win64` package
 

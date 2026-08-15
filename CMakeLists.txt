@@ -238,7 +238,13 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     CXX_EXTENSIONS OFF)
   target_compile_options(construo.sdl PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.sdl PUBLIC -DUSE_SDL2_DISPLAY)
-  target_link_libraries(construo.sdl PRIVATE libconstruo SDL2::SDL2)
+  # Config package provides SDL2::SDL2; module package provides SDL2_LIBRARIES.
+  if(TARGET SDL2::SDL2)
+    target_link_libraries(construo.sdl PRIVATE libconstruo SDL2::SDL2)
+  else()
+    target_include_directories(construo.sdl PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(construo.sdl PRIVATE libconstruo ${SDL2_LIBRARIES})
+  endif()
   if(GLESV2_LIBRARY)
     target_link_libraries(construo.sdl PRIVATE ${GLESV2_LIBRARY})
   endif()
@@ -258,6 +264,8 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
   endif()
 
   if(EMSCRIPTEN)
+    # Preloaded examples live at /examples in the virtual FS.
+    target_compile_definitions(construo.sdl PRIVATE -DCONSTRUO_DATADIR="/")
     target_link_options(construo.sdl PRIVATE
       "SHELL:-sFULL_ES2=1"
       "SHELL:-sALLOW_MEMORY_GROWTH=1"
