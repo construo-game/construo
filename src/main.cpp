@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <SDL.h>
+
 #include "construo_main.hpp"
 
+// On Android, SDL.h maps main → SDL_main so the Java SDLActivity can
+// dlsym("SDL_main") from libmain.so. Do not define SDL_MAIN_HANDLED here.
 int main (int argc, char** argv)
 {
   construo::ConstruoMain app;
