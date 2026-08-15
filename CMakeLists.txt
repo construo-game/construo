@@ -234,6 +234,7 @@ set(CONSTRUO_SDL2_SOURCES_CXX
   src/construo_main.cpp
   src/sdl2_display.cpp
   src/gles2_renderer.cpp
+  src/gl_api.cpp
 )
 
 include_directories(src/)
@@ -308,9 +309,7 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
   if(MINGW)
     target_link_libraries(construo.sdl PRIVATE mingw32)
   endif()
-  if(TARGET SDL2::SDL2main)
-    target_link_libraries(construo.sdl PRIVATE SDL2::SDL2main)
-  endif()
+  # SDL_MAIN_HANDLED: do not link SDL2main (it expects SDL_main).
   if(TARGET SDL2::SDL2)
     target_link_libraries(construo.sdl PRIVATE libconstruo SDL2::SDL2)
   else()

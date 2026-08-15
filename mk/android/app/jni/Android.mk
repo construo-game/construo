@@ -24,6 +24,7 @@ LOCAL_SRC_FILES := \
   $(CONSTRUO_SRC_ROOT)/src/construo_main.cpp \
   $(CONSTRUO_SRC_ROOT)/src/sdl2_display.cpp \
   $(CONSTRUO_SRC_ROOT)/src/gles2_renderer.cpp \
+  $(CONSTRUO_SRC_ROOT)/src/gl_api.cpp \
   $(CONSTRUO_SRC_ROOT)/src/unix_system.cpp \
   $(CONSTRUO_SRC_ROOT)/src/colors.cpp \
   $(CONSTRUO_SRC_ROOT)/src/command_line.cpp \

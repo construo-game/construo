@@ -12,8 +12,8 @@
 
 #include <logmich/log.hpp>
 
-// GLES2 API via SDL's portable header (works for Emscripten, Android, desktop ES).
-#include <SDL_opengles2.h>
+// GLES2 API: system headers on Unix/ES; SDL-loaded entry points on Windows.
+#include "gl_api.hpp"
 
 namespace construo {
 
@@ -146,6 +146,9 @@ GLES2Renderer::init()
   if (m_ready) {
     return;
   }
+
+  // Windows: resolve GL symbols via SDL after the context exists.
+  gl_api::load();
 
   unsigned vs = compile_shader(GL_VERTEX_SHADER, k_vs);
   unsigned fs = compile_shader(GL_FRAGMENT_SHADER, k_fs);
