@@ -63,6 +63,9 @@
           alert('WebGL context lost. Reload the page.');
           e.preventDefault();
         }, false);
+        // Keyboard events go to #canvas (SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT).
+        canvas.addEventListener('click', function() { canvas.focus(); });
+        canvas.focus();
         return canvas;
       })(),
       setStatus: function(text) {

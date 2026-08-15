@@ -77,3 +77,10 @@ Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).
 `main()`. MinGW builds still link `mingw32` and `SDL2::SDL2main` when
 available, plus `opengl32` and common Win32 libs for the desktop GL fallback.
 
+## Mobile / web lifecycle
+
+`SDL2Display` handles `SDL_APP_WILLENTERBACKGROUND` by toggling `Action::RUN`
+when the simulation is running (pause), and `SDL_APP_TERMINATING` /
+`SDL_QUIT` as escape. The WASM shell focuses the canvas on click so
+keyboard events reach SDL (`SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT`).
+

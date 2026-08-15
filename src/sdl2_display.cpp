@@ -608,6 +608,29 @@ SDL2Display::process_event(SDL_Event const& ev)
       events.push(e);
       break;
     }
+#if defined(SDL_APP_TERMINATING)
+    // Mobile / web lifecycle (SDL 2.0.4+). Treat hard terminate like Quit.
+    case SDL_APP_TERMINATING: {
+      Event e;
+      e.button.type = BUTTON_EVENT;
+      e.button.id = Action::ESCAPE;
+      e.button.pressed = true;
+      events.push(e);
+      break;
+    }
+#endif
+#if defined(SDL_APP_WILLENTERBACKGROUND)
+    case SDL_APP_WILLENTERBACKGROUND:
+      // Pause simulation while the activity is not visible.
+      if (Controller::instance() && Controller::instance()->is_running()) {
+        Event e;
+        e.button.type = BUTTON_EVENT;
+        e.button.id = Action::RUN;
+        e.button.pressed = true;
+        events.push(e);
+      }
+      break;
+#endif
     case SDL_WINDOWEVENT:
       if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
           ev.window.event == SDL_WINDOWEVENT_RESIZED) {
