@@ -59,6 +59,7 @@ public:
 
   /** Public entry for the Emscripten main-loop trampoline. */
   void process_event_public(SDL_Event const& ev);
+  void poll_controller_axes() { handle_controller_axis(); }
 
 private:
   void process_event(SDL_Event const& ev);
@@ -94,6 +95,8 @@ private:
   void open_controller();
   void close_controller();
   void handle_controller_button(SDL_GameControllerButton button, bool pressed);
+  void handle_controller_axis();
+  void emit_button(Action action, bool pressed);
 
 public:
   SDL2Display(const SDL2Display&) = delete;

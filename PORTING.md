@@ -62,3 +62,4 @@ Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).
 | Back | UNDO |
 | Shoulders | ZOOM_IN / ZOOM_OUT |
 | D-pad | SCROLL_* |
+| Left stick | SCROLL_* (analog threshold) |

@@ -499,6 +499,16 @@ SDL2Display::close_controller()
 }
 
 void
+SDL2Display::emit_button(Action action, bool pressed)
+{
+  Event e;
+  e.button.type = BUTTON_EVENT;
+  e.button.id = action;
+  e.button.pressed = pressed;
+  events.push(e);
+}
+
+void
 SDL2Display::handle_controller_button(SDL_GameControllerButton button, bool pressed)
 {
   Action action = Action::NONE;
@@ -517,11 +527,36 @@ SDL2Display::handle_controller_button(SDL_GameControllerButton button, bool pres
     case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: action = Action::SCROLL_RIGHT; break;
     default: return;
   }
-  Event e;
-  e.button.type = BUTTON_EVENT;
-  e.button.id = action;
-  e.button.pressed = pressed;
-  events.push(e);
+  emit_button(action, pressed);
+}
+
+void
+SDL2Display::handle_controller_axis()
+{
+  if (!m_controller) {
+    return;
+  }
+  // Left stick → continuous scroll (edge-triggered on threshold cross).
+  constexpr Sint16 dead = 16000;
+  struct AxisMap { SDL_GameControllerAxis axis; Action neg; Action pos; bool* state_neg; bool* state_pos; };
+  static bool left=false, right=false, up=false, down=false;
+  AxisMap maps[] = {
+    { SDL_CONTROLLER_AXIS_LEFTX, Action::SCROLL_LEFT, Action::SCROLL_RIGHT, &left, &right },
+    { SDL_CONTROLLER_AXIS_LEFTY, Action::SCROLL_UP, Action::SCROLL_DOWN, &up, &down },
+  };
+  for (auto& m : maps) {
+    Sint16 v = SDL_GameControllerGetAxis(m_controller, m.axis);
+    bool neg = v < -dead;
+    bool pos = v > dead;
+    if (neg != *m.state_neg) {
+      emit_button(m.neg, neg);
+      *m.state_neg = neg;
+    }
+    if (pos != *m.state_pos) {
+      emit_button(m.pos, pos);
+      *m.state_pos = pos;
+    }
+  }
 }
 
 void
@@ -644,6 +679,7 @@ void em_main_loop_callback()
   while (SDL_PollEvent(&ev)) {
     g_em_display->process_event_public(ev);
   }
+  g_em_display->poll_controller_axes();
   ScreenManager::instance()->run_once(*g_em_display);
 }
 #endif
@@ -669,6 +705,7 @@ SDL2Display::run()
     while (SDL_PollEvent(&ev)) {
       process_event(ev);
     }
+    handle_controller_axis();
     ScreenManager::instance()->run_once(*this);
   }
 #endif
