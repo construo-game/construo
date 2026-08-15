@@ -182,6 +182,15 @@
           construo = self.packages.${system}.construo;
           construo-sdl = self.packages.${system}.construo-sdl;
           construo-all = self.packages.${system}.construo-all;
+
+          # Ensure --version prints the expanded PROJECT_VERSION_FULL string.
+          version-smoke = pkgs.runCommand "construo-version-smoke" {
+            nativeBuildInputs = [ self.packages.${system}.construo-sdl ];
+          } ''
+            construo --version | tee $out
+            grep -q "Construo " $out
+            grep -q "${construo_version}" $out
+          '';
         };
 
         apps = {
