@@ -4,7 +4,7 @@
 #   android = import ./nix/android.nix {
 #     inherit pkgs androidSdk buildToolsVersion packagePlatform compilePlatform targetAbis;
 #     sdlSrc = sdl2-src;
-#     sdlVersion = "2.30.3";
+#     sdlVersion = "2.32.8";
 #   };
 #   android.mkApk { … }
 { pkgs
@@ -34,17 +34,6 @@ let
       APP_PLATFORM := android-${packagePlatform}
       APP_CPPFLAGS := -std=c++20 -frtti -fexceptions
       APP_MODULES := main
-    '';
-  };
-
-  # SDL2-only Application.mk (LOCAL_MODULE is SDL2 in upstream Android.mk).
-  sdlApplicationMk = pkgs.writeTextFile {
-    name = "SDL-Application.mk";
-    text = ''
-      APP_STL := c++_shared
-      APP_ABI := ${targetAbisStr}
-      APP_PLATFORM := android-${packagePlatform}
-      APP_MODULES := SDL2
     '';
   };
 
@@ -97,9 +86,15 @@ MK
     '';
     installPhase = ''
       runHook preInstall
-      mkdir -p $out
-      if [ -d sdl-out ]; then cp -a sdl-out/. $out/; fi
-      if [ -d work/app/libs ]; then mkdir -p $out/lib; cp -a work/app/libs/. $out/lib/; fi
+      mkdir -p $out/lib $out/include
+      if [ -d sdl-out/lib ]; then cp -a sdl-out/lib/. $out/lib/; fi
+      if [ -d work/app/libs ]; then cp -a work/app/libs/. $out/lib/; fi
+      # Headers for the app's ndk-build tree (jni/SDL/include).
+      if [ -d work/app/jni/SDL2/include ]; then
+        cp -a work/app/jni/SDL2/include/. $out/include/
+      elif [ -d "${sdlSrc}/include" ]; then
+        cp -a "${sdlSrc}/include"/. $out/include/
+      fi
       # Also keep Java glue from SDL for packaging scripts.
       if [ -d "${sdlSrc}/android-project/app/src/main/java" ]; then
         mkdir -p $out/java
@@ -113,6 +108,21 @@ MK
       platforms = platforms.linux;
       hydraPlatforms = [ ];
     };
+  };
+
+  # Prebuilt SDL2 for the app's ndk-build tree (sibling of jni/src/).
+  # LOCAL_SRC_FILES path is absolute into the Nix store so ndk-build does not
+  # need the .so copied under jni/ — same pattern as Pingus.
+  sdlPrebuiltAndroidMk = pkgs.writeTextFile {
+    name = "SDL2-prebuilt-Android.mk";
+    text = ''
+      LOCAL_PATH := $(call my-dir)
+      include $(CLEAR_VARS)
+      LOCAL_MODULE := SDL2
+      LOCAL_SRC_FILES := ${sdlAndroidLibs}/lib/$(TARGET_ARCH_ABI)/libSDL2.so
+      LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include $(LOCAL_PATH)/include/SDL2
+      include $(PREBUILT_SHARED_LIBRARY)
+    '';
   };
 
   mkApk = {
@@ -145,27 +155,56 @@ MK
         export ANDROID_HOME="$ANDROID_SDK_ROOT"
         export PATH="$ANDROID_NDK_HOME:$ANDROID_SDK_ROOT/build-tools/${buildToolsVersion}:$PATH"
 
-        mkdir -p work
-        cp -a ${appDir}/. work/app/
-        chmod -R u+w work/app
+        mkdir -p work/app/jni/src work/app/jni/SDL
 
-        # Stage SDL prebuilts
-        mkdir -p work/app/jni/SDL
+        # Manifest / res from appDir
+        cp -a ${appDir}/AndroidManifest.xml work/app/ 2>/dev/null || true
+        if [ -d ${appDir}/res ]; then cp -a ${appDir}/res work/app/; fi
+        if [ -f ${appDir}/build.gradle ]; then cp -a ${appDir}/build.gradle work/app/; fi
+
+        # Top-level jni makefiles (all-subdir + Application.mk)
+        cp ${topAndroidMk} work/app/jni/Android.mk
+        cp ${applicationMk} work/app/jni/Application.mk
+
+        # Game module Android.mk under jni/src/
+        cp ${appDir}/jni/src/Android.mk work/app/jni/src/Android.mk
+
+        # Stage game sources + external helpers under jni/src/ so
+        # CONSTRUO_SRC_ROOT := $(LOCAL_PATH) finds src/main.cpp.
+        cp -a ${gameSrcDir} work/app/jni/src/src
+        cp -a ${gameExternalDir} work/app/jni/src/external
+        # VERSION for CONSTRUO_VERSION fallback in Android.mk
+        if [ -f ${gameSrcDir}/../VERSION ]; then
+          cp ${gameSrcDir}/../VERSION work/app/jni/src/VERSION 2>/dev/null || true
+        fi
+        # Write version file explicitly for reproducible builds
+        echo -n "${gameVersion}" > work/app/jni/src/VERSION
+        chmod -R u+w work/app/jni/src
+
+        # SDL2 prebuilt module + headers
+        cp ${sdlPrebuiltAndroidMk} work/app/jni/SDL/Android.mk
+        mkdir -p work/app/jni/SDL/include
+        if [ -d ${sdlAndroidLibs}/include ]; then
+          cp -a ${sdlAndroidLibs}/include/. work/app/jni/SDL/include/
+        fi
+        chmod -R u+w work/app/jni/SDL
+
+        # Also place .so under libs/ for packaging (ndk-build copies prebuilts)
         if [ -d ${sdlAndroidLibs}/lib ]; then
           mkdir -p work/app/libs
           cp -a ${sdlAndroidLibs}/lib/. work/app/libs/ || true
         fi
 
-        # Point Android.mk at sources
-        export CONSTRUO_SRC_ROOT="$(pwd)/work/srcroot"
-        mkdir -p "$CONSTRUO_SRC_ROOT"
-        cp -a ${gameSrcDir} "$CONSTRUO_SRC_ROOT/src"
-        cp -a ${gameExternalDir} "$CONSTRUO_SRC_ROOT/external"
-        # Patch Android.mk CONSTRUO_SRC_ROOT if relative
-        sed -i "s|CONSTRUO_SRC_ROOT := .*|CONSTRUO_SRC_ROOT := $CONSTRUO_SRC_ROOT|" work/app/jni/Android.mk || true
-
         if [ -n "${toString glmIncludeDir}" ] && [ -d "${glmIncludeDir}" ]; then
+          # Ensure glm is visible; prefer GLM_ROOT if Android.mk uses it.
           export GLM_ROOT="${glmIncludeDir}"
+          # Also stage under external if missing
+          if [ ! -d work/app/jni/src/external/glm ] && [ -d "${glmIncludeDir}/glm" ]; then
+            mkdir -p work/app/jni/src/external/glm
+            cp -a "${glmIncludeDir}/glm"/. work/app/jni/src/external/glm/ || \
+              cp -a "${glmIncludeDir}"/. work/app/jni/src/external/ || true
+            chmod -R u+w work/app/jni/src/external
+          fi
         fi
 
         # Examples as assets
@@ -174,11 +213,11 @@ MK
           cp -a ${gameExamplesDir} work/app/src/main/assets/examples
         fi
 
-        ndk-build -C work/app -j''${NIX_BUILD_CORES:-4}
+        echo "==> ndk-build libmain + prebuilt SDL2"
+        ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} NDK_DEBUG=0
 
-        # Prefer existing package scripts when Gradle is not fully wired.
         if command -v aapt >/dev/null 2>&1; then
-          echo "ndk-build finished; APK packaging via aapt is optional in this phase"
+          echo "ndk-build finished; full aapt/apksigner packaging can extend this phase"
         fi
         runHook postBuild
       '';
@@ -190,6 +229,8 @@ MK
         echo "${outApkName}" > $out/share/construo-android/OUT_APK_NAME.txt
         echo "Native libs built for Construo Android (${gameVersion})." > $out/README.txt
         echo "Full aapt/apksigner packaging can extend this derivation (see pingus)." >> $out/README.txt
+        # List produced shared objects for verification
+        find $out/lib -name '*.so' 2>/dev/null | sort >> $out/README.txt || true
         runHook postInstall
       '';
       meta = with lib; {
@@ -201,5 +242,5 @@ MK
     };
 
 in {
-  inherit sdlAndroidLibs mkApk applicationMk topAndroidMk;
+  inherit sdlAndroidLibs mkApk applicationMk topAndroidMk sdlPrebuiltAndroidMk;
 }
