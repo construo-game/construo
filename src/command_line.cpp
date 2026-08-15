@@ -20,10 +20,7 @@
 #include <string.h>
 #include "settings.hpp"
 #include "command_line.hpp"
-
-#ifndef CONSTRUO_VERSION
-#  define CONSTRUO_VERSION "unknown"
-#endif
+#include "construo_version.hpp"
 
 namespace construo {
 

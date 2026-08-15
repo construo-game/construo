@@ -1,4 +1,4 @@
-// Construo - A wire-frame construction gamee
+// Construo - A wire-frame construction game
 // Copyright (C) 2002 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "world_gui_manager.hpp"
+#include "construo_version.hpp"
 
 #include <algorithm>
 #include <fmt/format.h>

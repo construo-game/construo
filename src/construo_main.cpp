@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "construo_main.hpp"
+#include "construo_version.hpp"
 
 #include <fstream>
 #include "construo.hpp"
