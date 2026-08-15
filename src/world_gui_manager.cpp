@@ -339,7 +339,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_widget->get_scale()));
 
   // Right-side version label (avoid hard-coded x for small handheld screens).
-  float const ver_x = std::max(610.0f, geometry().width() - 200.0f);
+  float const ver_x = std::max(610.0f, gc.geometry().width() - 200.0f);
   gc.draw_string(geom::fpoint(ver_x, bottom_line), "Construo " CONSTRUO_VERSION);
   //gc.draw_string(680, bottom_line, std::to_string(m_worldview_widget->get_scale()));
 }
