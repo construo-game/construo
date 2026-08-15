@@ -292,7 +292,9 @@ void
 GLES2Renderer::draw_line(geom::fpoint const& p1, geom::fpoint const& p2,
                          Color color, float width)
 {
-  if (width <= 1.0f && m_quick_draw_depth > 0) {
+  // GLES often clamps glLineWidth to 1; use real lines for hairlines and
+  // camera-facing quads for thicker strokes.
+  if (width <= 1.0f) {
     std::vector<Vertex> v = {
       {p1.x(), p1.y(), color.r, color.g, color.b, color.a, 0, 0},
       {p2.x(), p2.y(), color.r, color.g, color.b, color.a, 0, 0},

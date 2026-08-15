@@ -141,7 +141,10 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   }
 
   SDL_GL_MakeCurrent(m_window, m_gl);
-  SDL_GL_SetSwapInterval(1);
+  // Prefer adaptive vsync; fall back to fixed vsync.
+  if (SDL_GL_SetSwapInterval(-1) != 0) {
+    SDL_GL_SetSwapInterval(1);
+  }
 
   int drawable_w = 0, drawable_h = 0;
   SDL_GL_GetDrawableSize(m_window, &drawable_w, &drawable_h);
