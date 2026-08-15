@@ -18,7 +18,12 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, SDL2-win32, sdl2-src }:
-    flake-utils.lib.eachDefaultSystem (system:
+    # nixpkgs 26.11+ dropped x86_64-darwin; keep the systems we still support.
+    flake-utils.lib.eachSystem [
+      "x86_64-linux"
+      "aarch64-linux"
+      "aarch64-darwin"
+    ] (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         lib = pkgs.lib;
