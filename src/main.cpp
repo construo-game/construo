@@ -18,10 +18,12 @@
 
 #include "construo_main.hpp"
 
-// On Android, SDL.h maps main → SDL_main so the Java SDLActivity can
-// dlsym("SDL_main") from libmain.so. Do not define SDL_MAIN_HANDLED here.
-int main (int argc, char** argv)
+// On Android, SDL.h maps main → SDL_main so SDLActivity can dlsym it from
+// libmain.so. The macro would also rewrite app.main(...), so #undef after the
+// entry point name is established.
+int main(int argc, char** argv)
 {
+#undef main
   construo::ConstruoMain app;
   return app.main(argc, argv);
 }
