@@ -3,6 +3,7 @@
 ## Native Linux (Nix)
 
 ```bash
+nix develop                   # deps + tools for local cmake builds
 nix build .#construo          # X11 + GLUT
 nix build .#construo-sdl      # SDL2 + GLES2 (shared port path)
 nix build .#construo-all      # X11 + GLUT + SDL2 together

@@ -14,6 +14,7 @@ appropriate section.
 - [x] Inline tinycmmc CMake helpers under `cmake/` (no top-level tinycmmc dep)
 - [x] SDL2 display + GLES2 renderer (desktop `construo.sdl`)
 - [x] Nix: `construo` + `construo-sdl` + `construo-all`; `nix flake check` builds them
+- [x] Nix: `devShells.default` for local CMake work
 - [x] Nix: `nix/` + `mk/` scaffolding for cross ports
 
 ---

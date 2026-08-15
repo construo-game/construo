@@ -193,6 +193,22 @@
           '';
         };
 
+        devShells.default = pkgs.mkShell {
+          packages = commonNative ++ commonLibs ++ (with pkgs; [
+            freeglut
+            libGL
+            libGLU
+            libX11
+            SDL2
+            libglvnd
+            ninja
+            gdb
+          ]);
+          shellHook = ''
+            echo "Construo dev shell — try: cmake --preset linux-all && cmake --build --preset linux-all"
+          '';
+        };
+
         apps = {
           default = {
             type = "app";
