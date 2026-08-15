@@ -60,6 +60,17 @@ void init_default_keybindings(SDL2Display& dpy)
   dpy.bind_key(SDLK_7, Action::QUICKSAVE7);
   dpy.bind_key(SDLK_8, Action::QUICKSAVE8);
   dpy.bind_key(SDLK_9, Action::QUICKSAVE9);
+  // Shift+digit quickload (GLUT uses !@#$…); also F1–F10 for load without shift.
+  dpy.bind_key(SDLK_F1, Action::QUICKLOAD1);
+  dpy.bind_key(SDLK_F2, Action::QUICKLOAD2);
+  dpy.bind_key(SDLK_F3, Action::QUICKLOAD3);
+  dpy.bind_key(SDLK_F4, Action::QUICKLOAD4);
+  dpy.bind_key(SDLK_F5, Action::QUICKLOAD5);
+  dpy.bind_key(SDLK_F6, Action::QUICKLOAD6);
+  dpy.bind_key(SDLK_F7, Action::QUICKLOAD7);
+  dpy.bind_key(SDLK_F8, Action::QUICKLOAD8);
+  dpy.bind_key(SDLK_F9, Action::QUICKLOAD9);
+  dpy.bind_key(SDLK_F10, Action::QUICKLOAD0);
 }
 
 } // namespace
@@ -403,13 +414,38 @@ SDL2Display::toggle_fullscreen()
 void
 SDL2Display::handle_key(SDL_Keycode key, bool pressed)
 {
-  auto it = m_key_bindings.find(key);
-  if (it == m_key_bindings.end()) {
-    return;
+  Action action = Action::NONE;
+
+  // Shift+0–9 → quickload (matches GLUT shifted-symbol bindings).
+  SDL_Keymod const mods = SDL_GetModState();
+  bool const shift = (mods & KMOD_SHIFT) != 0;
+  if (shift) {
+    switch (key) {
+      case SDLK_0: action = Action::QUICKLOAD0; break;
+      case SDLK_1: action = Action::QUICKLOAD1; break;
+      case SDLK_2: action = Action::QUICKLOAD2; break;
+      case SDLK_3: action = Action::QUICKLOAD3; break;
+      case SDLK_4: action = Action::QUICKLOAD4; break;
+      case SDLK_5: action = Action::QUICKLOAD5; break;
+      case SDLK_6: action = Action::QUICKLOAD6; break;
+      case SDLK_7: action = Action::QUICKLOAD7; break;
+      case SDLK_8: action = Action::QUICKLOAD8; break;
+      case SDLK_9: action = Action::QUICKLOAD9; break;
+      default: break;
+    }
   }
+
+  if (action == Action::NONE) {
+    auto it = m_key_bindings.find(key);
+    if (it == m_key_bindings.end()) {
+      return;
+    }
+    action = it->second;
+  }
+
   Event ev;
   ev.button.type = BUTTON_EVENT;
-  ev.button.id = it->second;
+  ev.button.id = action;
   ev.button.pressed = pressed;
   events.push(ev);
 }
@@ -455,6 +491,9 @@ SDL2Display::process_event(SDL_Event const& ev)
       }
       break;
     case SDL_KEYDOWN:
+      if (ev.key.repeat) {
+        break;
+      }
       handle_key(ev.key.keysym.sym, true);
       break;
     case SDL_KEYUP:
