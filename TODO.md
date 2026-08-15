@@ -12,7 +12,8 @@ appropriate section.
 - [x] Bundles `construo-001` … `construo-003` (agents, CMake options, TODO)
 - [x] Inline tinycmmc CMake helpers under `cmake/` (no top-level tinycmmc dep)
 - [x] SDL2 display + GLES2 renderer (desktop `construo.sdl`)
-- [x] Nix: `construo` + `construo-sdl` packages; `nix/` + `mk/` scaffolding
+- [x] Nix: `construo` + `construo-sdl` + `construo-all`; `nix flake check` builds them
+- [x] Nix: `nix/` + `mk/` scaffolding for cross ports
 
 ---
 

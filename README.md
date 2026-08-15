@@ -41,8 +41,10 @@ cmake --build .
 ### Nix
 
 ```bash
+nix flake check            # builds construo, construo-sdl, construo-all
 nix build .#construo       # X11 + GLUT
 nix build .#construo-sdl   # SDL2 + GLES2 (desktop validation)
+nix build .#construo-all   # X11 + GLUT + SDL2
 ```
 
 WASM / Android / Win32 / R36S packaging is under development; see `PORTING.md`,

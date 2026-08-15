@@ -126,6 +126,29 @@
             '';
           };
 
+          # All native backends in one build (X11 + GLUT + SDL2).
+          construo-all = mkConstruo {
+            pname = "construo-all";
+            extraCmakeFlags = [
+              "-DCONSTRUO_USE_X11=ON"
+              "-DCONSTRUO_USE_GLUT=ON"
+              "-DCONSTRUO_USE_SDL2=ON"
+            ];
+            extraBuildInputs = with pkgs; [
+              freeglut
+              libGL
+              libGLU
+              libX11
+              SDL2
+              libglvnd
+            ];
+            postFixup = ''
+              if [ -e $out/bin/construo.x11 ]; then
+                ln -s $out/bin/construo.x11 $out/bin/construo
+              fi
+            '';
+          };
+
           # Cross / embedded ports — scaffolding under nix/*.nix and mk/*/.
           # Real outputs need prebuilt SDL2 + static cross deps; until then these
           # stubs fail with a clear message instead of being missing attributes.
@@ -149,6 +172,15 @@
             echo "See nix/r36s.nix, mk/r36s/, and TODO.md (ArkOS sysroot)." >&2
             exit 1
           '';
+        };
+
+        # `nix flake check` builds every currently shippable package.
+        # Cross stubs (wasm/android/win64/r36s) are intentionally excluded until
+        # prebuilt SDL2 + helper libs exist — including them would fail the check.
+        checks = {
+          construo = self.packages.${system}.construo;
+          construo-sdl = self.packages.${system}.construo-sdl;
+          construo-all = self.packages.${system}.construo-all;
         };
       }
     );
