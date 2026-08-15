@@ -90,6 +90,8 @@ appropriate section.
 - [x] `mk/win32/scripts/cross-cmake.sh` MinGW configure helper
 - [x] Flake input `SDL2-win32` + `mkLibs` for `pkgsCross.mingwW64`
 - [x] `packages.construo-win64` / `construo-win64-bin` (cross derivation)
+- [x] `CONSTRUO_TARGET_WINDOWS` unifies native and cross MinGW CMake paths
+- [x] `package-zip.sh` copies MinGW + optional GLES/ANGLE DLLs
 - [ ] Validate Win64 link (GLESv2 / ANGLE / system GL) on a real MinGW run
 
 #### R36S (ArkOS)
@@ -115,6 +117,7 @@ appropriate section.
 - [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
 - [x] Prefer system packages on native Linux (`find_package` / pkg-config)
 - [x] Fix `-g/--geometry` parse (`WIDTHxHEIGHT` required correctly)
+- [x] `scripts/check-port-layouts.sh` smoke-tests packaging helpers without hardware
 
 ---
 

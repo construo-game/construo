@@ -69,3 +69,13 @@ Gamepad input is supported via SDL2 game controllers (D-pad, A/B/X/Y, shoulders)
 ## Releases
 
 See [RELEASE.md](RELEASE.md) for versioning and tagging.
+
+## Packaging layout checks (no device required)
+
+```bash
+bash scripts/check-port-layouts.sh
+```
+
+Runs the R36S and Win32 package helpers against fake binaries and verifies
+expected files exist.
+

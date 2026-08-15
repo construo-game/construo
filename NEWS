@@ -5,7 +5,16 @@ Construo (ports in progress)
 
   * GLES2 renderer with line/circle/rect primitives and bitmap font
 
-  * Packaging scaffolding for WASM, Android, Win32/MinGW, and R36S (ArkOS)
+  * Helper libraries vendored as squashed subtrees under `external/`
+    (no git submodules); flake builds them via `callPackage`
+
+  * `{fmt}` replaced with C++20 `std::format` (+ `print.hpp` polyfill)
+
+  * Flake packages: `construo`, `construo-sdl`, `construo-all`,
+    `construo-wasm` (Emscripten + static helpers), `construo-win64` (MinGW)
+
+  * Android NDK `Android.mk` + `install-sdl-libs.sh`; R36S launcher
+    defaults to 640×480 fullscreen
 
   * Optional `CONSTRUO_NO_XDGCPP` for embedded and Windows builds
 

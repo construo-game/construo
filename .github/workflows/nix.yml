@@ -12,3 +12,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - run: nix flake check -L
+
+  port-layouts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Packaging layout smoke tests
+        run: bash scripts/check-port-layouts.sh
+
