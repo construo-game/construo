@@ -73,6 +73,7 @@ appropriate section.
 - [x] SDL2 game controller mapping (handheld / R36S)
 - [x] HiDPI mouse/touch → drawable coordinate mapping
 - [x] Android.mk source list + Application.mk (NDK staging still manual)
+- [x] Pingus-style jni layout: top all-subdir, `jni/src` libmain, `jni/SDL` PREBUILT (no import-module)
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
 - [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
 - [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
