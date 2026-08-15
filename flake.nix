@@ -166,7 +166,7 @@
           enableParallelBuilding = true;
         };
 
-        # Flat redistributable directory (exe + examples + README).
+        # Flat redistributable directory (exe + DLLs + examples + README).
         construo-win64 = pkgs.runCommand "construo-win64-flat" {
           nativeBuildInputs = [ pkgs.zip ];
         } ''
@@ -176,14 +176,23 @@
           elif [ -f ${construo-win64-bin}/bin/construo.exe ]; then
             cp -a ${construo-win64-bin}/bin/construo.exe $out/construo.exe
           else
-            echo "Win64 binary not produced; packaging scaffolding only." > $out/README.txt
-            cp -a ${./examples} $out/examples
-            exit 0
+            echo "error: Win64 binary not produced under ${construo-win64-bin}/bin" >&2
+            ls -la ${construo-win64-bin}/bin 2>/dev/null || true
+            exit 1
+          fi
+          # SDL2 and any other runtime DLLs shipped next to the exe.
+          cp -a ${construo-win64-bin}/bin/*.dll $out/ 2>/dev/null || true
+          if [ -d ${win64Sdl}/bin ]; then
+            cp -a ${win64Sdl}/bin/*.dll $out/ 2>/dev/null || true
+          fi
+          if [ -d ${win64Sdl}/lib ]; then
+            cp -a ${win64Sdl}/lib/*.dll $out/ 2>/dev/null || true
           fi
           cp -a ${./examples} $out/examples
           cat > $out/README.txt <<'TXT'
 Construo (Win64 SDL2 + GLES2)
-Run construo.exe. Example constructions are under examples/.
+Run construo.exe (or: nix run .#construo-win64 via Wine).
+Example constructions are under examples/.
 TXT
         '';
 
@@ -371,6 +380,34 @@ TXT
           }
           // linuxExtras.packages;
 
+
+        # Wine runner for Windows cross builds (Linux host only).
+        mkWineApp = pkg: name: description:
+          if isWin || !pkgs.stdenv.hostPlatform.isLinux then null
+          else {
+            type = "app";
+            program = toString (pkgs.writeShellScript name ''
+              set -euo pipefail
+              export WINEPREFIX=$(mktemp -d)
+              export WINEARCH=win64
+              export WINEDLLOVERRIDES="mscoree,mshtml="
+              export WINEDLLOVERRIDES="SDL2=n,$WINEDLLOVERRIDES"
+              trap 'rm -rf "$WINEPREFIX"' EXIT
+              ${pkgs.wineWow64Packages.stable}/bin/wineboot --init >/dev/null 2>&1 || true
+              cd ${pkg}
+              exe=
+              for c in construo.exe *.exe; do
+                if [ -f "$c" ]; then exe="$c"; break; fi
+              done
+              if [ -z "$exe" ]; then
+                echo "error: no .exe found in ${pkg}" >&2
+                exit 1
+              fi
+              exec ${pkgs.wineWow64Packages.stable}/bin/wine "./$exe" "$@"
+            '');
+            meta.description = description;
+          };
+
         apps =
           {
             default = {
@@ -388,6 +425,9 @@ TXT
               program = "${packages.construo-sdl}/bin/construo";
               meta.description = "Construo SDL2 + GLES2 package";
             };
+          }
+          // lib.optionalAttrs (!isWin && pkgs.stdenv.hostPlatform.isLinux) {
+            construo-win64 = mkWineApp packages.construo-win64 "construo-win64" "Construo (MinGW x86_64) via Wine";
           }
           // linuxExtras.apps;
 
