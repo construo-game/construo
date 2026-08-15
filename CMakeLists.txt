@@ -296,6 +296,12 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
   # Keep our own main() on all platforms (avoid SDL redefining entry on Win/Android).
   target_compile_definitions(construo.sdl PRIVATE SDL_MAIN_HANDLED)
 
+  # MinGW/Windows: SDL_opengles2.h expects system GLES2 headers; provide Khronos copies.
+  if(CONSTRUO_TARGET_WINDOWS)
+    target_include_directories(construo.sdl PRIVATE
+      "${CMAKE_CURRENT_SOURCE_DIR}/external/gles2-headers")
+  endif()
+
   # Config package provides SDL2::SDL2; module package provides SDL2_LIBRARIES.
   # MinGW needs mingw32 before SDL2 when not using SDL_MAIN_HANDLED; with
   # SDL_MAIN_HANDLED we still link SDL2::SDL2main if present for subsystem helpers.

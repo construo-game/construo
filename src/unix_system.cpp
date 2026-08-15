@@ -193,7 +193,7 @@ UnixSystem::get_file_type(const std::string& filename)
     }
     return FT_UNKNOWN_FILE;
   }
-  log_debug("UnixSystem: ERROR: Couldn't stat: '{}'", sys_name);
+  log_debug("UnixSystem: ERROR: Couldn't stat: '{}'", sys_name.string());
   return FT_UNKNOWN_FILE;
 }
 
