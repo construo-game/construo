@@ -54,23 +54,23 @@ let
       export ANDROID_NDK_HOME="$(echo "$ANDROID_SDK_ROOT"/ndk/* | awk '{print $1}')"
       export ANDROID_HOME="$ANDROID_SDK_ROOT"
       export PATH="$ANDROID_NDK_HOME:$PATH"
-      export SDL_SRC="${sdlSrc}"
-      export TARGET_ABIS="${targetAbisStr}"
-      export PACKAGE_PLATFORM="${packagePlatform}"
       export OUT_DIR="$PWD/sdl-out"
       mkdir -p "$OUT_DIR"
-      # Reuse project helper when present; otherwise ndk-build SDL2 jni tree.
-      if [ -f ${../mk/android/scripts/install-sdl-libs.sh} ]; then
-        # install-sdl-libs.sh expects to write into the app tree; stage a temp app.
-        mkdir -p work/app/jni
-        cp -a ${../mk/android/app}/jni/Application.mk work/app/jni/ 2>/dev/null || cp ${applicationMk} work/app/jni/Application.mk
-        # Minimal install: build SDL2 Android.mk from SDL_SRC
-        mkdir -p work/app/jni/SDL
-        cp -a "${sdlSrc}"/. work/app/jni/SDL/
-        printf '%s\n' 'include $(call all-subdir-makefiles)' > work/app/jni/Android.mk
-        cp ${applicationMk} work/app/jni/Application.mk
-        ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} NDK_LIBS_OUT="$OUT_DIR/lib" NDK_OUT="$PWD/obj"
-      fi
+
+      # Writable staging (nix store copies are read-only).
+      mkdir -p work/app/jni/SDL
+      cp -a "${sdlSrc}"/. work/app/jni/SDL/
+      chmod -R u+w work
+      printf '%s\n' 'include $(call all-subdir-makefiles)' > work/app/jni/Android.mk
+      cp ${applicationMk} work/app/jni/Application.mk
+      chmod -R u+w work
+
+      ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} \
+        NDK_LIBS_OUT="$OUT_DIR/lib" \
+        NDK_OUT="$PWD/obj" \
+        APP_ABI="${targetAbisStr}" \
+        APP_PLATFORM=android-${packagePlatform}
+
       runHook postBuild
     '';
     installPhase = ''
