@@ -16,6 +16,10 @@
 
 #include "unix_system.hpp"
 
+#if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
+#  include <SDL.h>
+#endif
+
 #include <algorithm>
 #include <assert.h>
 #include <dirent.h>
@@ -65,10 +69,16 @@ UnixSystem::UnixSystem () :
 #ifdef __EMSCRIPTEN__
     home_dir = "/home/web_user";
 #elif defined(__ANDROID__)
+    // Prefer SDL app-private storage (always writable); fall back to env paths.
+#  if defined(USE_SDL2_DISPLAY)
+    if (char const* internal = SDL_AndroidGetInternalStoragePath()) {
+      home_dir = std::filesystem::path(internal) / "home";
+    } else
+#  endif
     if (char const* ext = std::getenv("EXTERNAL_STORAGE")) {
       home_dir = std::filesystem::path(ext) / "construo";
     } else {
-      home_dir = "/data/local/tmp/construo-home";
+      home_dir = "/data/data/org.construo.game/files/home";
     }
 #else
     home_dir = std::filesystem::temp_directory_path() / "construo-home";

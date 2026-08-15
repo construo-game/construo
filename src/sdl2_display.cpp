@@ -3,6 +3,13 @@
 
 #include "sdl2_display.hpp"
 
+#if defined(__ANDROID__)
+#  include <android/log.h>
+#  define CONSTRUO_ALOG(...) __android_log_print(ANDROID_LOG_INFO, "construo", __VA_ARGS__)
+#else
+#  define CONSTRUO_ALOG(...) do { } while (0)
+#endif
+
 #include <stdexcept>
 #include <vector>
 
@@ -188,6 +195,7 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   open_controller();
   set_cursor(CursorType::INSERT);
   log_info("SDL2Display ready ({}x{}, GLES2)", m_size.width(), m_size.height());
+  CONSTRUO_ALOG("SDL2Display ready %dx%d", m_size.width(), m_size.height());
 }
 
 SDL2Display::~SDL2Display()
@@ -632,7 +640,8 @@ SDL2Display::process_event(SDL_Event const& ev)
       handle_controller_button(
         static_cast<SDL_GameControllerButton>(ev.cbutton.button), false);
       break;
-    case SDL_QUIT: {
+    case SDL_QUIT:
+      CONSTRUO_ALOG("SDL_QUIT received"); {
       Event e;
       e.button.type = BUTTON_EVENT;
       e.button.id = Action::ESCAPE;
@@ -771,6 +780,7 @@ SDL2Display::process_event_public(SDL_Event const& ev)
 void
 SDL2Display::run()
 {
+  CONSTRUO_ALOG("SDL2Display::run()");
 #ifdef __EMSCRIPTEN__
   g_em_display = this;
   // fps=0 → browser refresh rate; simulate_infinite_loop=1

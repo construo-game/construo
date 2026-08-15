@@ -17,6 +17,13 @@
 #include "construo_main.hpp"
 #include "construo_version.hpp"
 
+#if defined(__ANDROID__)
+#  include <android/log.h>
+#  define CONSTRUO_ALOG(...) __android_log_print(ANDROID_LOG_INFO, "construo", __VA_ARGS__)
+#else
+#  define CONSTRUO_ALOG(...) do { } while (0)
+#endif
+
 #include <fstream>
 #include "construo.hpp"
 #include "particle.hpp"
@@ -98,6 +105,7 @@ ConstruoMain::deinit_system()
 int
 ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instead command line arguments
 {
+  CONSTRUO_ALOG("ConstruoMain::run begin (argc=%d)", argc);
   CommandLine::parse(argc, argv);
 
   // Android: prefer fullscreen so the SDL surface matches the display.
@@ -107,8 +115,10 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
 #endif
 
   try {
-    // Init the System
+    CONSTRUO_ALOG("init_system...");
     init_system();
+    CONSTRUO_ALOG("init_system done, rc_path=%s",
+                  g_system_context->get_construo_rc_path().string().c_str());
 
     std::cout << PACKAGE_STRING"\n" << std::endl;
     std::cout << "If you have throuble with programm startup, delete the file:\n\n"
@@ -168,8 +178,10 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
     // FIXME: get proper x/y position of the window
     ScreenManager::instance()->set_geometry(m_display->geometry());
 
+    CONSTRUO_ALOG("entering display main loop");
     // For some targets this will never return
     m_display->run();
+    CONSTRUO_ALOG("display main loop ended");
 
     // Shutdown the system and exit
     controller->save_world("/user/laststate.construo");
@@ -182,7 +194,11 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
 
     deinit_system();
   } catch (std::exception const& err) {
+    CONSTRUO_ALOG("exception: %s", err.what());
     print_exception(err);
+    return EXIT_FAILURE;
+  } catch (...) {
+    CONSTRUO_ALOG("unknown exception");
     return EXIT_FAILURE;
   }
 
