@@ -179,39 +179,23 @@ UnixSystem::get_mtime(const std::string& filename)
 FileType
 UnixSystem::get_file_type(const std::string& filename)
 {
-  if (filename == "/examples" ||
-      filename == "/user") {
+  if (filename == "/examples" || filename == "/user") {
     return FT_DIRECTORY;
   }
 
-  std::filesystem::path sys_name = translate_filename(filename);
-
-  struct stat buf;
-  if (stat(sys_name.c_str(), &buf) != 0)
-  {
-    log_debug("UnixSystem: ERROR: Couldn't stat: '{}'", sys_name);
+  std::filesystem::path const sys_name = translate_filename(filename);
+  std::error_code ec;
+  if (std::filesystem::is_directory(sys_name, ec) && !ec) {
+    return FT_DIRECTORY;
+  }
+  if (std::filesystem::is_regular_file(sys_name, ec) && !ec) {
+    if (filename.ends_with(".construo") || filename.ends_with(".construo.gz")) {
+      return FT_CONSTRUO_FILE;
+    }
     return FT_UNKNOWN_FILE;
   }
-  else
-  {
-    if (S_ISDIR(buf.st_mode))
-    {
-      return FT_DIRECTORY;
-    }
-    else if (S_ISREG(buf.st_mode))
-    {
-      if (filename.ends_with(".construo") || filename.ends_with(".construo.gz"))
-        return FT_CONSTRUO_FILE;
-      else
-      {
-        return FT_UNKNOWN_FILE;
-      }
-    }
-    else
-    {
-      return FT_UNKNOWN_FILE;
-    }
-  }
+  log_debug("UnixSystem: ERROR: Couldn't stat: '{}'", sys_name);
+  return FT_UNKNOWN_FILE;
 }
 
 std::filesystem::path
@@ -229,10 +213,6 @@ UnixSystem::translate_filename(const std::string& filename)
   else if (filename == "/examples")
   {
     return path_manager.complete("examples");
-  }
-  else if (filename == "/examples")
-  {
-    return m_construo_rc_path;
   }
   else if (filename.starts_with("/user/"))
   {
