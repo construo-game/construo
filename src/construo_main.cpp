@@ -19,12 +19,14 @@
 
 #if defined(__ANDROID__)
 #  include <android/log.h>
+#  include <SDL.h>
 #  define CONSTRUO_ALOG(...) __android_log_print(ANDROID_LOG_INFO, "construo", __VA_ARGS__)
 #else
 #  define CONSTRUO_ALOG(...) do { } while (0)
 #endif
 
 #include <fstream>
+#include <vector>
 #include "construo.hpp"
 #include "particle.hpp"
 #include "world.hpp"
@@ -53,6 +55,100 @@
 #include "settings.hpp"
 #include "gui_manager.hpp"
 #include "screen_manager.hpp"
+
+
+#if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
+namespace {
+
+/** Copy APK assets/examples/* into internal storage so directory_iterator works. */
+void
+extract_android_examples()
+{
+  char const* internal = SDL_AndroidGetInternalStoragePath();
+  if (!internal) {
+    CONSTRUO_ALOG("extract_android_examples: no internal storage path");
+    return;
+  }
+  std::filesystem::path const dest_root = std::filesystem::path(internal) / "examples";
+  std::error_code ec;
+  if (std::filesystem::is_directory(dest_root, ec) && !ec) {
+    // Already extracted (non-empty check).
+    auto it = std::filesystem::directory_iterator{dest_root, ec};
+    if (!ec && it != std::filesystem::directory_iterator{}) {
+      CONSTRUO_ALOG("examples already present at %s", dest_root.string().c_str());
+      path_manager.add_path(internal);
+      return;
+    }
+  }
+  std::filesystem::create_directories(dest_root, ec);
+  if (ec) {
+    CONSTRUO_ALOG("create examples dir failed: %s", ec.message().c_str());
+    return;
+  }
+
+  // Manifest written into assets at package time (one filename per line).
+  SDL_RWops* list_rw = SDL_RWFromFile("examples/examples.list", "rb");
+  if (!list_rw) {
+    CONSTRUO_ALOG("no examples/examples.list in assets: %s", SDL_GetError());
+    return;
+  }
+  Sint64 const list_sz = SDL_RWsize(list_rw);
+  if (list_sz <= 0) {
+    SDL_RWclose(list_rw);
+    return;
+  }
+  std::string list_buf(static_cast<size_t>(list_sz), '\0');
+  SDL_RWread(list_rw, list_buf.data(), 1, static_cast<size_t>(list_sz));
+  SDL_RWclose(list_rw);
+
+  int count = 0;
+  std::size_t start = 0;
+  while (start < list_buf.size()) {
+    std::size_t end = list_buf.find('\n', start);
+    if (end == std::string::npos) {
+      end = list_buf.size();
+    }
+    std::string name = list_buf.substr(start, end - start);
+    while (!name.empty() && (name.back() == '\r' || name.back() == ' ')) {
+      name.pop_back();
+    }
+    start = end + 1;
+    if (name.empty() || name == "examples.list") {
+      continue;
+    }
+    std::string const asset_path = "examples/" + name;
+    SDL_RWops* in = SDL_RWFromFile(asset_path.c_str(), "rb");
+    if (!in) {
+      CONSTRUO_ALOG("skip asset %s: %s", asset_path.c_str(), SDL_GetError());
+      continue;
+    }
+    Sint64 const sz = SDL_RWsize(in);
+    if (sz < 0) {
+      SDL_RWclose(in);
+      continue;
+    }
+    std::vector<char> buf(static_cast<size_t>(sz));
+    if (sz > 0) {
+      SDL_RWread(in, buf.data(), 1, static_cast<size_t>(sz));
+    }
+    SDL_RWclose(in);
+    std::filesystem::path const out_path = dest_root / name;
+    std::ofstream out(out_path, std::ios::binary);
+    if (!out) {
+      CONSTRUO_ALOG("write failed: %s", out_path.string().c_str());
+      continue;
+    }
+    if (sz > 0) {
+      out.write(buf.data(), static_cast<std::streamsize>(sz));
+    }
+    ++count;
+  }
+  CONSTRUO_ALOG("extracted %d examples to %s", count, dest_root.string().c_str());
+  path_manager.add_path(internal);
+}
+
+} // namespace
+#endif
 
 namespace construo {
 
@@ -142,6 +238,7 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
       path_manager.add_path(external);
       path_manager.add_path(std::string(external) + "/examples");
     }
+    extract_android_examples();
 #endif
     path_manager.add_path(".");
     path_manager.add_path("..");

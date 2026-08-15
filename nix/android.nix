@@ -242,10 +242,11 @@ CFG
           fi
         fi
 
-        # Examples as assets
+        # Examples as assets (+ manifest for first-run extract)
         mkdir -p work/app/src/main/assets
         if [ -d ${gameExamplesDir} ]; then
           cp -a ${gameExamplesDir} work/app/src/main/assets/examples
+          ( cd work/app/src/main/assets/examples && find . -type f -printf '%P\n' | sort > examples.list )
         fi
 
         echo "==> ndk-build libmain + prebuilt SDL2"

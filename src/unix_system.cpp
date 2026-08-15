@@ -290,16 +290,26 @@ UnixSystem::read_directory(const std::string& arg_pathname)
     std::vector<std::string> dir_lst;
     std::filesystem::path pathname = translate_filename(arg_pathname);
 
-    for (std::filesystem::directory_entry const& entry : std::filesystem::directory_iterator{pathname})
+    std::error_code ec;
+    if (!std::filesystem::is_directory(pathname, ec) || ec) {
+      // Missing dirs (e.g. /examples before first extract on Android) → empty.
+      return dir_lst;
+    }
+
+    for (std::filesystem::directory_entry const& entry :
+         std::filesystem::directory_iterator{pathname, ec})
     {
+      if (ec) {
+        break;
+      }
       if (entry.path().filename() != "." &&
           entry.path().filename() != "..")
-      { // We ignore unusefull directories
+      {
         dir_lst.push_back(entry.path().filename());
       }
     }
 
-    std::sort(dir_lst.begin(), dir_lst.end(), DirectorySorter(pathname));
+    std::sort(dir_lst.begin(), dir_lst.end(), DirectorySorter(pathname.string()));
 
     return dir_lst;
   }
