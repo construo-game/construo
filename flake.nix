@@ -43,11 +43,14 @@
         lib = pkgs.lib;
         # Single source of truth: top-level VERSION (e.g. "0.2.3-dev").
         versionBase = lib.strings.removeSuffix "\n" (builtins.readFile ./VERSION);
+        # shortRev is missing on dirty trees; dirtyShortRev includes "-dirty".
         gitRev = self.shortRev or self.dirtyShortRev or "unknown";
+        # revCount is absent for some path/dirty flake evaluations — default to 0.
+        revCount = self.revCount or 0;
         # Development builds append .<revCount>+g<shortRev>[-dirty].
         construo_version =
           if lib.strings.hasInfix "-dev" versionBase
-          then "${versionBase}.${toString self.revCount}+g${gitRev}"
+          then "${versionBase}.${toString revCount}+g${gitRev}"
           else versionBase;
 
         commonNative = with pkgs; [ cmake pkg-config ];
