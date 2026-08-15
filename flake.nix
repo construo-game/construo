@@ -184,13 +184,18 @@
           construo-all = self.packages.${system}.construo-all;
 
           # Ensure --version prints the expanded PROJECT_VERSION_FULL string.
-          version-smoke = pkgs.runCommand "construo-version-smoke" {
-            nativeBuildInputs = [ self.packages.${system}.construo-sdl ];
-          } ''
-            construo --version | tee $out
+          version-smoke = pkgs.runCommand "construo-version-smoke" {} ''
+            export SDL_VIDEODRIVER=dummy
+            export SDL_AUDIODRIVER=dummy
+            ${self.packages.${system}.construo-sdl}/bin/construo --version | tee $out
             grep -q "Construo " $out
             grep -q "${construo_version}" $out
           '';
+        };
+
+        # Expose the same set to Hydra / CI consumers.
+        hydraJobs = checks // {
+          inherit (self.packages.${system}) construo construo-sdl construo-all;
         };
 
         devShells.default = pkgs.mkShell {

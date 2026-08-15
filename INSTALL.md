@@ -8,6 +8,7 @@ nix build .#construo          # X11 + GLUT
 nix build .#construo-sdl      # SDL2 + GLES2 (shared port path)
 nix build .#construo-all      # X11 + GLUT + SDL2 together
 nix flake check              # builds construo, construo-sdl, construo-all + version-smoke
+# hydraJobs mirrors checks + packages for CI
 ```
 
 ## Native Linux (CMake)

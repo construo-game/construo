@@ -195,3 +195,12 @@ When in doubt about WASM / Android / Win32 / R36S packaging, examine the
 corresponding files in the Pingus repository and adapt them carefully to
 Construo’s smaller surface (no sound stack required initially, simpler data
 layout under `examples/`).
+
+## Nix checks
+
+```bash
+nix flake check          # construo, construo-sdl, construo-all, version-smoke
+nix develop              # local build environment
+```
+
+`hydraJobs` mirrors `checks` plus the three packages for CI.
