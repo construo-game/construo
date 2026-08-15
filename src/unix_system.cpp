@@ -30,6 +30,9 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+#include <thread>
+#include <chrono>
+#include <cstdlib>
 
 #ifndef CONSTRUO_NO_XDGCPP
 #include <xdg.h>
@@ -53,14 +56,29 @@ UnixSystem::UnixSystem () :
   gettimeofday(&tv, NULL);
   start_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
 
-  char* home = getenv("HOME");
-  if (!home) {
-    std::cerr << "UnixSystem: FATAL ERROR: couldn't find env variable $HOME" << std::endl;
-    throw ConstruoError ("UnixSystem: Couldn't find $HOME!");
+  // HOME is missing on some Android images and minimal Emscripten setups.
+  std::filesystem::path home_dir;
+  if (char const* home = std::getenv("HOME")) {
+    home_dir = home;
+  } else if (char const* xdg = std::getenv("XDG_CONFIG_HOME")) {
+    home_dir = xdg;
+  } else {
+#ifdef __EMSCRIPTEN__
+    home_dir = "/home/web_user";
+#elif defined(__ANDROID__)
+    if (char const* ext = std::getenv("EXTERNAL_STORAGE")) {
+      home_dir = std::filesystem::path(ext) / "construo";
+    } else {
+      home_dir = "/data/local/tmp/construo-home";
+    }
+#else
+    home_dir = std::filesystem::temp_directory_path() / "construo-home";
+    log_warn("UnixSystem: $HOME unset; using {}", home_dir.string());
+#endif
   }
 
   {
-    std::filesystem::path const legacy_path = std::filesystem::path(home) / ".construo";
+    std::filesystem::path const legacy_path = home_dir / ".construo";
 #ifdef CONSTRUO_NO_XDGCPP
     m_construo_rc_path = legacy_path;
 #else
@@ -77,7 +95,12 @@ UnixSystem::UnixSystem () :
 
   // create $HOME directory if not already there
   if (!std::filesystem::is_directory(m_construo_rc_path)) {
-    std::filesystem::create_directory(m_construo_rc_path);
+    std::error_code ec;
+    std::filesystem::create_directories(m_construo_rc_path, ec);
+    if (ec) {
+      throw ConstruoError("UnixSystem: could not create config directory: " +
+                          m_construo_rc_path.string());
+    }
   }
 }
 
@@ -99,7 +122,7 @@ UnixSystem::get_time ()
 void
 UnixSystem::sleep(unsigned int msec)
 {
-  usleep(msec);
+  std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 }
 
 std::filesystem::path
@@ -111,17 +134,18 @@ UnixSystem::get_construo_rc_path()
 std::string
 UnixSystem::get_user_realname()
 {
-  struct passwd* pw;
-
-  pw = getpwuid(getuid());
-  if (pw)
-    {
-      return pw->pw_gecos;
-    }
-  else
-    {
-      return "";
-    }
+#if defined(__EMSCRIPTEN__) || defined(__ANDROID__)
+  if (char const* user = std::getenv("USER")) {
+    return user;
+  }
+  return {};
+#else
+  struct passwd* pw = getpwuid(getuid());
+  if (pw && pw->pw_gecos) {
+    return pw->pw_gecos;
+  }
+  return {};
+#endif
 }
 
 std::string
