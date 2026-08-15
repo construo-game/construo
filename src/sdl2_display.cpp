@@ -364,6 +364,13 @@ SDL2Display::enter_fullscreen()
   if (!m_is_fullscreen) {
     SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     m_is_fullscreen = true;
+    int w = 0, h = 0;
+    SDL_GL_GetDrawableSize(m_window, &w, &h);
+    m_size = geom::isize(w, h);
+    m_renderer.set_viewport(m_size);
+    if (ScreenManager::instance()) {
+      ScreenManager::instance()->set_geometry(geometry());
+    }
   }
 }
 
@@ -373,6 +380,13 @@ SDL2Display::leave_fullscreen()
   if (m_is_fullscreen) {
     SDL_SetWindowFullscreen(m_window, 0);
     m_is_fullscreen = false;
+    int w = 0, h = 0;
+    SDL_GL_GetDrawableSize(m_window, &w, &h);
+    m_size = geom::isize(w, h);
+    m_renderer.set_viewport(m_size);
+    if (ScreenManager::instance()) {
+      ScreenManager::instance()->set_geometry(geometry());
+    }
   }
 }
 
@@ -435,6 +449,9 @@ SDL2Display::process_event(SDL_Event const& ev)
         SDL_GL_GetDrawableSize(m_window, &w, &h);
         m_size = geom::isize(w, h);
         m_renderer.set_viewport(m_size);
+        if (ScreenManager::instance()) {
+          ScreenManager::instance()->set_geometry(geometry());
+        }
       }
       break;
     case SDL_KEYDOWN:
