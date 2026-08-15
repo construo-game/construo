@@ -32,3 +32,21 @@ registers an Emscripten main loop when `__EMSCRIPTEN__` is defined.
 Scaffolding is in place; a full flake output `.#construo-wasm` still needs a
 prebuilt SDL2 wasm prefix and dependency wiring (fmt, glm, sigc++, priocpp, …)
 similar to Pingus `nix/wasm.nix`.
+
+## Scripts
+
+| Script | Role |
+|--------|------|
+| `scripts/build-sdl2.sh` | Static SDL2 for wasm (`SDL_SRC`, `PREFIX`) |
+| `scripts/build-app.sh` | emcmake configure + build |
+| `scripts/serve.sh` | HTTP server for local browser test |
+
+Example:
+
+```bash
+export SDL_SRC=/path/to/SDL2
+export PREFIX=$PWD/wasm-prefix
+mk/wasm/scripts/build-sdl2.sh
+SDL_WASM_LIBS=$PREFIX mk/wasm/scripts/build-app.sh
+cd build-wasm && ../mk/wasm/scripts/serve.sh
+```
