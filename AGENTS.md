@@ -201,8 +201,14 @@ layout under `examples/`).
 ## Nix checks
 
 ```bash
+nix flake update         # after changing flake inputs (required once after
+                         # dropping remote helper flakes / adding SDL2-win32)
 nix flake check          # construo, construo-sdl, construo-all, version-smoke
 nix develop              # local build environment
 ```
 
 `hydraJobs` mirrors `checks` plus the three packages for CI.
+
+After applying agent bundles that touch `flake.nix` inputs, always run
+`nix flake update` (or `nix flake lock`) so `flake.lock` matches. The lock
+file cannot be refreshed in environments without Nix.

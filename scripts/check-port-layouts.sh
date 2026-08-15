@@ -38,6 +38,28 @@ echo "    ok"
 echo "==> Android helpers present"
 test -f "$ROOT/mk/android/app/jni/Android.mk"
 test -x "$ROOT/mk/android/scripts/install-sdl-libs.sh"
+test -x "$ROOT/mk/android/scripts/stamp-version.sh"
+echo "    ok"
+
+echo "==> Android stamp-version.sh"
+cp -a "$ROOT/mk/android/app/AndroidManifest.xml" "$TMP/AndroidManifest.xml.bak"
+# Run from a copy of the tree fragment is hard; invoke and restore
+"$ROOT/mk/android/scripts/stamp-version.sh" >/dev/null
+grep -q "android:versionName=" "$ROOT/mk/android/app/AndroidManifest.xml"
+mv "$TMP/AndroidManifest.xml.bak" "$ROOT/mk/android/app/AndroidManifest.xml"
+echo "    ok"
+
+echo "==> CMake presets include port targets"
+grep -q '"emscripten"' "$ROOT/CMakePresets.json"
+grep -q '"mingw-win64"' "$ROOT/CMakePresets.json"
+grep -q '"linux-sdl2"' "$ROOT/CMakePresets.json"
+echo "    ok"
+
+echo "==> Flake declares port packages"
+grep -q 'construo-wasm' "$ROOT/flake.nix"
+grep -q 'construo-win64' "$ROOT/flake.nix"
+grep -q 'SDL2-win32' "$ROOT/flake.nix"
+grep -q 'sdl2-src' "$ROOT/flake.nix"
 echo "    ok"
 
 echo "All packaging layout checks passed."

@@ -9,3 +9,18 @@
 /CMakeUserPresets.json
 compile_commands.json
 .cache/
+
+# Port / package scratch trees
+/wasm-prefix/
+/prefix/
+/build-wasm/
+/build-win*/
+/build-r36s/
+*.bundle
+mk/android/app/libs/
+mk/android/app/obj/
+mk/android/app/jni/SDL/
+mk/android/app/jni/SDL2
+mk/android/app/.gradle/
+mk/android/.gradle/
+mk/android/local.properties

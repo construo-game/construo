@@ -120,6 +120,8 @@ appropriate section.
 - [x] Prefer system packages on native Linux (`find_package` / pkg-config)
 - [x] Fix `-g/--geometry` parse (`WIDTHxHEIGHT` required correctly)
 - [x] `scripts/check-port-layouts.sh` smoke-tests packaging helpers without hardware
+- [x] Expand layout checks (stamp-version, CMake presets, flake package names)
+- [x] `scripts/refresh-flake-lock.sh` (+ AGENTS note: run after input changes)
 
 ---
 
