@@ -58,7 +58,8 @@ appropriate section.
 - [x] `nix/wasm.nix` scaffolding (glm prefix notes, next steps)
 - [x] Emscripten main loop in `SDL2Display::run()`
 - [x] CMake `EMSCRIPTEN` link options (FULL_ES2, shell, preload examples)
-- [ ] Prebuilt SDL2 + static deps for wasm; flake output `.#construo-wasm`
+- [x] `mk/wasm/scripts/build-sdl2.sh` + `serve.sh` for local wasm toolchain
+- [ ] Prebuilt SDL2 + static deps in Nix; real `.#construo-wasm` package
 - [ ] Runtime validation in browser
 
 #### Android
@@ -69,7 +70,8 @@ appropriate section.
 - [x] HiDPI mouse/touch → drawable coordinate mapping
 - [x] Android.mk source list + Application.mk (NDK staging still manual)
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
-- [ ] Full Gradle/APK release flow
+- [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
+- [ ] Full signed APK release flow / CI artifact
 
 #### Win32 / Win64 (MinGW)
 
@@ -78,6 +80,7 @@ appropriate section.
 - [x] UnixSystem HOME fallbacks for Emscripten/Android
 - [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
 - [x] Win32 `package-zip.sh` layout helper
+- [x] `mk/win32/scripts/cross-cmake.sh` MinGW configure helper
 - [ ] Cross-build helper libs + real `.#construo-win64` package
 
 #### R36S (ArkOS)
@@ -108,3 +111,4 @@ appropriate section.
 - [x] Update `README.md` with SDL2 / GLES2 build instructions
 - [x] Note in `NEWS` (ports in progress); update again when packages ship
 - [x] Keep `AGENTS.md` and this file in sync with reality
+- [x] GitHub Actions `nix flake check` workflow

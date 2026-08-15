@@ -28,8 +28,9 @@ fallback). X11/GLUT builds need libX11, freeglut, OpenGL.
 ## WASM (Emscripten)
 
 1. Install EMSDK and activate `emsdk_env.sh`.
-2. Provide static SDL2 (and fmt, sigc++, helpers) under a prefix.
-3. Run `mk/wasm/scripts/build-app.sh` or:
+2. Build static SDL2: `SDL_SRC=… PREFIX=… mk/wasm/scripts/build-sdl2.sh`
+3. Provide fmt, sigc++, helpers under the same prefix.
+4. Run `mk/wasm/scripts/build-app.sh`, then `mk/wasm/scripts/serve.sh` to test:
 
 ```bash
 emcmake cmake --preset emscripten -DCMAKE_PREFIX_PATH=/path/to/sdl-wasm
