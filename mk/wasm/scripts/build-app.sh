@@ -10,11 +10,21 @@ mkdir -p "$EM_CACHE"
 
 APP_NAME="${APP_NAME:-construo}"
 SRC_DIR="${SRC_DIR:-.}"
+# Absolute paths before cd into BUILD_DIR (relative SRC_DIR would break).
+SRC_DIR="$(cd "$SRC_DIR" && pwd)"
 SDL_PREFIX="${SDL_WASM_LIBS:-}"
-EXAMPLES_DIR="${EXAMPLES_DIR:-${SRC_DIR}/examples}"
+if [ -n "${EXAMPLES_DIR:-}" ] && [ -d "${EXAMPLES_DIR}" ]; then
+  EXAMPLES_DIR="$(cd "$EXAMPLES_DIR" && pwd)"
+else
+  EXAMPLES_DIR="${SRC_DIR}/examples"
+fi
 VERSION_FULL="${PROJECT_VERSION_FULL:-unknown}"
 SOURCE_URL="${SOURCE_URL:-https://github.com/construo-game/construo}"
 SHELL_HTML="${SHELL_HTML:-${SRC_DIR}/mk/wasm/shell.html}"
+if [ ! -f "$SHELL_HTML" ]; then
+  echo "error: shell html not found: $SHELL_HTML" >&2
+  exit 1
+fi
 
 BUILD_DIR="${BUILD_DIR:-build-wasm}"
 mkdir -p "$BUILD_DIR"

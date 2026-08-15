@@ -225,7 +225,7 @@ EOF
       APP_NAME = "construo";
       SRC_DIR = ".";
       SDL_WASM_LIBS = "${sdlWasmLibs}";
-      EXAMPLES_DIR = "./examples";
+      # Resolved to absolute paths inside build-app.sh after unpack.
       PROJECT_VERSION_FULL = "0.2.3-dev";
       SOURCE_URL = "https://github.com/construo-game/construo";
       PKG_CONFIG_PATH = "${sdlWasmLibs}/lib/pkgconfig:${sigcWasm}/lib/pkgconfig";
