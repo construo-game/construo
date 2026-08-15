@@ -57,6 +57,9 @@ public:
 
   void bind_key(SDL_Keycode key, Action action);
 
+  /** Public entry for the Emscripten main-loop trampoline. */
+  void process_event_public(SDL_Event const& ev);
+
 private:
   void process_event(SDL_Event const& ev);
   void handle_key(SDL_Keycode key, bool pressed);

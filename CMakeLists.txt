@@ -223,6 +223,30 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     target_link_libraries(construo.sdl PRIVATE ${EGL_LIBRARY})
   endif()
   install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+  if(EXISTS "${CMAKE_SOURCE_DIR}/construo.sdl.desktop")
+    install(FILES construo.sdl.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+  endif()
+
+  if(EMSCRIPTEN)
+    target_link_options(construo.sdl PRIVATE
+      "SHELL:-sFULL_ES2=1"
+      "SHELL:-sALLOW_MEMORY_GROWTH=1"
+      "SHELL:-sDISABLE_EXCEPTION_CATCHING=0"
+      -fexceptions
+    )
+    # Prefer the wasm shell when present (browser builds).
+    if(EXISTS "${CMAKE_SOURCE_DIR}/mk/wasm/shell.html")
+      target_link_options(construo.sdl PRIVATE
+        "SHELL:--shell-file=${CMAKE_SOURCE_DIR}/mk/wasm/shell.html"
+      )
+    endif()
+    if(EXISTS "${CMAKE_SOURCE_DIR}/examples")
+      target_link_options(construo.sdl PRIVATE
+        "SHELL:--preload-file=${CMAKE_SOURCE_DIR}/examples@/examples"
+      )
+    endif()
+  endif()
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})

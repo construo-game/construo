@@ -7,6 +7,10 @@
 
 #include <logmich/log.hpp>
 
+#ifdef __EMSCRIPTEN__
+#  include <emscripten.h>
+#endif
+
 #include "action.hpp"
 #include "controller.hpp"
 #include "events.hpp"
@@ -237,9 +241,44 @@ SDL2Display::pop_quick_draw()
 }
 
 void
-SDL2Display::set_cursor_real(CursorType)
+SDL2Display::set_cursor_real(CursorType cursor)
 {
-  // System cursors could be mapped here later; keep default arrow for now.
+  SDL_SystemCursor id = SDL_SYSTEM_CURSOR_ARROW;
+  switch (cursor) {
+    case CursorType::SELECT:
+      id = SDL_SYSTEM_CURSOR_ARROW;
+      break;
+    case CursorType::SCROLL:
+      id = SDL_SYSTEM_CURSOR_SIZEALL;
+      break;
+    case CursorType::ZOOM:
+      id = SDL_SYSTEM_CURSOR_SIZEALL;
+      break;
+    case CursorType::INSERT:
+      id = SDL_SYSTEM_CURSOR_CROSSHAIR;
+      break;
+    case CursorType::ROTATE:
+      id = SDL_SYSTEM_CURSOR_SIZEALL;
+      break;
+    case CursorType::SCALE:
+      id = SDL_SYSTEM_CURSOR_SIZENWSE;
+      break;
+    case CursorType::COLLIDER:
+      id = SDL_SYSTEM_CURSOR_CROSSHAIR;
+      break;
+  }
+  SDL_Cursor* c = SDL_CreateSystemCursor(id);
+  if (c) {
+    SDL_SetCursor(c);
+    // SDL keeps the previous cursor until replaced; free the old one if we tracked it.
+    // For simplicity, leak is avoided by SDL_FreeCursor after SetCursor is unsafe for
+    // the active cursor — store and free previous on next change.
+    static SDL_Cursor* s_prev = nullptr;
+    if (s_prev) {
+      SDL_FreeCursor(s_prev);
+    }
+    s_prev = c;
+  }
 }
 
 void
@@ -347,21 +386,52 @@ SDL2Display::process_event(SDL_Event const& ev)
   }
 }
 
+namespace {
+
+#ifdef __EMSCRIPTEN__
+SDL2Display* g_em_display = nullptr;
+
+void em_main_loop_callback()
+{
+  if (!g_em_display) {
+    return;
+  }
+  if (ScreenManager::instance()->is_finished()) {
+    emscripten_cancel_main_loop();
+    return;
+  }
+  SDL_Event ev;
+  while (SDL_PollEvent(&ev)) {
+    g_em_display->process_event_public(ev);
+  }
+  ScreenManager::instance()->run_once(*g_em_display);
+}
+#endif
+
+} // namespace
+
+void
+SDL2Display::process_event_public(SDL_Event const& ev)
+{
+  process_event(ev);
+}
+
 void
 SDL2Display::run()
 {
+#ifdef __EMSCRIPTEN__
+  g_em_display = this;
+  // fps=0 → browser refresh rate; simulate_infinite_loop=1
+  emscripten_set_main_loop(em_main_loop_callback, 0, 1);
+#else
   while (!ScreenManager::instance()->is_finished()) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
       process_event(ev);
     }
-
     ScreenManager::instance()->run_once(*this);
-
-    if (Controller::instance()->is_running()) {
-      // Keep simulation responsive; short yield when idle is handled inside run_once timing.
-    }
   }
+#endif
 }
 
 } // namespace construo

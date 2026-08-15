@@ -1,48 +1,66 @@
 Construo
 ========
 
-Construo is a programm for constructing wire-frame objects and let
-them react to physical forces, it is neither a real simulation nor a
-real game, it is just a little toy app which can be a nice way to
-waste time. Some game-like elements might follow later, see the file
-`TODO`. Construo runs under both OpenGL and plain Xlib.
+Construo is a program for constructing wire-frame objects and letting
+them react to physical forces. It is neither a full simulation nor a
+finished game—just a small interactive toy. See `TODO` / `TODO.md` for
+ideas and port status.
 
-The Construo webpage is located at:
+* Homepage: https://construo.github.io/
+* Source: https://github.com/construo-game/construo
 
-* http://construo.github.io/
-
-and the source repository is located at:
-
-* http://github.com/Construo/construo
-
-For questions, comments, constructions, bugs reports and other things
-write a mail to:
-
-* Ingo Ruhnke <grumbel@gmail.com>
-
-or send it directly to the Construo Development mailing list at:
-
-* Construo Development List <construo-devel@nongnu.org>
+Contact: Ingo Ruhnke \<grumbel@gmail.com\>
 
 
 Compilation
 -----------
 
-Construo can be compiled with:
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+```
 
-    mkdir build
-    cd build
-    cmake ..
+### Backends
+
+| CMake option | Default | Binary | Notes |
+|--------------|---------|--------|-------|
+| `CONSTRUO_USE_X11` | ON | `construo.x11` | Software rendering (Xlib) |
+| `CONSTRUO_USE_GLUT` | ON | `construo.glut` | Desktop OpenGL + freeglut |
+| `CONSTRUO_USE_SDL2` | OFF | `construo.sdl` | SDL2 + OpenGL ES 2.0 (ports) |
+
+SDL2 example:
+
+```bash
+cmake -DCONSTRUO_USE_SDL2=ON -DCONSTRUO_USE_X11=OFF -DCONSTRUO_USE_GLUT=OFF ..
+cmake --build .
+./construo.sdl
+```
+
+### Nix
+
+```bash
+nix build .#construo       # X11 + GLUT
+nix build .#construo-sdl   # SDL2 + GLES2 (desktop validation)
+```
+
+WASM / Android / Win32 / R36S packaging is under development; see `TODO.md`,
+`nix/`, and `mk/` (layout adapted from Pingus).
 
 
 Running
 -------
 
-Construo comes in two binaries `construo.glut` and `construo.x11`. The
-former uses OpenGL and the later software rendering with X11. To run it:
+```bash
+build/construo.glut
+build/construo.x11
+build/construo.sdl    # when built with CONSTRUO_USE_SDL2
+```
 
-    build/construo.glut
-or
+Example constructions live in `examples/`.
 
-    build/construo.x11
 
+Agent / contributor notes
+-------------------------
+
+See `AGENTS.md` for architecture, porting rules, and the git-bundle workflow.

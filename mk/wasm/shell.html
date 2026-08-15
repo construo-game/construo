@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Construo @versionFull@</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: #0a0a12; color: #c8d0e0;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+    }
+    #wrap {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; gap: 0.5rem;
+    }
+    #canvas-slot {
+      background: #000;
+      box-shadow: 0 0 24px rgba(0,0,0,0.5);
+    }
+    #canvas-slot canvas {
+      display: block;
+      width: min(100vw, 960px);
+      height: min(80vh, 720px);
+      outline: none;
+    }
+    #status { font-size: 0.9rem; opacity: 0.85; }
+    #progress {
+      width: min(100vw, 320px); height: 4px;
+      background: #1e2a40; border-radius: 2px; overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%; width: 0%; background: #5b8def; transition: width 0.15s;
+    }
+    #meta { font-size: 0.75rem; opacity: 0.6; text-align: center; }
+    #meta a { color: #8ab4ff; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="canvas-slot">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    </div>
+    <div id="status">Loading…</div>
+    <div id="progress"><div id="progress-bar"></div></div>
+    <div id="meta">
+      Construo <strong>@versionFull@</strong><br>
+      <a href="@sourceUrl@" target="_blank" rel="noopener">Source</a>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var statusElement = document.getElementById('status');
+    var progressElement = document.getElementById('progress');
+    var progressBar = document.getElementById('progress-bar');
+    var Module = {
+      preRun: [],
+      postRun: [],
+      canvas: (function() {
+        var canvas = document.getElementById('canvas');
+        canvas.addEventListener('webglcontextlost', function(e) {
+          alert('WebGL context lost. Reload the page.');
+          e.preventDefault();
+        }, false);
+        return canvas;
+      })(),
+      setStatus: function(text) {
+        if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+        if (text === Module.setStatus.last.text) return;
+        var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+        var now = Date.now();
+        if (m && now - Module.setStatus.last.time < 30) return;
+        Module.setStatus.last.time = now;
+        Module.setStatus.last.text = text;
+        if (m) {
+          var progress = parseInt(m[2]) / parseInt(m[4]);
+          progressBar.style.width = (progress * 100) + '%';
+          progressElement.hidden = false;
+        } else {
+          progressBar.style.width = '0%';
+          if (!text) progressElement.hidden = true;
+        }
+        statusElement.innerHTML = text;
+      },
+      totalDependencies: 0,
+      monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        Module.setStatus(left
+          ? 'Preparing… (' + (this.totalDependencies - left) + '/' + this.totalDependencies + ')'
+          : 'All downloads complete.');
+      }
+    };
+    Module.setStatus('Downloading…');
+    window.onerror = function(event) {
+      Module.setStatus('Exception thrown, see JavaScript console');
+      Module.setStatus = function(text) {
+        if (text) console.error('[post-exception status] ' + text);
+      };
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

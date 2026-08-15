@@ -34,7 +34,7 @@ appropriate section.
 - [x] `SDL2Display` implementing `RootGraphicContext` + `InputContext`
 - [x] Map SDL events to existing `Action` / mouse tools
 - [x] Window title, fullscreen toggle (basic)
-- [ ] Custom cursors (currently default arrow)
+- [x] System cursors mapped for SDL2 (bitmap cursors still optional)
 - [x] Keep GLUT and X11 backends selectable and working
 
 ### GLES2 renderer
@@ -50,10 +50,12 @@ appropriate section.
 
 #### WASM (Emscripten)
 
-- [ ] Flesh out `nix/wasm.nix` + `mk/wasm/` from Pingus
-- [ ] SDL2 for `wasm32-emscripten`, preload `examples/`
-- [ ] Main-loop / canvas resize / input
-- [ ] Flake output `.#construo-wasm`
+- [x] `mk/wasm/shell.html`, `scripts/build-app.sh`, README
+- [x] `nix/wasm.nix` scaffolding (glm prefix notes, next steps)
+- [x] Emscripten main loop in `SDL2Display::run()`
+- [x] CMake `EMSCRIPTEN` link options (FULL_ES2, shell, preload examples)
+- [ ] Prebuilt SDL2 + static deps for wasm; flake output `.#construo-wasm`
+- [ ] Runtime validation in browser
 
 #### Android
 
@@ -86,6 +88,6 @@ appropriate section.
 
 ## Documentation
 
-- [ ] Update `README.md` with SDL2 / GLES2 build instructions
+- [x] Update `README.md` with SDL2 / GLES2 build instructions
 - [ ] Note in `NEWS` when first WASM / Android / Win / R36S builds ship
 - [x] Keep `AGENTS.md` and this file in sync with reality
