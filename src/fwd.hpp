@@ -47,6 +47,8 @@ class WorldViewSelectTool;
 class WorldViewTool;
 class WorldViewZoomTool;
 class X11Display;
+class SDL2Display;
+class GLES2Renderer;
 class ZoomGraphicContext;
 struct ButtonEvent;
 

@@ -29,6 +29,9 @@
 #elif defined(USE_GLUT_DISPLAY)
 #  include "glut_display.hpp"
 #  include "unix_system.hpp"
+#elif defined(USE_SDL2_DISPLAY)
+#  include "sdl2_display.hpp"
+#  include "unix_system.hpp"
 #else
 #  error "No Display target defined!"
 #endif
@@ -61,8 +64,11 @@ ConstruoMain::init_system()
 #ifdef USE_X11_DISPLAY
   m_display = std::make_unique<X11Display>(title, g_settings.screen_width, g_settings.screen_height,
                                          g_settings.fullscreen);
-#elif USE_GLUT_DISPLAY
+#elif defined(USE_GLUT_DISPLAY)
   m_display = std::make_unique<GlutDisplay>(title, g_settings.screen_width, g_settings.screen_height, g_settings.fullscreen);
+#elif defined(USE_SDL2_DISPLAY)
+  m_display = std::make_unique<SDL2Display>(title, g_settings.screen_width, g_settings.screen_height,
+                                            g_settings.fullscreen != 0);
 #else
 #  error "No display type defined"
 #endif

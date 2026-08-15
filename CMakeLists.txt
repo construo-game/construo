@@ -1,5 +1,5 @@
 # Construo - A wire-frame construction game
-# Copyright (C) 2015 Ingo Ruhnke <grumbel@gmail.com>
+# Copyright (C) 2015–2026 Ingo Ruhnke <grumbel@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,15 +17,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(construo)
 
-# Prefer tinycmmc from the environment / Nix; fall back to the vendored copy.
-set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/tinycmmc/modules/")
-find_package(tinycmmc CONFIG QUIET)
-if(tinycmmc_FOUND)
-  message(STATUS "tinycmmc found via find_package")
-else()
-  message(STATUS "tinycmmc module path (vendored): ${TINYCMMC_MODULE_PATH}")
-  list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
-endif()
+# Inlined CMake helpers (formerly provided by tinycmmc). No find_package(tinycmmc).
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 option(BUILD_TESTS "Build test cases" OFF)
 option(CONSTRUO_USE_SDL2 "Build SDL2 + GLES2 backend" OFF)
@@ -48,6 +41,12 @@ if(CONSTRUO_USE_X11)
 endif()
 if(CONSTRUO_USE_SDL2)
   find_package(SDL2 REQUIRED)
+  # GLES2 headers (libGLESv2). On desktop, often provided by mesa/libglvnd.
+  find_library(GLESV2_LIBRARY GLESv2)
+  if(NOT GLESV2_LIBRARY)
+    # Fall back to linking via SDL's GL loader / system GL for desktop GLES.
+    message(STATUS "GLESv2 library not found by name; relying on SDL2 GL context")
+  endif()
 endif()
 find_package(fmt REQUIRED)
 find_package(glm REQUIRED)
@@ -56,11 +55,12 @@ pkg_search_module(SIGCXX REQUIRED sigc++-3.0 IMPORTED_TARGET)
 
 set(CONSTRUO_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}")
 
-if (BUILD_TESTS)
+if(BUILD_TESTS)
   enable_testing()
-endif(BUILD_TESTS)
+endif()
 
 # Build dependencies from external/ when not provided by the environment.
+# (Subprojects may still use their own tinycmmc copies; construo itself does not.)
 function(build_dependencies)
   set(BUILD_TESTS OFF)
 
@@ -142,19 +142,26 @@ set(CONSTRUO_SOURCES_CXX
   src/writer.cpp
   src/zoom_graphic_context.cpp
   src/zoom_state.cpp
-  )
+)
 
 set(CONSTRUO_GLUT_SOURCES_CXX
   src/main.cpp
   src/construo_main.cpp
   src/glut_display.cpp
-  )
+)
 
 set(CONSTRUO_X11_SOURCES_CXX
   src/main.cpp
   src/construo_main.cpp
   src/x11_display.cpp
-  )
+)
+
+set(CONSTRUO_SDL2_SOURCES_CXX
+  src/main.cpp
+  src/construo_main.cpp
+  src/sdl2_display.cpp
+  src/gles2_renderer.cpp
+)
 
 include_directories(src/)
 
@@ -170,23 +177,19 @@ set_target_properties(libconstruo PROPERTIES
   CXX_EXTENSIONS OFF)
 set_target_properties(libconstruo PROPERTIES OUTPUT_NAME construo)
 target_link_libraries(libconstruo PUBLIC prio::prio geom::geom fmt::fmt xdgcpp PkgConfig::SIGCXX)
-target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS} -Wuseless-cast)
+target_compile_options(libconstruo PRIVATE ${WARNINGS_CXX_FLAGS})
 
 if(CONSTRUO_USE_GLUT AND GLUT_FOUND AND OPENGL_FOUND)
   add_executable(construo.glut ${CONSTRUO_GLUT_SOURCES_CXX})
   set_target_properties(construo.glut PROPERTIES
-      CXX_STANDARD 20
-      CXX_STANDARD_REQUIRED ON
-      CXX_EXTENSIONS OFF)
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF)
   target_compile_options(construo.glut PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.glut PUBLIC -DUSE_GLUT_DISPLAY)
   target_link_libraries(construo.glut libconstruo OpenGL::GL OpenGL::GLU GLUT::GLUT)
-
   install(TARGETS construo.glut RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-  install(FILES
-    construo.glut.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+  install(FILES construo.glut.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
 if(CONSTRUO_USE_X11 AND X11_FOUND)
@@ -198,18 +201,28 @@ if(CONSTRUO_USE_X11 AND X11_FOUND)
   target_compile_options(construo.x11 PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.x11 PUBLIC -DUSE_X11_DISPLAY)
   target_link_libraries(construo.x11 libconstruo prio::prio X11::X11)
-
   install(TARGETS construo.x11 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-  install(FILES
-    construo.x11.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+  install(FILES construo.x11.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()
 
-# SDL2 + GLES2 backend (WASM / Android / Win32 / R36S / desktop validation).
-# Sources and full target wiring will be added once the GLES2 renderer lands.
 if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
-  message(STATUS "SDL2 backend enabled (renderer implementation pending)")
+  add_executable(construo.sdl ${CONSTRUO_SDL2_SOURCES_CXX})
+  set_target_properties(construo.sdl PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF)
+  target_compile_options(construo.sdl PRIVATE ${WARNINGS_CXX_FLAGS})
+  target_compile_definitions(construo.sdl PUBLIC -DUSE_SDL2_DISPLAY)
+  target_link_libraries(construo.sdl PRIVATE libconstruo SDL2::SDL2)
+  if(GLESV2_LIBRARY)
+    target_link_libraries(construo.sdl PRIVATE ${GLESV2_LIBRARY})
+  endif()
+  # Desktop may need EGL as well for GLES contexts.
+  find_library(EGL_LIBRARY EGL)
+  if(EGL_LIBRARY)
+    target_link_libraries(construo.sdl PRIVATE ${EGL_LIBRARY})
+  endif()
+  install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DATADIR})
@@ -218,11 +231,8 @@ install(FILES
   construo.svg
   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
-if (BUILD_TESTS)
-  # compile tests
+if(BUILD_TESTS)
   find_package(GTest REQUIRED)
-
-  # build automatic tests
   file(GLOB TEST_CONSTRUO_SOURCES test/*_test.cpp)
   add_executable(test_construo ${TEST_CONSTRUO_SOURCES})
   target_compile_options(test_construo PRIVATE ${WARNINGS_CXX_FLAGS})
@@ -230,8 +240,6 @@ if (BUILD_TESTS)
     GTest::GTest
     GTest::Main
     libconstruo)
-
-  # add 'make test' target, use 'make test ARGS="-V"' or 'ctest -V' for verbose
   enable_testing()
   add_test(NAME test_construo
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

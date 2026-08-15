@@ -5,6 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
+    # Still required by logmich / priocpp / geomcpp / sexpcpp flake inputs.
+    # Construo itself no longer depends on tinycmmc (CMake helpers are inlined under cmake/).
     tinycmmc.url = "github:grumbel/tinycmmc";
     tinycmmc.inputs.nixpkgs.follows = "nixpkgs";
     tinycmmc.inputs.flake-utils.follows = "flake-utils";
@@ -43,60 +45,93 @@
         construo_version = if !construo_has_version
                            then ("0.2.3-${nixpkgs.lib.substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}")
                            else (builtins.substring 1 ((builtins.stringLength version_file) - 2) version_file);
-       in {
-         packages = rec {
-           default = construo;
 
-           construo = pkgs.stdenv.mkDerivation rec {
-             pname = "construo";
-             version = construo_version;
+        commonNative = with pkgs; [ cmake pkg-config ];
+        commonLibs = with pkgs; [
+          fmt
+          glm
+          gtest
+          zlib
+          libsigcxx30
+        ] ++ [
+          geomcpp.packages.${system}.default
+          logmich.packages.${system}.default
+          priocpp.packages.${system}.default
+          xdgcpp.packages.${system}.default
+        ];
 
-             src = ./.;
+        mkConstruo = { pname ? "construo", extraCmakeFlags ? [], extraBuildInputs ? [], postFixup ? "" }:
+          pkgs.stdenv.mkDerivation rec {
+            inherit pname;
+            version = construo_version;
+            src = ./.;
 
-             postPatch = ''
-                if ${if construo_has_version then "false" else "true"}; then
-                  echo "${version}" > VERSION
-                fi
-                substituteInPlace CMakeLists.txt \
-                  --replace "appstream-util" "appstream-util --nonet"
-             '';
+            postPatch = ''
+              if ${if construo_has_version then "false" else "true"}; then
+                echo "${version}" > VERSION
+              fi
+            '';
 
-             cmakeFlags = [
-               "-DWARNINGS=ON"
-               "-DWERROR=ON"
-               "-DBUILD_TESTS=ON"
-             ];
+            cmakeFlags = [
+              "-DWARNINGS=ON"
+              "-DWERROR=ON"
+              "-DBUILD_TESTS=ON"
+            ] ++ extraCmakeFlags;
 
-             doCheck = true;
+            doCheck = true;
+            inherit postFixup;
 
-             postFixup = ''
-               ln -s $out/bin/construo.x11 $out/bin/construo
-             '';
+            nativeBuildInputs = commonNative;
+            buildInputs = commonLibs ++ extraBuildInputs;
+          };
+      in {
+        packages = rec {
+          default = construo;
 
-             nativeBuildInputs = with pkgs; [
-               cmake
-               pkg-config
-             ];
+          # Classic X11 + GLUT Linux build (existing behaviour).
+          construo = mkConstruo {
+            extraCmakeFlags = [
+              "-DCONSTRUO_USE_X11=ON"
+              "-DCONSTRUO_USE_GLUT=ON"
+              "-DCONSTRUO_USE_SDL2=OFF"
+            ];
+            extraBuildInputs = with pkgs; [
+              freeglut
+              libGL
+              libGLU
+              libX11
+            ];
+            postFixup = ''
+              ln -s $out/bin/construo.x11 $out/bin/construo
+            '';
+          };
 
-             buildInputs = with pkgs; [
-               fmt
-               freeglut
-               glm
-               gtest
-               libGL
-               libGLU
-               libX11
-               zlib
-               libsigcxx30
-             ] ++ [
-               geomcpp.packages.${system}.default
-               logmich.packages.${system}.default
-               priocpp.packages.${system}.default
-               tinycmmc.packages.${system}.default
-               xdgcpp.packages.${system}.default
-             ];
-           };
+          # Desktop SDL2 + GLES2 validation binary (shared path for ports).
+          construo-sdl = mkConstruo {
+            pname = "construo-sdl";
+            extraCmakeFlags = [
+              "-DCONSTRUO_USE_X11=OFF"
+              "-DCONSTRUO_USE_GLUT=OFF"
+              "-DCONSTRUO_USE_SDL2=ON"
+            ];
+            extraBuildInputs = with pkgs; [
+              SDL2
+              libGL
+              libglvnd
+            ];
+            postFixup = ''
+              if [ -e $out/bin/construo.sdl ]; then
+                ln -s $out/bin/construo.sdl $out/bin/construo
+              fi
+            '';
+          };
+
+          # Placeholders for cross / embedded ports (see nix/*.nix and TODO.md).
+          # construo-wasm = ...;
+          # construo-android = ...;
+          # construo-win32 = ...;
+          # construo-r36s = ...;
         };
-       }
+      }
     );
 }

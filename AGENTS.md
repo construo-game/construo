@@ -11,7 +11,8 @@ in C++ with CMake and a Nix flake for reproducible builds.
 |------|------|
 | `src/` | Core simulation, GUI, tools, display backends |
 | `examples/` | Sample constructions (`.construo` files) |
-| `external/` | Vendored helper libraries (tinycmmc, geomcpp, logmich, priocpp, sexpcpp, xdgcpp) |
+| `external/` | Vendored helper libraries (geomcpp, logmich, priocpp, sexpcpp, xdgcpp; tinycmmc only for subprojects) |
+| `cmake/` | Inlined CMake helpers (formerly tinycmmc: version, warnings) |
 | `test/` | Tests (when enabled) |
 | `contrib/` | Extra / contributed material |
 
@@ -56,10 +57,10 @@ Port / flake progress checklist: **`TODO.md`** (keep it current).
 | GUI / tools / file manager | `src/gui_*.cpp`, `src/worldview_*.cpp`, `src/screen_manager.cpp` |
 | Graphic abstraction | `src/graphic_context.hpp`, `src/root_graphic_context.hpp`, `src/zoom_graphic_context.*` |
 | Display backends (current) | `src/glut_display.*` (OpenGL + GLUT), `src/x11_display.*` (Xlib software) |
-| Display backends (planned) | SDL2 + GLES2 renderer (new), shared across WASM / Android / Win32 / R36S |
+| Display backends (new) | `src/sdl2_display.*` + `src/gles2_renderer.*` (SDL2 + GLES2) |
 | System / input | `src/system_context.hpp`, `src/unix_system.*`, `src/input_context.*` |
 | Main entry | `src/main.cpp`, `src/construo_main.*` |
-| CMake | Top-level `CMakeLists.txt` + tinycmmc modules from `external/tinycmmc` |
+| CMake | Top-level `CMakeLists.txt` + inlined modules under `cmake/` |
 | Nix flake | `flake.nix` (currently Linux-focused; extend for ports) |
 
 Existing Linux targets (`construo.glut`, `construo.x11`) **must stay**. New
@@ -118,8 +119,11 @@ Copy and adapt what is useful:
 - Do not hard-require exact flake pins for every downstream build.
 - Missing dependencies are packaging bugs: fail clearly at configure time.
 
-Helper libraries live under `external/`. CMake resolves them via tinycmmc /
+Helper libraries live under `external/`. CMake resolves them via
 `find_package` then `add_subdirectory(external/…)`.
+
+**tinycmmc:** not used by construo itself anymore — helpers are inlined under
+`cmake/`. Library flakes may still depend on tinycmmc independently.
 
 ---
 

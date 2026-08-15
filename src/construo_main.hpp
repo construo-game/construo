@@ -1,5 +1,5 @@
 // Construo - A wire-frame construction game
-// Copyright (C) 2002 Ingo Ruhnke <grumbel@gmail.com>
+// Copyright (C) 2002–2026 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 #define HEADER_CONSTRUO_CONSTRUO_MAIN_HPP
 
 #include <memory>
-#include <vector>
-#include <list>
 
 #include "fwd.hpp"
 
@@ -28,25 +26,23 @@ namespace construo {
 class ConstruoMain
 {
 public:
-  ConstruoMain ();
-  virtual ~ConstruoMain ();
+  ConstruoMain();
+  virtual ~ConstruoMain();
 
   int main(int argc, char* argv[]);
 
 private:
-  /** Initialize the graphic context and the system */
   void init_system();
-
-  /** Shutdown the graphic display and everything else */
   void deinit_system();
-
-  void process_events ();
+  void process_events();
 
 private:
-#ifdef USE_X11_DISPLAY
-  std::unique_ptr<X11Display>  m_display;
-#elif USE_GLUT_DISPLAY
+#if defined(USE_X11_DISPLAY)
+  std::unique_ptr<X11Display> m_display;
+#elif defined(USE_GLUT_DISPLAY)
   std::unique_ptr<GlutDisplay> m_display;
+#elif defined(USE_SDL2_DISPLAY)
+  std::unique_ptr<SDL2Display> m_display;
 #endif
   std::unique_ptr<UnixSystem> m_system;
 
