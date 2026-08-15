@@ -272,7 +272,18 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     CXX_EXTENSIONS OFF)
   target_compile_options(construo.sdl PRIVATE ${WARNINGS_CXX_FLAGS})
   target_compile_definitions(construo.sdl PUBLIC -DUSE_SDL2_DISPLAY)
+  # Keep our own main() on all platforms (avoid SDL redefining entry on Win/Android).
+  target_compile_definitions(construo.sdl PRIVATE SDL_MAIN_HANDLED)
+
   # Config package provides SDL2::SDL2; module package provides SDL2_LIBRARIES.
+  # MinGW needs mingw32 before SDL2 when not using SDL_MAIN_HANDLED; with
+  # SDL_MAIN_HANDLED we still link SDL2::SDL2main if present for subsystem helpers.
+  if(MINGW)
+    target_link_libraries(construo.sdl PRIVATE mingw32)
+  endif()
+  if(TARGET SDL2::SDL2main)
+    target_link_libraries(construo.sdl PRIVATE SDL2::SDL2main)
+  endif()
   if(TARGET SDL2::SDL2)
     target_link_libraries(construo.sdl PRIVATE libconstruo SDL2::SDL2)
   else()
@@ -290,7 +301,7 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
   endif()
   if(CONSTRUO_TARGET_WINDOWS)
     # Desktop GL fallback path in SDL2Display; ANGLE/GLESv2 may also be present.
-    target_link_libraries(construo.sdl PRIVATE opengl32)
+    target_link_libraries(construo.sdl PRIVATE opengl32 gdi32 user32 shell32 imm32 ole32 oleaut32 version uuid)
   endif()
   install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 

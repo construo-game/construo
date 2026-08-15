@@ -94,6 +94,7 @@ appropriate section.
 - [x] `packages.construo-win64` / `construo-win64-bin` (cross derivation)
 - [x] `CONSTRUO_TARGET_WINDOWS` unifies native and cross MinGW CMake paths
 - [x] `package-zip.sh` copies MinGW + optional GLES/ANGLE DLLs
+- [x] `SDL_MAIN_HANDLED` + MinGW/SDL2main/opengl32 link order for Win targets
 - [ ] Validate Win64 link (GLESv2 / ANGLE / system GL) on a real MinGW run
 
 #### R36S (ArkOS)

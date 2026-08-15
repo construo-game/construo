@@ -70,3 +70,10 @@ Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).
 | Left stick | SCROLL_* (analog threshold) |
 | Right stick Y | ZOOM_IN / ZOOM_OUT |
 | Triggers L/R | UNDO / REDO |
+
+## Windows entry point
+
+`construo.sdl` is built with `SDL_MAIN_HANDLED` so the game keeps a normal
+`main()`. MinGW builds still link `mingw32` and `SDL2::SDL2main` when
+available, plus `opengl32` and common Win32 libs for the desktop GL fallback.
+

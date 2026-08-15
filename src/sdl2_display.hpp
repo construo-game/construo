@@ -7,6 +7,10 @@
 #include <string>
 #include <unordered_map>
 
+// Own main() on every platform (see CMake SDL_MAIN_HANDLED).
+#ifndef SDL_MAIN_HANDLED
+#  define SDL_MAIN_HANDLED
+#endif
 #include <SDL.h>
 #include <geom/point.hpp>
 #include <geom/rect.hpp>
