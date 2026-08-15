@@ -37,6 +37,17 @@ let
     '';
   };
 
+  # SDL2-only Application.mk (LOCAL_MODULE is SDL2 in upstream Android.mk).
+  sdlApplicationMk = pkgs.writeTextFile {
+    name = "SDL-Application.mk";
+    text = ''
+      APP_STL := c++_shared
+      APP_ABI := ${targetAbisStr}
+      APP_PLATFORM := android-${packagePlatform}
+      APP_MODULES := SDL2
+    '';
+  };
+
   # Prebuilt SDL2 shared libs per ABI (ndk-build of SDL2 sources).
   sdlAndroidLibs = pkgs.stdenvNoCC.mkDerivation {
     pname = "sdl2-android-libs";
@@ -58,18 +69,18 @@ let
       mkdir -p "$OUT_DIR"
 
       # Writable staging (nix store copies are read-only).
+      # Layout matches mk/android/scripts/install-sdl-libs.sh (jni/SDL + SDL2 symlink).
       mkdir -p work/app/jni/SDL
       cp -a "${sdlSrc}"/. work/app/jni/SDL/
       chmod -R u+w work
+      ln -sfn SDL work/app/jni/SDL2
       printf '%s\n' 'include $(call all-subdir-makefiles)' > work/app/jni/Android.mk
-      cp ${applicationMk} work/app/jni/Application.mk
+      cp ${sdlApplicationMk} work/app/jni/Application.mk
       chmod -R u+w work
 
       ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} \
         NDK_LIBS_OUT="$OUT_DIR/lib" \
-        NDK_OUT="$PWD/obj" \
-        APP_ABI="${targetAbisStr}" \
-        APP_PLATFORM=android-${packagePlatform}
+        NDK_OUT="$PWD/obj"
 
       runHook postBuild
     '';
