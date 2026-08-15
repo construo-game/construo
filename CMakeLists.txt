@@ -355,8 +355,18 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
       -fexceptions
     )
     if(EXISTS "${CMAKE_SOURCE_DIR}/mk/wasm/shell.html")
+      # Substitute @versionFull@ / @sourceUrl@ (raw shell keeps tokens for sed).
+      set(versionFull "${PROJECT_VERSION_FULL}")
+      if(NOT versionFull)
+        set(versionFull "${PROJECT_VERSION}")
+      endif()
+      set(sourceUrl "https://github.com/construo-game/construo")
+      configure_file(
+        "${CMAKE_SOURCE_DIR}/mk/wasm/shell.html"
+        "${CMAKE_BINARY_DIR}/construo-shell.html"
+        @ONLY)
       target_link_options(construo.sdl PRIVATE
-        "SHELL:--shell-file=${CMAKE_SOURCE_DIR}/mk/wasm/shell.html"
+        "SHELL:--shell-file=${CMAKE_BINARY_DIR}/construo-shell.html"
       )
     endif()
     if(EXISTS "${CMAKE_SOURCE_DIR}/examples")
