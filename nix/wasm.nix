@@ -19,7 +19,7 @@ let
   # Header-only glm config package for emscripten FIND_ROOT.
   glmPrefix = pkgs.runCommand "glm-headers-wasm" { } ''
     mkdir -p $out/include $out/lib/cmake/glm
-    cp -a ${pkgs.glm}/include/. $out/include/
+    cp -a ${../external/glm}/glm $out/include/
     cat > $out/lib/cmake/glm/glmConfig.cmake <<'EOF_GLM'
 set(_glm_inc "''${CMAKE_CURRENT_LIST_DIR}/../../../include")
 if(NOT TARGET glm::glm)

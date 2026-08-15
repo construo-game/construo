@@ -51,6 +51,9 @@
             call = path: args: pkgs'.callPackage path args;
           in
           rec {
+            # Header-only glm with platforms = platforms.all (works on MinGW cross).
+            glm = call ./external/glm/glm.nix { };
+
             tinycmmc = call ./external/tinycmmc/tinycmmc.nix {
               self = selfFor ./external/tinycmmc;
               inherit tinycmmc_lib;
@@ -58,8 +61,7 @@
 
             geomcpp = call ./external/geomcpp/geomcpp.nix {
               self = selfFor ./external/geomcpp;
-              glm = pkgs'.glm.overrideAttrs (_: { meta = { }; });
-              inherit tinycmmc tinycmmc_lib;
+              inherit glm tinycmmc tinycmmc_lib;
               gtest = pkgs'.gtest;
             };
 
@@ -97,11 +99,11 @@
 
         commonNative = with pkgs; [ cmake pkg-config ];
         commonLibs = with pkgs; [
-          glm
           gtest
           zlib
           libsigcxx30
         ] ++ [
+          libs.glm
           libs.geomcpp
           libs.logmich
           libs.priocpp
@@ -138,7 +140,7 @@
           nativeBuildInputs = with pkgs; [ cmake pkg-config ];
           buildInputs = [
             win64Sdl
-            pkgs.pkgsCross.mingwW64.glm
+            win64Libs.glm
             pkgs.pkgsCross.mingwW64.zlib
             pkgs.pkgsCross.mingwW64.libsigcxx
             win64Libs.geomcpp
@@ -153,7 +155,7 @@
             "-DBUILD_TESTS=OFF"
             "-DWARNINGS=ON"
             "-DPROJECT_VERSION_FULL=${construo_version}"
-            "-DCMAKE_PREFIX_PATH=${win64Sdl}"
+            "-DCMAKE_PREFIX_PATH=${win64Sdl};${win64Libs.glm}"
           ];
           enableParallelBuilding = true;
         };
@@ -264,16 +266,40 @@ TXT
           # inherit pulls from the enclosing let (not the rec set).
           inherit construo-win64 construo-win64-bin;
 
-          construo-android = pkgs.runCommand "construo-android-stub" {} ''
-            echo "construo-android is not packaged yet." >&2
-            echo "See nix/android.nix, mk/android/, and TODO.md." >&2
-            exit 1
+          # Packaging helpers + docs (full APK / device binary need NDK / sysroot).
+          construo-android = pkgs.runCommand "construo-android" {
+            meta.description = "Construo Android packaging helpers (NDK/Gradle)";
+          } ''
+            mkdir -p $out/share/construo/android $out/bin
+            cp -a ${./mk/android} $out/share/construo/android/mk
+            cp -a ${./nix/android.nix} $out/share/construo/android/
+            cat > $out/share/construo/android/README.txt <<'EOF'
+Construo Android packaging helpers
+==================================
+1. SDL_SRC=/path/to/SDL2 $out/share/construo/android/mk/scripts/install-sdl-libs.sh
+2. ANDROID_NDK_HOME=… $out/share/construo/android/mk/scripts/package-apk.sh
+3. Optional: push-examples.sh via adb
+See mk/android/README.md in the source tree.
+EOF
+            ln -s $out/share/construo/android/mk/scripts/package-apk.sh $out/bin/construo-android-package-apk
+            ln -s $out/share/construo/android/mk/scripts/install-sdl-libs.sh $out/bin/construo-android-install-sdl
           '';
 
-          construo-r36s = pkgs.runCommand "construo-r36s-stub" {} ''
-            echo "construo-r36s is not packaged yet." >&2
-            echo "See nix/r36s.nix, mk/r36s/, and TODO.md (ArkOS sysroot)." >&2
-            exit 1
+          construo-r36s = pkgs.runCommand "construo-r36s" {
+            meta.description = "Construo R36S/ArkOS packaging helpers";
+          } ''
+            mkdir -p $out/share/construo/r36s $out/bin
+            cp -a ${./mk/r36s} $out/share/construo/r36s/mk
+            cp -a ${./nix/r36s.nix} $out/share/construo/r36s/
+            cat > $out/share/construo/r36s/README.txt <<'EOF'
+Construo R36S (ArkOS) packaging helpers
+=======================================
+Cross-build with ARKOS_SYSROOT and:
+  cmake -DCMAKE_TOOLCHAIN_FILE=$out/share/construo/r36s/mk/toolchain-arkos-aarch64.cmake …
+Package with:
+  $out/share/construo/r36s/mk/scripts/package-port.sh construo.sdl examples /tmp/port
+EOF
+            ln -s $out/share/construo/r36s/mk/scripts/package-port.sh $out/bin/construo-r36s-package-port
           '';
         };
 

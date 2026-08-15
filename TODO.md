@@ -76,6 +76,7 @@ appropriate section.
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
 - [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
 - [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
+- [x] Flake `construo-android` / `construo-r36s` helper packages (full APK/device binary still external)
 - [x] `mk/android/scripts/install-sdl-libs.sh` to stage SDL2 under jni/
 - [x] Android default fullscreen when `__ANDROID__`
 - [x] SDL app lifecycle: pause sim on background, ESC on terminate
@@ -115,6 +116,7 @@ appropriate section.
 ## Dependencies & CMake hygiene
 
 - [x] Convert `external/*` from git submodules to squashed subtrees (latest master)
+- [x] Vendor header-only glm 1.0.1 under `external/glm` (platforms = all, MinGW-safe)
 - [x] Replace `{fmt}` with C++20 `std::format` + optional `print.hpp` polyfill
 - [x] Flake builds helpers from vendored `external/*` (no remote helper flake inputs)
 

@@ -11,7 +11,7 @@ in C++ with CMake and a Nix flake for reproducible builds.
 |------|------|
 | `src/` | Core simulation, GUI, tools, display backends |
 | `examples/` | Sample constructions (`.construo` files) |
-| `external/` | Squashed-subtree helper libraries (geomcpp, logmich, priocpp, sexpcpp, xdgcpp, tinycmmc) — not submodules |
+| `external/` | Squashed-subtree helpers (geomcpp, logmich, priocpp, sexpcpp, xdgcpp, tinycmmc, glm) — not submodules |
 | `cmake/` | Inlined CMake helpers (formerly tinycmmc: version, warnings) |
 | `test/` | Tests (when enabled) |
 | `contrib/` | Extra / contributed material |

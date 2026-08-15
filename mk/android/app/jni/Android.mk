@@ -95,10 +95,9 @@ LOCAL_C_INCLUDES := \
   $(CONSTRUO_SRC_ROOT)/external/geomcpp/include \
   $(LOCAL_PATH)/SDL/include
 
-# Optional: export GLM_ROOT=/path/to/glm (headers only).
-ifdef GLM_ROOT
+# glm headers: default to vendored external/glm, or GLM_ROOT override.
+GLM_ROOT ?= $(CONSTRUO_SRC_ROOT)/external/glm
 LOCAL_C_INCLUDES += $(GLM_ROOT)
-endif
 
 ifndef CONSTRUO_VERSION
   CONSTRUO_VERSION := $(shell cat $(CONSTRUO_SRC_ROOT)/VERSION 2>/dev/null | tr -d '\n' || echo unknown)
