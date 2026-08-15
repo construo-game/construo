@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>Construo @versionFull@</title>
   <style>
     html, body {
@@ -14,7 +16,7 @@
     #wrap {
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      height: 100%; gap: 0.5rem;
+      min-height: 100%; gap: 0.5rem;
     }
     #canvas-slot {
       background: #000;
@@ -26,7 +28,7 @@
       height: min(80vh, 720px);
       outline: none;
     }
-    #status { font-size: 0.9rem; opacity: 0.85; }
+    #status { font-size: 0.9rem; opacity: 0.85; min-height: 1.2em; }
     #progress {
       width: min(100vw, 320px); height: 4px;
       background: #1e2a40; border-radius: 2px; overflow: hidden;
@@ -34,8 +36,45 @@
     #progress-bar {
       height: 100%; width: 0%; background: #5b8def; transition: width 0.15s;
     }
-    #meta { font-size: 0.75rem; opacity: 0.6; text-align: center; }
+    #meta { font-size: 0.75rem; opacity: 0.6; text-align: center; line-height: 1.5; }
     #meta a { color: #8ab4ff; }
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      justify-content: center; max-width: 90vw;
+    }
+    .toolbar button {
+      background: #1e2a40; color: #c8d0e0;
+      border: 1px solid #3a4a66; border-radius: 4px;
+      padding: 0.35rem 0.75rem; cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .toolbar button:hover { background: #2a3a55; }
+    .toolbar button:disabled { opacity: 0.4; cursor: default; }
+    .toolbar button.active { border-color: #5b8def; color: #fff; }
+    .toolbar input[type=file] { display: none; }
+    #wrap:fullscreen,
+    #wrap:-webkit-full-screen {
+      background: #000;
+      justify-content: center;
+      gap: 0;
+    }
+    #wrap:fullscreen #status,
+    #wrap:fullscreen #progress,
+    #wrap:fullscreen .toolbar,
+    #wrap:fullscreen #meta,
+    #wrap:-webkit-full-screen #status,
+    #wrap:-webkit-full-screen #progress,
+    #wrap:-webkit-full-screen .toolbar,
+    #wrap:-webkit-full-screen #meta {
+      display: none !important;
+    }
+    #wrap:fullscreen #canvas-slot canvas,
+    #wrap:-webkit-full-screen #canvas-slot canvas {
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+    }
   </style>
 </head>
 <body>
@@ -45,6 +84,14 @@
     </div>
     <div id="status">Loading…</div>
     <div id="progress"><div id="progress-bar"></div></div>
+    <div class="toolbar">
+      <button type="button" id="btn-display-fullscreen" title="Browser fullscreen">Fullscreen</button>
+    </div>
+    <div class="toolbar toolbar-backup" title="Saves live under /user (mapped to ~/.construo). Download or restore a JSON backup.">
+      <button type="button" id="btn-download-backup" disabled>Download backup</button>
+      <button type="button" id="btn-upload-backup" disabled>Upload backup…</button>
+      <input type="file" id="file-upload-backup" accept=".json,application/json">
+    </div>
     <div id="meta">
       Construo <strong>@versionFull@</strong><br>
       <a href="@sourceUrl@" target="_blank" rel="noopener">Source</a>
@@ -54,16 +101,184 @@
     var statusElement = document.getElementById('status');
     var progressElement = document.getElementById('progress');
     var progressBar = document.getElementById('progress-bar');
+
+    /* Matches UnixSystem on Emscripten: HOME=/home/web_user → ~/.construo
+       (also the translate target for virtual /user/… paths). */
+    var ST_USER_ROOTS = ['/home/web_user/.construo', '/user'];
+
+    function stBytesToBase64(u8) {
+      var CHUNK = 0x8000;
+      var s = '';
+      for (var i = 0; i < u8.length; i += CHUNK) {
+        s += String.fromCharCode.apply(null, u8.subarray(i, Math.min(i + CHUNK, u8.length)));
+      }
+      return btoa(s);
+    }
+
+    function stBase64ToBytes(b64) {
+      var s = atob(b64);
+      var u8 = new Uint8Array(s.length);
+      for (var i = 0; i < s.length; i++) u8[i] = s.charCodeAt(i);
+      return u8;
+    }
+
+    function stWalkFiles(path, root, out) {
+      var names;
+      try { names = FS.readdir(path); } catch (e) { return; }
+      for (var i = 0; i < names.length; i++) {
+        var n = names[i];
+        if (n === '.' || n === '..') continue;
+        var child = path + (path.charAt(path.length - 1) === '/' ? '' : '/') + n;
+        var st;
+        try { st = FS.stat(child); } catch (e) { continue; }
+        if (FS.isDir(st.mode)) {
+          stWalkFiles(child, root, out);
+        } else if (FS.isFile(st.mode)) {
+          var data = FS.readFile(child, { encoding: 'binary' });
+          out[child.slice(root.length)] = stBytesToBase64(data);
+        }
+      }
+    }
+
+    function stEnsureDirs(filePath) {
+      var parts = filePath.split('/');
+      var cur = '';
+      for (var i = 0; i < parts.length - 1; i++) {
+        if (!parts[i]) continue;
+        cur += '/' + parts[i];
+        try { FS.mkdir(cur); } catch (e) {}
+      }
+    }
+
+    function stDownloadBackup() {
+      if (typeof FS === 'undefined') {
+        alert('File system not ready yet.');
+        return;
+      }
+      var roots = {};
+      var any = false;
+      for (var r = 0; r < ST_USER_ROOTS.length; r++) {
+        var root = ST_USER_ROOTS[r];
+        var files = {};
+        try {
+          stWalkFiles(root, root, files);
+        } catch (e) {
+          continue;
+        }
+        if (Object.keys(files).length) {
+          roots[root] = files;
+          any = true;
+        }
+      }
+      if (!any) {
+        alert('No user saves found under ' + ST_USER_ROOTS.join(' or ') + '.');
+        return;
+      }
+      var payload = {
+        format: 'construo-backup',
+        version: 1,
+        roots: roots
+      };
+      var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'construo-backup.json';
+      a.click();
+      setTimeout(function() { URL.revokeObjectURL(a.href); }, 2000);
+    }
+
+    function stUploadBackup(file) {
+      if (typeof FS === 'undefined') {
+        alert('File system not ready yet.');
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function() {
+        try {
+          var obj = JSON.parse(reader.result);
+          if (!obj || obj.format !== 'construo-backup' || !obj.roots) {
+            alert('Not a Construo backup file.');
+            return;
+          }
+          var rootNames = Object.keys(obj.roots);
+          for (var i = 0; i < rootNames.length; i++) {
+            var root = rootNames[i];
+            var files = obj.roots[root];
+            var rels = Object.keys(files);
+            for (var j = 0; j < rels.length; j++) {
+              var rel = rels[j];
+              var abs = root + (rel.charAt(0) === '/' ? rel : '/' + rel);
+              stEnsureDirs(abs);
+              FS.writeFile(abs, stBase64ToBytes(files[rel]));
+            }
+          }
+          if (typeof FS.syncfs === 'function') {
+            FS.syncfs(false, function(err) {
+              if (err) console.error('syncfs after import:', err);
+            });
+          }
+          alert('Backup restored. Reload the page if the UI does not refresh.');
+        } catch (e) {
+          alert('Could not import backup: ' + e);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function stToggleFullscreen() {
+      var wrap = document.getElementById('wrap');
+      var fs = document.fullscreenElement || document.webkitFullscreenElement;
+      if (!fs) {
+        if (wrap.requestFullscreen) wrap.requestFullscreen();
+        else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    }
+
+    function stOnFullscreenChange() {
+      var fs = document.fullscreenElement || document.webkitFullscreenElement;
+      var btn = document.getElementById('btn-display-fullscreen');
+      if (btn) {
+        btn.textContent = fs ? 'Exit fullscreen' : 'Fullscreen';
+        btn.className = fs ? 'active' : '';
+      }
+      var canvas = document.getElementById('canvas');
+      if (canvas) canvas.focus();
+    }
+
+    function stEnableDisplayButtons() {
+      var bfs = document.getElementById('btn-display-fullscreen');
+      if (bfs) bfs.onclick = function() { stToggleFullscreen(); };
+      document.addEventListener('fullscreenchange', stOnFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', stOnFullscreenChange);
+    }
+
+    function stEnableBackupButtons() {
+      var dl = document.getElementById('btn-download-backup');
+      var ul = document.getElementById('btn-upload-backup');
+      var fi = document.getElementById('file-upload-backup');
+      if (dl) { dl.disabled = false; dl.onclick = stDownloadBackup; }
+      if (ul) { ul.disabled = false; ul.onclick = function() { fi && fi.click(); }; }
+      if (fi) fi.onchange = function() {
+        if (fi.files && fi.files[0]) stUploadBackup(fi.files[0]);
+        fi.value = '';
+      };
+    }
+
     var Module = {
       preRun: [],
-      postRun: [],
+      postRun: [function() {
+        stEnableDisplayButtons();
+        stEnableBackupButtons();
+      }],
       canvas: (function() {
         var canvas = document.getElementById('canvas');
         canvas.addEventListener('webglcontextlost', function(e) {
           alert('WebGL context lost. Reload the page.');
           e.preventDefault();
         }, false);
-        // Keyboard events go to #canvas (SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT).
         canvas.addEventListener('click', function() { canvas.focus(); });
         canvas.focus();
         return canvas;
