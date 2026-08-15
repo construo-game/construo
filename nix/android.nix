@@ -69,11 +69,11 @@ let
       mkdir -p "$OUT_DIR"
 
       # Writable staging (nix store copies are read-only).
-      # Layout matches mk/android/scripts/install-sdl-libs.sh (jni/SDL + SDL2 symlink).
-      mkdir -p work/app/jni/SDL
-      cp -a "${sdlSrc}"/. work/app/jni/SDL/
+      # Stage only as jni/SDL2 so all-subdir-makefiles defines the module once
+      # (a SDL + SDL2 symlink pair double-defines LOCAL_MODULE := SDL2).
+      mkdir -p work/app/jni/SDL2
+      cp -a "${sdlSrc}"/. work/app/jni/SDL2/
       chmod -R u+w work
-      ln -sfn SDL work/app/jni/SDL2
       printf '%s\n' 'include $(call all-subdir-makefiles)' > work/app/jni/Android.mk
       cp ${sdlApplicationMk} work/app/jni/Application.mk
       chmod -R u+w work
