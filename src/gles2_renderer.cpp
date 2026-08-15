@@ -177,7 +177,7 @@ GLES2Renderer::init()
   {
     char const* ver = reinterpret_cast<char const*>(glGetString(GL_VERSION));
     char const* renderer = reinterpret_cast<char const*>(glGetString(GL_RENDERER));
-    log_info("GLES2Renderer initialized (GL_VERSION="{}", GL_RENDERER="{}")",
+    log_info("GLES2Renderer initialized (GL_VERSION={}, GL_RENDERER={})",
              ver ? ver : "?", renderer ? renderer : "?");
   }
 }
