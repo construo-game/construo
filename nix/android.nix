@@ -69,18 +69,29 @@ let
       mkdir -p "$OUT_DIR"
 
       # Writable staging (nix store copies are read-only).
-      # Stage only as jni/SDL2 so all-subdir-makefiles defines the module once
-      # (a SDL + SDL2 symlink pair double-defines LOCAL_MODULE := SDL2).
+      # Stage only as jni/SDL2 so all-subdir-makefiles defines the module once.
       mkdir -p work/app/jni/SDL2
       cp -a "${sdlSrc}"/. work/app/jni/SDL2/
       chmod -R u+w work
       printf '%s\n' 'include $(call all-subdir-makefiles)' > work/app/jni/Android.mk
-      cp ${sdlApplicationMk} work/app/jni/Application.mk
+      cat > work/app/jni/Application.mk <<MK
+APP_STL := c++_shared
+APP_PLATFORM := android-${packagePlatform}
+APP_MODULES := SDL2
+MK
       chmod -R u+w work
 
-      ndk-build -C work/app -j''${NIX_BUILD_CORES:-4} \
-        NDK_LIBS_OUT="$OUT_DIR/lib" \
-        NDK_OUT="$PWD/obj"
+      export NDK_PROJECT_PATH="$PWD/work/app"
+      # One ABI at a time: full SDL + multi-ABI + high -j often OOMs the sandbox
+      # and only leaves truncated compile lines in the log.
+      for abi in ${targetAbisStr}; do
+        echo "==> ndk-build SDL2 ABI=$abi"
+        ndk-build -C work/app -j2 \
+          APP_ABI="$abi" \
+          NDK_LIBS_OUT="$OUT_DIR/lib" \
+          NDK_OUT="$PWD/obj-$abi" \
+          NDK_DEBUG=0
+      done
 
       runHook postBuild
     '';
