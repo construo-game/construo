@@ -140,9 +140,14 @@ ConstruoMain::main(int argc, char* argv[]) // FIXME: pass an option class, inste
     if (!path_manager.find_path("examples"))
     {
       std::cerr << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
       // Still allow startup with an empty world; user can load files later.
       std::cerr << "Android: continuing without examples (push them under the app storage path)." << std::endl;
+      if (char const* internal = SDL_AndroidGetInternalStoragePath()) {
+        path_manager.set_path(internal);
+      } else {
+        path_manager.set_path(".");
+      }
 #else
       ::exit(EXIT_FAILURE);
 #endif

@@ -75,8 +75,10 @@ Status of ports
 |--------|--------|
 | Linux X11 / GLUT | Supported (`nix build .#construo`) |
 | Linux SDL2 + GLES2 | Supported (`nix build .#construo-sdl`) |
-| WASM | `nix build .#construo-wasm` (needs static helper libs for full link) |
-| Win64 (MinGW) | `nix build .#construo-win64` (SDL2-win32 + pkgsCross) |
-| Android / R36S | Scaffolding in `nix/` + `mk/` |
+| WASM | Flake + static helpers wired; browser runtime still to validate |
+| Win64 (MinGW) | `nix build .#construo-win64`; GLES/driver validation pending |
+| Android | NDK/Gradle/scripts ready; device APK validation pending |
+| R36S (ArkOS) | Cross toolchain + 640×480 launcher; on-device check pending |
 
-See `PORTING.md`, `INSTALL.md`, and `TODO.md`.
+See `PORTING.md`, `INSTALL.md`, and `TODO.md`. After changing flake inputs run
+`nix flake update` (or `scripts/refresh-flake-lock.sh`).

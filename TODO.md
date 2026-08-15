@@ -81,6 +81,7 @@ appropriate section.
 - [x] SDL app lifecycle: pause sim on background, ESC on terminate
 - [x] WASM shell: canvas click-to-focus for keyboard input
 - [x] Android datadir paths (internal/external storage) + soft-fail without examples
+- [x] Android soft-fail sets `path_manager` base to internal storage
 - [x] Stage examples into APK assets; `push-examples.sh` for adb deploy
 - [x] Align package id `org.construo.game`; stamp VERSION; optional release signing env
 - [x] CMake preset `mingw-win64` for MinGW cross configures
