@@ -11,7 +11,8 @@
 
     # SDL2 source tarball for wasm static builds.
     sdl2-src = {
-      url = "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz";
+      # 2.30.3 fails on NDK 27: ALooper_pollAll is unavailable (use ALooper_pollOnce).
+      url = "https://github.com/libsdl-org/SDL/releases/download/release-2.32.8/SDL2-2.32.8.tar.gz";
       flake = false;
     };
   };

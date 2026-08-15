@@ -9,7 +9,7 @@
 #   android.mkApk { … }
 { pkgs
 , sdlSrc
-, sdlVersion ? "2.30.3"
+, sdlVersion ? "2.32.8"
 , androidSdk
 , buildToolsVersion
 , packagePlatform
