@@ -4,6 +4,7 @@
 #include "sdl2_display.hpp"
 
 #include <stdexcept>
+#include <vector>
 
 #include <logmich/log.hpp>
 
@@ -166,6 +167,24 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   init_default_keybindings(*this);
   load_cursors();
+
+  // Window / taskbar icon (BMP next to data or beside executable).
+  {
+    char const* candidates[] = {
+      "data/icons/construo-window.bmp",
+      "construo-window.bmp",
+      nullptr
+    };
+    for (int i = 0; candidates[i]; ++i) {
+      SDL_Surface* icon = SDL_LoadBMP(candidates[i]);
+      if (icon) {
+        SDL_SetWindowIcon(m_window, icon);
+        SDL_FreeSurface(icon);
+        break;
+      }
+    }
+  }
+
   open_controller();
   set_cursor(CursorType::INSERT);
   log_info("SDL2Display ready ({}x{}, GLES2)", m_size.width(), m_size.height());
@@ -302,8 +321,21 @@ SDL2Display::make_xbm_cursor(unsigned char const* bits,
                              int width, int height,
                              int hot_x, int hot_y)
 {
-  // SDL_CreateCursor expects MSB-first bitmaps (same layout as XBM).
-  SDL_Cursor* c = SDL_CreateCursor(bits, mask_bits, width, height, hot_x, hot_y);
+  // XBM is LSB-first (X11); SDL_CreateCursor is MSB-first. Bit-reverse each
+  // byte so the hotspot and glyph match the X11 cursors.
+  auto const nbytes = static_cast<size_t>(((width + 7) / 8) * height);
+  std::vector<unsigned char> data(nbytes), mask(nbytes);
+  auto rev = [](unsigned char b) -> unsigned char {
+    b = static_cast<unsigned char>((b & 0xF0) >> 4 | (b & 0x0F) << 4);
+    b = static_cast<unsigned char>((b & 0xCC) >> 2 | (b & 0x33) << 2);
+    b = static_cast<unsigned char>((b & 0xAA) >> 1 | (b & 0x55) << 1);
+    return b;
+  };
+  for (size_t i = 0; i < nbytes; ++i) {
+    data[i] = rev(bits[i]);
+    mask[i] = rev(mask_bits[i]);
+  }
+  SDL_Cursor* c = SDL_CreateCursor(data.data(), mask.data(), width, height, hot_x, hot_y);
   if (!c) {
     log_warn("SDL_CreateCursor failed: {}", SDL_GetError());
   }

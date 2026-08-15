@@ -57,6 +57,10 @@ fi
 
 # Substitute version tokens into a working shell.html copy
 WORK_SHELL="$(pwd)/shell.html"
+# App icon next to the HTML (shell references favicon.png).
+if [ -f "${SRC_DIR}/mk/wasm/favicon.png" ]; then
+  cp "${SRC_DIR}/mk/wasm/favicon.png" "$(pwd)/favicon.png"
+fi
 sed \
   -e "s|@versionFull@|${VERSION_FULL}|g" \
   -e "s|@sourceUrl@|${SOURCE_URL}|g" \

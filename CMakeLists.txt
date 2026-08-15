@@ -86,11 +86,27 @@ if(CONSTRUO_USE_X11)
   find_package(X11)
 endif()
 if(CONSTRUO_USE_SDL2)
-  find_package(SDL2 REQUIRED)
+  # Prefer CMake config package; fall back to pkg-config (ArkOS / R36S sysroots
+  # ship sdl2.pc but not SDL2Config.cmake — same approach as Pingus).
+  find_package(SDL2 QUIET)
+  if(NOT SDL2_FOUND AND NOT TARGET SDL2::SDL2)
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(SDL2 REQUIRED sdl2 IMPORTED_TARGET)
+    if(TARGET PkgConfig::SDL2)
+      add_library(SDL2::SDL2 ALIAS PkgConfig::SDL2)
+      set(SDL2_FOUND TRUE)
+      message(STATUS "SDL2 via pkg-config (${SDL2_VERSION})")
+    endif()
+  endif()
+  if(NOT SDL2_FOUND AND NOT TARGET SDL2::SDL2)
+    message(FATAL_ERROR "SDL2 not found (tried find_package and pkg-config sdl2)")
+  endif()
   # GLES2 headers (libGLESv2). On desktop, often provided by mesa/libglvnd.
   find_library(GLESV2_LIBRARY GLESv2)
+  if(NOT GLESV2_LIBRARY AND GLESV2_LIBRARY STREQUAL "")
+    # explicit empty
+  endif()
   if(NOT GLESV2_LIBRARY)
-    # Fall back to linking via SDL's GL loader / system GL for desktop GLES.
     message(STATUS "GLESv2 library not found by name; relying on SDL2 GL context")
   endif()
 endif()
@@ -382,6 +398,13 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples DESTINATION ${CONSTRUO_DA
 install(FILES
   construo.svg
   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+# Raster icons for menus / taskbars (generated from logo.png).
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/hicolor/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/construo.png
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/construo-window.bmp
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/construo)
 
 if(BUILD_TESTS)
   find_package(GTest REQUIRED)
