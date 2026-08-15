@@ -92,6 +92,16 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   m_active_cursor(nullptr),
   m_controller(nullptr)
 {
+  // Platform hints before SDL_Init (Android / Emscripten / high-DPI).
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+  SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
+#ifdef __ANDROID__
+  SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
+#ifdef __EMSCRIPTEN__
+  SDL_SetHint(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas");
+#endif
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
   }
