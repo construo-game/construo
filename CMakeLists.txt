@@ -28,14 +28,24 @@ option(CONSTRUO_USE_GLUT "Build GLUT/OpenGL backend" ON)
 option(CONSTRUO_USE_X11 "Build X11 software backend" ON)
 option(CONSTRUO_NO_XDGCPP "Omit xdgcpp (embedded / Win32 / Android)" OFF)
 
-# True for native MSVC/MinGW and for Linux→MinGW cross (toolchain sets SYSTEM_NAME).
+# Platform targets (native and cross toolchains).
 set(CONSTRUO_TARGET_WINDOWS OFF)
 if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(CONSTRUO_TARGET_WINDOWS ON)
 endif()
 
+set(CONSTRUO_TARGET_ANDROID OFF)
+if(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
+  set(CONSTRUO_TARGET_ANDROID ON)
+endif()
+
+set(CONSTRUO_TARGET_EMSCRIPTEN OFF)
+if(EMSCRIPTEN OR CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  set(CONSTRUO_TARGET_EMSCRIPTEN ON)
+endif()
+
 # Auto-disable xdgcpp on platforms where it is typically unavailable.
-if(EMSCRIPTEN OR ANDROID OR CONSTRUO_TARGET_WINDOWS)
+if(CONSTRUO_TARGET_EMSCRIPTEN OR CONSTRUO_TARGET_ANDROID OR CONSTRUO_TARGET_WINDOWS)
   set(CONSTRUO_NO_XDGCPP ON CACHE BOOL "Omit xdgcpp (embedded / Win32 / Android)" FORCE)
 endif()
 
@@ -46,7 +56,7 @@ if(CONSTRUO_TARGET_WINDOWS)
   set(CONSTRUO_USE_X11 OFF CACHE BOOL "Build X11 software backend" FORCE)
 endif()
 
-if(EMSCRIPTEN OR ANDROID)
+if(CONSTRUO_TARGET_EMSCRIPTEN OR CONSTRUO_TARGET_ANDROID)
   set(CONSTRUO_USE_SDL2 ON CACHE BOOL "Build SDL2 + GLES2 backend" FORCE)
   set(CONSTRUO_USE_GLUT OFF CACHE BOOL "Build GLUT/OpenGL backend" FORCE)
   set(CONSTRUO_USE_X11 OFF CACHE BOOL "Build X11 software backend" FORCE)
@@ -54,7 +64,7 @@ endif()
 
 # Emscripten: allow finding host-provided prefixes (glm headers, static libs)
 # staged via CMAKE_PREFIX_PATH / EXTRA_PREFIX_PATH (see nix/wasm.nix).
-if(EMSCRIPTEN)
+if(CONSTRUO_TARGET_EMSCRIPTEN)
   set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
   set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
   set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
@@ -309,7 +319,7 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     install(FILES construo.sdl.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
   endif()
 
-  if(EMSCRIPTEN)
+  if(CONSTRUO_TARGET_EMSCRIPTEN)
     # Preloaded examples live at /examples in the virtual FS.
     target_compile_definitions(construo.sdl PRIVATE -DCONSTRUO_DATADIR="/")
     target_link_options(construo.sdl PRIVATE

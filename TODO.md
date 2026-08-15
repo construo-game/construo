@@ -128,6 +128,8 @@ appropriate section.
 - [x] `scripts/check-port-layouts.sh` smoke-tests packaging helpers without hardware
 - [x] Expand layout checks (stamp-version, CMake presets, flake package names)
 - [x] `scripts/refresh-flake-lock.sh` (+ AGENTS note: run after input changes)
+- [x] `CONSTRUO_TARGET_{WINDOWS,ANDROID,EMSCRIPTEN}` unified platform detection
+- [x] `scripts/ci-smoke.sh` for CI without Nix/NDK/EMSDK
 
 ---
 
