@@ -1,0 +1,18 @@
+// Top-level build file for Construo Android (Gradle wrapper optional).
+// Native code is built via ndk-build (see app/jni/). This file is a stub for
+// a future full Gradle/APK release flow.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.0'
+    }
+}
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
