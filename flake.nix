@@ -61,7 +61,6 @@
 
         commonNative = with pkgs; [ cmake pkg-config ];
         commonLibs = with pkgs; [
-          fmt
           glm
           gtest
           zlib

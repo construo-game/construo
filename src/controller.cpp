@@ -17,7 +17,7 @@
 #include "controller.hpp"
 
 #include <logmich/log.hpp>
-#include <fmt/std.h>
+#include <format>
 
 #include "worldview_widget.hpp"
 #include "construo_error.hpp"
@@ -80,7 +80,7 @@ Controller::save_world (const std::string& filename)
 std::string
 Controller::get_slot_filename(int slot)
 {
-  return "/user/" + fmt::format("quicksave{:d}.construo", slot);
+  return "/user/" + std::format("quicksave{:d}.construo", slot);
 }
 
 void

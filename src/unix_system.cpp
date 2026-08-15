@@ -38,7 +38,6 @@
 #include <xdg.h>
 #endif
 #include <logmich/log.hpp>
-#include <fmt/std.h>
 
 #include "construo.hpp"
 #include "construo_error.hpp"

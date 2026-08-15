@@ -18,7 +18,7 @@
 #include "construo_version.hpp"
 
 #include <algorithm>
-#include <fmt/format.h>
+#include <format>
 #include <geom/rect.hpp>
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -143,7 +143,7 @@ WorldGUIManager::WorldGUIManager() :
 
   // particle mass
   m_particle_mass_label = create<GUILabel>([]{
-    return fmt::format("Mass: {:.1f}", Controller::instance()->get_particle_mass());
+    return std::format("Mass: {:.1f}", Controller::instance()->get_particle_mass());
   });
   m_particle_mass_increase_button = create<GUIButton>("+", [](){
     Controller::instance()->set_particle_mass(std::max(0.1f,
@@ -156,7 +156,7 @@ WorldGUIManager::WorldGUIManager() :
 
   // spring stiffness
   m_spring_stiffness_label = create<GUILabel>([]{
-    return fmt::format("Stiffness: {:.0f}", Controller::instance()->get_spring_stiffness());
+    return std::format("Stiffness: {:.0f}", Controller::instance()->get_spring_stiffness());
   });
   m_spring_stiffness_increase_button = create<GUIButton>("+", [](){
     Controller::instance()->set_spring_stiffness(std::max(0.1f,
@@ -324,11 +324,11 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
 
   float const bottom_line = gc.geometry().height() - 10;
   gc.draw_string(geom::fpoint(10.0f, bottom_line - 20.0f), "FPS: ");
-  gc.draw_string(geom::fpoint(80.0f, bottom_line - 20.0f), fmt::format("{:6.2f}", get_fps()));
+  gc.draw_string(geom::fpoint(80.0f, bottom_line - 20.0f), std::format("{:6.2f}", get_fps()));
 
   gc.draw_string(geom::fpoint(10.0f, bottom_line), "Pos: ");
   auto const& p = m_worldview_widget->zoom().screen_to_world(g_input_context->get_mouse_pos());
-  gc.draw_string(geom::fpoint(80.0f, bottom_line), fmt::format("{:6.2f} {:6.2f}", p.x(), p.y()));
+  gc.draw_string(geom::fpoint(80.0f, bottom_line), std::format("{:6.2f} {:6.2f}", p.x(), p.y()));
 
   gc.draw_string(geom::fpoint(210.0f, bottom_line - 20.0f), "Particles: ");
   gc.draw_string(geom::fpoint(280.0f, bottom_line - 20.0f), std::to_string(world.particles().size()));
@@ -337,7 +337,7 @@ WorldGUIManager::draw_overlay(GraphicContext& gc)
   gc.draw_string(geom::fpoint(280.0f, bottom_line), std::to_string(world.springs().size()));
 
   gc.draw_string(geom::fpoint(410.0f, bottom_line), "Zoom: ");
-  gc.draw_string(geom::fpoint(480.0f, bottom_line), fmt::format("{:5.2f}", m_worldview_widget->get_scale()));
+  gc.draw_string(geom::fpoint(480.0f, bottom_line), std::format("{:5.2f}", m_worldview_widget->get_scale()));
 
   // Right-side version label (avoid hard-coded x for small handheld screens).
   float const ver_x = std::max(610.0f, gc.geometry().width() - 200.0f);

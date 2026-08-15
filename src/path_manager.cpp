@@ -19,7 +19,6 @@
 #include <filesystem>
 
 #include <logmich/log.hpp>
-#include <fmt/std.h>
 
 namespace construo {
 
@@ -75,7 +74,7 @@ PathManager::find_path(const std::list<std::filesystem::path>& file_list)
       m_path_found = true;
       m_base_path = *i;
 
-      log_info("PathManager: Using base_path: {}", m_base_path);
+      log_info("PathManager: Using base_path: {}", m_base_path.string());
 
       return true;
     }
@@ -97,7 +96,7 @@ PathManager::find_path(const std::filesystem::path& file)
       m_path_found = true;
       m_base_path = *i;
 
-      log_info("PathManager: Using base_path: {}", m_base_path);
+      log_info("PathManager: Using base_path: {}", m_base_path.string());
 
       return true;
     }
