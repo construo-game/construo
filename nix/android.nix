@@ -189,11 +189,15 @@ MK
         fi
         chmod -R u+w work/app/jni/SDL
 
-        # Also place .so under libs/ for packaging (ndk-build copies prebuilts)
+        # Place .so under libs/ for packaging. Must be writable: ndk-build
+        # clean-installed-binaries tries to rm them (nix store files are 0444).
         if [ -d ${sdlAndroidLibs}/lib ]; then
           mkdir -p work/app/libs
           cp -a ${sdlAndroidLibs}/lib/. work/app/libs/ || true
+          chmod -R u+w work/app/libs
         fi
+        # Whole app tree writable for ndk-build intermediate outputs.
+        chmod -R u+w work/app
 
         if [ -n "${toString glmIncludeDir}" ] && [ -d "${glmIncludeDir}" ]; then
           # Ensure glm is visible; prefer GLM_ROOT if Android.mk uses it.
