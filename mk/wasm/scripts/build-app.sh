@@ -31,10 +31,12 @@ CMAKE_ARGS=(
 
 if [ -n "$SDL_PREFIX" ]; then
   CMAKE_ARGS+=(
-    "-DCMAKE_PREFIX_PATH=${SDL_PREFIX}"
+    "-DCMAKE_PREFIX_PATH=${SDL_PREFIX}${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
     "-DSDL2_DIR=${SDL_PREFIX}/lib/cmake/SDL2"
   )
 fi
+# Prefer system/pkg-config discovery of static helpers staged under the prefix.
+export PKG_CONFIG_PATH="${SDL_PREFIX:+$SDL_PREFIX/lib/pkgconfig}${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 
 # Preload examples into the virtual FS at /examples
 PRELOAD_FLAGS=()

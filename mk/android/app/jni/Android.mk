@@ -68,16 +68,38 @@ LOCAL_SRC_FILES := \
   $(CONSTRUO_SRC_ROOT)/src/worldview_zoom_tool.cpp \
   $(CONSTRUO_SRC_ROOT)/src/writer.cpp \
   $(CONSTRUO_SRC_ROOT)/src/zoom_graphic_context.cpp \
-  $(CONSTRUO_SRC_ROOT)/src/zoom_state.cpp
+  $(CONSTRUO_SRC_ROOT)/src/zoom_state.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/logmich/src/log.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/logmich/src/logger.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/float.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/io.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/lexer.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/parser.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/util.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/src/value.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/override_reader_mapping.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/reader_collection.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/reader_document.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/reader_error.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/reader_mapping.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/reader_object.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/sexpr_reader_impl.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/sexpr_writer_impl.cpp \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/src/writer.cpp
 
 LOCAL_C_INCLUDES := \
   $(CONSTRUO_SRC_ROOT)/src \
+  $(CONSTRUO_SRC_ROOT)/external/logmich/include \
+  $(CONSTRUO_SRC_ROOT)/external/sexpcpp/include \
+  $(CONSTRUO_SRC_ROOT)/external/priocpp/include \
+  $(CONSTRUO_SRC_ROOT)/external/geomcpp/include \
   $(LOCAL_PATH)/SDL/include
 
 ifndef CONSTRUO_VERSION
   CONSTRUO_VERSION := $(shell cat $(CONSTRUO_SRC_ROOT)/VERSION 2>/dev/null | tr -d '\n' || echo unknown)
 endif
-LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP \
+LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP -DPRIO_USE_SEXPCPP=1 \
+  -DGLM_ENABLE_EXPERIMENTAL \
   -DCONSTRUO_VERSION=\"$(CONSTRUO_VERSION)\" -DVERSION=\"$(CONSTRUO_VERSION)\" \
   -DPACKAGE=\"construo\"
 LOCAL_CPPFLAGS := -std=c++20 -frtti -fexceptions

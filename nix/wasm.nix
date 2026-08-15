@@ -14,6 +14,7 @@
 
 let
   lib = pkgs.lib;
+  srcRoot = ../.;
 
   # Header-only glm config package for emscripten FIND_ROOT.
   glmPrefix = pkgs.runCommand "glm-headers-wasm" { } ''
@@ -29,8 +30,7 @@ set(glm_FOUND TRUE)
 EOF_GLM
   '';
 
-  # libsigc++ 2.x static for wasm (sigc++-2.0.pc). Meson needs an explicit
-  # cross file because it rejects emcc as a "native" compiler.
+  # libsigc++ 2.x static for wasm (sigc++-2.0.pc).
   emscriptenCrossFile = pkgs.writeText "emscripten-cross.ini" ''
     [binaries]
     c = 'emcc'
@@ -80,7 +80,6 @@ EOF_GLM
     '';
   };
 
-  # Static zlib for wasm (offline; avoids Emscripten -sUSE_ZLIB network port).
   zlibWasmLibs = pkgs.stdenv.mkDerivation {
     pname = "zlib-wasm";
     version = pkgs.zlib.version;
@@ -101,7 +100,6 @@ EOF_GLM
     '';
   };
 
-  # Static SDL2 for wasm32-emscripten.
   sdl2WasmLibs = if sdlSrc == null then null else pkgs.stdenv.mkDerivation {
     pname = "sdl2-wasm";
     version = sdlVersion;
@@ -132,17 +130,92 @@ EOF_GLM
     '';
   };
 
-  # Combined prefix: SDL2 + zlib + glm headers + sigc++ for CMAKE_PREFIX_PATH.
-  sdlWasmLibs = if sdl2WasmLibs == null then null else pkgs.symlinkJoin {
-    name = "construo-wasm-deps";
-    paths = [ sdl2WasmLibs zlibWasmLibs glmPrefix sigcWasm ];
+  # Generic helper: static CMake lib for wasm from external/<name>.
+  mkCmakeWasmLib = { pname, src, extraCmakeArgs ? "", extraPrefix ? null }:
+    pkgs.stdenv.mkDerivation {
+      inherit pname;
+      version = "vendored";
+      dontUnpack = true;
+      dontConfigure = true;
+      dontUseCmakeConfigure = true;
+      nativeBuildInputs = [ pkgs.emscripten pkgs.cmake pkgs.python3 pkgs.pkg-config ];
+      env = {
+        SRC_DIR = "${src}";
+        PREFIX = "prefix";
+        CMAKE_ARGS = extraCmakeArgs;
+        EXTRA_PREFIX = if extraPrefix == null then "" else extraPrefix;
+      };
+      buildPhase = ''
+        runHook preBuild
+        export PREFIX="$PWD/prefix"
+        export SRC_DIR="${src}"
+        export CMAKE_ARGS="${extraCmakeArgs}"
+        export EXTRA_PREFIX="${if extraPrefix == null then "" else extraPrefix}"
+        bash ${../mk/wasm/scripts/build-cmake-lib.sh}
+        runHook postBuild
+      '';
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out
+        cp -a prefix/. $out/
+        runHook postInstall
+      '';
+    };
+
+  logmichWasm = mkCmakeWasmLib {
+    pname = "logmich-wasm";
+    src = ../external/logmich;
+    extraCmakeArgs = "-DBUILD_TESTS=OFF";
   };
 
-  # Full application derivation (requires sdlSrc).
+  sexpcppWasm = mkCmakeWasmLib {
+    pname = "sexpcpp-wasm";
+    src = ../external/sexpcpp;
+    extraCmakeArgs = "-DBUILD_TESTS=OFF -DWARNINGS=OFF";
+  };
+
+  # geom is header-only (INTERFACE); install headers + cmake config.
+  geomWasm = pkgs.runCommand "geomcpp-wasm" { } ''
+    mkdir -p $out/include $out/lib/cmake/geom
+    cp -a ${../external/geomcpp}/include/. $out/include/
+    cat > $out/lib/cmake/geom/geomConfig.cmake <<'EOF'
+set(_geom_inc "${CMAKE_CURRENT_LIST_DIR}/../../../include")
+if(NOT TARGET geom::geom)
+  add_library(geom::geom INTERFACE IMPORTED)
+  set_target_properties(geom::geom PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${_geom_inc}"
+    INTERFACE_COMPILE_DEFINITIONS "GLM_ENABLE_EXPERIMENTAL")
+endif()
+set(geom_FOUND TRUE)
+EOF
+  '';
+
+  priocppWasm = mkCmakeWasmLib {
+    pname = "priocpp-wasm";
+    src = ../external/priocpp;
+    extraCmakeArgs = "-DBUILD_TESTS=OFF -DBUILD_EXTRA=OFF -DPRIO_USE_JSONCPP=OFF -DPRIO_USE_SEXPCPP=ON -DWARNINGS=OFF";
+    extraPrefix = "${logmichWasm}:${sexpcppWasm}";
+  };
+
+  # Combined prefix for CMAKE_PREFIX_PATH / PKG_CONFIG_PATH.
+  sdlWasmLibs = if sdl2WasmLibs == null then null else pkgs.symlinkJoin {
+    name = "construo-wasm-deps";
+    paths = [
+      sdl2WasmLibs
+      zlibWasmLibs
+      glmPrefix
+      sigcWasm
+      logmichWasm
+      sexpcppWasm
+      geomWasm
+      priocppWasm
+    ];
+  };
+
   construo-wasm = if sdlSrc == null then null else pkgs.stdenv.mkDerivation {
     pname = "construo-wasm";
-    version = "0.2.3-dev"; # overridden by flake with PROJECT_VERSION_FULL
-    src = ../.;
+    version = "0.2.3-dev";
+    src = srcRoot;
     dontConfigure = true;
     dontUseCmakeConfigure = true;
     nativeBuildInputs = [ pkgs.emscripten pkgs.cmake pkgs.python3 pkgs.pkg-config ];
@@ -160,6 +233,7 @@ EOF_GLM
       export EM_CACHE="''${TMPDIR:-/tmp}/emcache"
       mkdir -p "$EM_CACHE"
       export PKG_CONFIG_PATH="${sdlWasmLibs}/lib/pkgconfig:${sigcWasm}/lib/pkgconfig''${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+      export CMAKE_PREFIX_PATH="${sdlWasmLibs}"
       bash ${../mk/wasm/scripts/build-app.sh}
       runHook postBuild
     '';
@@ -171,7 +245,6 @@ EOF_GLM
         if [ -f "build-wasm/$f" ]; then cp "build-wasm/$f" $out/; fi
         if [ -f "$f" ]; then cp "$f" $out/; fi
       done
-      # Catch whatever emscripten left behind.
       if [ -d build-wasm ]; then
         find build-wasm -maxdepth 1 -type f \( -name '*.html' -o -name '*.js' -o -name '*.wasm' -o -name '*.data' \) \
           -exec cp {} $out/ \; || true
@@ -187,16 +260,16 @@ EOF_GLM
   };
 
 in {
-  inherit glmPrefix sigcWasm zlibWasmLibs sdl2WasmLibs sdlWasmLibs construo-wasm;
+  inherit glmPrefix sigcWasm zlibWasmLibs sdl2WasmLibs sdlWasmLibs;
+  inherit logmichWasm sexpcppWasm geomWasm priocppWasm construo-wasm;
 
   notes = ''
-    .#construo-wasm builds when flake input sdl2-src is wired and
-    external helper libraries (geomcpp, logmich, priocpp, sexpcpp)
-    are available as static wasm libraries or via CMAKE_PREFIX_PATH.
+    Static wasm helpers (logmich, sexpcpp, geom headers, priocpp) are built
+    via mk/wasm/scripts/build-cmake-lib.sh and joined into sdlWasmLibs.
 
     Local non-nix path:
       SDL_SRC=… PREFIX=… mk/wasm/scripts/build-sdl2.sh
-      ZLIB_SRC=… mk/wasm/scripts/build-zlib.sh
+      SRC_DIR=external/logmich PREFIX=… mk/wasm/scripts/build-cmake-lib.sh
       SDL_WASM_LIBS=$PREFIX mk/wasm/scripts/build-app.sh
       mk/wasm/scripts/serve.sh
   '';

@@ -62,8 +62,9 @@ appropriate section.
 - [x] `mk/wasm/scripts/build-zlib.sh` (static zlib for wasm)
 - [x] `nix/wasm.nix`: glmPrefix, sigcWasm, zlibWasmLibs, sdl2WasmLibs, construo-wasm derivation
 - [x] Flake input `sdl2-src` (SDL 2.30.3) and `packages.construo-wasm` wiring
-- [ ] Static wasm builds of external helpers (geom, logmich, prio, sexp) for full link
-- [ ] Runtime validation in browser
+- [x] Static wasm builds of helpers (`logmich`, `sexpcpp`, `geom`, `priocpp`) via `build-cmake-lib.sh`
+- [x] `sdlWasmLibs` joins SDL2 + zlib + sigc++ + helpers for CMAKE_PREFIX_PATH
+- [ ] Runtime validation in browser / full Emscripten link dry-run
 
 #### Android
 
@@ -74,6 +75,7 @@ appropriate section.
 - [x] Android.mk source list + Application.mk (NDK staging still manual)
 - [x] Android `package-apk.sh` (needs NDK + staged SDL2)
 - [x] Gradle skeleton (`mk/android/*.gradle`) + `build-apk.sh`
+- [x] Android.mk includes vendored external sources (logmich, sexp, prio sexp path)
 - [ ] Full signed APK release flow / CI artifact
 
 #### Win32 / Win64 (MinGW)
