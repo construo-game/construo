@@ -21,7 +21,7 @@ cmake --install build/all --prefix /usr/local
 
 Presets: `linux-x11-glut`, `linux-sdl2`, `linux-all`, `emscripten`.
 
-Dependencies: CMake ≥ 3.16, C++20, fmt, glm, libsigc++-2 or 3, zlib,
+Dependencies: CMake ≥ 3.16, C++20, glm, libsigc++-2 or 3, zlib,
 and for SDL2 builds: SDL2 + GLES2/EGL (or desktop GL for the compatibility
 fallback). X11/GLUT builds need libX11, freeglut, OpenGL.
 
@@ -29,7 +29,7 @@ fallback). X11/GLUT builds need libX11, freeglut, OpenGL.
 
 1. Install EMSDK and activate `emsdk_env.sh`.
 2. Build static SDL2: `SDL_SRC=… PREFIX=… mk/wasm/scripts/build-sdl2.sh`
-3. Provide fmt, sigc++, helpers under the same prefix.
+3. Provide sigc++, helpers under the same prefix (std::format is used instead of fmt).
 4. Run `mk/wasm/scripts/build-app.sh`, then `mk/wasm/scripts/serve.sh` to test:
 
 ```bash

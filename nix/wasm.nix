@@ -191,7 +191,7 @@ in {
 
   notes = ''
     .#construo-wasm builds when flake input sdl2-src is wired and
-    external helper libraries (geomcpp, logmich, priocpp, sexpcpp, fmt)
+    external helper libraries (geomcpp, logmich, priocpp, sexpcpp)
     are available as static wasm libraries or via CMAKE_PREFIX_PATH.
 
     Local non-nix path:

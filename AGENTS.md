@@ -11,7 +11,7 @@ in C++ with CMake and a Nix flake for reproducible builds.
 |------|------|
 | `src/` | Core simulation, GUI, tools, display backends |
 | `examples/` | Sample constructions (`.construo` files) |
-| `external/` | Vendored helper libraries (geomcpp, logmich, priocpp, sexpcpp, xdgcpp; tinycmmc only for subprojects) |
+| `external/` | Squashed-subtree helper libraries (geomcpp, logmich, priocpp, sexpcpp, xdgcpp, tinycmmc) — not submodules |
 | `cmake/` | Inlined CMake helpers (formerly tinycmmc: version, warnings) |
 | `test/` | Tests (when enabled) |
 | `contrib/` | Extra / contributed material |
@@ -58,7 +58,7 @@ Port / flake progress checklist: **`TODO.md`** (keep it current).
 4. Support **native Linux** (existing X11 + GLUT/OpenGL), plus new ports:
    **SDL2 + GLES2** for WASM, Android, Win32, and R36S.
 5. Keep the dependency surface manageable. Helper libraries live under
-   `external/` as git submodules / subtrees.
+   `external/` as squashed git subtrees (not submodules).
 
 ---
 

@@ -62,7 +62,7 @@ appropriate section.
 - [x] `mk/wasm/scripts/build-zlib.sh` (static zlib for wasm)
 - [x] `nix/wasm.nix`: glmPrefix, sigcWasm, zlibWasmLibs, sdl2WasmLibs, construo-wasm derivation
 - [x] Flake input `sdl2-src` (SDL 2.30.3) and `packages.construo-wasm` wiring
-- [ ] Static wasm builds of fmt + external helpers (geom, logmich, prio, sexp) for full link
+- [ ] Static wasm builds of external helpers (geom, logmich, prio, sexp) for full link
 - [ ] Runtime validation in browser
 
 #### Android
@@ -97,10 +97,13 @@ appropriate section.
 
 ## Dependencies & CMake hygiene
 
+- [x] Convert `external/*` from git submodules to squashed subtrees (latest master)
+- [x] Replace `{fmt}` with C++20 `std::format` + optional `print.hpp` polyfill
+
 - [x] Fix geom subdirectory / tinycmmc module path
 - [x] Remove top-level tinycmmc dependency; inline under `cmake/`
 - [x] Emscripten FIND_ROOT_PATH_MODE BOTH for package/include/library
-- [x] CMake accepts sigc++-3 or 2; glm/fmt via prefix (still need wasm builds of deps)
+- [x] CMake accepts sigc++-3 or 2; glm via prefix (still need wasm builds of deps)
 - [x] Gate `xdgcpp` via `CONSTRUO_NO_XDGCPP` (+ unix_system fallback)
 - [x] Prefer system packages on native Linux (`find_package` / pkg-config)
 
