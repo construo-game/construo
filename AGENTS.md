@@ -42,7 +42,7 @@ Port / flake progress checklist: **`TODO.md`** (keep it current).
 - **Single source of truth:** top-level `VERSION` (e.g. `0.2.3-dev` in git).
 - In git, the version always has a `-dev` suffix. Development builds expand to
   `0.2.3-dev.<revCount>+g<shortHash>[-dirty]` via CMake and/or the Nix flake.
-- Release: strip `-dev`, commit `VERSION` as `0.2.3`, tag `v0.2.3`.
+- Release: strip `-dev`, commit `VERSION` as `0.2.3`, tag `v0.2.3` (details in `RELEASE.md`).
 - CMake exposes `PROJECT_VERSION_FULL` and defines `CONSTRUO_VERSION` (and
   alias `VERSION`) for `--version` and the on-screen label.
 - Packaging may pass `-DPROJECT_VERSION_FULL=...` (flake does this).

@@ -62,3 +62,7 @@ mk/r36s/scripts/package-port.sh /path/to/construo.sdl examples outdir
 ```
 
 Gamepad input is supported via SDL2 game controllers (D-pad, A/B/X/Y, shoulders).
+
+## Releases
+
+See [RELEASE.md](RELEASE.md) for versioning and tagging.
