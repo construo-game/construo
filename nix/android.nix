@@ -179,6 +179,15 @@ MK
         fi
         # Write version file explicitly for reproducible builds
         echo -n "${gameVersion}" > work/app/jni/src/VERSION
+        # String macros via header (ndk-build strips quotes from -DFOO="bar")
+        cat > work/app/jni/src/construo_android_config.h <<CFG
+#pragma once
+#define CONSTRUO_VERSION "${gameVersion}"
+#define VERSION CONSTRUO_VERSION
+#define PACKAGE "construo"
+#define PACKAGE_STRING "construo ${gameVersion}"
+#define CONSTRUO_DATADIR "/"
+CFG
         chmod -R u+w work/app/jni/src
 
         # SDL2 prebuilt module + headers

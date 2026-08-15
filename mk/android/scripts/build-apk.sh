@@ -60,6 +60,17 @@ MK
   fi
 fi
 
+# Generate string-macro header (ndk-build cannot carry quoted -D reliably).
+VERSION_FULL="${CONSTRUO_VERSION:-$(tr -d '\n' < "$ROOT/VERSION" 2>/dev/null || echo unknown)}"
+cat > "$APP/jni/src/construo_android_config.h" <<CFG
+#pragma once
+#define CONSTRUO_VERSION "${VERSION_FULL}"
+#define VERSION CONSTRUO_VERSION
+#define PACKAGE "construo"
+#define PACKAGE_STRING "construo ${VERSION_FULL}"
+#define CONSTRUO_DATADIR "/"
+CFG
+
 echo "==> Building native libs (libmain + prebuilt SDL2)"
 "$NDK/ndk-build" -C "$APP" "$@"
 

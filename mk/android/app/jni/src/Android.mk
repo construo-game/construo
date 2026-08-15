@@ -121,10 +121,13 @@ LOCAL_C_INCLUDES += $(GLM_ROOT)
 ifndef CONSTRUO_VERSION
   CONSTRUO_VERSION := $(shell cat $(CONSTRUO_INC_ROOT)/VERSION 2>/dev/null | tr -d '\n' || echo unknown)
 endif
-# String macros must not contain spaces: ndk-build splits LOCAL_CFLAGS on
-# whitespace, so -DPACKAGE_STRING="construo 0.2.3" becomes two broken args.
-# PACKAGE_STRING is built in construo_version.hpp from PACKAGE + CONSTRUO_VERSION.
-LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP -DPRIO_USE_SEXPCPP=1   -DGLM_ENABLE_EXPERIMENTAL -DANDROID   -DCONSTRUO_VERSION="$(CONSTRUO_VERSION)"   -DVERSION="$(CONSTRUO_VERSION)"   -DPACKAGE="construo"   -DCONSTRUO_DATADIR="/"
+# Version/string macros: ndk-build strips quotes from -DFOO="bar", so never
+# put string literals in LOCAL_CFLAGS. Stage construo_android_config.h and
+# force-include it (written by nix/android.nix mkApk or package scripts).
+LOCAL_CFLAGS := -DUSE_SDL2_DISPLAY -DCONSTRUO_NO_XDGCPP -DPRIO_USE_SEXPCPP=1   -DGLM_ENABLE_EXPERIMENTAL -DANDROID
+ifneq ($(wildcard $(LOCAL_PATH)/construo_android_config.h),)
+  LOCAL_CFLAGS += -include $(LOCAL_PATH)/construo_android_config.h
+endif
 LOCAL_CPPFLAGS := -std=c++20 -frtti -fexceptions
 LOCAL_LDLIBS := -lGLESv2 -llog -landroid
 
