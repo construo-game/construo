@@ -19,6 +19,21 @@ namespace construo {
 
 namespace {
 
+/** Byte offset into a bound VBO for glVertexAttribPointer (not a host pointer). */
+inline void const* gl_buffer_offset(std::size_t byte_offset)
+{
+  // offsetof may be 0; GCC -Wzero-as-null-pointer-constant rejects 0→pointer
+  // casts even via uintptr_t. The GL API encodes offsets as void*.
+#if defined(__GNUC__)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+  return reinterpret_cast<void const*>(byte_offset);
+#if defined(__GNUC__)
+#  pragma GCC diagnostic pop
+#endif
+}
+
 char const* k_vs = R"(
 attribute vec2 a_pos;
 attribute vec4 a_color;
@@ -242,16 +257,13 @@ GLES2Renderer::draw_arrays(unsigned mode, std::vector<Vertex> const& verts, bool
 
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_pos));
   glVertexAttribPointer(static_cast<GLuint>(m_a_pos), 2, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex),
-                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, x))));
+                        sizeof(Vertex), gl_buffer_offset(offsetof(Vertex, x)));
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_color));
   glVertexAttribPointer(static_cast<GLuint>(m_a_color), 4, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex),
-                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, r))));
+                        sizeof(Vertex), gl_buffer_offset(offsetof(Vertex, r)));
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_uv));
   glVertexAttribPointer(static_cast<GLuint>(m_a_uv), 2, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex),
-                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, u))));
+                        sizeof(Vertex), gl_buffer_offset(offsetof(Vertex, u)));
 
   glDrawArrays(mode, 0, static_cast<GLsizei>(verts.size()));
 
