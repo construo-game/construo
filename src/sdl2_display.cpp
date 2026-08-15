@@ -64,6 +64,9 @@ void init_default_keybindings(SDL2Display& dpy)
 } // namespace
 
 SDL2Display::SDL2Display(std::string const& title, int width, int height, bool fullscreen) :
+  m_window(nullptr),
+  m_gl(nullptr),
+  m_renderer(),
   m_size(width, height),
   m_mouse_pos(),
   m_is_fullscreen(fullscreen),

@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <cstdint>
 // SPDX-FileCopyrightText: 2026 Ingo Ruhnke <grumbel@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -241,13 +242,16 @@ GLES2Renderer::draw_arrays(unsigned mode, std::vector<Vertex> const& verts, bool
 
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_pos));
   glVertexAttribPointer(static_cast<GLuint>(m_a_pos), 2, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, x)));
+                        sizeof(Vertex),
+                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, x))));
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_color));
   glVertexAttribPointer(static_cast<GLuint>(m_a_color), 4, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, r)));
+                        sizeof(Vertex),
+                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, r))));
   glEnableVertexAttribArray(static_cast<GLuint>(m_a_uv));
   glVertexAttribPointer(static_cast<GLuint>(m_a_uv), 2, GL_FLOAT, GL_FALSE,
-                        sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, u)));
+                        sizeof(Vertex),
+                        reinterpret_cast<void*>(static_cast<uintptr_t>(offsetof(Vertex, u))));
 
   glDrawArrays(mode, 0, static_cast<GLsizei>(verts.size()));
 
