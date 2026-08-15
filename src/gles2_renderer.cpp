@@ -52,9 +52,10 @@ void main() {
 }
 )";
 
-// "precision" is GLES-only; stripped at compile time on desktop GL.
+// "precision" is GLES-only; enabled via CONSTRUO_IS_GLES (never #define GL_ES —
+// names starting with GL_ are reserved and WebGL/ES already predefine GL_ES).
 char const* k_fs = R"(
-#ifdef GL_ES
+#ifdef CONSTRUO_IS_GLES
 precision mediump float;
 #endif
 varying vec4 v_color;
@@ -102,12 +103,14 @@ GLES2Renderer::compile_shader(unsigned type, char const* source)
 {
   unsigned s = glCreateShader(type);
 
-  // Desktop compatibility contexts reject GLES-only "precision" without GL_ES.
-  // Prepend a define when the GL version string indicates OpenGL ES / WebGL.
+  // Desktop compatibility contexts reject GLES-only "precision". Prepend a
+  // non-reserved define when the GL version string indicates OpenGL ES / WebGL.
+  // Do not #define GL_ES: macro names starting with "GL_" are reserved, and
+  // real ES/WebGL compilers already predefine GL_ES (redefinition fails).
   char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
   bool const is_es = version && (std::strstr(version, "OpenGL ES") != nullptr ||
                                  std::strstr(version, "WebGL") != nullptr);
-  char const* prefix = is_es ? "#define GL_ES 1\n" : "";
+  char const* prefix = is_es ? "#define CONSTRUO_IS_GLES 1\n" : "";
   char const* sources[2] = { prefix, source };
   glShaderSource(s, 2, sources, nullptr);
   glCompileShader(s);
