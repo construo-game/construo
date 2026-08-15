@@ -327,6 +327,19 @@ void
 GLES2Renderer::draw_lines(std::vector<GraphicContext::Line> const& lines,
                           Color color, float width)
 {
+  if (lines.empty()) {
+    return;
+  }
+  if (width <= 1.0f) {
+    std::vector<Vertex> v;
+    v.reserve(lines.size() * 2);
+    for (auto const& l : lines) {
+      v.push_back({l.p1.x(), l.p1.y(), color.r, color.g, color.b, color.a, 0, 0});
+      v.push_back({l.p2.x(), l.p2.y(), color.r, color.g, color.b, color.a, 0, 0});
+    }
+    draw_arrays(GL_LINES, v);
+    return;
+  }
   for (auto const& l : lines) {
     draw_line(l.p1, l.p2, color, width);
   }
