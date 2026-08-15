@@ -251,6 +251,19 @@ EOF
         find build-wasm -maxdepth 1 -type f \( -name '*.html' -o -name '*.js' -o -name '*.wasm' -o -name '*.data' \) \
           -exec cp {} $out/ \; || true
       fi
+      # Canonical names for nix run / serve (prefer SUFFIX=.html outputs).
+      if [ -f $out/construo.sdl.html ] && [ ! -f $out/construo.html ]; then
+        ln -s construo.sdl.html $out/construo.html
+      fi
+      if [ -f $out/construo.sdl.js ] && [ ! -f $out/construo.js ]; then
+        ln -s construo.sdl.js $out/construo.js
+      fi
+      if [ -f $out/construo.sdl.wasm ] && [ ! -f $out/construo.wasm ]; then
+        ln -s construo.sdl.wasm $out/construo.wasm
+      fi
+      if [ -f $out/construo.sdl.data ] && [ ! -f $out/construo.data ]; then
+        ln -s construo.sdl.data $out/construo.data
+      fi
       ls -la $out
       runHook postInstall
     '';
@@ -261,9 +274,26 @@ EOF
     };
   };
 
+  mkOpenBrowserApp = {
+    pkg
+  , appName ? "construo"
+  , description ? "Serve Construo wasm in a browser"
+  }: {
+    type = "app";
+    program = toString (pkgs.writeShellScript "serve-${appName}-wasm" ''
+      set -euo pipefail
+      export PKG=${pkg}
+      export APP_NAME=${appName}
+      export PATH=${pkgs.python3}/bin:$PATH
+      exec bash ${../mk/wasm/scripts/serve.sh} "$@"
+    '');
+    meta.description = description;
+  };
+
 in {
   inherit glmPrefix sigcWasm zlibWasmLibs sdl2WasmLibs sdlWasmLibs;
   inherit logmichWasm sexpcppWasm geomWasm priocppWasm construo-wasm;
+  inherit mkOpenBrowserApp;
 
   notes = ''
     Static wasm helpers (logmich, sexpcpp, geom headers, priocpp) are built

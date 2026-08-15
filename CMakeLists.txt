@@ -244,7 +244,10 @@ add_definitions(-DCONSTRUO_VERSION="${PROJECT_VERSION_FULL}")
 add_definitions(-DVERSION="${PROJECT_VERSION_FULL}")
 add_definitions(-DPACKAGE="construo")
 add_definitions(-DPACKAGE_STRING="${PROJECT_VERSION_FULL}")
-add_definitions(-DCONSTRUO_DATADIR="${CONSTRUO_DATADIR}")
+# Install-prefix datadir for native builds; Emscripten overrides on the target.
+if(NOT CONSTRUO_TARGET_EMSCRIPTEN)
+  add_definitions(-DCONSTRUO_DATADIR="${CONSTRUO_DATADIR}")
+endif()
 
 add_library(libconstruo STATIC ${CONSTRUO_SOURCES_CXX})
 set_target_properties(libconstruo PROPERTIES
@@ -337,7 +340,9 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
 
   if(CONSTRUO_TARGET_EMSCRIPTEN)
     # Preloaded examples live at /examples in the virtual FS.
-    target_compile_definitions(construo.sdl PRIVATE -DCONSTRUO_DATADIR="/")
+    # Emit .html so --shell-file is applied (otherwise only .js is produced).
+    set_target_properties(construo.sdl PROPERTIES SUFFIX ".html")
+    target_compile_definitions(construo.sdl PRIVATE CONSTRUO_DATADIR="/")
     target_link_options(construo.sdl PRIVATE
       "SHELL:-sFULL_ES2=1"
       "SHELL:-sALLOW_MEMORY_GROWTH=1"
@@ -346,7 +351,6 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
       "SHELL:-sASSERTIONS=1"
       -fexceptions
     )
-    # Prefer the wasm shell when present (browser builds).
     if(EXISTS "${CMAKE_SOURCE_DIR}/mk/wasm/shell.html")
       target_link_options(construo.sdl PRIVATE
         "SHELL:--shell-file=${CMAKE_SOURCE_DIR}/mk/wasm/shell.html"

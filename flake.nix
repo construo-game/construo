@@ -272,17 +272,18 @@ TXT
             } // lib.optionalAttrs (construoWasm != null) {
               construo-wasm = construoWasm;
             };
-            apps = lib.optionalAttrs (construoWasm != null) {
-              construo-wasm-serve = {
-                type = "app";
-                program = "${pkgs.writeShellScript "construo-wasm-serve" ''
-                  set -euo pipefail
-                  cd "${construoWasm}"
-                  exec ${pkgs.python3}/bin/python3 -m http.server "''${CONSTRUO_WASM_PORT:-8765}" --bind 127.0.0.1
-                ''}";
-                meta.description = "Serve construo-wasm over HTTP";
-              };
-            };
+            apps = lib.optionalAttrs (construoWasm != null) (
+              let
+                open = wasm.mkOpenBrowserApp {
+                  pkg = construoWasm;
+                  appName = "construo";
+                  description = "Serve Construo wasm and open in a browser";
+                };
+              in {
+                construo-wasm = open;
+                construo-wasm-serve = open;
+              }
+            );
           };
 
         packages = rec {
