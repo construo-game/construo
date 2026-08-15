@@ -63,13 +63,15 @@ appropriate section.
 - [x] Touch input (finger → PRIMARY/SECONDARY)
 - [x] HiDPI mouse/touch → drawable coordinate mapping
 - [x] Android.mk source list + Application.mk (NDK staging still manual)
-- [ ] Full APK packaging scripts
+- [x] Android `package-apk.sh` (needs NDK + staged SDL2)
+- [ ] Full Gradle/APK release flow
 
 #### Win32 / Win64 (MinGW)
 
 - [x] `Win32System` (`src/win32_system.*`) and CMake WIN32 defaults
 - [x] Portable `path_manager` (no POSIX `access()`)
 - [x] `nix/win32.nix` / `mk/win32/` scaffolding (SDL2-win32 input when package lands)
+- [x] Win32 `package-zip.sh` layout helper
 - [ ] Cross-build helper libs + real `.#construo-win64` package
 
 #### R36S (ArkOS)
@@ -95,6 +97,7 @@ appropriate section.
 ## Documentation
 
 - [x] `PORTING.md` overview of SDL2/GLES2 targets
+- [x] `CMakePresets.json` for common configure profiles
 
 - [x] Update `README.md` with SDL2 / GLES2 build instructions
 - [x] Note in `NEWS` (ports in progress); update again when packages ship

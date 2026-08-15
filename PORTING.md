@@ -38,3 +38,12 @@ and cross-built helper libraries (fmt, sigc++, geom, logmich, prio). Tracked in
 `TODO.md`.
 
 Reference: [Pingus](https://github.com/pingus/pingus) `nix/` and `mk/` layouts.
+
+## CMake presets
+
+```bash
+cmake --preset linux-sdl2
+cmake --build --preset linux-sdl2
+```
+
+Also: `linux-x11-glut`, `linux-all`, `emscripten` (requires EMSDK).

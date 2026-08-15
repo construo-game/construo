@@ -32,6 +32,7 @@ cmake --build .
 SDL2 example:
 
 ```bash
+# or: cmake --preset linux-sdl2 && cmake --build --preset linux-sdl2
 cmake -DCONSTRUO_USE_SDL2=ON -DCONSTRUO_USE_X11=OFF -DCONSTRUO_USE_GLUT=OFF ..
 cmake --build .
 ./construo.sdl
