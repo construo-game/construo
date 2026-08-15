@@ -45,7 +45,9 @@ inline
 void print_exception(std::exception const& err, int level = 0)
 {
   std::cerr << std::string(level, ' ') << "exception: " << err.what() << '\n';
-
+  // Nested exceptions use exception_ptr ABI that differs between GCC 15 headers
+  // and older ArkOS libstdc++; skip rethrow_if_nested on constrained ports.
+#if !defined(CONSTRUO_NO_NESTED_EXCEPTIONS)
   try {
     std::rethrow_if_nested(err);
   } catch(std::exception const& new_err) {
@@ -53,6 +55,7 @@ void print_exception(std::exception const& err, int level = 0)
   } catch(...) {
     std::cerr << "unknown exception\n";
   }
+#endif
 }
 
 } // namespace construo

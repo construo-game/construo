@@ -356,7 +356,14 @@ if(CONSTRUO_USE_SDL2 AND SDL2_FOUND)
     # Desktop GL fallback path in SDL2Display; ANGLE/GLESv2 may also be present.
     target_link_libraries(construo.sdl PRIVATE opengl32 gdi32 user32 shell32 imm32 ole32 oleaut32 version uuid)
   endif()
-  install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  
+  if(CONSTRUO_CXXABI_SHIM)
+    # GCC 15 + ArkOS libstdc++: missing to_chars / ABI symbols (R36S).
+    target_sources(construo.sdl PRIVATE "${CONSTRUO_CXXABI_SHIM}")
+    target_compile_definitions(construo.sdl PRIVATE CONSTRUO_NO_NESTED_EXCEPTIONS)
+    target_compile_definitions(libconstruo PUBLIC CONSTRUO_NO_NESTED_EXCEPTIONS)
+  endif()
+install(TARGETS construo.sdl RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   if(EXISTS "${CMAKE_SOURCE_DIR}/construo.sdl.desktop")
     install(FILES construo.sdl.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)

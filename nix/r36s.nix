@@ -379,6 +379,8 @@ let
         "-DCONSTRUO_NO_XDGCPP=ON"
         # ArkOS has no jsoncpp; construo only needs sexp via prio.
         "-DPRIO_USE_JSONCPP=OFF"
+        # GCC 15 headers vs ArkOS libstdc++: shim missing ABI symbols.
+        "-DCONSTRUO_CXXABI_SHIM=${../mk/r36s/cxxabi_shim.cpp}"
         # glm headers via flake-provided package (not in ArkOS sysroot).
         "-DCMAKE_PREFIX_PATH=${glm}"
         # Forced cross-compiler cannot try_compile pthread; ArkOS glibc has it.
