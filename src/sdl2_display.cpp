@@ -540,9 +540,11 @@ SDL2Display::handle_controller_axis()
   constexpr Sint16 dead = 16000;
   struct AxisMap { SDL_GameControllerAxis axis; Action neg; Action pos; bool* state_neg; bool* state_pos; };
   static bool left=false, right=false, up=false, down=false;
+  static bool zin=false, zout=false;
   AxisMap maps[] = {
     { SDL_CONTROLLER_AXIS_LEFTX, Action::SCROLL_LEFT, Action::SCROLL_RIGHT, &left, &right },
     { SDL_CONTROLLER_AXIS_LEFTY, Action::SCROLL_UP, Action::SCROLL_DOWN, &up, &down },
+    { SDL_CONTROLLER_AXIS_RIGHTY, Action::ZOOM_IN, Action::ZOOM_OUT, &zin, &zout },
   };
   for (auto& m : maps) {
     Sint16 v = SDL_GameControllerGetAxis(m_controller, m.axis);
