@@ -85,7 +85,7 @@
             nativeBuildInputs = commonNative;
             buildInputs = commonLibs ++ extraBuildInputs;
           };
-      in {
+        # Package set used by packages/checks/hydraJobs outputs.
         packages = rec {
           default = construo;
 
@@ -175,9 +175,7 @@
           '';
         };
 
-        # `nix flake check` builds every currently shippable package.
-        # Cross stubs (wasm/android/win64/r36s) are intentionally excluded until
-        # prebuilt SDL2 + helper libs exist — including them would fail the check.
+        # Checks attrset (also used by hydraJobs).
         checks = {
           construo = self.packages.${system}.construo;
           construo-sdl = self.packages.${system}.construo-sdl;
@@ -192,6 +190,8 @@
             grep -q "${construo_version}" $out
           '';
         };
+      in {
+        inherit packages checks;
 
         # Expose the same set to Hydra / CI consumers.
         hydraJobs = checks // {
