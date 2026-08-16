@@ -29,6 +29,7 @@
 #include "worldview_insert_tool.hpp"
 #include "root_graphic_context.hpp"
 #include "screen_manager.hpp"
+#include "world_gui_manager.hpp"
 
 namespace construo {
 
@@ -76,7 +77,9 @@ GUIManager::draw(GraphicContext& gc)
   gc.clear();
   for (auto i = m_widgets.begin (); i != m_widgets.end (); ++i)
   {
-    (*i)->draw(gc);
+    if (show_widget(**i)) {
+      (*i)->draw(gc);
+    }
   }
 
   draw_overlay(gc);
@@ -89,6 +92,9 @@ GUIManager::find_widget_at(geom::fpoint const& pos) const
   GUIWidget* widget = nullptr;
   for (auto i = m_widgets.begin (); i != m_widgets.end (); ++i)
   {
+    if (!show_widget(**i)) {
+      continue;
+    }
     if ((*i)->is_at(pos)) {
       widget = i->get();
     }
@@ -182,6 +188,12 @@ GUIManager::process_button_events (ButtonEvent& button)
 
       case Action::HIDEDOTS:
         Controller::instance()->set_hide_dots (!Controller::instance()->get_hide_dots());
+        break;
+
+      case Action::TOGGLE_UI:
+        if (WorldGUIManager::instance()) {
+          WorldGUIManager::instance()->toggle_ui();
+        }
         break;
 
       case Action::ESCAPE:

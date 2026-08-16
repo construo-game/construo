@@ -37,6 +37,10 @@ public:
 
   void update() override;
   void draw_overlay(GraphicContext& gc) override;
+  bool show_widget(GUIWidget const& widget) const override;
+
+  void toggle_ui();
+  bool ui_visible() const { return m_ui_visible; }
 
 private:
   WorldViewWidget* m_worldview_widget;
@@ -71,6 +75,7 @@ private:
   GUIWidget* m_spring_stiffness_decrease_button;
 
   geom::frect m_last_geometry;
+  bool m_ui_visible = true;
 
 public:
   WorldGUIManager(const WorldGUIManager&) = delete;

@@ -256,8 +256,27 @@ WorldGUIManager::update()
 }
 
 void
+WorldGUIManager::toggle_ui()
+{
+  m_ui_visible = !m_ui_visible;
+}
+
+bool
+WorldGUIManager::show_widget(GUIWidget const& widget) const
+{
+  if (m_ui_visible) {
+    return true;
+  }
+  // Keep the world view interactive; hide chrome buttons/labels.
+  return &widget == static_cast<GUIWidget const*>(m_worldview_widget);
+}
+
+void
 WorldGUIManager::draw_overlay(GraphicContext& gc)
 {
+  if (!m_ui_visible) {
+    return;
+  }
   int column = 0;
   int row = 0;
   auto pos = [&](){

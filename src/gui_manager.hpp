@@ -48,6 +48,9 @@ public:
 
   virtual void set_geometry(geom::frect const& geometry) {}
 
+  /** When false, widget is skipped in draw and hit-testing (UI chrome hide). */
+  virtual bool show_widget(GUIWidget const& widget) const { return true; }
+
   /** Stops the GUIManager */
   void quit();
 

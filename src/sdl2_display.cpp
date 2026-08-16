@@ -28,6 +28,7 @@
 #include "controller.hpp"
 #include "events.hpp"
 #include "screen_manager.hpp"
+#include "worldview_widget.hpp"
 #include "settings.hpp"
 #include "cursors/cursors.hpp"
 
@@ -862,23 +863,132 @@ SDL2Display::emit_button(Action action, bool pressed)
 void
 SDL2Display::handle_controller_button(SDL_GameControllerButton button, bool pressed)
 {
+  // SNES/Game-Boy-style layout for handhelds (R36S):
+  //   A/B = primary/secondary, X = fix, Y = hold for quick menu
+  //   Start = run, Select = toggle UI chrome
+  //   D-pad = tool modes, shoulders = zoom, triggers = undo/redo
+  //   Stick clicks = delete / grid
   Action action = Action::NONE;
   switch (button) {
-    case SDL_CONTROLLER_BUTTON_A: action = Action::PRIMARY; break;
-    case SDL_CONTROLLER_BUTTON_B: action = Action::SECONDARY; break;
-    case SDL_CONTROLLER_BUTTON_X: action = Action::FIX; break;
-    case SDL_CONTROLLER_BUTTON_Y: action = Action::RUN; break;
-    case SDL_CONTROLLER_BUTTON_START: action = Action::ESCAPE; break;
-    case SDL_CONTROLLER_BUTTON_BACK: action = Action::UNDO; break;
-    case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: action = Action::ZOOM_OUT; break;
-    case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: action = Action::ZOOM_IN; break;
-    case SDL_CONTROLLER_BUTTON_DPAD_UP: action = Action::SCROLL_UP; break;
-    case SDL_CONTROLLER_BUTTON_DPAD_DOWN: action = Action::SCROLL_DOWN; break;
-    case SDL_CONTROLLER_BUTTON_DPAD_LEFT: action = Action::SCROLL_LEFT; break;
-    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: action = Action::SCROLL_RIGHT; break;
-    default: return;
+    case SDL_CONTROLLER_BUTTON_A:
+      action = Action::PRIMARY;
+      break;
+    case SDL_CONTROLLER_BUTTON_B:
+      action = Action::SECONDARY;
+      break;
+    case SDL_CONTROLLER_BUTTON_X:
+      action = Action::FIX;
+      break;
+    case SDL_CONTROLLER_BUTTON_Y:
+      m_y_held = pressed;
+      if (!pressed) {
+        m_y_menu_latched = -1;
+      }
+      return;
+    case SDL_CONTROLLER_BUTTON_START:
+      action = Action::RUN;
+      break;
+    case SDL_CONTROLLER_BUTTON_BACK: // Select
+      action = Action::TOGGLE_UI;
+      break;
+    case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+      action = Action::ZOOM_OUT;
+      break;
+    case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+      action = Action::ZOOM_IN;
+      break;
+    case SDL_CONTROLLER_BUTTON_DPAD_UP:
+      if (pressed && WorldViewWidget::instance()) {
+        WorldViewWidget::instance()->set_mode(WorldViewWidget::INSERT_MODE);
+      }
+      return;
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+      if (pressed && WorldViewWidget::instance()) {
+        WorldViewWidget::instance()->set_mode(WorldViewWidget::SELECT_MODE);
+      }
+      return;
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+      if (pressed && WorldViewWidget::instance()) {
+        WorldViewWidget::instance()->set_mode(WorldViewWidget::COLLIDER_MODE);
+      }
+      return;
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+      if (pressed && WorldViewWidget::instance()) {
+        WorldViewWidget::instance()->set_mode(WorldViewWidget::ZOOM_MODE);
+      }
+      return;
+    case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+      action = Action::DELETE;
+      break;
+    case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+      action = Action::GRID;
+      break;
+    default:
+      return;
   }
-  emit_button(action, pressed);
+  if (action != Action::NONE) {
+    emit_button(action, pressed);
+  }
+}
+
+void
+SDL2Display::handle_y_quick_menu(float lx, float ly)
+{
+  // Cardinal sectors while Y is held (left stick). Fire once per latch.
+  constexpr float dead = 0.55f;
+  float const mag = std::sqrt(lx * lx + ly * ly);
+  if (mag < dead) {
+    m_y_menu_latched = -1;
+    return;
+  }
+  int sector;
+  if (std::fabs(ly) >= std::fabs(lx)) {
+    sector = (ly < 0.0f) ? 0 : 2; // N / S
+  } else {
+    sector = (lx > 0.0f) ? 1 : 3; // E / W
+  }
+  if (sector == m_y_menu_latched) {
+    return;
+  }
+  m_y_menu_latched = sector;
+  Action action = Action::NONE;
+  switch (sector) {
+    case 0: action = Action::NONE; break; // Load — handled below
+    case 1: action = Action::TOGGLESLOWMO; break;
+    case 2: action = Action::NONE; break; // Save
+    case 3: action = Action::CLEAR; break;
+    default: break;
+  }
+  // Load/Save go through ScreenManager (not Action enum).
+  if (sector == 0) {
+    ScreenManager::instance()->set_gui(ScreenManager::LOAD_GUI);
+    return;
+  }
+  if (sector == 2) {
+    ScreenManager::instance()->set_gui(ScreenManager::SAVE_GUI);
+    return;
+  }
+  if (action != Action::NONE) {
+    emit_button(action, true);
+    emit_button(action, false);
+  }
+}
+
+void
+SDL2Display::draw_y_quick_menu()
+{
+  float const cx = static_cast<float>(m_size.width()) * 0.5f;
+  float const cy = static_cast<float>(m_size.height()) * 0.5f;
+  Color const bg(0.0f, 0.0f, 0.0f, 0.65f);
+  Color const fg(1.0f, 1.0f, 1.0f, 1.0f);
+  m_renderer.draw_fill_rect(geom::frect(geom::fpoint(cx - 90.0f, cy - 70.0f),
+                                        geom::fsize(180.0f, 140.0f)), bg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy - 50.0f), "Y+stick menu", fg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy - 28.0f), "Up: Load", fg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy - 12.0f), "Down: Save", fg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy + 4.0f), "Left: Clear", fg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy + 20.0f), "Right: Slow-mo", fg);
+  m_renderer.draw_string_centered(geom::fpoint(cx, cy + 44.0f), "Start=Run  Select=UI", fg);
 }
 
 void
@@ -898,40 +1008,63 @@ SDL2Display::handle_controller_axis()
     dt = 0.1f;
   }
 
-  // Left stick → software cursor (continuous).
   constexpr float dead = 8000.0f;
   constexpr float max_axis = 32767.0f;
-  Sint16 const lx = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTX);
-  Sint16 const ly = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTY);
-  float ax = static_cast<float>(lx);
-  float ay = static_cast<float>(ly);
-  float mag = std::sqrt(ax * ax + ay * ay);
-  if (mag > dead) {
-    // Normalize outside deadzone for finer control near center.
-    float const t = (mag - dead) / (max_axis - dead);
-    float const scale = (t > 1.0f ? 1.0f : t) / mag;
-    ax *= scale;
-    ay *= scale;
-    // ~280 px/s at full deflection on a 640-wide panel.
+  auto axis_norm = [&](Sint16 raw) -> float {
+    float v = static_cast<float>(raw);
+    float a = std::fabs(v);
+    if (a <= dead) {
+      return 0.0f;
+    }
+    float t = (a - dead) / (max_axis - dead);
+    if (t > 1.0f) {
+      t = 1.0f;
+    }
+    return (v < 0.0f ? -t : t);
+  };
+
+  float const lx = axis_norm(SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTX));
+  float const ly = axis_norm(SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTY));
+  float const rx = axis_norm(SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_RIGHTX));
+  float const ry = axis_norm(SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_RIGHTY));
+
+  // Y held: left stick drives quick menu instead of the cursor.
+  if (m_y_held) {
+    handle_y_quick_menu(lx, ly);
+  } else if (lx != 0.0f || ly != 0.0f) {
     float const speed = 280.0f * static_cast<float>(m_size.width()) / 640.0f;
     m_mouse_pos = geom::ipoint(
-      m_mouse_pos.x() + static_cast<int>(ax * speed * dt + (ax > 0 ? 0.5f : -0.5f)),
-      m_mouse_pos.y() + static_cast<int>(ay * speed * dt + (ay > 0 ? 0.5f : -0.5f)));
+      m_mouse_pos.x() + static_cast<int>(lx * speed * dt + (lx > 0 ? 0.5f : -0.5f)),
+      m_mouse_pos.y() + static_cast<int>(ly * speed * dt + (ly > 0 ? 0.5f : -0.5f)));
     clamp_mouse_pos();
   }
 
-  // Right stick Y → zoom (edge-triggered). Right X unused for now.
-  constexpr Sint16 zdead = 16000;
-  static bool zin = false, zout = false, ltrig = false, rtrig = false;
-  {
-    Sint16 ry = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_RIGHTY);
-    bool neg = ry < -zdead; // up
-    bool pos = ry > zdead;  // down
-    if (neg != zin) { emit_button(Action::ZOOM_IN, neg); zin = neg; }
-    if (pos != zout) { emit_button(Action::ZOOM_OUT, pos); zout = pos; }
+  // Right stick → continuous view scroll (world units via widget).
+  if ((rx != 0.0f || ry != 0.0f) && WorldViewWidget::instance()) {
+    float const scroll_speed = 320.0f; // px/s at full deflection
+    int steps_x = static_cast<int>(rx * scroll_speed * dt / 20.0f);
+    int steps_y = static_cast<int>(ry * scroll_speed * dt / 20.0f);
+    // Fallback to at least one step when stick is clearly deflected
+    if (steps_x == 0 && std::fabs(rx) > 0.2f) {
+      steps_x = rx > 0 ? 1 : -1;
+    }
+    if (steps_y == 0 && std::fabs(ry) > 0.2f) {
+      steps_y = ry > 0 ? 1 : -1;
+    }
+    auto* wv = WorldViewWidget::instance();
+    for (int i = 0; i < std::abs(steps_x); ++i) {
+      if (steps_x > 0) wv->scroll_right();
+      else wv->scroll_left();
+    }
+    for (int i = 0; i < std::abs(steps_y); ++i) {
+      if (steps_y > 0) wv->scroll_down();
+      else wv->scroll_up();
+    }
   }
 
-  // Triggers are 0..32767 (never negative).
+  // Triggers → undo / redo (edge-triggered).
+  constexpr Sint16 zdead = 16000;
+  static bool ltrig = false, rtrig = false;
   {
     Sint16 lt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
     Sint16 rt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);

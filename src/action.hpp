@@ -48,6 +48,8 @@ enum class Action
   ACTIONCAM,
   HIDEDOTS,
 
+  TOGGLE_UI, // show/hide on-screen chrome (Select on handheld)
+
   ZOOM_OUT,
   ZOOM_IN,
 

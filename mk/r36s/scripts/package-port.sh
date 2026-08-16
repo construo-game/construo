@@ -24,22 +24,24 @@ SH
 chmod +x "$OUT/construo.sh"
 
 cat > "$OUT/controls.txt" <<'TXT'
-Construo — R36S / SDL_GameController mapping
+Construo — R36S (SNES-style) controls
 
-  A                 primary action (place particle / tool)
-  B                 secondary action
-  X                 fix / unfix particle
-  Y                 start / stop simulation
-  Start             escape / quit
-  Back / Select     undo
-  L / R shoulder    zoom out / zoom in
+  Left stick        software cursor
+  Right stick       scroll the view
+  A                 primary (place / select)
+  B                 secondary (remove / rotate)
+  X                 fix particle / selection
+  Y (hold)          quick menu — stick:
+                      Up Load, Down Save, Left Clear, Right Slow-mo
+  Start             run / stop simulation
+  Select            show / hide on-screen UI
+  D-pad             tool mode: U Insert, D Select, L Collider, R Zoom
+  L / R shoulder    zoom out / in
   L / R trigger     undo / redo
-  D-pad             scroll the view
-  Left stick        move software cursor (crosshair)
-  Right stick Y     zoom in / out
+  L-stick click     delete
+  R-stick click     toggle grid
 
-No mouse on device: a software crosshair is drawn; aim with the left
-stick and press A to act at the cursor.
+Quit: keyboard Esc, or close via OS / PortMaster hotkey.
 TXT
 
 cat > "$OUT/README.txt" <<'TXT'

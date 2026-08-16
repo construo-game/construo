@@ -92,6 +92,8 @@ private:
   SDL_Cursor* m_active_cursor = nullptr;
   SDL_GameController* m_controller = nullptr;
   Uint32 m_axis_last_ticks = 0;
+  bool m_y_held = false;
+  int m_y_menu_latched = -1; // -1 none, 0=N 1=E 2=S 3=W
 
   static SDL_Cursor* make_xbm_cursor(unsigned char const* bits,
                                      unsigned char const* mask_bits,
@@ -105,7 +107,9 @@ private:
   void handle_controller_axis();
   void emit_button(Action action, bool pressed);
   void draw_software_cursor();
+  void draw_y_quick_menu();
   void clamp_mouse_pos();
+  void handle_y_quick_menu(float lx, float ly);
 
 public:
   SDL2Display(const SDL2Display&) = delete;
