@@ -149,13 +149,21 @@ GLES2Renderer::init()
     return;
   }
 
+  std::fprintf(stderr, "debug: GLES2Renderer::init begin\n");
+  std::fflush(stderr);
+
   // Windows: resolve GL symbols via SDL after the context exists.
+  std::fprintf(stderr, "debug: before gl_api::load\n");
+  std::fflush(stderr);
   gl_api::load();
+  std::fprintf(stderr, "debug: after gl_api::load\n");
+  std::fflush(stderr);
 
   {
     char const* vendor = reinterpret_cast<char const*>(glGetString(GL_VENDOR));
     char const* renderer = reinterpret_cast<char const*>(glGetString(GL_RENDERER));
     char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+    std::fprintf(stderr, "debug: after glGetString\n");
     std::fprintf(stderr, "GL_VENDOR=%s\nGL_RENDERER=%s\nGL_VERSION=%s\n",
                  vendor ? vendor : "?",
                  renderer ? renderer : "?",
@@ -163,9 +171,23 @@ GLES2Renderer::init()
     std::fflush(stderr);
   }
 
+  std::fprintf(stderr, "debug: before compile vertex shader\n");
+  std::fflush(stderr);
   unsigned vs = compile_shader(GL_VERTEX_SHADER, k_vs);
+  std::fprintf(stderr, "debug: after compile vertex shader\n");
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before compile fragment shader\n");
+  std::fflush(stderr);
   unsigned fs = compile_shader(GL_FRAGMENT_SHADER, k_fs);
+  std::fprintf(stderr, "debug: after compile fragment shader\n");
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before link_program\n");
+  std::fflush(stderr);
   m_program = link_program(vs, fs);
+  std::fprintf(stderr, "debug: after link_program\n");
+  std::fflush(stderr);
   glDeleteShader(vs);
   glDeleteShader(fs);
 
@@ -175,15 +197,29 @@ GLES2Renderer::init()
   m_u_screen = glGetUniformLocation(m_program, "u_screen");
   m_u_use_tex = glGetUniformLocation(m_program, "u_use_tex");
   m_u_tex = glGetUniformLocation(m_program, "u_tex");
+  std::fprintf(stderr, "debug: after get attrib/uniform locations\n");
+  std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before glGenBuffers\n");
+  std::fflush(stderr);
   glGenBuffers(1, &m_vbo);
+  std::fprintf(stderr, "debug: after glGenBuffers (vbo=%u)\n", m_vbo);
+  std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before build_font_atlas\n");
+  std::fflush(stderr);
   build_font_atlas();
+  std::fprintf(stderr, "debug: after build_font_atlas\n");
+  std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before blend/depth setup\n");
+  std::fflush(stderr);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
+  std::fprintf(stderr, "debug: after blend/depth setup\n");
+  std::fflush(stderr);
 
   m_ready = true;
   {
@@ -192,6 +228,8 @@ GLES2Renderer::init()
     log_info("GLES2Renderer initialized (GL_VERSION={}, GL_RENDERER={})",
              ver ? ver : "?", renderer ? renderer : "?");
   }
+  std::fprintf(stderr, "debug: GLES2Renderer::init done\n");
+  std::fflush(stderr);
 }
 
 void
@@ -235,7 +273,18 @@ GLES2Renderer::build_font_atlas()
     }
   }
 
+  std::fprintf(stderr, "debug: font atlas pixels ready (%dx%d, %zu bytes)\n",
+               atlas_w, atlas_h, pixels.size());
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before glGenTextures\n");
+  std::fflush(stderr);
   glGenTextures(1, &m_font_tex);
+  std::fprintf(stderr, "debug: after glGenTextures (tex=%u)\n", m_font_tex);
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before glBindTexture\n");
+  std::fflush(stderr);
   glBindTexture(GL_TEXTURE_2D, m_font_tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -244,10 +293,16 @@ GLES2Renderer::build_font_atlas()
   // GLES2 has no GL_UNPACK_ROW_LENGTH; tight-packed alpha rows need alignment 1
   // (default 4 would require width % 4 == 0 for every upload — Pingus does this).
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  std::fprintf(stderr, "debug: before glTexImage2D GL_ALPHA %dx%d\n", atlas_w, atlas_h);
+  std::fflush(stderr);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, atlas_w, atlas_h, 0,
                GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+  std::fprintf(stderr, "debug: after glTexImage2D\n");
+  std::fflush(stderr);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
   glBindTexture(GL_TEXTURE_2D, 0);
+  std::fprintf(stderr, "debug: font atlas upload complete\n");
+  std::fflush(stderr);
 }
 
 void

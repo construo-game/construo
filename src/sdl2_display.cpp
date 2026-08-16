@@ -289,18 +289,30 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
     std::exit(EXIT_FAILURE);
   }
 
-  SDL_GL_MakeCurrent(m_window, m_gl);
+  std::fprintf(stderr, "debug: before SDL_GL_MakeCurrent\n");
+  std::fflush(stderr);
+  if (SDL_GL_MakeCurrent(m_window, m_gl) != 0) {
+    std::fprintf(stderr, "SDL_GL_MakeCurrent failed: %s\n", SDL_GetError());
+    std::fflush(stderr);
+    std::exit(EXIT_FAILURE);
+  }
+  std::fprintf(stderr, "debug: after SDL_GL_MakeCurrent\n");
+  std::fflush(stderr);
+
   // Prefer adaptive vsync; fall back to fixed vsync. On some Mali builds
   // adaptive (-1) misbehaves — try fixed first on KMSDRM.
+  std::fprintf(stderr, "debug: before SDL_GL_SetSwapInterval\n");
+  std::fflush(stderr);
   if (is_kmsdrm) {
     if (SDL_GL_SetSwapInterval(1) != 0) {
+      std::fprintf(stderr, "debug: SetSwapInterval(1) failed: %s, trying 0\n", SDL_GetError());
+      std::fflush(stderr);
       SDL_GL_SetSwapInterval(0);
     }
   } else if (SDL_GL_SetSwapInterval(-1) != 0) {
     SDL_GL_SetSwapInterval(1);
   }
-
-  std::fprintf(stderr, "GL context current, swap interval set (kmsdrm=%d)\n", is_kmsdrm ? 1 : 0);
+  std::fprintf(stderr, "debug: after SDL_GL_SetSwapInterval (kmsdrm=%d)\n", is_kmsdrm ? 1 : 0);
   std::fflush(stderr);
 
   int drawable_w = 0, drawable_h = 0;
@@ -312,11 +324,29 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   std::fprintf(stderr, "drawable size %dx%d\n", drawable_w, drawable_h);
   std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before m_renderer.init()\n");
+  std::fflush(stderr);
   m_renderer.init();
-  m_renderer.set_viewport(m_size);
+  std::fprintf(stderr, "debug: after m_renderer.init()\n");
+  std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before set_viewport\n");
+  std::fflush(stderr);
+  m_renderer.set_viewport(m_size);
+  std::fprintf(stderr, "debug: after set_viewport\n");
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before keybindings\n");
+  std::fflush(stderr);
   init_default_keybindings(*this);
+  std::fprintf(stderr, "debug: after keybindings\n");
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before load_cursors\n");
+  std::fflush(stderr);
   load_cursors();
+  std::fprintf(stderr, "debug: after load_cursors\n");
+  std::fflush(stderr);
 
   // Window / taskbar icon (BMP next to data or beside executable).
   {
@@ -334,11 +364,25 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
       }
     }
   }
+  std::fprintf(stderr, "debug: after window icon\n");
+  std::fflush(stderr);
 
+  std::fprintf(stderr, "debug: before open_controller\n");
+  std::fflush(stderr);
   open_controller();
+  std::fprintf(stderr, "debug: after open_controller\n");
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "debug: before set_cursor\n");
+  std::fflush(stderr);
   set_cursor(CursorType::INSERT);
+  std::fprintf(stderr, "debug: after set_cursor\n");
+  std::fflush(stderr);
+
   log_info("SDL2Display ready ({}x{}, GLES2)", m_size.width(), m_size.height());
   CONSTRUO_ALOG("SDL2Display ready %dx%d", m_size.width(), m_size.height());
+  std::fprintf(stderr, "debug: SDL2Display ctor done\n");
+  std::fflush(stderr);
 }
 
 SDL2Display::~SDL2Display()
