@@ -30,6 +30,12 @@ Install `construo.sdl` plus the `examples/` tree (e.g. under `/roms/ports/constr
 
 See also Pingus `mk/r36s/` for sysroot extraction scripts if needed later.
 
+## Debug symbols (R36S nix package)
+
+`nix/r36s.nix` builds with `CMAKE_BUILD_TYPE=RelWithDebInfo`, `-g`,
+`-fno-omit-frame-pointer`, and `dontStrip = true` so the device binary
+keeps symbols for `gdb` / `eu-addr2line` on SIGBUS and similar crashes.
+
 ## Launcher defaults
 
 `mk/r36s/scripts/package-port.sh` writes `construo.sh` that starts with:
