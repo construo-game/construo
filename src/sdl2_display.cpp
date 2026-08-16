@@ -10,7 +10,9 @@
 #  define CONSTRUO_ALOG(...) do { } while (0)
 #endif
 
+#include <cstdlib>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include <logmich/log.hpp>
@@ -114,7 +116,80 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
     throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
   }
 
-  auto set_common_gl_attrs = []() {
+  // Log video backend early — KMSDRM vs x11/wayland matters for EGL/GLES on
+  // handhelds (R36S/ArkOS, Mali). Helps diagnose "Could not create EGL window
+  // surface" style failures when the exception path itself is unreliable.
+  {
+    char const* driver = SDL_GetCurrentVideoDriver();
+    log_info("SDL video driver: env={} current={}",
+             std::getenv("SDL_VIDEODRIVER") ? std::getenv("SDL_VIDEODRIVER") : "(unset)",
+             driver ? driver : "(none)");
+    int n = SDL_GetNumVideoDrivers();
+    std::string drivers;
+    for (int i = 0; i < n; ++i) {
+      drivers += ' ';
+      drivers += SDL_GetVideoDriver(i);
+    }
+    log_info("SDL available video drivers:{}", drivers);
+  }
+
+  // Probe libEGL: KMSDRM GLES needs it at runtime (SDL dlopens it).
+  {
+    void* egl = SDL_LoadObject("libEGL.so.1");
+    if (!egl) egl = SDL_LoadObject("libEGL.so");
+    if (!egl) egl = SDL_LoadObject("/usr/lib/aarch64-linux-gnu/libEGL.so.1");
+    if (!egl) egl = SDL_LoadObject("/usr/local/lib/aarch64-linux-gnu/libEGL.so.1");
+    if (egl) {
+      log_info("libEGL probe: loaded");
+      SDL_UnloadObject(egl);
+    } else {
+      log_info("libEGL probe: FAILED ({}) — matching libEGL next to libGLESv2 may be required",
+               SDL_GetError());
+    }
+  }
+
+  // GL attribute sets. Mali/KMSDRM often rejects over-specified configs
+  // (RGB888 + BUFFER_SIZE mismatch is a known cause of EGL surface failure).
+  // Minimal ES2 first matches working handheld SDL samples; richer configs
+  // and desktop GL are fallbacks.
+  struct GlAttrSet {
+    char const* name;
+    void (*apply)();
+  };
+
+  auto apply_es_minimal = []() {
+    SDL_GL_ResetAttributes();
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  };
+  auto apply_es_rgb565 = []() {
+    SDL_GL_ResetAttributes();
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+  };
+  auto apply_es_rgba8888 = []() {
+    SDL_GL_ResetAttributes();
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+  };
+  auto apply_gl21_compat = []() {
+    SDL_GL_ResetAttributes();
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -122,41 +197,96 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
   };
 
-  // Prefer OpenGL ES 2.0 (WASM / Android / R36S / desktop GLES).
-  // On desktop hosts without an ES driver, fall back to a compatibility
-  // GL 2.1 context — shaders remain GLES2-style and work under that profile.
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  set_common_gl_attrs();
+  GlAttrSet attr_sets[] = {
+    {"es2-minimal", apply_es_minimal},
+    {"es2-rgb565", apply_es_rgb565},
+    {"es2-rgba8888", apply_es_rgba8888},
+    {"gl21-compat", apply_gl21_compat},
+  };
+  int const n_attr_sets = static_cast<int>(sizeof(attr_sets) / sizeof(attr_sets[0]));
 
-  Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+  // Prefer native display size when fullscreen — exclusive modes that do not
+  // match the panel (common on R36S 640x480 + KMSDRM) often fail with EGL
+  // surface errors.
+  int req_w = width;
+  int req_h = height;
   if (fullscreen) {
-    flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    SDL_DisplayMode mode;
+    if (SDL_GetDesktopDisplayMode(0, &mode) == 0 && mode.w > 0 && mode.h > 0) {
+      log_info("desktop mode {}x{} @{}Hz", mode.w, mode.h, mode.refresh_rate);
+      if (req_w != mode.w || req_h != mode.h) {
+        log_info("adjusting requested {}x{} -> desktop {}x{}", req_w, req_h, mode.w, mode.h);
+        req_w = mode.w;
+        req_h = mode.h;
+      }
+    } else {
+      log_info("SDL_GetDesktopDisplayMode failed: {}", SDL_GetError());
+    }
   }
 
-  m_window = SDL_CreateWindow(title.c_str(),
-                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              width, height, flags);
-  if (!m_window) {
-    SDL_Quit();
-    throw std::runtime_error(std::string("SDL_CreateWindow failed: ") + SDL_GetError());
+  // Attempt order on embedded GLES (ArkOS/R36S, Mali, KMSDRM):
+  // 1) FULLSCREEN_DESKTOP  2) exclusive FULLSCREEN  3) windowed
+  struct Attempt {
+    char const* name;
+    Uint32 flags;
+  };
+  Attempt attempts[3];
+  int n_attempts = 0;
+#ifdef __ANDROID__
+  attempts[n_attempts++] = Attempt{"android-fullscreen",
+                                   SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN};
+  (void)fullscreen;
+#else
+  if (fullscreen) {
+    attempts[n_attempts++] = Attempt{"fullscreen-desktop",
+                                     SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP};
+    attempts[n_attempts++] = Attempt{"fullscreen-exclusive",
+                                     SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN};
+  }
+  attempts[n_attempts++] = Attempt{"windowed",
+                                   static_cast<Uint32>(
+                                     SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                                     SDL_WINDOW_ALLOW_HIGHDPI)};
+#endif
+
+  std::string last_error;
+  for (int ai = 0; ai < n_attempts && !m_window; ++ai) {
+    for (int si = 0; si < n_attr_sets && !m_window; ++si) {
+      attr_sets[si].apply();
+      log_info("trying window={} attrs={}", attempts[ai].name, attr_sets[si].name);
+      m_window = SDL_CreateWindow(title.c_str(),
+                                  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                  req_w, req_h, attempts[ai].flags);
+      if (!m_window) {
+        last_error = std::string("SDL_CreateWindow(") + attempts[ai].name + "/" +
+                     attr_sets[si].name + "): " + SDL_GetError();
+        log_info("{}", last_error);
+        continue;
+      }
+      m_gl = SDL_GL_CreateContext(m_window);
+      if (!m_gl) {
+        last_error = std::string("SDL_GL_CreateContext(") + attempts[ai].name + "/" +
+                     attr_sets[si].name + "): " + SDL_GetError();
+        log_info("{}", last_error);
+        SDL_DestroyWindow(m_window);
+        m_window = nullptr;
+        continue;
+      }
+      log_info("created window+context with {} / {}", attempts[ai].name, attr_sets[si].name);
+      m_is_fullscreen = (attempts[ai].flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP)) != 0;
+    }
   }
 
-  m_gl = SDL_GL_CreateContext(m_window);
-  if (!m_gl) {
-    log_info("GLES2 context failed ({}), trying desktop GL 2.1 compatibility", SDL_GetError());
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    set_common_gl_attrs();
-    m_gl = SDL_GL_CreateContext(m_window);
-  }
-  if (!m_gl) {
-    SDL_DestroyWindow(m_window);
-    m_window = nullptr;
+  if (!m_window || !m_gl) {
+    if (m_window) {
+      SDL_DestroyWindow(m_window);
+      m_window = nullptr;
+    }
     SDL_Quit();
-    throw std::runtime_error(std::string("SDL_GL_CreateContext failed: ") + SDL_GetError());
+    throw std::runtime_error(
+      last_error.empty()
+        ? std::string("SDL2Display: failed to create window/GL context")
+        : last_error);
   }
 
   SDL_GL_MakeCurrent(m_window, m_gl);
@@ -167,6 +297,9 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   int drawable_w = 0, drawable_h = 0;
   SDL_GL_GetDrawableSize(m_window, &drawable_w, &drawable_h);
+  if (drawable_w <= 0 || drawable_h <= 0) {
+    SDL_GetWindowSize(m_window, &drawable_w, &drawable_h);
+  }
   m_size = geom::isize(drawable_w, drawable_h);
 
   m_renderer.init();
