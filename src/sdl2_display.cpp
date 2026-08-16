@@ -10,6 +10,7 @@
 #  define CONSTRUO_ALOG(...) do { } while (0)
 #endif
 
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -323,6 +324,8 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   m_size = geom::isize(drawable_w, drawable_h);
   std::fprintf(stderr, "drawable size %dx%d\n", drawable_w, drawable_h);
   std::fflush(stderr);
+  m_mouse_pos = geom::ipoint(drawable_w / 2, drawable_h / 2);
+  m_axis_last_ticks = SDL_GetTicks();
 
   std::fprintf(stderr, "debug: before m_renderer.init()\n");
   std::fflush(stderr);
@@ -429,7 +432,38 @@ SDL2Display::clear()
 void
 SDL2Display::flip()
 {
+  if (m_software_cursor) {
+    draw_software_cursor();
+  }
   SDL_GL_SwapWindow(m_window);
+}
+
+void
+SDL2Display::clamp_mouse_pos()
+{
+  int x = m_mouse_pos.x();
+  int y = m_mouse_pos.y();
+  if (x < 0) x = 0;
+  if (y < 0) y = 0;
+  if (x >= m_size.width()) x = m_size.width() > 0 ? m_size.width() - 1 : 0;
+  if (y >= m_size.height()) y = m_size.height() > 0 ? m_size.height() - 1 : 0;
+  m_mouse_pos = geom::ipoint(x, y);
+}
+
+void
+SDL2Display::draw_software_cursor()
+{
+  float const x = static_cast<float>(m_mouse_pos.x());
+  float const y = static_cast<float>(m_mouse_pos.y());
+  float const arm = 10.0f;
+  Color const hi(1.0f, 1.0f, 1.0f, 1.0f);
+  Color const lo(0.0f, 0.0f, 0.0f, 1.0f);
+  // Black outline then white crosshair so it stays visible on any background.
+  m_renderer.draw_line(geom::fpoint(x - arm - 1, y), geom::fpoint(x + arm + 1, y), lo, 3.0f);
+  m_renderer.draw_line(geom::fpoint(x, y - arm - 1), geom::fpoint(x, y + arm + 1), lo, 3.0f);
+  m_renderer.draw_line(geom::fpoint(x - arm, y), geom::fpoint(x + arm, y), hi, 1.0f);
+  m_renderer.draw_line(geom::fpoint(x, y - arm), geom::fpoint(x, y + arm), hi, 1.0f);
+  m_renderer.draw_fill_circle(geom::fpoint(x, y), 2.5f, hi);
 }
 
 void
@@ -548,6 +582,7 @@ SDL2Display::load_cursors()
     std::fprintf(stderr, "debug: load_cursors: skip custom cursors on KMSDRM\n");
     std::fflush(stderr);
     SDL_ShowCursor(SDL_DISABLE);
+    m_software_cursor = true;
     return;
   }
 
@@ -736,17 +771,38 @@ SDL2Display::window_to_drawable(int x, int y) const
 void
 SDL2Display::open_controller()
 {
+  SDL_GameControllerEventState(SDL_ENABLE);
   int const n = SDL_NumJoysticks();
+  std::fprintf(stderr, "debug: joysticks=%d\n", n);
+  std::fflush(stderr);
   for (int i = 0; i < n; ++i) {
-    if (!SDL_IsGameController(i)) {
+    char const* name = SDL_JoystickNameForIndex(i);
+    bool const is_gc = SDL_IsGameController(i);
+    std::fprintf(stderr, "debug: joy[%d] name=%s gamecontroller=%d\n",
+                 i, name ? name : "?", is_gc ? 1 : 0);
+    std::fflush(stderr);
+    if (!is_gc) {
       continue;
     }
     m_controller = SDL_GameControllerOpen(i);
     if (m_controller) {
       log_info("Opened game controller: {}", SDL_GameControllerName(m_controller));
+      std::fprintf(stderr, "debug: opened controller %s\n",
+                   SDL_GameControllerName(m_controller));
+      std::fflush(stderr);
+      // Handhelds: stick drives the software pointer.
+      if (!m_software_cursor) {
+        m_software_cursor = true;
+        SDL_ShowCursor(SDL_DISABLE);
+      }
       return;
     }
+    std::fprintf(stderr, "debug: SDL_GameControllerOpen(%d) failed: %s\n",
+                 i, SDL_GetError());
+    std::fflush(stderr);
   }
+  // No mapped controller: still try index 0 as gamecontroller after a generic mapping
+  // is not available — leave m_controller null; d-pad-only devices may appear later.
 }
 
 void
@@ -796,37 +852,58 @@ SDL2Display::handle_controller_axis()
   if (!m_controller) {
     return;
   }
-  // Left stick → continuous scroll (edge-triggered on threshold cross).
-  constexpr Sint16 dead = 16000;
-  struct AxisMap { SDL_GameControllerAxis axis; Action neg; Action pos; bool* state_neg; bool* state_pos; };
-  static bool left=false, right=false, up=false, down=false;
-  static bool zin=false, zout=false, ltrig=false, rtrig=false;
-  AxisMap maps[] = {
-    { SDL_CONTROLLER_AXIS_LEFTX, Action::SCROLL_LEFT, Action::SCROLL_RIGHT, &left, &right },
-    { SDL_CONTROLLER_AXIS_LEFTY, Action::SCROLL_UP, Action::SCROLL_DOWN, &up, &down },
-    { SDL_CONTROLLER_AXIS_RIGHTY, Action::ZOOM_IN, Action::ZOOM_OUT, &zin, &zout },
-  };
-  // Triggers are 0..32767 (never negative). Treat as "pos" only.
+
+  Uint32 const now = SDL_GetTicks();
+  float dt = static_cast<float>(now - m_axis_last_ticks) / 1000.0f;
+  m_axis_last_ticks = now;
+  if (dt <= 0.0f) {
+    dt = 1.0f / 60.0f;
+  }
+  if (dt > 0.1f) {
+    dt = 0.1f;
+  }
+
+  // Left stick → software cursor (continuous).
+  constexpr float dead = 8000.0f;
+  constexpr float max_axis = 32767.0f;
+  Sint16 const lx = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTX);
+  Sint16 const ly = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_LEFTY);
+  float ax = static_cast<float>(lx);
+  float ay = static_cast<float>(ly);
+  float mag = std::sqrt(ax * ax + ay * ay);
+  if (mag > dead) {
+    // Normalize outside deadzone for finer control near center.
+    float const t = (mag - dead) / (max_axis - dead);
+    float const scale = (t > 1.0f ? 1.0f : t) / mag;
+    ax *= scale;
+    ay *= scale;
+    // ~280 px/s at full deflection on a 640-wide panel.
+    float const speed = 280.0f * static_cast<float>(m_size.width()) / 640.0f;
+    m_mouse_pos = geom::ipoint(
+      m_mouse_pos.x() + static_cast<int>(ax * speed * dt + (ax > 0 ? 0.5f : -0.5f)),
+      m_mouse_pos.y() + static_cast<int>(ay * speed * dt + (ay > 0 ? 0.5f : -0.5f)));
+    clamp_mouse_pos();
+  }
+
+  // Right stick Y → zoom (edge-triggered). Right X unused for now.
+  constexpr Sint16 zdead = 16000;
+  static bool zin = false, zout = false, ltrig = false, rtrig = false;
+  {
+    Sint16 ry = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_RIGHTY);
+    bool neg = ry < -zdead; // up
+    bool pos = ry > zdead;  // down
+    if (neg != zin) { emit_button(Action::ZOOM_IN, neg); zin = neg; }
+    if (pos != zout) { emit_button(Action::ZOOM_OUT, pos); zout = pos; }
+  }
+
+  // Triggers are 0..32767 (never negative).
   {
     Sint16 lt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
     Sint16 rt = SDL_GameControllerGetAxis(m_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-    bool l = lt > dead;
-    bool r = rt > dead;
+    bool l = lt > zdead;
+    bool r = rt > zdead;
     if (l != ltrig) { emit_button(Action::UNDO, l); ltrig = l; }
     if (r != rtrig) { emit_button(Action::REDO, r); rtrig = r; }
-  }
-  for (auto& m : maps) {
-    Sint16 v = SDL_GameControllerGetAxis(m_controller, m.axis);
-    bool neg = v < -dead;
-    bool pos = v > dead;
-    if (neg != *m.state_neg) {
-      emit_button(m.neg, neg);
-      *m.state_neg = neg;
-    }
-    if (pos != *m.state_pos) {
-      emit_button(m.pos, pos);
-      *m.state_pos = pos;
-    }
   }
 }
 

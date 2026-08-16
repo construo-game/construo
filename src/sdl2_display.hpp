@@ -78,6 +78,8 @@ private:
   geom::isize m_size;
   geom::ipoint m_mouse_pos;
   bool m_is_fullscreen = false;
+  /** Draw a crosshair at m_mouse_pos (needed when OS cursor is unavailable). */
+  bool m_software_cursor = false;
   std::string m_title;
 
   std::unordered_map<SDL_Keycode, Action> m_key_bindings;
@@ -89,6 +91,7 @@ private:
   SDL_Cursor* m_cursor_collider = nullptr;
   SDL_Cursor* m_active_cursor = nullptr;
   SDL_GameController* m_controller = nullptr;
+  Uint32 m_axis_last_ticks = 0;
 
   static SDL_Cursor* make_xbm_cursor(unsigned char const* bits,
                                      unsigned char const* mask_bits,
@@ -101,6 +104,8 @@ private:
   void handle_controller_button(SDL_GameControllerButton button, bool pressed);
   void handle_controller_axis();
   void emit_button(Action action, bool pressed);
+  void draw_software_cursor();
+  void clamp_mouse_pos();
 
 public:
   SDL2Display(const SDL2Display&) = delete;

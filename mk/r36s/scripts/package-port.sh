@@ -24,19 +24,22 @@ SH
 chmod +x "$OUT/construo.sh"
 
 cat > "$OUT/controls.txt" <<'TXT'
-Construo — R36S / game controller mapping (SDL2)
+Construo — R36S / SDL_GameController mapping
 
-  A (PRIMARY)     primary tool action / place
-  B (SECONDARY)   secondary action
-  X (FIX)         fix / unfix particle
-  Y (RUN)         start / stop simulation
-  Start           escape / menu
-  Back            undo
-  L / R shoulder  zoom out / zoom in
-  D-pad / stick   scroll view
-  Triggers        undo / redo
+  A                 primary action (place particle / tool)
+  B                 secondary action
+  X                 fix / unfix particle
+  Y                 start / stop simulation
+  Start             escape / quit
+  Back / Select     undo
+  L / R shoulder    zoom out / zoom in
+  L / R trigger     undo / redo
+  D-pad             scroll the view
+  Left stick        move software cursor (crosshair)
+  Right stick Y     zoom in / out
 
-Touch / mouse also work when a pointing device is present.
+No mouse on device: a software crosshair is drawn; aim with the left
+stick and press A to act at the cursor.
 TXT
 
 cat > "$OUT/README.txt" <<'TXT'
