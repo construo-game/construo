@@ -135,11 +135,18 @@
             buildInputs = commonLibs ++ extraBuildInputs;
           };
 
-        # MinGW Win64 game binary (Linux builder).
-        win64Libs = mkLibs pkgs.pkgsCross.mingwW64;
-        win64Sdl = SDL2-win32.packages.${system}."SDL2-win64";
+        # MinGW Win64 game binary (Linux builder). SDL2-win32 only publishes
+        # packages for some systems (not aarch64-darwin); gate so flake check
+        # does not fail on systems without that package set.
+        supportsWin64Cross =
+          pkgs.stdenv.hostPlatform.isLinux
+          && (SDL2-win32.packages ? ${system})
+          && (SDL2-win32.packages.${system} ? "SDL2-win64");
 
-        construo-win64-bin = pkgs.pkgsCross.mingwW64.stdenv.mkDerivation {
+        win64Libs = if supportsWin64Cross then mkLibs pkgs.pkgsCross.mingwW64 else null;
+        win64Sdl = if supportsWin64Cross then SDL2-win32.packages.${system}."SDL2-win64" else null;
+
+        construo-win64-bin = if !supportsWin64Cross then null else pkgs.pkgsCross.mingwW64.stdenv.mkDerivation {
           pname = "construo-win64";
           version = construo_version;
           src = ./.;
@@ -167,7 +174,7 @@
         };
 
         # Flat redistributable directory (exe + DLLs + examples + README).
-        construo-win64 = pkgs.runCommand "construo-win64-flat" {
+        construo-win64 = if !supportsWin64Cross then null else pkgs.runCommand "construo-win64-flat" {
           nativeBuildInputs = [ pkgs.zip ];
         } ''
           mkdir -p $out
@@ -392,7 +399,7 @@ TXT
 
 
         }
-          // lib.optionalAttrs (!isWin) {
+          // lib.optionalAttrs supportsWin64Cross {
             # Flat redistributable (exe + DLLs + examples). Binary-only is internal.
             construo-win64 = construo-win64;
             construo-win64-zip = mkWinZip construo-win64 "construo" "win64";
@@ -445,7 +452,7 @@ TXT
               meta.description = "Construo (native SDL2 + GLES2)";
             };
           }
-          // lib.optionalAttrs (!isWin && pkgs.stdenv.hostPlatform.isLinux) {
+          // lib.optionalAttrs supportsWin64Cross {
             construo-win64 = mkWineApp packages.construo-win64 "construo-win64" "Construo (MinGW x86_64) via Wine";
           }
           // linuxExtras.apps;
