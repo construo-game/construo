@@ -291,15 +291,21 @@ GLES2Renderer::build_font_atlas()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   // GLES2 has no GL_UNPACK_ROW_LENGTH; tight-packed alpha rows need alignment 1
-  // (default 4 would require width % 4 == 0 for every upload — Pingus does this).
+  // when width is not a multiple of 4. Emscripten/WebGL does not export
+  // glPixelStorei as a wasm import by default — skip there (atlas_w is 760,
+  // already 4-byte aligned, so the default unpack alignment is fine).
+#if !defined(__EMSCRIPTEN__)
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+#endif
   std::fprintf(stderr, "debug: before glTexImage2D GL_ALPHA %dx%d\n", atlas_w, atlas_h);
   std::fflush(stderr);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, atlas_w, atlas_h, 0,
                GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
   std::fprintf(stderr, "debug: after glTexImage2D\n");
   std::fflush(stderr);
+#if !defined(__EMSCRIPTEN__)
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+#endif
   glBindTexture(GL_TEXTURE_2D, 0);
   std::fprintf(stderr, "debug: font atlas upload complete\n");
   std::fflush(stderr);
