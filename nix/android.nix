@@ -242,10 +242,13 @@ CFG
           fi
         fi
 
-        # Examples as assets (+ manifest for first-run extract)
+        # Examples as assets (+ manifest for first-run extract).
+        # cp -a from the nix store keeps mode 0444; make writable before writing
+        # examples.list into that tree.
         mkdir -p work/app/src/main/assets
         if [ -d ${gameExamplesDir} ]; then
           cp -a ${gameExamplesDir} work/app/src/main/assets/examples
+          chmod -R u+w work/app/src/main/assets/examples
           ( cd work/app/src/main/assets/examples && find . -type f -printf '%P\n' | sort > examples.list )
         fi
 
