@@ -16,11 +16,13 @@
 
 #include "construo_main.hpp"
 
-#include <SDL.h>
-
+#if defined(USE_SDL2_DISPLAY)
 // On Android, SDL.h maps main → SDL_main so SDLActivity can dlsym it from
 // libmain.so. App logic lives in ConstruoMain::run (not named main) so the
-// macro cannot rewrite the method.
+// macro cannot rewrite the method. X11/GLUT builds must not require SDL.h.
+#  include <SDL.h>
+#endif
+
 int main(int argc, char** argv)
 {
   construo::ConstruoMain app;
