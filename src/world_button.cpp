@@ -30,7 +30,12 @@ WorldButton::WorldButton (WorldCache& world_cache, const std::string& filename, 
   GUIFileButton(filename),
   m_world_cache(world_cache),
   m_mode(m),
-  m_basename(path_basename(filename))
+  m_basename(path_basename(filename)),
+  m_preview_valid(false),
+  m_preview_geom(),
+  m_preview_lines(),
+  m_preview_dots(),
+  m_preview_broken(false)
 {
 }
 
