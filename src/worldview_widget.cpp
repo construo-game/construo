@@ -263,9 +263,16 @@ WorldViewWidget::scroll_down()
 }
 
 void
-WorldViewWidget::scroll_by(geom::foffset const& offset)
+WorldViewWidget::scroll_by_screen(geom::foffset const& screen_delta)
 {
-  m_zoom.translate(offset);
+  // Offset is stored in world units; divide by scale so a given stick
+  // deflection always moves the same amount on screen when zoomed in or out.
+  float const scale = m_zoom.get_scale();
+  if (scale <= 1e-6f) {
+    return;
+  }
+  m_zoom.translate(geom::foffset(screen_delta.x() / scale,
+                                 screen_delta.y() / scale));
 }
 
 void

@@ -1039,11 +1039,10 @@ SDL2Display::handle_controller_axis()
     clamp_mouse_pos();
   }
 
-  // Right stick → smooth analog pan (sub-pixel, proportional to deflection).
+  // Right stick → smooth analog pan in screen space (constant on-screen speed).
   if ((rx != 0.0f || ry != 0.0f) && WorldViewWidget::instance()) {
-    // Match the old 20px step scale: full deflection ≈ 16 steps/s ≈ 320 px/s.
-    float const scroll_speed = 320.0f;
-    WorldViewWidget::instance()->scroll_by(
+    float const scroll_speed = 320.0f; // screen px/s at full deflection
+    WorldViewWidget::instance()->scroll_by_screen(
       geom::foffset(rx * scroll_speed * dt, ry * scroll_speed * dt));
   }
 

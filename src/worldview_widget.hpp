@@ -80,8 +80,8 @@ public:
   void scroll_up() override;
   void scroll_down() override;
 
-  /** Continuous pan (e.g. analog stick); offset in the same units as scroll_*(). */
-  void scroll_by(geom::foffset const& offset);
+  /** Continuous pan in screen pixels (scale-independent; for analog sticks). */
+  void scroll_by_screen(geom::foffset const& screen_delta);
 
   float get_scale();
 
