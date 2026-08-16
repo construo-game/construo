@@ -540,26 +540,49 @@ SDL2Display::make_xbm_cursor(unsigned char const* bits,
 void
 SDL2Display::load_cursors()
 {
+  // SDL_CreateCursor on KMSDRM (Mali / R36S) has been observed to SIGBUS in
+  // gbm_bo_write — the DRM cursor plane path is unreliable. Skip custom
+  // cursors there; the default cursor or no cursor is fine for a handheld.
+  char const* drv = SDL_GetCurrentVideoDriver();
+  if (drv && (std::strcmp(drv, "KMSDRM") == 0 || std::strcmp(drv, "kmsdrm") == 0)) {
+    std::fprintf(stderr, "debug: load_cursors: skip custom cursors on KMSDRM\n");
+    std::fflush(stderr);
+    SDL_ShowCursor(SDL_DISABLE);
+    return;
+  }
+
+  std::fprintf(stderr, "debug: load_cursors: select\n");
+  std::fflush(stderr);
   m_cursor_select = make_xbm_cursor(
     cursor_select_bits, cursor_select_mask_bits,
     cursor_select_width, cursor_select_height,
     cursor_select_x_hot, cursor_select_y_hot);
+  std::fprintf(stderr, "debug: load_cursors: scroll\n");
+  std::fflush(stderr);
   m_cursor_scroll = make_xbm_cursor(
     cursor_scroll_bits, cursor_scroll_mask_bits,
     cursor_scroll_width, cursor_scroll_height,
     cursor_scroll_x_hot, cursor_scroll_y_hot);
+  std::fprintf(stderr, "debug: load_cursors: zoom\n");
+  std::fflush(stderr);
   m_cursor_zoom = make_xbm_cursor(
     cursor_zoom_bits, cursor_zoom_mask_bits,
     cursor_zoom_width, cursor_zoom_height,
     cursor_zoom_x_hot, cursor_zoom_y_hot);
+  std::fprintf(stderr, "debug: load_cursors: insert\n");
+  std::fflush(stderr);
   m_cursor_insert = make_xbm_cursor(
     cursor_insert_bits, cursor_insert_mask_bits,
     cursor_insert_width, cursor_insert_height,
     cursor_insert_x_hot, cursor_insert_y_hot);
+  std::fprintf(stderr, "debug: load_cursors: collider\n");
+  std::fflush(stderr);
   m_cursor_collider = make_xbm_cursor(
     cursor_collider_bits, cursor_collider_mask_bits,
     cursor_collider_width, cursor_collider_height,
     cursor_collider_x_hot, cursor_collider_y_hot);
+  std::fprintf(stderr, "debug: load_cursors: done\n");
+  std::fflush(stderr);
 }
 
 void
