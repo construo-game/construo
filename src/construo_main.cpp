@@ -61,7 +61,7 @@
 #if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
 namespace {
 
-/** Copy APK assets/examples/* into internal storage so directory_iterator works. */
+/** Copy APK assets/examples/ into internal storage so directory_iterator works. */
 void
 extract_android_examples()
 {
@@ -77,7 +77,7 @@ extract_android_examples()
     auto it = std::filesystem::directory_iterator{dest_root, ec};
     if (!ec && it != std::filesystem::directory_iterator{}) {
       CONSTRUO_ALOG("examples already present at %s", dest_root.string().c_str());
-      path_manager.add_path(internal);
+      construo::path_manager.add_path(internal);
       return;
     }
   }
@@ -145,7 +145,7 @@ extract_android_examples()
     ++count;
   }
   CONSTRUO_ALOG("extracted %d examples to %s", count, dest_root.string().c_str());
-  path_manager.add_path(internal);
+  construo::path_manager.add_path(internal);
 }
 
 } // namespace
@@ -222,22 +222,22 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
               << "    " << (g_system_context->get_construo_rc_path() / "laststate.construo") << "\n" << std::endl;
 
     if (!g_settings.datadir.empty()) {
-      path_manager.add_path(g_settings.datadir);
+      construo::path_manager.add_path(g_settings.datadir);
     }
 #ifdef __EMSCRIPTEN__
     // Virtual FS layout from --preload-file examples@/examples
-    path_manager.add_path("/");
-    path_manager.add_path("/examples");
+    construo::path_manager.add_path("/");
+    construo::path_manager.add_path("/examples");
 #endif
 #if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
     // Prefer app-private storage, then external (user can push examples there).
     if (char const* internal = SDL_AndroidGetInternalStoragePath()) {
-      path_manager.add_path(internal);
-      path_manager.add_path(std::string(internal) + "/examples");
+      construo::path_manager.add_path(internal);
+      construo::path_manager.add_path(std::string(internal) + "/examples");
     }
     if (char const* external = SDL_AndroidGetExternalStoragePath()) {
-      path_manager.add_path(external);
-      path_manager.add_path(std::string(external) + "/examples");
+      construo::path_manager.add_path(external);
+      construo::path_manager.add_path(std::string(external) + "/examples");
     }
     extract_android_examples();
 #endif
@@ -249,16 +249,16 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
       if (n > 0) {
         buf[n] = '\0';
         std::filesystem::path const exe_dir = std::filesystem::path(buf).parent_path();
-        path_manager.add_path(exe_dir.string());
-        path_manager.add_path((exe_dir / "data").string());
-        path_manager.add_path((exe_dir / ".." / "share" / "construo").lexically_normal().string());
-        path_manager.add_path((exe_dir / ".." / "data").lexically_normal().string());
+        construo::path_manager.add_path(exe_dir.string());
+        construo::path_manager.add_path((exe_dir / "data").string());
+        construo::path_manager.add_path((exe_dir / ".." / "share" / "construo").lexically_normal().string());
+        construo::path_manager.add_path((exe_dir / ".." / "data").lexically_normal().string());
       }
     }
 #endif
-    path_manager.add_path(".");
-    path_manager.add_path("..");
-    path_manager.add_path(CONSTRUO_DATADIR);
+    construo::path_manager.add_path(".");
+    construo::path_manager.add_path("..");
+    construo::path_manager.add_path(CONSTRUO_DATADIR);
 
     if (!path_manager.find_path("examples"))
     {
