@@ -26,6 +26,7 @@
 #endif
 
 #include <fstream>
+#include <unistd.h>
 #include <vector>
 #include "construo.hpp"
 #include "particle.hpp"
@@ -240,13 +241,30 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
     }
     extract_android_examples();
 #endif
+#if defined(__linux__) && !defined(__ANDROID__)
+    // PortMaster / loose installs: data next to the binary or under share/.
+    {
+      char buf[4096];
+      ssize_t const n = ::readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+      if (n > 0) {
+        buf[n] = '\0';
+        std::filesystem::path const exe_dir = std::filesystem::path(buf).parent_path();
+        path_manager.add_path(exe_dir.string());
+        path_manager.add_path((exe_dir / "data").string());
+        path_manager.add_path((exe_dir / ".." / "share" / "construo").lexically_normal().string());
+        path_manager.add_path((exe_dir / ".." / "data").lexically_normal().string());
+      }
+    }
+#endif
     path_manager.add_path(".");
     path_manager.add_path("..");
     path_manager.add_path(CONSTRUO_DATADIR);
 
     if (!path_manager.find_path("examples"))
     {
-      std::cerr << "Couldn't find Construo Datadir, use '--datadir DIR' to set it manually." << std::endl;
+      std::cerr << "Couldn't find Construo Datadir (no 'examples/' tree), "
+                   "use '--datadir DIR' to set it manually.\n"
+                   "  (DIR must contain an examples/ subdirectory.)\n";
 #if defined(__ANDROID__) && defined(USE_SDL2_DISPLAY)
       // Still allow startup with an empty world; user can load files later.
       std::cerr << "Android: continuing without examples (push them under the app storage path)." << std::endl;
@@ -255,6 +273,10 @@ ConstruoMain::run(int argc, char* argv[]) // FIXME: pass an option class, instea
       } else {
         path_manager.set_path(".");
       }
+#elif defined(CONSTRUO_NO_XDGCPP)
+      // Handheld / PortMaster: allow empty start if data was not packaged.
+      std::cerr << "Continuing without examples.\n";
+      path_manager.set_path(".");
 #else
       ::exit(EXIT_FAILURE);
 #endif

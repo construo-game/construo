@@ -18,7 +18,8 @@ cat > "$OUT/construo.sh" <<'SH'
 cd "$(dirname "$0")"
 export SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-kmsdrm}"
 # R36S panel is 640×480; force geometry unless the user overrides.
-exec ./construo.sdl -f -g 640x480 "$@"
+# examples/ is packaged next to this script
+exec ./construo.sdl --datadir "$(pwd)" -f -g 640x480 "$@"
 SH
 chmod +x "$OUT/construo.sh"
 

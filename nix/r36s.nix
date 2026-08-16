@@ -588,7 +588,11 @@ if [ -d "$DIR/libs" ]; then
 elif [ -d "$DIR/../lib/construo" ]; then
   export LD_LIBRARY_PATH="$DIR/../lib/construo''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
-exec "$BIN" --software-cursor --controller "$DIR/data/controller/r36s.scm" --fullscreen "$@"
+# Data lives next to this script (share/construo) or under data/ in PortMaster layout.
+DATADIR="$DIR"
+[ -d "$DIR/examples" ] || DATADIR="$DIR/.."
+[ -d "$DATADIR/examples" ] || DATADIR="$DIR/data"
+exec "$BIN" --datadir "$DATADIR" -f -g 640x480 "$@"
 LAUNCH
         chmod +x $out/share/construo/construo.sh
       '';
@@ -728,16 +732,11 @@ fi
 # Native aarch64 SDL2 joystick input; gptokeyb optional for exit hotkey.
 pm_platform_helper "$GAMEDIR/construo" 2>/dev/null || true
 
-# Force on-device data + config dirs (do not use any baked-in install prefix).
-# Prefer --renderer opengl (GLES) on R36S; --renderer sdl is a software fallback.
-# Software cursor: no mouse; pad via SDL joystick.
+# Data: PortMaster copies share/construo into $GAMEDIR/data (examples under that).
+# Only construo CLI flags (not Pingus --renderer/--controller/--userdir).
 ./construo \
   --datadir "$GAMEDIR/data" \
-  --userdir "$CONFDIR" \
-  --renderer sdl \
-  --software-cursor \
-  --controller "$GAMEDIR/data/controller/r36s.scm" \
-  --fullscreen \
+  -f -g 640x480 \
   "$@"
 pm_finish 2>/dev/null || true
 EOF_LAUNCH
@@ -755,7 +754,7 @@ EOF_LAUNCH
   "items_opt": null,
   "attr": {
     "title": "${title}",
-    "desc": "Classic Construo (SDL2 + GLES2) for ArkOS / R36S. Free jump-and-run platformer starring Tux.",
+    "desc": "Construo — 2D construction sandbox (SDL2 + GLES2) for ArkOS / R36S.",
     "inst": "Ready to run. Copy Construo.sh and the construo/ folder into /roms/ports/ (or install the zip via PortMaster autoinstall).",
     "genres": ["platform", "action"],
     "porter": ["Construo-Origins"],
@@ -775,7 +774,7 @@ EOF_JSON
   <game>
     <path>./${scriptName}</path>
     <name>${title}</name>
-    <desc>Classic Construo — free jump-and-run platformer starring Tux. SDL2 + GLES2 build for ArkOS / R36S.</desc>
+    <desc>Construo — 2D construction sandbox. SDL2 + GLES2 build for ArkOS / R36S.</desc>
     <releasedate>20040511T000000</releasedate>
     <developer>Construo Team</developer>
     <publisher>Construo-Origins</publisher>
