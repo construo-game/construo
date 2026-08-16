@@ -156,11 +156,21 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   // Leave pixel format / buffer sizes on SDL defaults ("auto"). Explicit
   // RED/GREEN/BLUE/ALPHA sizes caused bad GBM BOs and SIGBUS in gbm_bo_write
-  // on Mali KMSDRM (R36S). Only request an ES 2.0 context profile.
+  // on Mali KMSDRM (R36S).
+  //
+  // Windows: request desktop OpenGL 3.3 core first. GLES/ANGLE is often
+  // missing and SDL then fails CreateWindow with "Could not initialize
+  // OpenGL / GLES library". Embedded (Android / KMSDRM / Emscripten) keep ES2.
   SDL_GL_ResetAttributes();
+#if defined(_WIN32) || defined(WIN32)
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+#else
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   char const* video_drv = SDL_GetCurrentVideoDriver();
@@ -241,32 +251,57 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
       std::fflush(stderr);
       SDL_DestroyWindow(m_window);
       m_window = nullptr;
-      // Desktop GL 2.1 compatibility fallback (hosts without ES).
-      SDL_GL_ResetAttributes();
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-      SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-      m_window = SDL_CreateWindow(title.c_str(),
-                                  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                  req_w, req_h, attempts[ai].flags);
-      if (m_window) {
+      // Fallbacks when the preferred profile failed.
+      struct GlFallback { char const* name; int profile; int major; int minor; };
+      GlFallback fallbacks[] = {
+#if defined(_WIN32) || defined(WIN32)
+        {"gl33-compat", SDL_GL_CONTEXT_PROFILE_COMPATIBILITY, 3, 3},
+        {"gl21-compat", SDL_GL_CONTEXT_PROFILE_COMPATIBILITY, 2, 1},
+        {"es2", SDL_GL_CONTEXT_PROFILE_ES, 2, 0},
+#else
+        {"gl21-compat", SDL_GL_CONTEXT_PROFILE_COMPATIBILITY, 2, 1},
+        {"gl33-core", SDL_GL_CONTEXT_PROFILE_CORE, 3, 3},
+#endif
+      };
+      for (auto const& fb : fallbacks) {
+        SDL_GL_ResetAttributes();
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, fb.profile);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, fb.major);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, fb.minor);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        m_window = SDL_CreateWindow(title.c_str(),
+                                    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                    req_w, req_h, attempts[ai].flags);
+        if (!m_window) {
+          last_error = std::string("SDL_CreateWindow(") + attempts[ai].name + "/" + fb.name + "): " + SDL_GetError();
+          std::fprintf(stderr, "%s\n", last_error.c_str());
+          std::fflush(stderr);
+          continue;
+        }
         m_gl = SDL_GL_CreateContext(m_window);
         if (!m_gl) {
-          last_error = std::string("SDL_GL_CreateContext(compat): ") + SDL_GetError();
+          last_error = std::string("SDL_GL_CreateContext(") + fb.name + "): " + SDL_GetError();
           std::fprintf(stderr, "%s\n", last_error.c_str());
           std::fflush(stderr);
           SDL_DestroyWindow(m_window);
           m_window = nullptr;
-        } else {
-          std::fprintf(stderr, "created window+context with %s / gl21-compat\n", attempts[ai].name);
+          continue;
         }
+        std::fprintf(stderr, "created window+context with %s / %s\n", attempts[ai].name, fb.name);
+        std::fflush(stderr);
+        break;
       }
-      // Restore ES request for next attempt
+      // Restore preferred profile for the next window-flag attempt.
       SDL_GL_ResetAttributes();
+#if defined(_WIN32) || defined(WIN32)
+      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+#else
       SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
       SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
       SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
       SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
       continue;
     }

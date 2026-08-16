@@ -16,6 +16,14 @@
 // GLES2 API: system headers on Unix/ES; SDL-loaded entry points on Windows.
 #include "gl_api.hpp"
 
+// Desktop GL 3.3 core texture format (not in GLES2 headers).
+#ifndef GL_RED
+#  define GL_RED 0x1903
+#endif
+#ifndef GL_R8
+#  define GL_R8 0x8229
+#endif
+
 namespace construo {
 
 namespace {
@@ -35,7 +43,8 @@ inline void const* gl_buffer_offset(std::size_t byte_offset)
 #endif
 }
 
-char const* k_vs = R"(
+// GLES2 / WebGL 1 (and desktop compat profiles that accept GLSL 1.00).
+char const* k_vs_es = R"(
 attribute vec2 a_pos;
 attribute vec4 a_color;
 attribute vec2 a_uv;
@@ -53,9 +62,7 @@ void main() {
 }
 )";
 
-// Fragment source without precision — compile_shader prepends
-// "precision mediump float;" on OpenGL ES / WebGL only (desktop GL rejects it).
-char const* k_fs = R"(
+char const* k_fs_es = R"(
 varying vec4 v_color;
 varying vec2 v_uv;
 uniform sampler2D u_tex;
@@ -66,6 +73,43 @@ void main() {
     gl_FragColor = vec4(v_color.rgb, v_color.a * a);
   } else {
     gl_FragColor = v_color;
+  }
+}
+)";
+
+// Desktop OpenGL 3.3 core (Windows primary path).
+char const* k_vs_gl33 = R"(
+#version 330 core
+in vec2 a_pos;
+in vec4 a_color;
+in vec2 a_uv;
+uniform vec2 u_screen;
+out vec4 v_color;
+out vec2 v_uv;
+void main() {
+  vec2 ndc = vec2(
+    (a_pos.x / u_screen.x) * 2.0 - 1.0,
+    1.0 - (a_pos.y / u_screen.y) * 2.0
+  );
+  gl_Position = vec4(ndc, 0.0, 1.0);
+  v_color = a_color;
+  v_uv = a_uv;
+}
+)";
+
+char const* k_fs_gl33 = R"(
+#version 330 core
+in vec4 v_color;
+in vec2 v_uv;
+uniform sampler2D u_tex;
+uniform float u_use_tex;
+out vec4 fragColor;
+void main() {
+  if (u_use_tex > 0.5) {
+    float a = texture(u_tex, v_uv).r;
+    fragColor = vec4(v_color.rgb, v_color.a * a);
+  } else {
+    fragColor = v_color;
   }
 }
 )";
@@ -105,10 +149,12 @@ GLES2Renderer::compile_shader(unsigned type, char const* source)
   // On OpenGL ES / WebGL, inject it for fragment shaders only. Never #define
   // GL_ES — names starting with "GL_" are reserved and ES/WebGL already
   // predefine that macro (redefinition fails at compile time).
+  // GL 3.3 core sources already include #version and must not get a prefix.
   char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
   bool const is_es = version && (std::strstr(version, "OpenGL ES") != nullptr ||
                                  std::strstr(version, "WebGL") != nullptr);
-  bool const need_precision = is_es && type == GL_FRAGMENT_SHADER;
+  bool const has_version = (std::strstr(source, "#version") != nullptr);
+  bool const need_precision = is_es && type == GL_FRAGMENT_SHADER && !has_version;
   char const* prefix = need_precision ? "precision mediump float;\n" : "";
   char const* sources[2] = { prefix, source };
   glShaderSource(s, 2, sources, nullptr);
@@ -171,15 +217,25 @@ GLES2Renderer::init()
     std::fflush(stderr);
   }
 
+  char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+  bool const is_es = version && (std::strstr(version, "OpenGL ES") != nullptr ||
+                                 std::strstr(version, "WebGL") != nullptr);
+  // Prefer GLSL 330 core on desktop; ES/WebGL and old compat keep GLSL 1.00.
+  bool const use_gl33 = !is_es;
+  char const* vs_src = use_gl33 ? k_vs_gl33 : k_vs_es;
+  char const* fs_src = use_gl33 ? k_fs_gl33 : k_fs_es;
+  std::fprintf(stderr, "debug: shader path=%s\n", use_gl33 ? "gl33-core" : "es2");
+  std::fflush(stderr);
+
   std::fprintf(stderr, "debug: before compile vertex shader\n");
   std::fflush(stderr);
-  unsigned vs = compile_shader(GL_VERTEX_SHADER, k_vs);
+  unsigned vs = compile_shader(GL_VERTEX_SHADER, vs_src);
   std::fprintf(stderr, "debug: after compile vertex shader\n");
   std::fflush(stderr);
 
   std::fprintf(stderr, "debug: before compile fragment shader\n");
   std::fflush(stderr);
-  unsigned fs = compile_shader(GL_FRAGMENT_SHADER, k_fs);
+  unsigned fs = compile_shader(GL_FRAGMENT_SHADER, fs_src);
   std::fprintf(stderr, "debug: after compile fragment shader\n");
   std::fflush(stderr);
 
@@ -299,8 +355,19 @@ GLES2Renderer::build_font_atlas()
 #endif
   std::fprintf(stderr, "debug: before glTexImage2D GL_ALPHA %dx%d\n", atlas_w, atlas_h);
   std::fflush(stderr);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, atlas_w, atlas_h, 0,
-               GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+  {
+    char const* ver = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+    bool const is_es = ver && (std::strstr(ver, "OpenGL ES") != nullptr ||
+                               std::strstr(ver, "WebGL") != nullptr);
+    if (is_es) {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, atlas_w, atlas_h, 0,
+                   GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    } else {
+      // GL 3.3 core removed GL_ALPHA; use single-channel RED.
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, atlas_w, atlas_h, 0,
+                   GL_RED, GL_UNSIGNED_BYTE, pixels.data());
+    }
+  }
   std::fprintf(stderr, "debug: after glTexImage2D\n");
   std::fflush(stderr);
 #if !defined(__EMSCRIPTEN__)
