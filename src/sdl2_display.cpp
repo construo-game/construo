@@ -1039,27 +1039,12 @@ SDL2Display::handle_controller_axis()
     clamp_mouse_pos();
   }
 
-  // Right stick → continuous view scroll (world units via widget).
+  // Right stick → smooth analog pan (sub-pixel, proportional to deflection).
   if ((rx != 0.0f || ry != 0.0f) && WorldViewWidget::instance()) {
-    float const scroll_speed = 320.0f; // px/s at full deflection
-    int steps_x = static_cast<int>(rx * scroll_speed * dt / 20.0f);
-    int steps_y = static_cast<int>(ry * scroll_speed * dt / 20.0f);
-    // Fallback to at least one step when stick is clearly deflected
-    if (steps_x == 0 && std::fabs(rx) > 0.2f) {
-      steps_x = rx > 0 ? 1 : -1;
-    }
-    if (steps_y == 0 && std::fabs(ry) > 0.2f) {
-      steps_y = ry > 0 ? 1 : -1;
-    }
-    auto* wv = WorldViewWidget::instance();
-    for (int i = 0; i < std::abs(steps_x); ++i) {
-      if (steps_x > 0) wv->scroll_right();
-      else wv->scroll_left();
-    }
-    for (int i = 0; i < std::abs(steps_y); ++i) {
-      if (steps_y > 0) wv->scroll_down();
-      else wv->scroll_up();
-    }
+    // Match the old 20px step scale: full deflection ≈ 16 steps/s ≈ 320 px/s.
+    float const scroll_speed = 320.0f;
+    WorldViewWidget::instance()->scroll_by(
+      geom::foffset(rx * scroll_speed * dt, ry * scroll_speed * dt));
   }
 
   // Triggers → undo / redo (edge-triggered).

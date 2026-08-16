@@ -80,6 +80,9 @@ public:
   void scroll_up() override;
   void scroll_down() override;
 
+  /** Continuous pan (e.g. analog stick); offset in the same units as scroll_*(). */
+  void scroll_by(geom::foffset const& offset);
+
   float get_scale();
 
   /** Called once the world has changed, aka a new world got loaded */

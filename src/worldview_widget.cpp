@@ -263,6 +263,12 @@ WorldViewWidget::scroll_down()
 }
 
 void
+WorldViewWidget::scroll_by(geom::foffset const& offset)
+{
+  m_zoom.translate(offset);
+}
+
+void
 WorldViewWidget::on_tertiary_button_press(geom::fpoint const& pos)
 {
   m_scrolling = true;
