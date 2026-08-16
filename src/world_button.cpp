@@ -22,7 +22,7 @@
 #include "screen_manager.hpp"
 #include "world.hpp"
 #include "world_cache.hpp"
-#include "world_renderer.hpp"
+#include "zoom_state.hpp"
 
 namespace construo {
 
@@ -39,37 +39,85 @@ WorldButton::~WorldButton ()
 }
 
 void
+WorldButton::rebuild_preview(World const* world)
+{
+  m_preview_lines.clear();
+  m_preview_dots.clear();
+  m_preview_broken = (world == nullptr);
+  m_preview_geom = m_geometry;
+  m_preview_valid = true;
+
+  if (!world) {
+    return;
+  }
+
+  ZoomState zoom(m_geometry);
+  zoom.zoom_to(world->calc_bounding_box());
+
+  auto to_screen = [&](glm::vec2 const& p) {
+    return zoom.world_to_screen(geom::fpoint(p.x, p.y));
+  };
+
+  // Springs → one batched line list (screen space).
+  auto const& springs = world->springs();
+  m_preview_lines.reserve(springs.size());
+  for (auto const& spring : springs) {
+    if (!spring) {
+      continue;
+    }
+    auto* a = spring->particles.first;
+    auto* b = spring->particles.second;
+    if (!a || !b) {
+      continue;
+    }
+    m_preview_lines.push_back({to_screen(a->pos), to_screen(b->pos)});
+  }
+
+  // Particles as small circles (batched outline is enough for a thumb).
+  auto const& particles = world->particles();
+  m_preview_dots.reserve(particles.size());
+  for (auto const& particle : particles) {
+    if (!particle) {
+      continue;
+    }
+    float r = particle->fixed ? 3.0f : 2.5f;
+    m_preview_dots.push_back({to_screen(particle->pos), r});
+  }
+}
+
+void
 WorldButton::draw(GraphicContext& parent_gc)
 {
   World const* world = m_world_cache.get(m_path);
 
+  if (!m_preview_valid || m_preview_geom.left() != m_geometry.left()
+      || m_preview_geom.top() != m_geometry.top()
+      || m_preview_geom.width() != m_geometry.width()
+      || m_preview_geom.height() != m_geometry.height()) {
+    rebuild_preview(world);
+  }
+
   parent_gc.draw_fill_rect(m_geometry, Color(0xBB0000FF));
 
-  ZoomState zoom(m_geometry);
+  parent_gc.push_quick_draw();
+  parent_gc.set_clip_rect(m_geometry);
 
-  if (world) {
-    zoom.zoom_to(world->calc_bounding_box());
+  if (m_preview_broken) {
+    parent_gc.draw_line(m_geometry.topleft(), m_geometry.bottomright(), Color(0xFF00FFFF));
+    parent_gc.draw_line(geom::fpoint(m_geometry.left(), m_geometry.bottom()),
+                        geom::fpoint(m_geometry.right(), m_geometry.top()),
+                        Color(0xFF00FFFF));
+  } else {
+    if (!m_preview_lines.empty()) {
+      parent_gc.draw_lines(m_preview_lines, Color(0.2f, 0.9f, 0.2f), 1);
+    }
+    if (!m_preview_dots.empty()) {
+      parent_gc.draw_circles(m_preview_dots, Color(1.0f, 0.3f, 0.3f));
+    }
   }
 
-  ZoomGraphicContext gc(parent_gc, zoom);
-
-  gc.lock();
-
-  if (world)
-  {
-    WorldRenderer renderer(*world);
-    renderer.draw_colliders(gc);
-    renderer.draw_springs(gc);
-  }
-  else
-  {
-    // Draw an 'X' for broken levels
-    gc.draw_line(geom::fpoint(0, 0), geom::fpoint(gc.geometry().size()), Color (0xFF00FFFF));
-    gc.draw_line(geom::fpoint(0, gc.geometry().height()), geom::fpoint(gc.geometry().width(), 0),
-                 Color (0xFF00FFFF));
-  }
-
-  gc.unlock();
+  parent_gc.clear_clip_rect();
+  parent_gc.pop_quick_draw();
 
   if (m_mouse_over) {
     parent_gc.draw_rect(m_geometry, Color (0xFFFFFFFF));

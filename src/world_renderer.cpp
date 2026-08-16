@@ -46,29 +46,44 @@ void
 WorldRenderer::draw_springs(ZoomGraphicContext& gc) const
 {
   auto const& springs = m_world.springs();
-
-#ifdef NEW_SPRING_CODE
-  std::vector<GraphicContext::Line> lines (springs.size());
-
-  glm::vec2 dist = springs[0]->particles.first->pos - springs[0]->particles.second->pos;
-  float stretch = std::fabs(glm::length(dist)/springs[0]->length - 1.0f) * 10.0f;
-  float color = std::fabs((stretch/springs[0]->max_stretch));
-
-  for (unsigned int i = 0; i < springs.size(); ++i)
-  {
-    //(*i)->draw (gc);
-    lines[i].x1 = springs[i]->particles.first->pos.x;
-    lines[i].y1 = springs[i]->particles.first->pos.y;
-    lines[i].x2 = springs[i]->particles.second->pos.x;
-    lines[i].y2 = springs[i]->particles.second->pos.y;
+  if (springs.empty()) {
+    return;
   }
-  gc.draw_lines (lines, Color(color, 1.0f - color, 0.0f), 2);
-#else
+
+  // Batch into as few draw calls as possible (critical on GLES handhelds).
+  // Keep a simple two-bucket color split: stressed vs relaxed.
+  std::vector<GraphicContext::Line> ok_lines;
+  std::vector<GraphicContext::Line> stress_lines;
+  ok_lines.reserve(springs.size());
+  stress_lines.reserve(springs.size() / 4 + 1);
+
   for (auto const& spring : springs)
   {
-    draw_spring(gc, *spring);
+    if (!spring || !spring->particles.first || !spring->particles.second) {
+      continue;
+    }
+    glm::vec2 const dist = spring->particles.first->pos - spring->particles.second->pos;
+    float const stretch = std::fabs(glm::length(dist) / spring->length - 1.0f);
+    float const stress = stretch / std::max(spring->max_stretch, 1e-6f);
+    GraphicContext::Line line{
+      geom::fpoint(spring->particles.first->pos.x, spring->particles.first->pos.y),
+      geom::fpoint(spring->particles.second->pos.x, spring->particles.second->pos.y)
+    };
+    if (stress > 0.5f) {
+      stress_lines.push_back(line);
+    } else {
+      ok_lines.push_back(line);
+    }
   }
-#endif
+
+  gc.push_quick_draw();
+  if (!ok_lines.empty()) {
+    gc.draw_lines(ok_lines, Color(0.2f, 0.9f, 0.2f), 1);
+  }
+  if (!stress_lines.empty()) {
+    gc.draw_lines(stress_lines, Color(0.9f, 0.2f, 0.1f), 1);
+  }
+  gc.pop_quick_draw();
 }
 
 void

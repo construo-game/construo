@@ -17,7 +17,10 @@
 #ifndef HEADER_CONSTRUO_WORLD_BUTTON_HPP
 #define HEADER_CONSTRUO_WORLD_BUTTON_HPP
 
+#include <vector>
+
 #include "gui_file_button.hpp"
+#include "graphic_context.hpp"
 #include "fwd.hpp"
 
 /** button in the load/save dialog */
@@ -36,13 +39,23 @@ public:
   void on_click() override;
 
 private:
+  void rebuild_preview(World const* world);
+
   WorldCache& m_world_cache;
   Mode m_mode;
   std::string m_basename;
 
+  /** Cached screen-space geometry for the thumbnail; rebuilt when the
+      widget geometry changes. Avoids re-tessellating every world every frame. */
+  bool m_preview_valid = false;
+  geom::frect m_preview_geom{};
+  std::vector<GraphicContext::Line> m_preview_lines;
+  std::vector<GraphicContext::Circle> m_preview_dots;
+  bool m_preview_broken = false;
+
 private:
   WorldButton (const WorldButton&);
-  WorldButton& operator= (const WorldButton&);
+  WorldButton& operator=(const WorldButton&);
 };
 
 } // namespace construo
