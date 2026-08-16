@@ -100,6 +100,12 @@ using PFN_glVertexAttribPointer = void (GL_APIENTRY*)(GLuint index, GLint size, 
 extern PFN_glVertexAttribPointer p_glVertexAttribPointer;
 using PFN_glViewport = void (GL_APIENTRY*)(GLint x, GLint y, GLsizei width, GLsizei height);
 extern PFN_glViewport p_glViewport;
+using PFN_glGenVertexArrays = void (GL_APIENTRY*)(GLsizei n, GLuint* arrays);
+extern PFN_glGenVertexArrays p_glGenVertexArrays;
+using PFN_glBindVertexArray = void (GL_APIENTRY*)(GLuint array);
+extern PFN_glBindVertexArray p_glBindVertexArray;
+using PFN_glDeleteVertexArrays = void (GL_APIENTRY*)(GLsizei n, const GLuint* arrays);
+extern PFN_glDeleteVertexArrays p_glDeleteVertexArrays;
 
 } // namespace gl_api
 } // namespace construo
@@ -147,6 +153,9 @@ extern PFN_glViewport p_glViewport;
 #  define glUseProgram ::construo::gl_api::p_glUseProgram
 #  define glVertexAttribPointer ::construo::gl_api::p_glVertexAttribPointer
 #  define glViewport ::construo::gl_api::p_glViewport
+#  define glGenVertexArrays ::construo::gl_api::p_glGenVertexArrays
+#  define glBindVertexArray ::construo::gl_api::p_glBindVertexArray
+#  define glDeleteVertexArrays ::construo::gl_api::p_glDeleteVertexArrays
 #endif
 
 #else // !_WIN32

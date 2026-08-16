@@ -262,6 +262,19 @@ GLES2Renderer::init()
   std::fprintf(stderr, "debug: after glGenBuffers (vbo=%u)\n", m_vbo);
   std::fflush(stderr);
 
+  // OpenGL 3.3 core requires a bound VAO for all draws; GLES2 does not.
+  if (use_gl33) {
+#if defined(_WIN32) || defined(WIN32)
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+    std::fprintf(stderr, "debug: VAO created (%u) for GL core\n", m_vao);
+    std::fflush(stderr);
+#else
+    // Non-Windows desktop GL path is rare (we prefer ES); skip if no VAO API.
+    m_vao = 0;
+#endif
+  }
+
   std::fprintf(stderr, "debug: before build_font_atlas\n");
   std::fflush(stderr);
   build_font_atlas();
@@ -297,6 +310,12 @@ GLES2Renderer::shutdown()
   if (m_font_tex) {
     glDeleteTextures(1, &m_font_tex);
     m_font_tex = 0;
+  }
+  if (m_vao) {
+#if defined(_WIN32) || defined(WIN32)
+    glDeleteVertexArrays(1, &m_vao);
+#endif
+    m_vao = 0;
   }
   if (m_vbo) {
     glDeleteBuffers(1, &m_vbo);
@@ -401,6 +420,11 @@ GLES2Renderer::draw_arrays(unsigned mode, std::vector<Vertex> const& verts, bool
   }
   ensure_init();
 
+#if defined(_WIN32) || defined(WIN32)
+  if (m_vao) {
+    glBindVertexArray(m_vao);
+  }
+#endif
   glUseProgram(m_program);
   glUniform2f(m_u_screen,
               static_cast<float>(m_viewport.width()),

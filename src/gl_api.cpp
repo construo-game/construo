@@ -53,6 +53,9 @@ PFN_glUniform2f p_glUniform2f = nullptr;
 PFN_glUseProgram p_glUseProgram = nullptr;
 PFN_glVertexAttribPointer p_glVertexAttribPointer = nullptr;
 PFN_glViewport p_glViewport = nullptr;
+PFN_glGenVertexArrays p_glGenVertexArrays = nullptr;
+PFN_glBindVertexArray p_glBindVertexArray = nullptr;
+PFN_glDeleteVertexArrays p_glDeleteVertexArrays = nullptr;
 
 namespace {
 
@@ -111,6 +114,10 @@ void load()
   p_glUseProgram = load_sym<PFN_glUseProgram>("glUseProgram");
   p_glVertexAttribPointer = load_sym<PFN_glVertexAttribPointer>("glVertexAttribPointer");
   p_glViewport = load_sym<PFN_glViewport>("glViewport");
+  // Core-profile VAO entry points (required for GL 3.3 core draws).
+  p_glGenVertexArrays = load_sym<PFN_glGenVertexArrays>("glGenVertexArrays");
+  p_glBindVertexArray = load_sym<PFN_glBindVertexArray>("glBindVertexArray");
+  p_glDeleteVertexArrays = load_sym<PFN_glDeleteVertexArrays>("glDeleteVertexArrays");
 }
 
 } // namespace gl_api

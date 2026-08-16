@@ -75,6 +75,7 @@ private:
   geom::isize m_viewport{800, 600};
 
   unsigned m_program = 0;
+  unsigned m_vao = 0;
   unsigned m_vbo = 0;
   int m_u_screen = -1;
   int m_u_use_tex = -1;
