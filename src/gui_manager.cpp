@@ -323,7 +323,10 @@ GUIManager::process_events()
   Event event;
   while (g_input_context->get_event(&event))
   {
-    if (m_current_widget)
+    // Prefer the grab target so press/release still work if the pointer
+    // briefly leaves the widget (common with coarse touch samples).
+    GUIWidget* target = m_grabbing_widget ? m_grabbing_widget : m_current_widget;
+    if (target)
     {
       switch (event.type)
       {

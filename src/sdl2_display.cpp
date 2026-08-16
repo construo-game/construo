@@ -111,6 +111,9 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 #ifdef __ANDROID__
   SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+  // Prefer real finger events; avoid duplicate synthetic mouse press/release pairs.
+  SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+  SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
 #endif
 #ifdef __EMSCRIPTEN__
   SDL_SetHint(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas");
@@ -1166,17 +1169,37 @@ SDL2Display::process_event(SDL_Event const& ev)
     case SDL_FINGERDOWN:
     case SDL_FINGERUP:
     case SDL_FINGERMOTION: {
-      // Normalized 0..1 → window pixels
-      m_mouse_pos = geom::ipoint(
-        static_cast<int>(ev.tfinger.x * static_cast<float>(m_size.width())),
-        static_cast<int>(ev.tfinger.y * static_cast<float>(m_size.height())));
+      // Normalized 0..1 is relative to the window; map through drawable size
+      // (same path as mouse) so UI hit-testing matches.
+      int win_w = 0, win_h = 0;
+      SDL_GetWindowSize(m_window, &win_w, &win_h);
+      if (win_w <= 0) {
+        win_w = m_size.width();
+      }
+      if (win_h <= 0) {
+        win_h = m_size.height();
+      }
+      m_mouse_pos = window_to_drawable(
+        static_cast<int>(ev.tfinger.x * static_cast<float>(win_w) + 0.5f),
+        static_cast<int>(ev.tfinger.y * static_cast<float>(win_h) + 0.5f));
       if (ev.type == SDL_FINGERDOWN || ev.type == SDL_FINGERUP) {
+        // Android finger IDs are not 0-based indices — track the first contact
+        // as primary; any other active id as secondary.
+        if (ev.type == SDL_FINGERDOWN) {
+          if (m_primary_finger < 0) {
+            m_primary_finger = ev.tfinger.fingerId;
+          }
+        }
         Event e;
         e.button.type = BUTTON_EVENT;
-        // One finger = primary; two-finger contact tracked roughly via fingerId
-        e.button.id = (ev.tfinger.fingerId == 0) ? Action::PRIMARY : Action::SECONDARY;
+        bool const is_primary = (m_primary_finger < 0) ||
+          (ev.tfinger.fingerId == m_primary_finger);
+        e.button.id = is_primary ? Action::PRIMARY : Action::SECONDARY;
         e.button.pressed = (ev.type == SDL_FINGERDOWN);
         events.push(e);
+        if (ev.type == SDL_FINGERUP && ev.tfinger.fingerId == m_primary_finger) {
+          m_primary_finger = -1;
+        }
       }
       break;
     }

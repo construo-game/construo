@@ -20,8 +20,7 @@
 #include "controller.hpp"
 #include "graphic_context.hpp"
 #include "screen_manager.hpp"
-#include "world_gui_manager.hpp"
-#include "worldview_widget.hpp"
+#include "gui_manager.hpp"
 
 namespace construo {
 
@@ -56,15 +55,19 @@ GUIButton::on_mouse_leave()
 void
 GUIButton::on_primary_button_press(geom::fpoint const& pos)
 {
-  WorldGUIManager::instance()->grab_mouse(*this);
+  if (auto* gui = ScreenManager::instance()->current_gui()) {
+    gui->grab_mouse(*this);
+  }
   m_pressed = true;
 }
 
 void
 GUIButton::on_primary_button_release(geom::fpoint const& pos)
 {
-  WorldGUIManager::instance()->ungrab_mouse(*this);
-  if (is_at(pos)) {
+  if (auto* gui = ScreenManager::instance()->current_gui()) {
+    gui->ungrab_mouse(*this);
+  }
+  if (m_pressed && is_at(pos)) {
     m_sig_on_click();
   }
   m_pressed = false;

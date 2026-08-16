@@ -47,6 +47,9 @@ public:
   void draw(GraphicContext& gc);
   void set_geometry(geom::frect const& geometry);
 
+  /** Active GUI (world / load / save) — for grab_mouse from widgets. */
+  GUIManager* current_gui() const { return m_current_gui_manager; }
+
 private:
   bool m_do_quit;
 

@@ -94,6 +94,8 @@ private:
   Uint32 m_axis_last_ticks = 0;
   bool m_y_held = false;
   int m_y_menu_latched = -1; // -1 none, 0=N 1=E 2=S 3=W
+  /** Active primary touch id (-1 = none). SDL finger IDs are not 0..n. */
+  SDL_FingerID m_primary_finger = -1;
 
   static SDL_Cursor* make_xbm_cursor(unsigned char const* bits,
                                      unsigned char const* mask_bits,
