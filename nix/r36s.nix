@@ -369,8 +369,6 @@ let
         "-DCMAKE_BUILD_WITH_INSTALL_RPATH=OFF"
         "-DCMAKE_INSTALL_RPATH="
         "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-        "-DCMAKE_CXX_FLAGS=-g -fno-omit-frame-pointer -fno-optimize-sibling-calls"
-        "-DCMAKE_C_FLAGS=-g -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         "-DBUILD_TESTS=OFF"
         "-DWARNINGS=OFF"
         "-DWERROR=OFF"
@@ -402,6 +400,11 @@ let
         # Prevent stdenv from injecting -rpath to modern nixpkgs glibc/gcc.
         export NIX_DONT_SET_RPATH=1
         export NIX_NO_SELF_RPATH=1
+
+        # Symbols + frame pointers for gdb on device (dontStrip keeps them).
+        # Passed via env so cmake does not split "-DCMAKE_CXX_FLAGS=... -f..." .
+        export CFLAGS="''${CFLAGS:-} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        export CXXFLAGS="''${CXXFLAGS:-} -g -fno-omit-frame-pointer -fno-optimize-sibling-calls"
 
         export PKG_CONFIG="pkg-config"
         export PKG_CONFIG_SYSROOT_DIR="${arkosSysroot}"
