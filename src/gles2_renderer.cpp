@@ -5,6 +5,7 @@
 
 #include "gles2_renderer.hpp"
 
+#include <cstdio>
 #include <cmath>
 #include <cstring>
 #include <stdexcept>
@@ -151,6 +152,17 @@ GLES2Renderer::init()
   // Windows: resolve GL symbols via SDL after the context exists.
   gl_api::load();
 
+  {
+    char const* vendor = reinterpret_cast<char const*>(glGetString(GL_VENDOR));
+    char const* renderer = reinterpret_cast<char const*>(glGetString(GL_RENDERER));
+    char const* version = reinterpret_cast<char const*>(glGetString(GL_VERSION));
+    std::fprintf(stderr, "GL_VENDOR=%s\nGL_RENDERER=%s\nGL_VERSION=%s\n",
+                 vendor ? vendor : "?",
+                 renderer ? renderer : "?",
+                 version ? version : "?");
+    std::fflush(stderr);
+  }
+
   unsigned vs = compile_shader(GL_VERTEX_SHADER, k_vs);
   unsigned fs = compile_shader(GL_FRAGMENT_SHADER, k_fs);
   m_program = link_program(vs, fs);
@@ -229,8 +241,12 @@ GLES2Renderer::build_font_atlas()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  // GLES2 has no GL_UNPACK_ROW_LENGTH; tight-packed alpha rows need alignment 1
+  // (default 4 would require width % 4 == 0 for every upload — Pingus does this).
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, atlas_w, atlas_h, 0,
                GL_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 

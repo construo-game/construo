@@ -11,6 +11,7 @@
 #endif
 
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
 #include <stdexcept>
 #include <string>
@@ -161,12 +162,16 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  // Prefer native display size when fullscreen — exclusive modes that do not
-  // match the panel (common on R36S 640x480 + KMSDRM) often fail with EGL
-  // surface errors.
+  char const* video_drv = SDL_GetCurrentVideoDriver();
+  bool const is_kmsdrm = video_drv &&
+    (std::strcmp(video_drv, "KMSDRM") == 0 || std::strcmp(video_drv, "kmsdrm") == 0);
+
+  // Prefer native display size when fullscreen / on KMSDRM — exclusive modes
+  // that do not match the panel (common on R36S 640x480 + KMSDRM) often fail
+  // with EGL surface errors. On pure KMSDRM there is no real "windowed" mode.
   int req_w = width;
   int req_h = height;
-  if (fullscreen) {
+  if (fullscreen || is_kmsdrm) {
     SDL_DisplayMode mode;
     if (SDL_GetDesktopDisplayMode(0, &mode) == 0 && mode.w > 0 && mode.h > 0) {
       std::fprintf(stderr, "desktop mode %dx%d @%dHz\n", mode.w, mode.h, mode.refresh_rate);
@@ -184,6 +189,8 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
 
   // Attempt order on embedded GLES (ArkOS/R36S, Mali, KMSDRM):
   // 1) FULLSCREEN_DESKTOP  2) exclusive FULLSCREEN  3) windowed
+  // On KMSDRM always try fullscreen first even if the user omitted -f —
+  // windowed EGL surfaces are a common source of gbm_bo_write SIGBUS.
   struct Attempt {
     char const* name;
     Uint32 flags;
@@ -194,17 +201,20 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   attempts[n_attempts++] = Attempt{"android-fullscreen",
                                    SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN};
   (void)fullscreen;
+  (void)is_kmsdrm;
 #else
-  if (fullscreen) {
+  if (fullscreen || is_kmsdrm) {
     attempts[n_attempts++] = Attempt{"fullscreen-desktop",
                                      SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP};
     attempts[n_attempts++] = Attempt{"fullscreen-exclusive",
                                      SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN};
   }
-  attempts[n_attempts++] = Attempt{"windowed",
-                                   static_cast<Uint32>(
-                                     SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
-                                     SDL_WINDOW_ALLOW_HIGHDPI)};
+  // Windowed last; drop RESIZABLE/HIGHDPI on KMSDRM (they confuse the DRM path).
+  Uint32 win_flags = SDL_WINDOW_OPENGL;
+  if (!is_kmsdrm) {
+    win_flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+  }
+  attempts[n_attempts++] = Attempt{"windowed", win_flags};
 #endif
 
   std::string last_error;
@@ -280,10 +290,18 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
   }
 
   SDL_GL_MakeCurrent(m_window, m_gl);
-  // Prefer adaptive vsync; fall back to fixed vsync.
-  if (SDL_GL_SetSwapInterval(-1) != 0) {
+  // Prefer adaptive vsync; fall back to fixed vsync. On some Mali builds
+  // adaptive (-1) misbehaves — try fixed first on KMSDRM.
+  if (is_kmsdrm) {
+    if (SDL_GL_SetSwapInterval(1) != 0) {
+      SDL_GL_SetSwapInterval(0);
+    }
+  } else if (SDL_GL_SetSwapInterval(-1) != 0) {
     SDL_GL_SetSwapInterval(1);
   }
+
+  std::fprintf(stderr, "GL context current, swap interval set (kmsdrm=%d)\n", is_kmsdrm ? 1 : 0);
+  std::fflush(stderr);
 
   int drawable_w = 0, drawable_h = 0;
   SDL_GL_GetDrawableSize(m_window, &drawable_w, &drawable_h);
@@ -291,6 +309,8 @@ SDL2Display::SDL2Display(std::string const& title, int width, int height, bool f
     SDL_GetWindowSize(m_window, &drawable_w, &drawable_h);
   }
   m_size = geom::isize(drawable_w, drawable_h);
+  std::fprintf(stderr, "drawable size %dx%d\n", drawable_w, drawable_h);
+  std::fflush(stderr);
 
   m_renderer.init();
   m_renderer.set_viewport(m_size);
