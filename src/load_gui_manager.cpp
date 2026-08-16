@@ -19,8 +19,6 @@
 #include <geom/rect.hpp>
 
 #include "gui_file_manager.hpp"
-#include "construo.hpp"
-#include "system_context.hpp"
 #include "root_graphic_context.hpp"
 
 namespace construo {
@@ -49,7 +47,6 @@ void
 LoadGUIManager::run_once(GraphicContext& gc)
 {
   GUIManager::run_once(gc);
-  g_system_context->sleep(1000);
 }
 
 } // namespace construo
